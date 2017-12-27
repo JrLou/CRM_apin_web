@@ -18,6 +18,13 @@
     "g-cloud": "Cloud",
     "g2-plugin-slider": "G2.Plugin.slider"
   },
+  "proxy": {
+    "/crm": {
+    "target": "http://10.0.0.182:9007",
+    "changeOrigin": true,
+    "pathRewrite": { "^/crm" : "" }
+    }
+  },
   "ignoreMomentLocale": true,
   "theme": "./src/theme.js",
   "hash": true
