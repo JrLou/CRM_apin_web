@@ -1,31 +1,30 @@
 const menuData = [{
-  name: 'dashborad',
-  icon: 'dashboard',
-  path: 'dashboard',
+  name: '订单管理',
+  icon: 'form',
+  path: 'order',
   children: [{
-    name: '分析页',
-    path: 'analysis',
+    name: '订单出票',
+    path: 'ticket',
   }, {
-    name: '监控页',
-    path: 'monitor',
+    name: '订单查看',
+    path: 'view',
   }, {
-    name: '工作台',
-    path: 'workplace',
-    // hideInMenu: true,
+    name: '订单确认',
+    path: 'confirm',
+  }, {
+    name: '订单列表',
+    path: 'list',
   }],
 }, {
-  name: '表单页',
-  icon: 'form',
-  path: 'form',
+  name: '财务管理',
+  icon: 'table',
+  path: 'finance',
   children: [{
-    name: '基础表单',
-    path: 'basic-form',
+    name: '支付明细',
+    path: 'finance_payment',
   }, {
-    name: '分步表单',
-    path: 'step-form',
-  }, {
-    name: '高级表单',
-    path: 'advanced-form',
+    name: '财务转账审核',
+    path: 'finance_verify',
   }],
 }, {
   name: '列表页',
@@ -34,6 +33,7 @@ const menuData = [{
   children: [{
     name: '查询表格',
     path: 'table-list',
+    hideInMenu: true,
   }, {
     name: '标准列表',
     path: 'basic-list',
@@ -65,50 +65,6 @@ const menuData = [{
     name: '高级详情页',
     path: 'advanced',
   }],
-}, {
-  name: '结果页',
-  icon: 'check-circle-o',
-  path: 'result',
-  children: [{
-    name: '成功',
-    path: 'success',
-  }, {
-    name: '失败',
-    path: 'fail',
-  }],
-}, {
-  name: '异常页',
-  icon: 'warning',
-  path: 'exception',
-  children: [{
-    name: '403',
-    path: '403',
-  }, {
-    name: '404',
-    path: '404',
-  }, {
-    name: '500',
-    path: '500',
-  }],
-}, {
-  name: '账户',
-  icon: 'user',
-  path: 'user',
-  children: [{
-    name: '登录',
-    path: 'login',
-  }, {
-    name: '注册',
-    path: 'register',
-  }, {
-    name: '注册结果',
-    path: 'register-result',
-  }],
-}, {
-  name: '使用文档',
-  icon: 'book',
-  path: 'http://pro.ant.design/docs/getting-started',
-  target: '_blank',
 }];
 
 function formatter(data, parentPath = '') {

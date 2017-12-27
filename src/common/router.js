@@ -35,16 +35,25 @@ export const getRouterData = (app) => {
     '/': {
       component: dynamicWrapper(app, ['user', 'login'], () => import('../layouts/BasicLayout')),
     },
-    '/dashboard/analysis': {
-      component: dynamicWrapper(app, ['chart'], () => import('../routes/Dashboard/Analysis')),
+    '/order/ticket': {
+      component: dynamicWrapper(app, ['chart'], () => import('../routes/Order/Ticket')),
     },
-    '/dashboard/monitor': {
-      component: dynamicWrapper(app, ['monitor'], () => import('../routes/Dashboard/Monitor')),
+    '/order/view': {
+      component: dynamicWrapper(app, ['chart'], () => import('../routes/Order/View')),
     },
-    '/dashboard/workplace': {
-      component: dynamicWrapper(app, ['project', 'activities', 'chart'], () => import('../routes/Dashboard/Workplace')),
+    '/order/confirm': {
+      component: dynamicWrapper(app, ['monitor'], () => import('../routes/Order/Confirm')),
+    },
+    '/order/list': {
+      component: dynamicWrapper(app, ['project', 'activities', 'chart'], () => import('../routes/Order/List')),
       // hideInBreadcrumb: true,
       // name: '工作台',
+    },
+    'finance/finance_payment': {
+      component: dynamicWrapper(app, [], () => import('../routes/Finance/FinancePayment')),
+    },
+    'finance/finance_verify': {
+      component: dynamicWrapper(app, [], () => import('../routes/Finance/FinanceVerify')),
     },
     '/form/basic-form': {
       component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/BasicForm')),
@@ -88,12 +97,12 @@ export const getRouterData = (app) => {
     '/profile/advanced': {
       component: dynamicWrapper(app, ['profile'], () => import('../routes/Profile/AdvancedProfile')),
     },
-    '/result/success': {
-      component: dynamicWrapper(app, [], () => import('../routes/Result/Success')),
-    },
-    '/result/fail': {
-      component: dynamicWrapper(app, [], () => import('../routes/Result/Error')),
-    },
+    // '/result/success': {
+    //   component: dynamicWrapper(app, [], () => import('../routes/Result/Success')),
+    // },
+    // '/result/fail': {
+    //   component: dynamicWrapper(app, [], () => import('../routes/Result/Error')),
+    // },
     '/exception/403': {
       component: dynamicWrapper(app, [], () => import('../routes/Exception/403')),
     },
