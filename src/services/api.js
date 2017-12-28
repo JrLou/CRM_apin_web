@@ -72,6 +72,12 @@ export async function AccountLogin(params) {
 export async function queryNotices() {
   return request('/api/notices');
 }
+export async function financePaymentList(params) {
+  return request('/crm/bo/orderapi/v1.0/orders/recordList', {
+    method: 'POST',
+    body: params,
+  });
+}
 //刘园园权限管理
 export async function roleManageList(params) {
   console.log("params",params);

@@ -1,271 +1,235 @@
-import React, { PureComponent } from 'react';
-import moment from 'moment';
-import { connect } from 'dva';
-import { Link } from 'dva/router';
-import { Row, Col, Card, List, Avatar } from 'antd';
-
+import React, {PureComponent} from 'react';
+import {connect} from 'dva';
+import {
+  Row,
+  Col,
+  Card,
+  Form,
+  Input,
+  Select,
+  Button,
+  Modal,
+  DatePicker,
+  message
+} from 'antd';
+import StandardTable from './TableList';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
-import EditableLinkGroup from '../../components/EditableLinkGroup';
-import { Radar } from '../../components/Charts';
 
-import styles from './Workplace.less';
+import styles from './FinancePayment.less';
 
-const links = [
-  {
-    title: '操作一',
-    href: '',
-  },
-  {
-    title: '操作二',
-    href: '',
-  },
-  {
-    title: '操作三',
-    href: '',
-  },
-  {
-    title: '操作四',
-    href: '',
-  },
-  {
-    title: '操作五',
-    href: '',
-  },
-  {
-    title: '操作六',
-    href: '',
-  },
-];
-
-const members = [
-  {
-    id: 'members-1',
-    title: '科学搬砖组',
-    logo: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
-    link: '',
-  },
-  {
-    id: 'members-2',
-    title: '程序员日常',
-    logo: 'https://gw.alipayobjects.com/zos/rmsportal/cnrhVkzwxjPwAaCfPbdc.png',
-    link: '',
-  },
-  {
-    id: 'members-3',
-    title: '设计天团',
-    logo: 'https://gw.alipayobjects.com/zos/rmsportal/gaOngJwsRYRaVAuXXcmB.png',
-    link: '',
-  },
-  {
-    id: 'members-4',
-    title: '中二少女团',
-    logo: 'https://gw.alipayobjects.com/zos/rmsportal/ubnKSIfAJTxIgXOKlciN.png',
-    link: '',
-  },
-  {
-    id: 'members-5',
-    title: '骗你学计算机',
-    logo: 'https://gw.alipayobjects.com/zos/rmsportal/WhxKECPNujWoWEFNdnJE.png',
-    link: '',
-  },
-];
+const FormItem = Form.Item;
+const {Option} = Select;
+const RangePicker = DatePicker.RangePicker;
+const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
 
 @connect(state => ({
-  project: state.project,
-  activities: state.activities,
-  chart: state.chart,
+  financePaymentList: state.financePaymentList,
 }))
-export default class Workplace extends PureComponent {
+@Form.create()
+export default class TableList extends PureComponent {
+  state = {
+    addInputValue: '',
+    modalVisible: false,
+    expandForm: false,
+    selectedRows: [],
+    formValues: {},
+    page:{
+      pageNo:1,
+      pageSize:10
+    }
+  };
+
   componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'project/fetchNotice',
+    this.getList();
+  }
+  getList(){
+    const values = this.props.form.getFieldsValue();
+    for (let item in values) {
+      if (values[item] === undefined) {
+        values[item] = '';
+      }
+    }
+    this.setState({
+      formValues:values,
     });
-    dispatch({
-      type: 'activities/fetchList',
+    let {page}=this.state;
+    let params = Object.assign(page, values);
+    this.props.dispatch({
+      type: 'financePaymentList/fetch',
+      payload: params,
     });
+  }
+  handleStandardTableChange = (pagination, filtersArg, sorter) => {
+    const {dispatch} = this.props;
+    const {formValues} = this.state;
+
+    const filters = Object.keys(filtersArg).reduce((obj, key) => {
+      const newObj = {...obj};
+      newObj[key] = getValue(filtersArg[key]);
+      return newObj;
+    }, {});
+    const params = {
+      currentPage: pagination.current,
+      pageSize: pagination.pageSize,
+      ...formValues,
+      ...filters,
+    };
+    if (sorter.field) {
+      params.sorter = `${sorter.field}_${sorter.order}`;
+    }
+
     dispatch({
-      type: 'chart/fetch',
+      type: 'financePaymentList/fetch',
+      payload: params,
+    });
+  };
+  handleFormReset = () => {
+    const {form, dispatch} = this.props;
+    form.resetFields();
+    dispatch({
+      type: 'financePaymentList/fetch',
+      payload: {},
+    });
+  };
+  // handleMenuClick = (e) => {
+  //   const {dispatch} = this.props;
+  //   const {selectedRows} = this.state;
+  //   if (!selectedRows) return;
+  //   switch (e.key) {
+  //     case 'remove':
+  //       dispatch({
+  //         type: 'rule/remove',
+  //         payload: {
+  //           no: selectedRows.map(row => row.no).join(','),
+  //         },
+  //         callback: () => {
+  //           this.setState({
+  //             selectedRows: [],
+  //           });
+  //         },
+  //       });
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // }
+  handleSelectRows = (rows) => {
+    this.setState({
+      selectedRows: rows,
     });
   }
 
-  componentWillUnmount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'chart/clear',
-    });
-  }
+  handleSearch = (e) => {
+    e.preventDefault();
 
-  renderActivities() {
-    const {
-      activities: { list },
-    } = this.props;
-    return list.map((item) => {
-      const events = item.template.split(/@\{([^{}]*)\}/gi).map((key) => {
-        if (item[key]) {
-          return <a href={item[key].link} key={item[key].name}>{item[key].name}</a>;
-        }
-        return key;
+    const {dispatch, form} = this.props;
+
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      const values = {
+        ...fieldsValue,
+        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
+      };
+      this.setState({
+        formValues: values,
       });
-      return (
-        <List.Item key={item.id}>
-          <List.Item.Meta
-            avatar={<Avatar src={item.user.avatar} />}
-            title={
-              <span>
-                <a className={styles.username}>{item.user.name}</a>
-                &nbsp;
-                <span className={styles.event}>{events}</span>
-              </span>
-            }
-            description={
-              <span className={styles.datetime} title={item.updatedAt}>
-                {moment(item.updatedAt).fromNow()}
-              </span>
-            }
-          />
-        </List.Item>
-      );
+      dispatch({
+        type: 'financePaymentList/fetch',
+        payload: values,
+      });
     });
+  }
+
+  handleAddInput = (e) => {
+    this.setState({
+      addInputValue: e.target.value,
+    });
+  }
+
+  renderSimpleForm() {
+    const {getFieldDecorator} = this.props.form;
+    return (
+      <Form onSubmit={this.handleSearch} layout="inline">
+        <Row gutter={{md: 8, lg: 24, xl: 48}}>
+          <Col md={8} sm={24}>
+            <FormItem label="上传凭证时间">
+              {getFieldDecorator('enddate_startdate', { initialValue: "" })(
+                <RangePicker />
+              )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="支付单号:">
+              {getFieldDecorator('recordId', { initialValue: "", rules: [{ max: 30, message: '长度不能超过30' }], })
+              (<Input placeholder="请输入…" />)
+              }
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="订单号:">
+              {getFieldDecorator('orderNo', { initialValue: "", rules: [{ max: 30, message: '长度不能超过30' }], })
+              (<Input placeholder="请输入…" />)
+              }
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="支付状态">
+              {getFieldDecorator('status', { initialValue: "" })(
+                <Select placeholder="支付状态">
+                  <Option value="">全部</Option>
+                  <Option value="0">待审核</Option>
+                  <Option value="1">审核通过</Option>
+                  <Option value="2">审核不通过</Option>
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <span className={styles.submitButtons}>
+              <Button type="primary" htmlType="submit">查询</Button>
+              <Button style={{marginLeft: 8}} onClick={this.handleFormReset}>重置</Button>
+            </span>
+          </Col>
+        </Row>
+      </Form>
+    );
   }
 
   render() {
-    const {
-      project: { loading: projectLoading, notice },
-      activities: { loading: activitiesLoading },
-      chart: { radarData },
-    } = this.props;
-
-    const pageHeaderContent = (
-      <div className={styles.pageHeaderContent}>
-        <div className={styles.avatar}>
-          <Avatar size="large" src="https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png" />
-        </div>
-        <div className={styles.content}>
-          <div className={styles.contentTitle}>早安，曲丽丽，祝你开心每一天！</div>
-          <div>交互专家 | 蚂蚁金服－某某某事业群－某某平台部－某某技术部－UED</div>
-        </div>
-      </div>
-    );
-
-    const extraContent = (
-      <div className={styles.extraContent}>
-        <div className={styles.statItem}>
-          <p>项目数</p>
-          <p>56</p>
-        </div>
-        <div className={styles.statItem}>
-          <p>团队内排名</p>
-          <p>8<span> / 24</span></p>
-        </div>
-        <div className={styles.statItem}>
-          <p>项目访问</p>
-          <p>2,223</p>
-        </div>
-      </div>
-    );
+    console.log("props_______________",this.props);
+    const {financePaymentList: {loading: ruleLoading, data}} = this.props;
+    const {selectedRows, modalVisible, addInputValue} = this.state;
 
     return (
-      <PageHeaderLayout
-        content={pageHeaderContent}
-        extraContent={extraContent}
-      >
-        <Row gutter={24}>
-          <Col xl={16} lg={24} md={24} sm={24} xs={24}>
-            <Card
-              className={styles.projectList}
-              style={{ marginBottom: 24 }}
-              title="进行中的项目"
-              bordered={false}
-              extra={<Link to="/">全部项目</Link>}
-              loading={projectLoading}
-              bodyStyle={{ padding: 0 }}
-            >
-              {
-                notice.map(item => (
-                  <Card.Grid className={styles.projectGrid} key={item.id}>
-                    <Card bodyStyle={{ padding: 0 }} bordered={false}>
-                      <Card.Meta
-                        title={(
-                          <div className={styles.cardTitle}>
-                            <Avatar size="small" src={item.logo} />
-                            <Link to={item.href}>{item.title}</Link>
-                          </div>
-                        )}
-                        description={item.description}
-                      />
-                      <div className={styles.projectItemContent}>
-                        <Link to={item.memberLink}>{item.member || ''}</Link>
-                        {item.updatedAt && (
-                          <span className={styles.datetime} title={item.updatedAt}>
-                            {moment(item.updatedAt).fromNow()}
-                          </span>
-                        )}
-                      </div>
-                    </Card>
-                  </Card.Grid>
-                ))
-              }
-            </Card>
-            <Card
-              bodyStyle={{ padding: 0 }}
-              bordered={false}
-              className={styles.activeCard}
-              title="动态"
-              loading={activitiesLoading}
-            >
-              <List loading={activitiesLoading} size="large">
-                <div className={styles.activitiesList}>
-                  {this.renderActivities()}
-                </div>
-              </List>
-            </Card>
-          </Col>
-          <Col xl={8} lg={24} md={24} sm={24} xs={24}>
-            <Card
-              style={{ marginBottom: 24 }}
-              title="快速开始 / 便捷导航"
-              bordered={false}
-              bodyStyle={{ padding: 0 }}
-            >
-              <EditableLinkGroup
-                onAdd={() => {}}
-                links={links}
-                linkElement={Link}
-              />
-            </Card>
-            <Card
-              style={{ marginBottom: 24 }}
-              bordered={false}
-              title="XX 指数"
-              loading={radarData.length === 0}
-            >
-              <div className={styles.chart}>
-                <Radar hasLegend height={343} data={radarData} />
-              </div>
-            </Card>
-            <Card
-              bodyStyle={{ paddingTop: 12, paddingBottom: 12 }}
-              bordered={false}
-              title="团队"
-            >
-              <div className={styles.members}>
-                <Row gutter={48}>
-                  {
-                    members.map(item => (
-                      <Col span={12} key={`members-item-${item.id}`}>
-                        <Link to={item.link}>
-                          <Avatar src={item.logo} size="small" />
-                          <span className={styles.member}>{item.title}</span>
-                        </Link>
-                      </Col>
-                    ))
-                  }
-                </Row>
-              </div>
-            </Card>
-          </Col>
-        </Row>
+      <PageHeaderLayout>
+        <Card bordered={false}>
+          <div className={styles.tableList}>
+            <div className={styles.tableListForm}>
+              {this.renderSimpleForm()}
+            </div>
+            <StandardTable
+              selectedRows={selectedRows}
+              loading={ruleLoading}
+              data={data}
+              onSelectRow={this.handleSelectRows}
+              onChange={this.handleStandardTableChange}
+            />
+          </div>
+        </Card>
+        <Modal
+          title="新建规则"
+          visible={modalVisible}
+          onOk={this.handleAdd}
+          onCancel={() => this.handleModalVisible()}
+        >
+          <FormItem
+            labelCol={{span: 5}}
+            wrapperCol={{span: 15}}
+            label="描述"
+          >
+            <Input placeholder="请输入" onChange={this.handleAddInput} value={addInputValue}/>
+          </FormItem>
+        </Modal>
       </PageHeaderLayout>
     );
   }
