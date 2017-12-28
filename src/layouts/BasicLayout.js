@@ -17,22 +17,21 @@ import { getMenuData } from '../common/menu';
 /**
  * 根据菜单取得重定向地址.
  */
-const redirectData = [];
-const getRedirect = (item) => {
-  if (item && item.children) {
-    if (item.children[0] && item.children[0].path) {
-      redirectData.push({
-        from: `/${item.path}`,
-        to: `/${item.children[0].path}`,
-      });
-      item.children.forEach((children) => {
-        getRedirect(children);
-      });
-    }
-  }
-};
-getMenuData().forEach(getRedirect);
-
+// const redirectData = [];
+// const getRedirect = (item) => {
+//   if (item && item.children) {
+//     if (item.children[0] && item.children[0].path) {
+//       redirectData.push({
+//         from: `/${item.path}`,
+//         to: `/${item.children[0].path}`,
+//       });
+//       item.children.forEach((children) => {
+//         getRedirect(children);
+//       });
+//     }
+//   }
+// };
+// getMenuData().forEach(getRedirect); //把一级栏目 重定向首个子栏目·
 const { Content } = Layout;
 const query = {
   'screen-xs': {
@@ -54,6 +53,8 @@ const query = {
     minWidth: 1200,
   },
 };
+
+// 假装有请求过来的数据
 
 class BasicLayout extends React.PureComponent {
   static childContextTypes = {
@@ -80,12 +81,28 @@ class BasicLayout extends React.PureComponent {
     const {
       currentUser, collapsed, fetchingNotices, notices, routerData, match, location, dispatch,
     } = this.props;
+    const redirectData = [];
+    const getRedirect = (item) => {
+      if (item && item.children) {
+        if (item.children[0] && item.children[0].path) {
+          redirectData.push({
+            from: `/${item.path}`,
+            to: `/${item.children[0].path}`,
+          });
+          item.children.forEach((children) => {
+            getRedirect(children);
+          });
+        }
+      }
+    };
+    getMenuData().forEach(getRedirect); //把一级栏目 重定向首个子栏目·
     const layout = (
       <Layout>
         <SiderMenu
           collapsed={collapsed}
           location={location}
           dispatch={dispatch}
+          menus={null}
         />
         <Layout>
           <GlobalHeader
@@ -113,7 +130,7 @@ class BasicLayout extends React.PureComponent {
                     />
                   ))
                 }
-                <Redirect exact from="/" to="/dashboard/analysis" />
+                <Redirect exact from="/" to="/welcome" />
                 <Route render={NotFound} />
               </Switch>
             </div>
