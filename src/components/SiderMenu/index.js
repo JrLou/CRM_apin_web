@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Layout, Menu, Icon } from 'antd';
 import { Link } from 'dva/router';
-import logo from '../../assets/logo.svg';
+import logo from '../../assets/logo.png';
 import styles from './index.less';
 import { getMenuData } from '../../common/menu';
 
@@ -148,7 +148,7 @@ export default class SiderMenu extends PureComponent {
         <div className={styles.logo}>
           <Link to="/">
             <img src={logo} alt="logo" />
-            <h1>Ant Design Pro</h1>
+            <h1>爱拼机</h1>
           </Link>
         </div>
         <Menu
