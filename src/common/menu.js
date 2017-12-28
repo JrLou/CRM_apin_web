@@ -65,7 +65,15 @@ const menuData = [{
     name: '高级详情页',
     path: 'advanced',
   }],
-}];
+}, {
+  name: '权限管理',
+  icon: 'table',
+  path: 'rightsManagement',
+  children: [{
+    name: '用户管理',
+    path: 'RoleManage',
+  }],
+},];
 
 function formatter(data, parentPath = '') {
   const list = [];

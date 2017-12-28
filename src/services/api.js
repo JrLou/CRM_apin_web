@@ -72,3 +72,8 @@ export async function AccountLogin(params) {
 export async function queryNotices() {
   return request('/api/notices');
 }
+//刘园园权限管理
+export async function roleManageList(params) {
+  console.log("params",params);
+  return request(`/crm/cr/v2/accounts/role/list?${stringify(params)}`);
+}
