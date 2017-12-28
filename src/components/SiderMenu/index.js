@@ -10,8 +10,9 @@ const { SubMenu } = Menu;
 
 export default class SiderMenu extends PureComponent {
   constructor(props) {
+
     super(props);
-    this.menus = getMenuData();
+    this.menus = this.props.menus;
     this.state = {
       openKeys: this.getDefaultCollapsedSubMenus(props),
     };
@@ -21,6 +22,9 @@ export default class SiderMenu extends PureComponent {
       type: 'global/changeLayoutCollapsed',
       payload: collapsed,
     });
+  }
+  componentWillReceiveProps(next){
+    this.menus = next.menus;
   }
   getDefaultCollapsedSubMenus(props) {
     const { location: { pathname } } = props || this.props;
@@ -142,7 +146,7 @@ export default class SiderMenu extends PureComponent {
         collapsed={collapsed}
         breakpoint="md"
         onCollapse={this.onCollapse}
-        width={256}
+        width={226}
         className={styles.sider}
       >
         <div className={styles.logo}>
@@ -151,7 +155,8 @@ export default class SiderMenu extends PureComponent {
             <h1>爱拼机</h1>
           </Link>
         </div>
-        <Menu
+        {
+          this.menus? <Menu
           theme="dark"
           mode="inline"
           {...menuProps}
@@ -160,7 +165,9 @@ export default class SiderMenu extends PureComponent {
           style={{ padding: '16px 0', width: '100%' }}
         >
           {this.getNavMenuItems(this.menus)}
-        </Menu>
+        </Menu>:null
+        }
+
       </Sider>
     );
   }
