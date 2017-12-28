@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Link } from 'dva/router';
+// import { Link } from 'dva/router';
 import { Form, Input, Tabs, Button, Icon, Checkbox, Row, Col, Alert } from 'antd';
 import styles from './Login.less';
 
@@ -179,7 +179,7 @@ export default class Login extends Component {
           {/*<span className={styles.iconAlipay} />*/}
           {/*<span className={styles.iconTaobao} />*/}
           {/*<span className={styles.iconWeibo} />*/}
-          <Link className={styles.register} to="/user/register">注册账户</Link>
+          {/*<Link className={styles.register} to="/user/register">注册账户</Link>*/}
         </div>
       </div>
     );
