@@ -211,7 +211,7 @@ export default class TableList extends PureComponent {
             </div>
             <div className={styles.tableListOperator}>
               <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
-                新建
+                创建角色
               </Button>
             </div>
             <StandardTable
