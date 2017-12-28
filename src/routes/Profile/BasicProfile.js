@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import { Card, Badge, Table, Divider } from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import DescriptionList from '../../components/DescriptionList';
+import ImageWrapper from '../../components/ImageWrapper';
 import styles from './BasicProfile.less';
 
 const { Description } = DescriptionList;
@@ -30,6 +31,17 @@ const progressColumns = [{
   title: '耗时',
   dataIndex: 'cost',
   key: 'cost',
+}, {
+  title:"城市图片",
+  key:"img_url",
+  render:(text, record, index) => {
+      // 生成复杂数据的渲染函数，参数分别为当前行的值，当前行数据，行索引，@return里面可以设置表格行/列合并
+      if (!record.img_url) {
+          return <ImageWrapper className={styles.picTable} src="https://os.alipayobjects.com/rmsportal/mgesTPFxodmIwpi.png" desc="示意图"/>
+      } else {
+          return <span>无</span>
+      }}
+
 }];
 
 @connect(state => ({
@@ -127,6 +139,8 @@ export default class BasicProfile extends Component {
     return (
       <PageHeaderLayout title="基础详情页">
         <Card bordered={false}>
+          <div className={styles.title}>图片查看</div>
+          <ImageWrapper className={styles.picWrapper} src="https://os.alipayobjects.com/rmsportal/mgesTPFxodmIwpi.png" desc="示意图"/>
           <DescriptionList size="large" title="退款申请" style={{ marginBottom: 32 }}>
             <Description term="取货单号">1000000000</Description>
             <Description term="状态">已取货</Description>
