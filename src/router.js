@@ -17,28 +17,18 @@ const fakeAuth = ()=>{
 
 const PrivateRoute = ({ component : Component , ...rest}) => {
   return (
-
-    // <Route {...rest} render={(props) => (
-    //   fakeAuth() ? (
-    //     <Component {...props} {...rest}/>
-    //   ) : (
-    //       <Redirect to={{
-    //         pathname: '/user/login',
-    //         state: { from: rest.location }
-    //       }} />
-    //     )
-    // )} />
-    <Route path={rest.path} render={(props) => {
-      if(fakeAuth()){
-
-        return  <Component {...props} {...rest}/>
-      }else{
-        return <Redirect to={{
-          pathname: '/user/login',
-          state: { from: rest.location }
-        }} />
+    <Route path={rest.path} render={
+      (props) => {
+        if(fakeAuth()){
+          return  <Component {...props} {...rest}/>
+        }else{
+          return <Redirect to={{
+                    pathname: '/user/login',
+                    state: { from: rest.location }
+                  }} />
+        }
       }
-    } } />
+    } />
   )
 }
 
