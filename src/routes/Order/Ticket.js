@@ -54,11 +54,10 @@ export default class Analysis extends Component {
   }
   upload = (originData) => {
     let formData = new FormData();
-    formData.append('key', "")
     let a = 'yFnb1L-yqxkEjfjOwiQzb5wsRcIQRoaZUbrhFupD:jQTK9TU-kbECRBHD6k8JxopBDtc=:eyJzY29wZSI6ImFwaW4tdm91Y2hlciIsImRlYWRsaW5lIjoxNTE0NDY3MzU1fQ=='
     formData.append("token", a);
     formData.append('accept', "")
-    formData.append("file", originData.file.name);
+    formData.append("file", originData.file,originData.file.name);
     fetch('http://upload.qiniu.com/', {
       method: "POST",
       // headers: {

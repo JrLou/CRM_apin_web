@@ -31,8 +31,7 @@ const getRedirect = (item) => {
     }
   }
 };
-getMenuData().forEach(getRedirect);
-
+getMenuData().forEach(getRedirect); //把一级栏目 重定向首个子栏目·
 const { Content } = Layout;
 const query = {
   'screen-xs': {

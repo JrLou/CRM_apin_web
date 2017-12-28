@@ -83,6 +83,7 @@ function formatter(data, parentPath = '') {
       });
     }
   });
+
   return list;
 }
 
