@@ -97,21 +97,21 @@ function checkaccessToken(json,url,options){
         if(!old_userInfo){
           return null
         }
-       return  request('/crm/uc/authapi/v1.1/tokens',{
-          method: 'POST',
-          body: {
-            account: old_userInfo.username,
-            password: old_userInfo.password
-          },
-        }).then((json)=>{
+      //  return  request('/crm/uc/authapi/v1.1/tokens',{
+      //     method: 'POST',
+      //     body: {
+      //       account: old_userInfo.username,
+      //       password: old_userInfo.password
+      //     },
+      //   }).then((json)=>{
 
-          if(json.code==200){
-           return request(url,options)
-          }else{
-            return "1001"
-          }
-        }
-        )
+      //     if(json.code==200){
+      //      return request(url,options)
+      //     }else{
+      //       return "1001"
+      //     }
+      //   }
+      //   )
 
     }
     if (json.code == 411) {
@@ -149,7 +149,7 @@ export default function request(url, options) {
     credentials: 'include',
   };
   const newOptions = { ...defaultOptions, ...options };
-  if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
+
     newOptions.headers = {
       Accept: 'application/json',
       'Content-Type': 'application/json; charset=utf-8',
@@ -161,7 +161,7 @@ export default function request(url, options) {
       delete newOptions.headers.Authorization
     }
     newOptions.body = JSON.stringify(newOptions.body);
-  }
+
   return fetch(url, newOptions)
     .then(checkStatus)
     .then(response =>response.json())
@@ -182,25 +182,25 @@ export default function request(url, options) {
       return error;
     });
 }
-function fetchcustom(url,type,data){
-  return new Promise(function(resolve,reject){
-      var xhr = new XMLHttpRequest();
-      type = type.toUpperCase();
-      xhr.open(type, url, true);
-      xhr.setRequestHeader("Content-type", "application/json");
-      xhr.onreadystatechange=function(){
-          if(xhr.readyState===4){
-              if(xhr.status===200 ||xhr.status<300 || xhr.status ===304){
-                  let obj = xhr.response
-                  if (typeof obj !== 'object') {
-                      obj = JSON.parse(obj);
-                  }
-                  resolve(obj)
-          }else{
-                reject(xhr.response)
-          }
-          }
-      }
-    xhr.send(data)
-  })
-}
+// function fetchcustom(url,type,data){
+//   return new Promise(function(resolve,reject){
+//       var xhr = new XMLHttpRequest();
+//       type = type.toUpperCase();
+//       xhr.open(type, url, true);
+//       xhr.setRequestHeader("Content-type", "application/json");
+//       xhr.onreadystatechange=function(){
+//           if(xhr.readyState===4){
+//               if(xhr.status===200 ||xhr.status<300 || xhr.status ===304){
+//                   let obj = xhr.response
+//                   if (typeof obj !== 'object') {
+//                       obj = JSON.parse(obj);
+//                   }
+//                   resolve(obj)
+//           }else{
+//                 reject(xhr.response)
+//           }
+//           }
+//       }
+//     xhr.send(data)
+//   })
+// }

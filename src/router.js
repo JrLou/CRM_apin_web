@@ -6,7 +6,7 @@ import dynamic from 'dva/dynamic';
 import { getRouterData } from './common/router';
 import CookieHelp from './utils/cookies';
 import styles from './index.less';
-
+import request from './utils/request';
 dynamic.setDefaultLoadingComponent(() => {
   return <Spin size="large" className={styles.globalSpin} />;
 });
@@ -14,12 +14,17 @@ dynamic.setDefaultLoadingComponent(() => {
 const fakeAuth = ()=>{
   return CookieHelp.getUserInfo();
 }
-
+//请求菜单数据
+const Loadmenu = ()=>{
+  return request('/crm/uc/authapi/v1.1/modules?');
+}
 const PrivateRoute = ({ component : Component , ...rest}) => {
   return (
     <Route path={rest.path} render={
       (props) => {
         if(fakeAuth()){
+          Loadmenu()
+
           return  <Component {...props} {...rest}/>
         }else{
           return <Redirect to={{
