@@ -65,8 +65,7 @@ export default class Analysis extends Component {
       //   // 'Content-Type': `multipart/form-data; boundary=----${}`,
       // },
       body: formData
-    })
-      .then((response) => {
+    }).then((response) => {
         return response.json();
       });
   }
@@ -127,19 +126,16 @@ export default class Analysis extends Component {
           bodyStyle={{ padding: '20px 0 32px 0' }}
           style={{ marginTop: 32 }}
         >
-          <FormItem
-            label="收据图片"
-          >
+
             <Upload
               showUploadList={false}
               beforeUpload={this.beforeUpload}
               customRequest={this.upload}
             >
              <Button type="primary">
-              <Icon type="upload" /> 导入票号
+              <Icon type="upload" /> 上传
                                     </Button>
             </Upload>
-          </FormItem>
           {/* <Upload
             className="avatar-uploader"
             name="file"
