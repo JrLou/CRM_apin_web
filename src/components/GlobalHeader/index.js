@@ -85,7 +85,7 @@ export default class GlobalHeader extends PureComponent {
         <Menu.Item key="logout"><Icon type="logout" />退出登录</Menu.Item>
       </Menu>
     );
-    const noticeData = this.getNoticeData();
+    // const noticeData = this.getNoticeData();
     return (
       <Header className={styles.header}>
         <Icon
