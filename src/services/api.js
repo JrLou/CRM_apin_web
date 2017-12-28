@@ -1,6 +1,6 @@
 import { stringify } from 'qs';
 import request from '../utils/request';
-
+import md5 from 'md5'
 export async function queryProjectNotice() {
   return request('/api/project/notice');
 }
@@ -60,18 +60,13 @@ export async function queryFakeList(params) {
   return request(`/api/fake_list?${stringify(params)}`);
 }
 
-export async function fakeAccountLogin(params) {
-  return request('/api/login/account', {
-    method: 'POST',
-    body: params,
-  });
-}
-
-export async function fakeRegister(params) {
-  return request('/api/register', {
-    method: 'POST',
-    body: params,
-  });
+export async function AccountLogin(params) {
+  const newparams = Object.assign({},{account:params.account,appid:'2ef8d902c12f454f9acdbb0484f8c05a'})
+  const response = await request(`/crm/uc/authapi/v1.1/tokens/codes?${stringify(newparams)}`);
+  if(response&&response.data){
+    const newparams2 = Object.assign({},{account:params.account,signature:md5(md5(params.account + md5(params.password)) + response.data)})
+    return request(`/crm/uc/authapi/v1.1/tokens?${stringify(newparams2)}`);
+  }
 }
 
 export async function queryNotices() {

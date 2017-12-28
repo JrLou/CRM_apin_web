@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, Route } from 'dva/router';
+import { Switch, Link, Route,Redirect} from 'dva/router';
 import DocumentTitle from 'react-document-title';
 import { Icon } from 'antd';
 import GlobalFooter from '../components/GlobalFooter';
@@ -7,18 +7,7 @@ import styles from './UserLayout.less';
 import logo from '../assets/logo.png';
 import { getRoutes } from '../utils/utils';
 
-const links = [{
-  title: '帮助',
-  href: '',
-}, {
-  title: '隐私',
-  href: '',
-}, {
-  title: '条款',
-  href: '',
-}];
-
-const copyright = <div>Copyright <Icon type="copyright" />2017 爱拼机小组出品</div>;
+const copyright = <div>Copyright <Icon type="copyright" />爱拼机</div>;
 
 class UserLayout extends React.PureComponent {
   getPageTitle() {
@@ -44,19 +33,23 @@ class UserLayout extends React.PureComponent {
             </div>
             <div className={styles.desc}>爱拼机CRM登陆页面</div>
           </div>
-          {
-            getRoutes(match.path, routerData).map(item =>
-              (
-                <Route
-                  key={item.key}
-                  path={item.path}
-                  component={item.component}
-                  exact={item.exact}
-                />
+          <Switch>
+            {
+              getRoutes(match.path, routerData).map(item =>
+                (
+                  <Route
+                    key={item.key}
+                    path={item.path}
+                    component={item.component}
+                    exact={item.exact}
+                  />
+                )
               )
-            )
-          }
-          <GlobalFooter className={styles.footer} links={links} copyright={copyright} />
+            }
+            <Redirect exact from="/user" to="/user/login" />
+            {/* <Route render={NotFound} /> */}
+          </Switch>
+          <GlobalFooter className={styles.footer} copyright={copyright} />
         </div>
       </DocumentTitle>
     );

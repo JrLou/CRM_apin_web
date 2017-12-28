@@ -1,9 +1,8 @@
 import { routerRedux } from 'dva/router';
-import { fakeAccountLogin } from '../services/api';
-
+import { AccountLogin } from '../services/api';
+import CookieHelp from './../utils/cookies';
 export default {
   namespace: 'login',
-
   state: {
     status: undefined,
   },
@@ -14,7 +13,7 @@ export default {
         type: 'changeSubmitting',
         payload: true,
       });
-      const response = yield call(fakeAccountLogin, payload);
+      const response = yield call(AccountLogin, payload);
       yield put({
         type: 'changeLoginStatus',
         payload: response,
@@ -31,18 +30,22 @@ export default {
           status: false,
         },
       });
+      CookieHelp.clearCookie()
       yield put(routerRedux.push('/user/login'));
     },
   },
 
   reducers: {
     changeLoginStatus(state, { payload }) {
-      return {
-        ...state,
-        status: payload.status,
-        type: payload.type,
-        submitting: false,
-      };
+      if (payload && payload.code === 200 && payload.success) {
+        payload.data.Authorization = payload.data.accessToken;
+        CookieHelp.saveUserInfo(payload.data,true);
+        return {
+          ...state,
+          status: 'ok',
+          submitting: false,
+        };
+      }
     },
     changeSubmitting(state, { payload }) {
       return {

@@ -102,7 +102,7 @@ class BasicLayout extends React.PureComponent {
           collapsed={collapsed}
           location={location}
           dispatch={dispatch}
-          menus={null}
+          menus={getMenuData()}
         />
         <Layout>
           <GlobalHeader

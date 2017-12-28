@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
+import { routerRedux } from 'dva/router';
 // import { Link } from 'dva/router';
 import { Form, Input, Tabs, Button, Icon, Checkbox, Row, Col, Alert } from 'antd';
 import styles from './Login.less';
@@ -17,25 +18,29 @@ export default class Login extends Component {
     type: 'account',
   }
 
-  componentWillUnmount() {
-    clearInterval(this.interval);
+  // componentWillUnmount() {
+  //   clearInterval(this.interval);
+  // }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.login.status === 'ok') {
+      this.props.dispatch(routerRedux.push('/'));
+    }
   }
-
   onSwitch = (type) => {
     this.setState({ type });
   }
 
-  onGetCaptcha = () => {
-    let count = 59;
-    this.setState({ count });
-    this.interval = setInterval(() => {
-      count -= 1;
-      this.setState({ count });
-      if (count === 0) {
-        clearInterval(this.interval);
-      }
-    }, 1000);
-  }
+  // onGetCaptcha = () => {
+  //   let count = 59;
+  //   this.setState({ count });
+  //   this.interval = setInterval(() => {
+  //     count -= 1;
+  //     this.setState({ count });
+  //     if (count === 0) {
+  //       clearInterval(this.interval);
+  //     }
+  //   }, 1000);
+  // }
 
   handleSubmit = (e) => {
     e.preventDefault();
@@ -46,7 +51,6 @@ export default class Login extends Component {
             type: 'login/login',
             payload: {
               ...values,
-              type: this.state.type,
             },
           });
         }
@@ -82,10 +86,10 @@ export default class Login extends Component {
                 this.renderMessage('账户或密码错误')
               }
               <FormItem>
-                {getFieldDecorator('userName', {
+                {getFieldDecorator('account', {
                   rules: [{
                     required: type === 'account', message: '请输入账户名！',
-                  }],
+                  }],initialValue:"admin"
                 })(
                   <Input
                     size="large"
@@ -98,13 +102,13 @@ export default class Login extends Component {
                 {getFieldDecorator('password', {
                   rules: [{
                     required: type === 'account', message: '请输入密码！',
-                  }],
+                  }],initialValue:"Apin123456"
                 })(
                   <Input
                     size="large"
                     prefix={<Icon type="lock" className={styles.prefixIcon} />}
                     type="password"
-                    placeholder="888888"
+                    placeholder="Apin123456"
                   />
                 )}
               </FormItem>
@@ -165,9 +169,9 @@ export default class Login extends Component {
               {/*valuePropName: 'checked',*/}
               {/*initialValue: true,*/}
             {/*})(*/}
-              {/*<Checkbox className={styles.autoLogin}>自动登录</Checkbox>*/}
+              <Checkbox className={styles.autoLogin}>自动登录</Checkbox>
             {/*)}*/}
-            <a className={styles.forgot} href="">忘记密码</a>
+            {/* <a className={styles.forgot} href="">忘记密码</a> */}
             <Button size="large" loading={login.submitting} className={styles.submit} type="primary" htmlType="submit">
               登录
             </Button>
