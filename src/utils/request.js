@@ -149,16 +149,21 @@ export default function request(url, options) {
     credentials: 'include',
   };
   const newOptions = { ...defaultOptions, ...options };
-
-    newOptions.headers = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json; charset=utf-8',
-      'Authorization':CookieHelp.getUserInfo().accessToken,
-      ...newOptions.headers,
-
-    };
-    if(!newOptions.headers.Authorization){
-      delete newOptions.headers.Authorization
+    let a=""
+    try{
+      a=CookieHelp.getUserInfo().accessToken
+      newOptions.headers = {
+        Accept: 'application/json',
+        'Content-Type': 'application/json; charset=utf-8',
+        'Authorization':a,
+        ...newOptions.headers,
+      };
+    }catch(e){
+      newOptions.headers = {
+        Accept: 'application/json',
+        'Content-Type': 'application/json; charset=utf-8',
+        ...newOptions.headers,
+      };
     }
     newOptions.body = JSON.stringify(newOptions.body);
 
