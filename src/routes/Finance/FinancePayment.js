@@ -28,9 +28,6 @@ const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
 @Form.create()
 export default class TableList extends PureComponent {
   state = {
-    addInputValue: '',
-    modalVisible: false,
-    expandForm: false,
     selectedRows: [],
     formValues: {},
     page:{
@@ -91,28 +88,7 @@ export default class TableList extends PureComponent {
       payload: {},
     });
   };
-  // handleMenuClick = (e) => {
-  //   const {dispatch} = this.props;
-  //   const {selectedRows} = this.state;
-  //   if (!selectedRows) return;
-  //   switch (e.key) {
-  //     case 'remove':
-  //       dispatch({
-  //         type: 'rule/remove',
-  //         payload: {
-  //           no: selectedRows.map(row => row.no).join(','),
-  //         },
-  //         callback: () => {
-  //           this.setState({
-  //             selectedRows: [],
-  //           });
-  //         },
-  //       });
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // }
+
   handleSelectRows = (rows) => {
     this.setState({
       selectedRows: rows,
@@ -137,12 +113,6 @@ export default class TableList extends PureComponent {
         type: 'financePaymentList/fetch',
         payload: values,
       });
-    });
-  }
-
-  handleAddInput = (e) => {
-    this.setState({
-      addInputValue: e.target.value,
     });
   }
 
@@ -198,7 +168,7 @@ export default class TableList extends PureComponent {
   render() {
     console.log("props_______________",this.props);
     const {financePaymentList: {loading: ruleLoading, data}} = this.props;
-    const {selectedRows, modalVisible, addInputValue} = this.state;
+    const {selectedRows} = this.state;
 
     return (
       <PageHeaderLayout>
@@ -216,20 +186,6 @@ export default class TableList extends PureComponent {
             />
           </div>
         </Card>
-        <Modal
-          title="新建规则"
-          visible={modalVisible}
-          onOk={this.handleAdd}
-          onCancel={() => this.handleModalVisible()}
-        >
-          <FormItem
-            labelCol={{span: 5}}
-            wrapperCol={{span: 15}}
-            label="描述"
-          >
-            <Input placeholder="请输入" onChange={this.handleAddInput} value={addInputValue}/>
-          </FormItem>
-        </Modal>
       </PageHeaderLayout>
     );
   }
