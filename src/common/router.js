@@ -35,32 +35,32 @@ export const getRouterData = (app) => {
     '/': {
       component: dynamicWrapper(app, ['user', 'login'], () => import('../layouts/BasicLayout')),
     },
-    '/order/ticket': {
-      component: dynamicWrapper(app, ['chart'], () => import('../routes/Order/Ticket')),
-    },
-    '/order/view': {
-      component: dynamicWrapper(app, ['chart'], () => import('../routes/Order/View')),
-    },
-    '/order/confirm': {
-      component: dynamicWrapper(app, ['monitor'], () => import('../routes/Order/Confirm')),
-    },
-    '/order/list': {
-      component: dynamicWrapper(app, ['project', 'activities', 'chart'], () => import('../routes/Order/List')),
-      // hideInBreadcrumb: true,
-      // name: '工作台',
-    },
+    // '/order/ticket': {
+    //   component: dynamicWrapper(app, ['chart'], () => import('../routes/Order/Ticket')),
+    // },
+    // '/order/view': {
+    //   component: dynamicWrapper(app, ['chart'], () => import('../routes/Order/View')),
+    // },
+    // '/order/confirm': {
+    //   component: dynamicWrapper(app, ['monitor'], () => import('../routes/Order/Confirm')),
+    // },
+    // '/order/list': {
+    //   component: dynamicWrapper(app, ['project', 'activities', 'chart'], () => import('../routes/Order/List')),
+    //   // hideInBreadcrumb: true,
+    //   // name: '工作台',
+    // },
     '/finance/finance_payment': {
       component: dynamicWrapper(app, ['financePaymentList'], () => import('../routes/Finance/FinancePayment')),
     },
     '/finance/finance_verify': {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Finance/FinanceVerify')),
     },
-      '/customer/userList':{
-        component: dynamicWrapper(app, ['rule'], () => import('../routes/Customer/TableList.js')),
-      },
-      '/supplier/supplierList':{
-        component: dynamicWrapper(app, ['rule'], () => import('../routes/Supplier/TableList.js')),
-      },
+      // '/customer/userList':{
+      //   component: dynamicWrapper(app, ['rule'], () => import('../routes/Customer/TableList.js')),
+      // },
+      // '/supplier/supplierList':{
+      //   component: dynamicWrapper(app, ['rule'], () => import('../routes/Supplier/TableList.js')),
+      // },
       '/fightgroups/demand':{
         component: dynamicWrapper(app, ['rule'], () => import('../routes/Fightgroups/Demand.js')),
       },
@@ -76,9 +76,9 @@ export const getRouterData = (app) => {
       '/order/refund':{
         component: dynamicWrapper(app, ['rule'], () => import('../routes/Order/Refund.js')),
       },
-      '/operations/banner':{
-        component: dynamicWrapper(app, ['rule'], () => import('../routes/Operations/Banner.js')),
-      },
+      // '/operations/banner':{
+      //   component: dynamicWrapper(app, ['rule'], () => import('../routes/Operations/Banner.js')),
+      // },
 
     // '/form/basic-form': {
     //   component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/BasicForm')),
