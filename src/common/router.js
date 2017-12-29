@@ -128,7 +128,18 @@ export const getRouterData = (app) => {
     '/RightsManagement/RoleManage': {
       component: dynamicWrapper(app, ['roleManageList'], () => import('../routes/RightsManagement/RoleManage')),
     },
-    
+    //客户管理
+    '/customer/userList': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Customer/UserList')),
+    },
+    //政策管理
+    '/supplier/supplierList': {
+      component: dynamicWrapper(app, [], () => import('../routes/Supplier/SupplierList')),
+    },
+    //运营管理
+    '/Operations/Banner': {
+      component: dynamicWrapper(app, [], () => import('../routes/Operations/Banner')),
+    },
     // '/user/:id': {
     //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),
     // },
