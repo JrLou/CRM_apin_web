@@ -8,7 +8,6 @@ class StandardTable extends PureComponent {
     totalCallNo: 0,
   };
   componentWillReceiveProps(nextProps) {
-    // clean state
     if (nextProps.selectedRows.length === 0) {
       this.setState({
         selectedRowKeys: [],
@@ -20,28 +19,8 @@ class StandardTable extends PureComponent {
     this.props.onChange(pagination, filters, sorter);
   };
   render() {
-    const { data: { list, pagination }, loading } = this.props;
-    const TableList = [{
-      key: '1',
-      id: '24234022342322324234201',
-      name: '胡彦斌',
-      createdTime: '2017-12-28 00:00:00'
-    }, {
-      key: '2',
-      id: '24234022342322324234202',
-      name: '1111',
-      createdTime: '2017-12-28 00:00:00'
-    }, {
-      key: '3',
-      id: '24234022342322324234892',
-      name: '3333',
-      createdTime: '2017-12-28 00:00:00'
-    }, {
-      key: '4',
-      id: '24234022342322324234567',
-      name: '7777',
-      createdTime: '2017-12-28 00:00:00'
-    }];
+    console.log("chuancan",this.props);
+    const { data, loading } = this.props;
     const columns = [
       {
         title: '角色ID',
@@ -54,9 +33,6 @@ class StandardTable extends PureComponent {
       {
         title: '创建时间',
         dataIndex: 'createdTime',
-        // sorter: true,
-        // align: 'right',
-        // render: val => `${val} 万`,
         render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
       },
       {
@@ -65,9 +41,7 @@ class StandardTable extends PureComponent {
           <div>
             <a href="">编辑</a>
             <Divider type="vertical" />
-            <Popconfirm title="是否要配置此角色？" onConfirm={() => this.remove()}>
-              <a>配置</a>
-            </Popconfirm>
+            <a>配置</a>
           </div>
         ),
       },
@@ -75,14 +49,14 @@ class StandardTable extends PureComponent {
     const paginationProps = {
       showSizeChanger: true,
       showQuickJumper: true,
-      ...pagination,
+      //pagination:data.pagination,
     };
     return (
       <div className={styles.standardTable}>
         <Table
           loading={loading}
-          rowKey={record => record.key}
-          dataSource={TableList}
+          rowKey={record => record.id}
+          dataSource={data}
           columns={columns}
           pagination={paginationProps}
           onChange={this.handleTableChange}

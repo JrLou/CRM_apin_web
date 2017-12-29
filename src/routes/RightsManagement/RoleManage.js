@@ -31,16 +31,22 @@ export default class TableList extends PureComponent {
     expandForm: false,
     selectedRows: [],
     formValues: {},
-    page:{
-      p:1,
-      pc:10
-    }
+    page: {
+      currentPage: 1,
+      pageSize: 5
+    },
+    options: [],
   };
 
   componentDidMount() {
-   this.getList();
+    this.getList();
   }
-  getList(){
+
+  componentWillMount() {
+
+  }
+
+  getList() {
     const values = this.props.form.getFieldsValue();
     for (let item in values) {
       if (values[item] === undefined) {
@@ -48,7 +54,7 @@ export default class TableList extends PureComponent {
       }
     }
     this.setState({
-      formValues:values,
+      formValues: values,
     });
     let {page}=this.state;
     let params = Object.assign(page, values);
@@ -57,6 +63,17 @@ export default class TableList extends PureComponent {
       payload: params,
     });
   }
+
+  //getOption() {
+  //  let {roleManageList}=this.props, options = [<Option key={"请选择"} value=''>请选择</Option>];
+  //  console.log("数据", roleManageList);
+  //  roleManageList.data.list.map((v, k) => {
+  //    console.log("u+++++++++++++", v);
+  //    options.push(<Option key={v.id} value={v.id}>{v.name}</Option>)
+  //  });
+  //  this.setState({options: options})
+  //}
+
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const {dispatch} = this.props;
     const {formValues} = this.state;
@@ -89,55 +106,11 @@ export default class TableList extends PureComponent {
       payload: {},
     });
   };
-  // handleMenuClick = (e) => {
-  //   const {dispatch} = this.props;
-  //   const {selectedRows} = this.state;
-  //   if (!selectedRows) return;
-  //   switch (e.key) {
-  //     case 'remove':
-  //       dispatch({
-  //         type: 'rule/remove',
-  //         payload: {
-  //           no: selectedRows.map(row => row.no).join(','),
-  //         },
-  //         callback: () => {
-  //           this.setState({
-  //             selectedRows: [],
-  //           });
-  //         },
-  //       });
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // }
   handleSelectRows = (rows) => {
     this.setState({
       selectedRows: rows,
     });
   }
-
-  handleSearch = (e) => {
-    e.preventDefault();
-
-    const {dispatch, form} = this.props;
-
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      const values = {
-        ...fieldsValue,
-        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
-      };
-      this.setState({
-        formValues: values,
-      });
-      dispatch({
-        type: 'roleManageList/fetch',
-        payload: values,
-      });
-    });
-  }
-
   handleModalVisible = (flag) => {
     this.setState({
       modalVisible: !!flag,
@@ -149,65 +122,48 @@ export default class TableList extends PureComponent {
       addInputValue: e.target.value,
     });
   }
-
-  // handleAdd = () => {
-  //   this.props.dispatch({
-  //     type: 'rule/add',
-  //     payload: {
-  //       description: this.state.addInputValue,
-  //     },
-  //   });
-  //
-  //   message.success('添加成功');
-  //   this.setState({
-  //     modalVisible: false,
-  //   });
-  // }
-
-  renderSimpleForm() {
-    const {getFieldDecorator} = this.props.form;
-    return (
-      <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{md: 8, lg: 24, xl: 48}}>
-          <Col md={8} sm={24}>
-            <FormItem label="角色ID">
-              {getFieldDecorator('id')(
-                <Input placeholder="请输入"/>
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="角色名称">
-              {getFieldDecorator('name')(
-                <Select placeholder="请选择" style={{width: '100%'}}>
-                  <Option value="0">关闭</Option>
-                  <Option value="1">运行中</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <span className={styles.submitButtons}>
-              <Button type="primary" htmlType="submit">查询</Button>
-              <Button style={{marginLeft: 8}} onClick={this.handleFormReset}>重置</Button>
-            </span>
-          </Col>
-        </Row>
-      </Form>
-    );
-  }
-
   render() {
-    console.log("props_______________",this.props);
-    const {roleManageList: {loading: ruleLoading, data}} = this.props;
-    const {selectedRows, modalVisible, addInputValue} = this.state;
-
+    console.log("props_______________", this.props);
+    let {getFieldDecorator} = this.props.form;
+    let {roleManageList}=this.props;
+    let {selectedRows, modalVisible, addInputValue} = this.state;
+    console.log("xuanze", this.state.options);
     return (
       <PageHeaderLayout>
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>
-              {this.renderSimpleForm()}
+              <Form onSubmit={::this.getList} layout="inline">
+                <Row gutter={{md: 8, lg: 24, xl: 48}}>
+                  <Col md={8} sm={24}>
+                    <FormItem label="角色ID">
+                      {getFieldDecorator('id')(
+                        <Input placeholder="请输入"/>
+                      )}
+                    </FormItem>
+                  </Col>
+                  <Col md={8} sm={24}>
+                    <FormItem label="角色名称">
+                      {getFieldDecorator('name')(
+                        <Select placeholder="请选择" style={{width: '100%'}}>
+                          {roleManageList.data?
+                            roleManageList.data.map((v, k) => {
+                              console.log("u+++++++++++++", v);
+                              options.push(<Option key={v.id} value={v.id}>{v.name}</Option>)
+                            }):null
+                          }
+                        </Select>
+                      )}
+                    </FormItem>
+                  </Col>
+                  <Col md={8} sm={24}>
+            <span className={styles.submitButtons}>
+              <Button type="primary" htmlType="submit">查询</Button>
+              <Button style={{marginLeft: 8}} onClick={this.handleFormReset}>重置</Button>
+            </span>
+                  </Col>
+                </Row>
+              </Form>
             </div>
             <div className={styles.tableListOperator}>
               <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
@@ -216,8 +172,8 @@ export default class TableList extends PureComponent {
             </div>
             <StandardTable
               selectedRows={selectedRows}
-              loading={ruleLoading}
-              data={data}
+              loading={roleManageList.loading}
+              data={roleManageList.list}
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
             />

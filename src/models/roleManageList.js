@@ -2,15 +2,14 @@ import { roleManageList } from '../services/api';
 
 export default {
   namespace: 'roleManageList',
-
   state: {
-    data: {
-      list: [],
-      pagination: {},
-    },
+    //data: {
+    //  list: [],
+    //  pagination: {},
+    //},
+    list:[],
     loading: true,
   },
-
   effects: {
     *fetch({ payload }, { call, put }) {
       yield put({
@@ -20,7 +19,7 @@ export default {
       const response = yield call(roleManageList, payload);
       yield put({
         type: 'save',
-        payload: response,
+        payload: response.data,
       });
       yield put({
         type: 'changeLoading',
@@ -67,7 +66,7 @@ export default {
     save(state, action) {
       return {
         ...state,
-        data: action.payload,
+        list: action.payload,
       };
     },
     changeLoading(state, action) {
