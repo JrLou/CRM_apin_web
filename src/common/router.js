@@ -128,9 +128,7 @@ export const getRouterData = (app) => {
     '/RightsManagement/RoleManage': {
       component: dynamicWrapper(app, ['roleManageList'], () => import('../routes/RightsManagement/RoleManage')),
     },
-    '/RightsManagement/EditRole': {
-      component: dynamicWrapper(app, ['role'], () => import('../routes/RightsManagement/EditRole')),
-    },
+    
     // '/user/:id': {
     //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),
     // },
