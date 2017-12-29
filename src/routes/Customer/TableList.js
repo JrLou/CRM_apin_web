@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+<<<<<<< HEAD
 import { connect } from 'dva';
 import { Row, Col, Card, Form, Input, Select, Icon, Button, Dropdown, Menu, InputNumber, DatePicker, Modal, message } from 'antd';
 import StandardTable from '../../components/StandardTable';
@@ -326,3 +327,82 @@ export default class TableList extends PureComponent {
     );
   }
 }
+=======
+import moment from 'moment';
+import { Table, Divider } from 'antd';
+import ImageWrapper from '../../components/ImageWrapper';
+import styles from './UserList.less';
+class StandardTable extends PureComponent {
+  state = {
+    selectedRowKeys: [],
+    totalCallNo: 0,
+  };
+  componentWillReceiveProps(nextProps) {
+    // clean state
+    if (nextProps.selectedRows.length === 0) {
+      this.setState({
+        selectedRowKeys: [],
+        totalCallNo: 0,
+      });
+    }
+  }
+  handleTableChange = (pagination, filters, sorter) => {
+    this.props.onChange(pagination, filters, sorter);
+  };
+  render() {
+    const { data: { list, pagination }, loading } = this.props;
+    const columns = [
+      {
+        title: 'ID',
+        dataIndex: 'id',
+      },
+      {
+        title: '微信昵称',
+        dataIndex: 'wechatName',
+      },
+      {
+        title: '头像',
+        render:(text, record, index) => {
+          // 生成复杂数据的渲染函数，参数分别为当前行的值，当前行数据，行索引，@return里面可以设置表格行/列合并
+          if (!record.img_url) {
+              return <ImageWrapper className={styles.picTable} src="https://os.alipayobjects.com/rmsportal/mgesTPFxodmIwpi.png" desc="示意图"/>
+          } else {
+              return <span>无</span>
+          }
+        }
+      },
+      {
+        title: '绑定手机号',
+        dataIndex: 'iphone',
+      },
+      {
+        title: '注册时间',
+        dataIndex: 'registerTime',
+      },
+      {
+        title: '最近登录时间',
+        dataIndex: 'loginTime',
+      },
+    ];
+    const paginationProps = {
+      showSizeChanger: true,
+      showQuickJumper: true,
+      ...pagination,
+    };
+    return (
+      <div className={styles.standardTable}>
+        <Table
+          loading={loading}
+          rowKey={record => record.key}
+          dataSource={list}
+          columns={columns}
+          pagination={paginationProps}
+          onChange={this.handleTableChange}
+        />
+      </div>
+    );
+  }
+}
+
+export default StandardTable;
+>>>>>>> 037a07f7489034237cbcdfe825aa578b17011a77
