@@ -42,9 +42,23 @@ export default {
       };
     },
     saveMenus(state, { payload }) {
+      const menus = payload&&payload.data?payload.data:null
+      if(!menus){
+        return {
+          ...state,
+          menus: [],
+          menusload: true,
+        };
+      }
+     let menus_children = menus.filter(item=>!item.groupId).map((element,index,arr) => {
+          let children = menus.filter(item=>item.groupId== element.id)
+          element.children=children
+          element.path=element.url
+          return element
+      });
       return {
         ...state,
-        menus: payload&&payload.data?payload.data:[],
+        menus: menus_children,
         menusload: true,
       };
     },

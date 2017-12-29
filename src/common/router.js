@@ -53,50 +53,75 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, ['financePaymentList'], () => import('../routes/Finance/FinancePayment')),
     },
     '/finance/finance_verify': {
-      component: dynamicWrapper(app, [], () => import('../routes/Finance/FinanceVerify')),
+      component: dynamicWrapper(app, ['rule'], () => import('../routes/Finance/FinanceVerify')),
     },
-    '/form/basic-form': {
-      component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/BasicForm')),
-    },
-    '/form/step-form': {
-      component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/StepForm')),
-    },
-    '/form/step-form/confirm': {
-      component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/StepForm/Step2')),
-    },
-    '/form/step-form/result': {
-      component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/StepForm/Step3')),
-    },
-    '/form/advanced-form': {
-      component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/AdvancedForm')),
-    },
-    '/list/table-list': {
-      component: dynamicWrapper(app, ['rule'], () => import('../routes/List/TableList')),
-    },
-    '/list/basic-list': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/List/BasicList')),
-    },
-    '/list/card-list': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/List/CardList')),
-    },
-    '/list/search': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/List/List')),
-    },
-    '/list/search/projects': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/List/Projects')),
-    },
-    '/list/search/applications': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/List/Applications')),
-    },
-    '/list/search/articles': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/List/Articles')),
-    },
-    '/profile/basic': {
-      component: dynamicWrapper(app, ['profile'], () => import('../routes/Profile/BasicProfile')),
-    },
-    '/profile/advanced': {
-      component: dynamicWrapper(app, ['profile'], () => import('../routes/Profile/AdvancedProfile')),
-    },
+      '/customer/userList':{
+        component: dynamicWrapper(app, ['rule'], () => import('../routes/Customer/TableList.js')),
+      },
+      '/supplier/supplierList':{
+        component: dynamicWrapper(app, ['rule'], () => import('../routes/Supplier/TableList.js')),
+      },
+      '/fightgroups/demand':{
+        component: dynamicWrapper(app, ['rule'], () => import('../routes/Fightgroups/Demand.js')),
+      },
+      '/fightgroups/list':{
+        component: dynamicWrapper(app, ['rule'], () => import('../routes/Fightgroups/List.js')),
+      },
+      '/order/flyingpig':{
+        component: dynamicWrapper(app, ['rule'], () => import('../routes/Order/Flyingpig.js')),
+      },
+      '/order/entrust':{
+        component: dynamicWrapper(app, ['rule'], () => import('../routes/Order/Entrust.js')),
+      },
+      '/order/refund':{
+        component: dynamicWrapper(app, ['rule'], () => import('../routes/Order/Refund.js')),
+      },
+      '/operations/banner':{
+        component: dynamicWrapper(app, ['rule'], () => import('../routes/Operations/Banner.js')),
+      },
+
+    // '/form/basic-form': {
+    //   component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/BasicForm')),
+    // },
+    // '/form/step-form': {
+    //   component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/StepForm')),
+    // },
+    // '/form/step-form/confirm': {
+    //   component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/StepForm/Step2')),
+    // },
+    // '/form/step-form/result': {
+    //   component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/StepForm/Step3')),
+    // },
+    // '/form/advanced-form': {
+    //   component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/AdvancedForm')),
+    // },
+    // '/list/table-list': {
+    //   component: dynamicWrapper(app, ['rule'], () => import('../routes/List/TableList')),
+    // },
+    // '/list/basic-list': {
+    //   component: dynamicWrapper(app, ['list'], () => import('../routes/List/BasicList')),
+    // },
+    // '/list/card-list': {
+    //   component: dynamicWrapper(app, ['list'], () => import('../routes/List/CardList')),
+    // },
+    // '/list/search': {
+    //   component: dynamicWrapper(app, ['list'], () => import('../routes/List/List')),
+    // },
+    // '/list/search/projects': {
+    //   component: dynamicWrapper(app, ['list'], () => import('../routes/List/Projects')),
+    // },
+    // '/list/search/applications': {
+    //   component: dynamicWrapper(app, ['list'], () => import('../routes/List/Applications')),
+    // },
+    // '/list/search/articles': {
+    //   component: dynamicWrapper(app, ['list'], () => import('../routes/List/Articles')),
+    // },
+    // '/profile/basic': {
+    //   component: dynamicWrapper(app, ['profile'], () => import('../routes/Profile/BasicProfile')),
+    // },
+    // '/profile/advanced': {
+    //   component: dynamicWrapper(app, ['profile'], () => import('../routes/Profile/AdvancedProfile')),
+    // },
     // '/result/success': {
     //   component: dynamicWrapper(app, [], () => import('../routes/Result/Success')),
     // },
@@ -118,17 +143,17 @@ export const getRouterData = (app) => {
     '/user/login': {
       component: dynamicWrapper(app, ['login'], () => import('../routes/User/Login')),
     },
-    '/user/register': {
-      component: dynamicWrapper(app, ['register'], () => import('../routes/User/Register')),
-    },
-    '/user/register-result': {
-      component: dynamicWrapper(app, [], () => import('../routes/User/RegisterResult')),
-    },
+    // '/user/register': {
+    //   component: dynamicWrapper(app, ['register'], () => import('../routes/User/Register')),
+    // },
+    // '/user/register-result': {
+    //   component: dynamicWrapper(app, [], () => import('../routes/User/RegisterResult')),
+    // },
     //刘园园  权限管理
     '/RightsManagement/RoleManage': {
       component: dynamicWrapper(app, ['roleManageList'], () => import('../routes/RightsManagement/RoleManage')),
     },
-    
+
     // '/user/:id': {
     //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),
     // },

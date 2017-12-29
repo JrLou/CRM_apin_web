@@ -1,7 +1,7 @@
 const menuData = [{
   name: '客户管理',
   icon: 'idcard',
-  path: 'Customer',
+  path: 'customer',
   children: [{
     name: '用户列表',
     path: 'customer/userList',
@@ -17,13 +17,13 @@ const menuData = [{
 }, {
   name: '拼团管理',
   icon: 'usergroup-add',
-  path: 'list',
+  path: 'fightgroups',
   children: [{
     name: '需求池',
-    path: 'list/card-list',
+    path: 'fightgroups/demand',
   }, {
     name: '拼团列表',
-    path: 'list/basic-list',
+    path: 'fightgroups/list',
   }],
 }, {
   name: '订单管理',
@@ -31,13 +31,13 @@ const menuData = [{
   path: 'order',
   children: [{
     name: '飞猪/代销订单',
-    path: 'order/confirm',
+    path: 'order/flyingpig',
   }, {
     name: '委托订单',
-    path: 'order/list',
+    path: 'order/entrust',
   }, {
     name: '退款列表',
-    path: 'order/list',
+    path: 'order/refund',
   }],
 }, {
   name: '运营管理',

@@ -20,7 +20,7 @@ export default ({ component: Component, ...rest }) => {
       const Auth =this.props.menus.some(item=> item&&item.path&&item.path==rest.path
       )
       return  <Route {...rest} render={props => (
-            !Auth ? (
+            !null ? (
           <Component {...props}/>
         ) : <NotAuth/>
       )}/>
