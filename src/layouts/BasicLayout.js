@@ -63,6 +63,7 @@ class BasicLayout extends React.PureComponent {
   }
   getChildContext() {
     const { location, routerData } = this.props;
+    console.log(routerData)
     return {
       location,
       breadcrumbNameMap: routerData,
@@ -81,6 +82,8 @@ class BasicLayout extends React.PureComponent {
     const {
       currentUser, collapsed, fetchingNotices, notices, routerData, match, location, dispatch,
     } = this.props;
+
+
     const redirectData = [];
     const getRedirect = (item) => {
       if (item && item.children) {
@@ -96,6 +99,7 @@ class BasicLayout extends React.PureComponent {
       }
     };
     getMenuData().forEach(getRedirect); //把一级栏目 重定向首个子栏目·
+    // console.log(this.props.menus)
     const layout = (
       <Layout>
         <SiderMenu
@@ -107,8 +111,6 @@ class BasicLayout extends React.PureComponent {
         <Layout>
           <GlobalHeader
             currentUser={currentUser}
-            fetchingNotices={fetchingNotices}
-            notices={notices}
             collapsed={collapsed}
             dispatch={dispatch}
           />
@@ -159,6 +161,5 @@ class BasicLayout extends React.PureComponent {
 export default connect(state => ({
   currentUser: state.user.currentUser,
   collapsed: state.global.collapsed,
-  fetchingNotices: state.global.fetchingNotices,
-  notices: state.global.notices,
+  menus:state.global.menus
 }))(BasicLayout);

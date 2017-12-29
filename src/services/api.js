@@ -69,8 +69,8 @@ export async function AccountLogin(params) {
   }
 }
 
-export async function queryNotices() {
-  return request('/api/notices');
+export async function queryMenus() {
+  return request('/crm/uc/authapi/v1.1/modules');
 }
 //刘园园权限管理
 export async function roleManageList(params) {

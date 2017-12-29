@@ -1,41 +1,37 @@
-import { queryNotices } from '../services/api';
+import { queryMenus } from '../services/api';
 
 export default {
   namespace: 'global',
 
   state: {
     collapsed: false,
-    notices: [],
-    fetchingNotices: false,
+    menusload:false,
+    menus:[],
   },
 
   effects: {
-    *fetchNotices(_, { call, put }) {
+    *fetchMenus(_, { call, put }) {
       yield put({
-        type: 'changeNoticeLoading',
+        type: 'changeMenusLoading',
         payload: true,
       });
-      const data = yield call(queryNotices);
+      const data = yield call(queryMenus);
       yield put({
-        type: 'saveNotices',
+        type: 'saveMenus',
         payload: data,
       });
-      yield put({
-        type: 'user/changeNotifyCount',
-        payload: data.length,
-      });
     },
-    *clearNotices({ payload }, { put, select }) {
-      yield put({
-        type: 'saveClearedNotices',
-        payload,
-      });
-      const count = yield select(state => state.global.notices.length);
-      yield put({
-        type: 'user/changeNotifyCount',
-        payload: count,
-      });
-    },
+    // *clearNotices({ payload }, { put, select }) {
+    //   yield put({
+    //     type: 'saveClearedNotices',
+    //     payload,
+    //   });
+    //   const count = yield select(state => state.global.notices.length);
+    //   yield put({
+    //     type: 'user/changeNotifyCount',
+    //     payload: count,
+    //   });
+    // },
   },
 
   reducers: {
@@ -45,23 +41,23 @@ export default {
         collapsed: payload,
       };
     },
-    saveNotices(state, { payload }) {
+    saveMenus(state, { payload }) {
       return {
         ...state,
-        notices: payload,
-        fetchingNotices: false,
+        menus: payload&&payload.data?payload.data:[],
+        menusload: true,
       };
     },
-    saveClearedNotices(state, { payload }) {
+    // saveClearedNotices(state, { payload }) {
+    //   return {
+    //     ...state,
+    //     notices: state.notices.filter(item => item.type !== payload),
+    //   };
+    // },
+    changeMenusLoading(state, { payload }) {
       return {
         ...state,
-        notices: state.notices.filter(item => item.type !== payload),
-      };
-    },
-    changeNoticeLoading(state, { payload }) {
-      return {
-        ...state,
-        fetchingNotices: payload,
+        menusload: true,
       };
     },
   },
