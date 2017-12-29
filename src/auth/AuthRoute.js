@@ -17,11 +17,10 @@ export default ({ component: Component, ...rest }) => {
     //   });
     // }
     render() {
-      const Auth =this.props.menus.some(item=>{
-        item ==rest
-      })
+      const Auth =this.props.menus.some(item=> item&&item.path&&item.path==rest.path
+      )
       return  <Route {...rest} render={props => (
-            !null ? (
+            !Auth ? (
           <Component {...props}/>
         ) : <NotAuth/>
       )}/>
