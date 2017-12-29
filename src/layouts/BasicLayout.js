@@ -12,7 +12,7 @@ import SiderMenu from '../components/SiderMenu';
 import NotFound from '../routes/Exception/404';
 import { getRoutes } from '../utils/utils';
 import { getMenuData } from '../common/menu';
-
+import AuthRoute from '../auth/AuthRoute'
 
 /**
  * 根据菜单取得重定向地址.
@@ -124,7 +124,7 @@ class BasicLayout extends React.PureComponent {
                 }
                 {
                   getRoutes(match.path, routerData).map(item => (
-                    <Route
+                    <AuthRoute
                       key={item.key}
                       path={item.path}
                       component={item.component}

@@ -26,7 +26,6 @@ export function getTimeDistance(type) {
     } else {
       day -= 1;
     }
-
     const beginTime = now.getTime() - (day * oneDay);
 
     return [moment(beginTime), moment(beginTime + ((7 * oneDay) - 1000))];

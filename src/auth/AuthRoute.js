@@ -1,26 +1,35 @@
 import React from 'react'
 import { Spin } from 'antd';
 import { connect } from 'dva';
-export default (WrappedComponent, props) => {
-  class Loadmenu2 extends React.Component {
+import NotAuth from '../routes/Exception/403';
+import {Route} from 'dva/router'
+export default ({ component: Component, ...rest }) => {
+  class AuthRoute extends React.Component {
     // constructor(props) {
     //   super(props);
     //   // this.state = {
     //   //   load:this.props.menusload
     //   // }
     // }
-    componentDidMount() {
-      this.props.menusload||this.props.dispatch({
-        type: 'global/fetchMenus',
-      });
-    }
+    // componentDidMount() {
+    //   this.props.menusload||this.props.dispatch({
+    //     type: 'global/fetchMenus',
+    //   });
+    // }
     render() {
-      return this.props.menusload?<WrappedComponent {...props} />: <Spin size="large" style={{ width: "100%",margin: "40px 0 !important"}} />
+      const Auth =this.props.menus.some(item=>{
+        item ==rest
+      })
+      return  <Route {...rest} render={props => (
+            !null ? (
+          <Component {...props}/>
+        ) : <NotAuth/>
+      )}/>
     }
   }
   const A = connect(state => ({
-    menusload: state.global.menusload,
-  }))(Loadmenu2)
+    menus: state.global.menus,
+  }))(AuthRoute)
   return <A />
 }
 
