@@ -7,6 +7,8 @@ import { getRouterData } from './common/router';
 import CookieHelp from './utils/cookies';
 import styles from './index.less';
 import request from './utils/request';
+import Loadmenu from './auth/Loadmenu'
+// import PrivateRoute from './auth/PrivateRoute'
 dynamic.setDefaultLoadingComponent(() => {
   return <Spin size="large" className={styles.globalSpin} />;
 });
@@ -15,17 +17,18 @@ const fakeAuth = ()=>{
   return CookieHelp.getUserInfo();
 }
 //请求菜单数据
-const Loadmenu = ()=>{
-  return request('/crm/uc/authapi/v1.1/modules?');
-}
+// const Loadmenu = ()=>{
+//   return request('/crm/uc/authapi/v1.1/modules?');
+// }
 const PrivateRoute = ({ component : Component , ...rest}) => {
   return (
     <Route path={rest.path} render={
       (props) => {
         if(fakeAuth()){
-          Loadmenu()
-
-          return  <Component {...props} {...rest}/>
+          // Loadmenu().then((json)=>{
+          //     console.log(json)
+          // })
+          return Loadmenu(Component,{...props,...rest})
         }else{
           return <Redirect to={{
                     pathname: '/user/login',

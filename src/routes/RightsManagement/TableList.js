@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import moment from 'moment';
-import { Table, Divider } from 'antd';
+import { Table, Divider, Popconfirm } from 'antd';
 import styles from './RoleManage.less';
 class StandardTable extends PureComponent {
   state = {
@@ -21,6 +21,27 @@ class StandardTable extends PureComponent {
   };
   render() {
     const { data: { list, pagination }, loading } = this.props;
+    const TableList = [{
+      key: '1',
+      id: '24234022342322324234201',
+      name: '胡彦斌',
+      createdTime: '2017-12-28 00:00:00'
+    }, {
+      key: '2',
+      id: '24234022342322324234202',
+      name: '1111',
+      createdTime: '2017-12-28 00:00:00'
+    }, {
+      key: '3',
+      id: '24234022342322324234892',
+      name: '3333',
+      createdTime: '2017-12-28 00:00:00'
+    }, {
+      key: '4',
+      id: '24234022342322324234567',
+      name: '7777',
+      createdTime: '2017-12-28 00:00:00'
+    }];
     const columns = [
       {
         title: '角色ID',
@@ -44,7 +65,9 @@ class StandardTable extends PureComponent {
           <div>
             <a href="">编辑</a>
             <Divider type="vertical" />
-            <a href="">配置</a>
+            <Popconfirm title="是否要配置此角色？" onConfirm={() => this.remove()}>
+              <a>配置</a>
+            </Popconfirm>
           </div>
         ),
       },
@@ -59,7 +82,7 @@ class StandardTable extends PureComponent {
         <Table
           loading={loading}
           rowKey={record => record.key}
-          dataSource={list}
+          dataSource={TableList}
           columns={columns}
           pagination={paginationProps}
           onChange={this.handleTableChange}

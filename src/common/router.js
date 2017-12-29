@@ -49,10 +49,10 @@ export const getRouterData = (app) => {
       // hideInBreadcrumb: true,
       // name: '工作台',
     },
-    'finance/finance_payment': {
-      component: dynamicWrapper(app, [], () => import('../routes/Finance/FinancePayment')),
+    '/finance/finance_payment': {
+      component: dynamicWrapper(app, ['financePaymentList'], () => import('../routes/Finance/FinancePayment')),
     },
-    'finance/finance_verify': {
+    '/finance/finance_verify': {
       component: dynamicWrapper(app, [], () => import('../routes/Finance/FinanceVerify')),
     },
     '/form/basic-form': {
