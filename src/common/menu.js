@@ -59,6 +59,10 @@ const menuData = [{
   children: [{
     name: '用户管理',
     path: 'rightsManagement/RoleManage',
+    path: 'RoleManage',
+  },{
+    name: '编辑角色',
+    path: 'rightsManagement/editRole',
   }],
 },];
 
