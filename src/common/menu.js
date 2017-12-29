@@ -33,7 +33,7 @@ const menuData = [{
   children: [{
     name: '查询表格',
     path: 'table-list',
-    hideInMenu: true,
+    // hideInMenu: true,
   }, {
     name: '标准列表',
     path: 'basic-list',
