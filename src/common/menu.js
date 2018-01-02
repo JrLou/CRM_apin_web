@@ -47,29 +47,29 @@ const menuData = [{
     name: 'banner图片管理',
     path: 'operations/banner',
   }],
-},  {
-  name: '财务管理',
-  icon: 'table',
-  path: 'finance',
-  children: [{
-    name: '支付明细',
-    path: 'finance/finance_payment',
-  }, {
-    name: '财务转账审核',
-    path: 'finance/finance_verify',
-  }],
-}, {
-  name: '详情页',
-  icon: 'profile',
-  path: 'profile',
-  children: [{
-    name: '基础详情页',
-    path: 'profile/basic',
-  }, {
-    name: '高级详情页',
-    path: 'profile/advanced',
-  }],
-}, {
+// },  {
+//   name: '财务管理',
+//   icon: 'table',
+//   path: 'finance',
+//   children: [{
+//     name: '支付明细',
+//     path: 'finance/finance_payment',
+//   }, {
+//     name: '财务转账审核',
+//     path: 'finance/finance_verify',
+//   }],
+// }, {
+//   name: '详情页',
+//   icon: 'profile',
+//   path: 'profile',
+//   children: [{
+//     name: '基础详情页',
+//     path: 'profile/basic',
+//   }, {
+//     name: '高级详情页',
+//     path: 'profile/advanced',
+//   }],
+// }, {
   name: '权限管理',
   icon: 'setting',
   path: 'rightsManagement',

@@ -79,63 +79,72 @@ function checkStatus(response) {
 }
 
 function checkaccessToken(json,url,options){
-    // 在这鉴权token`
-    if (json.code == 413) {
-        console.log('帐号被禁止')
-        message.error('帐号被禁止!');
-        return;
+    // >=1 操作成功
+// -1 ~ -99 固定错误编码，需要特殊处理
+// {
+//     -1  系统未捕获异常
+//     -2  未登录
+//     -3  没有权限访问
+//     -4  用户被禁用
+//     -5  列表无数据
+//     -6  接口不存在
+//     -7  非法请求
+//     ......
+// }
+// -199 ~ -100  用户输入信息校验错误
+// -299 ~ -200  后端业务提交错误
+    if(json.code>=1){
+      return json
+    }else{
+      if(json.code==-1){
+        console.log('系统未捕获异常')
+        message.error('系统未捕获导常')
+      }else if(json.code == -2){
+        console.log('未登录')
+        message.error('未登录')
+      }else if(json.code == -3){
+        console.log('没有权限访问')
+        message.error('没有权限访问')
+      }else if(json.code == -4){
+        console.log('用户被禁用')
+        message.error('用户被禁用')
+      }else if(json.code == -5){
+        console.log('列表无数据')
+        message.error('列表无数据')
+      }else if(json.code == -6){
+        console.log('接口不存在')
+        message.error('接口不存在')
+      }else if(json.code == -7){
+        console.log('非法请求')
+        message.error('非法请求')
+      }
     }
-    if (json.code == 403) {
-        console.log('该功能没有权限')
-        message.error('该功能没有权限!');
-        return;
-    }
-    if (json.code == 421) {
-        console.log('凭证过期')
-        message.error('凭证过期!');
-        let old_userInfo = CookieHelp.getUserInfo();
-        if(!old_userInfo){
-          return null
-        }
-      //  return  request('/crm/uc/authapi/v1.1/tokens',{
-      //     method: 'POST',
-      //     body: {
-      //       account: old_userInfo.username,
-      //       password: old_userInfo.password
-      //     },
-      //   }).then((json)=>{
 
-      //     if(json.code==200){
-      //      return request(url,options)
-      //     }else{
-      //       return "1001"
-      //     }
-      //   }
-      //   )
 
-    }
-    if (json.code == 411) {
-        console.log('token失效需要重新登陆')
-        // 如果记住密码就重新后台重新登陆下不然就指回登陆/uc/authapi/v1.1/tokens
-        let old_userInfo = CookieHelp.getUserInfo();
-        return request('/crm/uc/authapi/v1.1/tokens',{
-          method: 'POST',
-          body: {
-            account: old_userInfo.username,
-            password: old_userInfo.password
-          },
-        }).then((json)=>{
-          if(json.code==200){
-           return request(url,options)
-          }
-        }
-        )
-    }
-    if (json.code == 422) {
-        console.log('token过期需要刷新')
-        // 刷新token
-    }
-    return json
+    // if (json.code == 421) {
+    //     console.log('凭证过期')
+    //     message.error('凭证过期!');
+    //     let old_userInfo = CookieHelp.getUserInfo();
+    //     if(!old_userInfo){
+    //       return null
+    //     }
+    //   //  return  request('/crm/uc/authapi/v1.1/tokens',{
+    //   //     method: 'POST',
+    //   //     body: {
+    //   //       account: old_userInfo.username,
+    //   //       password: old_userInfo.password
+    //   //     },
+    //   //   }).then((json)=>{
+
+    //   //     if(json.code==200){
+    //   //      return request(url,options)
+    //   //     }else{
+    //   //       return "1001"
+    //   //     }
+    //   //   }
+    //   //   )
+    // }
+
 }
 /**
  * Requests a URL, returning a promise.
@@ -149,28 +158,27 @@ export default function request(url, options) {
     credentials: 'include',
   };
   const newOptions = { ...defaultOptions, ...options };
-    let a=""
-    try{
-      a=CookieHelp.getUserInfo().accessToken
-      newOptions.headers = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json; charset=utf-8',
-        'Authorization':a,
-        ...newOptions.headers,
-      };
-    }catch(e){
-      newOptions.headers = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json; charset=utf-8',
-        ...newOptions.headers,
-      };
-    }
-    newOptions.body = JSON.stringify(newOptions.body);
-
+  let a = '';
+  try {
+    a = CookieHelp.getUserInfo().accessToken;
+    newOptions.headers = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
+      'Authorization': a,
+      ...newOptions.headers,
+    };
+  } catch (e) {
+    newOptions.headers = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
+      ...newOptions.headers,
+    };
+  }
+  newOptions.body = JSON.stringify(newOptions.body);
   return fetch(url, newOptions)
     .then(checkStatus)
-    .then(response =>response.json())
-    .then(json=>checkaccessToken(json,url,options))
+    .then(response => response.json())
+    .then(json => checkaccessToken(json, url, options))
     .catch((error) => {
       if (error.code) {
         notification.error({
@@ -187,6 +195,9 @@ export default function request(url, options) {
       return error;
     });
 }
+
+
+
 // function fetchcustom(url,type,data){
 //   return new Promise(function(resolve,reject){
 //       var xhr = new XMLHttpRequest();
