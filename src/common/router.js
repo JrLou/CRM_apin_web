@@ -55,14 +55,8 @@ export const getRouterData = (app) => {
     '/finance/finance_verify': {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Finance/FinanceVerify')),
     },
-      // '/customer/userList':{
-      //   component: dynamicWrapper(app, ['rule'], () => import('../routes/Customer/TableList.js')),
-      // },
-      // '/supplier/supplierList':{
-      //   component: dynamicWrapper(app, ['rule'], () => import('../routes/Supplier/TableList.js')),
-      // },
       '/fightgroups/demand':{
-        component: dynamicWrapper(app, ['rule'], () => import('../routes/Fightgroups/Demand.js')),
+        component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/Demand.js')),
       },
       '/fightgroups/list':{
         component: dynamicWrapper(app, ['rule'], () => import('../routes/Fightgroups/List.js')),
@@ -153,10 +147,13 @@ export const getRouterData = (app) => {
     '/RightsManagement/RoleManage': {
       component: dynamicWrapper(app, ['roleManageList'], () => import('../routes/RightsManagement/RoleManage')),
     },
+    '/RightsManagement/EditRole': {
+      component: dynamicWrapper(app, ['role'], () => import('../routes/RightsManagement/EditRole')),
+    },
 
     //客户管理
     '/customer/userList': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/Customer/UserList')),
+      component: dynamicWrapper(app, ['userList'], () => import('../routes/Customer/UserList')),
     },
     //政策管理
     '/supplier/supplierList': {
