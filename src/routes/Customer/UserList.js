@@ -23,7 +23,7 @@ const RangePicker = DatePicker.RangePicker;
 const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
 
 @connect(state => ({
-  financePaymentList: state.financePaymentList,
+  userList: state.userList,
 }))
 @Form.create()
 export default class TableList extends PureComponent {
@@ -52,7 +52,7 @@ export default class TableList extends PureComponent {
     let {page}=this.state;
     let params = Object.assign(page, values);
     this.props.dispatch({
-      type: 'financePaymentList/fetch',
+      type: 'userList/fetch',
       payload: params,
     });
   }
@@ -76,7 +76,7 @@ export default class TableList extends PureComponent {
     }
 
     dispatch({
-      type: 'financePaymentList/fetch',
+      type: 'userList/fetch',
       payload: params,
     });
   };
@@ -84,7 +84,7 @@ export default class TableList extends PureComponent {
     const {form, dispatch} = this.props;
     form.resetFields();
     dispatch({
-      type: 'financePaymentList/fetch',
+      type: 'userList/fetch',
       payload: {},
     });
   };
@@ -110,7 +110,7 @@ export default class TableList extends PureComponent {
         formValues: values,
       });
       dispatch({
-        type: 'financePaymentList/fetch',
+        type: 'userList/fetch',
         payload: values,
       });
     });
@@ -148,7 +148,7 @@ export default class TableList extends PureComponent {
 
   render() {
     console.log("props_______________",this.props);
-    const {financePaymentList: {loading: ruleLoading, data}} = this.props;
+    const {userList: {loading: ruleLoading, data}} = this.props;
     const {selectedRows} = this.state;
 
     return (
