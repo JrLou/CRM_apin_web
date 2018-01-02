@@ -78,7 +78,7 @@ const menuData = [{
     path: 'rightsManagement/RoleManage',
   },{
     name: '编辑角色',
-    path: 'rightsManagement/editRole',
+    path: 'rightsManagement/EditRole',
   }],
 },];
 

@@ -42,40 +42,41 @@ class page extends PureComponent {
 
   setOwn(json) {
     // 如果是带过来id认为是编辑
-    // if (this.props.post.id) {
-    // HttpTool.get(APILXF.v2_role_ownFunctionList,
-    //     (code, msg, json, option) => {
-    //         if (code == 200) {
-    let expandedKeys = []
-    let selectedKeys = []
-    let toRemember = {}
-    // 关联2级和3级  // 勾选2级
-    json.map((v, k) => {
-      if (toRemember[v.parentId]) {
-        toRemember[v.parentId].push(v.id)
-      } else {
-        toRemember[v.parentId] = [v.id]
-      }
-      if (selectedKeys.indexOf(v.parentId) == -1) { selectedKeys.push(v.parentId) }
-    })
-    //   寻找默认打开的key
-    this.state.gData.map((v, k) => {
-      v.functionList.map((_v, _k) => {
-        // 如果2级已勾选找到一级  并且防止重复
-        if (selectedKeys.indexOf(_v.id) > -1 && expandedKeys.indexOf('parent-' + _v.groupId) == -1) {
-          expandedKeys.push('parent-' + _v.groupId)
+    if (this.props.post.id) {
+      // HttpTool.get(APILXF.v2_role_ownFunctionList,
+      //     (code, msg, json, option) => {
+      //         if (code == 200) {
+      let expandedKeys = []
+      let selectedKeys = []
+      let toRemember = {}
+      // 关联2级和3级  // 勾选2级
+      json.map((v, k) => {
+        if (toRemember[v.parentId]) {
+          toRemember[v.parentId].push(v.id)
+        } else {
+          toRemember[v.parentId] = [v.id]
         }
+        if (selectedKeys.indexOf(v.parentId) == -1) { selectedKeys.push(v.parentId) }
       })
-    })
-    this.setState({
-      checkedKeys: selectedKeys,
-      oldselectedKeys: selectedKeys,
-      selectedKeys: [],
-      expandedKeys: expandedKeys,
-      rememberSelected: toRemember
-    })
+      //   寻找默认打开的key
+      this.state.gData.map((v, k) => {
+        v.functionList.map((_v, _k) => {
+          // 如果2级已勾选找到一级  并且防止重复
+          if (selectedKeys.indexOf(_v.id) > -1 && expandedKeys.indexOf('parent-' + _v.groupId) == -1) {
+            expandedKeys.push('parent-' + _v.groupId)
+          }
+        })
+      })
+      this.setState({
+        checkedKeys: selectedKeys,
+        oldselectedKeys: selectedKeys,
+        selectedKeys: [],
+        expandedKeys: expandedKeys,
+        rememberSelected: toRemember
+      })
 
-    //         } else {
+    }
+    // else {
     //             message.warning(msg);
     //         }
 
@@ -321,7 +322,7 @@ class page extends PureComponent {
                         type: 'role/edit',
                         param
                       })
-                    }else{
+                    } else {
                       this.props.dispatch({
                         type: 'role/add',
                         param

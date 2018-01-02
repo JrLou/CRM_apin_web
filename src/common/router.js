@@ -153,6 +153,9 @@ export const getRouterData = (app) => {
     '/RightsManagement/RoleManage': {
       component: dynamicWrapper(app, ['roleManageList'], () => import('../routes/RightsManagement/RoleManage')),
     },
+    '/RightsManagement/EditRole': {
+      component: dynamicWrapper(app, ['role'], () => import('../routes/RightsManagement/EditRole')),
+    },
 
     //客户管理
     '/customer/userList': {
