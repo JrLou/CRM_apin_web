@@ -121,7 +121,7 @@ class BasicLayout extends React.PureComponent {
                 }
                 {
                   getRoutes(match.path, routerData).map(item => (
-                    <AuthRoute
+                    <Route
                       key={item.key}
                       path={item.path}
                       component={item.component}
