@@ -62,6 +62,11 @@ export async function queryFakeList(params) {
 export async function queryUserList(params) {
   return request(`/api/userList?${stringify(params)}`);
 }
+
+export async function querySupplierList(params) {
+  return request(`/api/suplierList?${stringify(params)}`);
+}
+
 export async function AccountLogin(params) {
   const newparams = Object.assign({},{account:params.account,appid:'2ef8d902c12f454f9acdbb0484f8c05a'})
   const response = await request(`/crm/uc/authapi/v1.1/tokens/codes?${stringify(newparams)}`);

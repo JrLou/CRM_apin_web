@@ -1,6 +1,7 @@
 import mockjs from 'mockjs';
 import { getRule, postRule} from './mock/rule';
 import { getUserList} from './mock/userlist';
+import {getSuplierList} from './mock/supplierlist'
 import { getActivities, getNotice, getFakeList} from './mock/api';
 import { getFakeChartData } from './mock/chart';
 import { imgMap } from './mock/utils';
@@ -68,6 +69,7 @@ const proxy = {
   }),
   'GET /api/fake_list': getFakeList,
   'GET /api/userList':getUserList,
+  'GET /api/suplierList' :getSuplierList,
   'GET /api/fake_chart_data': getFakeChartData,
   'GET /api/profile/basic': getProfileBasicData,
   'GET /api/profile/advanced': getProfileAdvancedData,

@@ -2,12 +2,10 @@ import { queryFakeList } from '../services/api';
 
 export default {
   namespace: 'list',
-
   state: {
     list: [],
     loading: false,
   },
-
   effects: {
     *fetch({ payload }, { call, put }) {
       yield put({

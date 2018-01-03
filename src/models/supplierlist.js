@@ -1,4 +1,4 @@
-import { querySupplierList } from '../services/api';
+import { queryUserList } from '../services/api';
 
 export default {
   namespace: 'userList',
@@ -16,7 +16,7 @@ export default {
         type: 'changeLoading',
         payload: true,
       });
-      const response = yield call(querySupplierList, payload);
+      const response = yield call(queryUserList, payload);
       yield put({
         type: 'save',
         payload: response,
