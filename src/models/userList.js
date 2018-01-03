@@ -1,4 +1,4 @@
-import { queryFakeList } from '../services/api';
+import { queryUserList } from '../services/api';
 
 export default {
   namespace: 'userList',
@@ -17,7 +17,8 @@ export default {
         type: 'changeLoading',
         payload: true,
       });
-      const response = yield call(queryFakeList, payload);
+      const response = yield call(queryUserList, payload);
+      console.log(response,"response-------------------------")
       yield put({
         type: 'save',
         payload: response,
@@ -67,7 +68,7 @@ export default {
     save(state, action) {
       return {
         ...state,
-        data: action.payload,
+        list: action.payload,
       };
     },
     changeLoading(state, action) {
