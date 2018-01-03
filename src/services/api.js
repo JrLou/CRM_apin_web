@@ -80,6 +80,5 @@ export async function financePaymentList(params) {
 }
 //刘园园权限管理
 export async function roleManageList(params) {
-  console.log("params",params);
   return request(`/crm/cr/v2/accounts/role/list?${stringify(params)}`);
 }

@@ -114,7 +114,7 @@ export const getRouterData = (app) => {
     '/supplier/flyPigList': {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Supplier/FlyPigList')),
     },
-    '/supplier/typeIn': {
+    '/supplier/supplierList/typeIn': {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Supplier/TypeIn')),
     },
     //运营管理

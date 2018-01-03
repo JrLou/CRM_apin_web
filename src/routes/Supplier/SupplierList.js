@@ -19,7 +19,7 @@ export default class Analysis extends Component {
     return (
       <PageHeaderLayout>
         供应商资源
-        <Link to={'/supplier/typeIn'}>
+        <Link to={'/supplier/supplierList/typeIn'}>
           <Button>录入资源</Button>
         </Link>
       </PageHeaderLayout>
