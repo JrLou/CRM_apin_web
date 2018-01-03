@@ -31,7 +31,7 @@ class UserLayout extends React.PureComponent {
                 <span className={styles.title}>爱拼机</span>
               </Link>
             </div>
-            <div className={styles.desc}>爱拼机CRM登陆页面</div>
+            <div className={styles.desc}>爱拼后台运营管理系统登录页面</div>
           </div>
           <Switch>
             {
