@@ -124,14 +124,14 @@ export default class TableList extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="微信昵称:">
-              {getFieldDecorator('recordId', { initialValue: "", rules: [{ max: 30, message: '长度不能超过30' }], })
+              {getFieldDecorator('wechatName', { initialValue: "", rules: [{ max: 30, message: '长度不能超过30' }], })
                 (<Input placeholder="请输入…" />)
               }
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="手机号:">
-              {getFieldDecorator('orderNo', { initialValue: "", rules: [{ max: 30, message: '长度不能超过30' }], })
+              {getFieldDecorator('iphone', { initialValue: "", rules: [{ max: 30, message: '长度不能超过30' }], })
                 (<Input placeholder="请输入…" />)
               }
             </FormItem>
@@ -150,6 +150,7 @@ export default class TableList extends PureComponent {
   render() {
     const { userList: { loading: ruleLoading, data } } = this.props;
     console.log(this.props.userList,"-------------------------userList")
+    console.log(data,"-------------------------data")
     const { selectedRows } = this.state;
 
     return (

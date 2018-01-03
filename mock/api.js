@@ -104,9 +104,9 @@ export function fakeList(count) {
   return list;
 }
 function UserList(count) {
-  const data = [];
+  const list = [];
   for (let i = 0; i < count; i += 1) {
-    data.push({
+    list.push({
       id: `fake-list-${i}`,
       owner: user[i % 10],
       title: titles[i % 8],
@@ -143,7 +143,7 @@ function UserList(count) {
     });
   }
 
-  return data;
+  return list;
 }
 export function getUserList(req, res, u) {
   let url = u;

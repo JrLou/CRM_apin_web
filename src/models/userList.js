@@ -18,7 +18,7 @@ export default {
         payload: true,
       });
       const response = yield call(queryUserList, payload);
-      console.log(response,"response-------------------------")
+      console.log(response, "response-------------------------")
       yield put({
         type: 'save',
         payload: response,
@@ -68,7 +68,7 @@ export default {
     save(state, action) {
       return {
         ...state,
-        list: action.payload,
+        data:action.payload,
       };
     },
     changeLoading(state, action) {
