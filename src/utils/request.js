@@ -178,7 +178,7 @@ export default function request(url, options) {
   return fetch(url, newOptions)
     .then(checkStatus)
     .then(response => response.json())
-    .then(json => checkaccessToken(json, url, options))
+    // .then(json => checkaccessToken(json, url, options))
     .catch((error) => {
       if (error.code) {
         notification.error({
