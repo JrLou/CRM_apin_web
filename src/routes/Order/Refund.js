@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
+import { routerRedux } from 'dva/router';
 import { Row, Col, Card, Form, Input, Select, Icon, Button, Dropdown, Menu, InputNumber, DatePicker, Modal, message } from 'antd';
 import StandardTable from '../../components/StandardTable';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
-
 import styles from './TableList.less';
 
 const FormItem = Form.Item;
@@ -187,7 +187,9 @@ export default class TableList extends PureComponent {
       </Form>
     );
   }
-
+  handlePush =()=>{
+    this.props.dispatch(routerRedux.push('/order/entrust/232023'));
+  }
   renderAdvancedForm() {
     const { getFieldDecorator } = this.props.form;
     return (
@@ -285,6 +287,9 @@ export default class TableList extends PureComponent {
             <div className={styles.tableListOperator}>
               <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
                 新建
+              </Button>
+              <Button icon="plus" type="primary" onClick={() => this.handlePush()}>
+                跳转下级
               </Button>
               {
                 selectedRows.length > 0 && (

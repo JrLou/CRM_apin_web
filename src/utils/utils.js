@@ -120,8 +120,9 @@ export function getRoutes(path, routerData) {
       renderArr.push(routes[i]);
     }
   }
-  const renderRoutes = renderArr.map((item) => {
-    const exact = !routes.some(route => route !== item && getRelation(route, item) === 1);
+  const renderRoutes = routes.map((item) => {
+    // const exact = routes.some(route => route !== item && getRelation(route, item) === 1);
+    const exact = true;
     return {
       key: `${path}${item}`,
       path: `${path}${item}`,
@@ -129,5 +130,6 @@ export function getRoutes(path, routerData) {
       exact,
     };
   });
+  console.log(renderRoutes)
   return renderRoutes;
 }

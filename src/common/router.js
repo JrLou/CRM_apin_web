@@ -35,90 +35,30 @@ export const getRouterData = (app) => {
     '/': {
       component: dynamicWrapper(app, ['user', 'login'], () => import('../layouts/BasicLayout')),
     },
-    // '/order/ticket': {
-    //   component: dynamicWrapper(app, ['chart'], () => import('../routes/Order/Ticket')),
-    // },
-    // '/order/view': {
-    //   component: dynamicWrapper(app, ['chart'], () => import('../routes/Order/View')),
-    // },
-    // '/order/confirm': {
-    //   component: dynamicWrapper(app, ['monitor'], () => import('../routes/Order/Confirm')),
-    // },
-    // '/order/list': {
-    //   component: dynamicWrapper(app, ['project', 'activities', 'chart'], () => import('../routes/Order/List')),
-    //   // hideInBreadcrumb: true,
-    //   // name: '工作台',
-    // },
     '/finance/finance_payment': {
       component: dynamicWrapper(app, ['financePaymentList'], () => import('../routes/Finance/FinancePayment')),
     },
     '/finance/finance_verify': {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Finance/FinanceVerify')),
     },
-      '/fightgroups/demand':{
-        component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/Demand.js')),
-      },
-      '/fightgroups/list':{
-        component: dynamicWrapper(app, ['rule'], () => import('../routes/Fightgroups/List.js')),
-      },
-      '/order/flyingpig':{
-        component: dynamicWrapper(app, ['rule'], () => import('../routes/Order/Flyingpig.js')),
-      },
-      '/order/entrust':{
-        component: dynamicWrapper(app, ['rule'], () => import('../routes/Order/Entrust.js')),
-      },
-      '/order/refund':{
-        component: dynamicWrapper(app, ['rule'], () => import('../routes/Order/Refund.js')),
-      },
-
-    // '/form/basic-form': {
-    //   component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/BasicForm')),
-    // },
-    // '/form/step-form': {
-    //   component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/StepForm')),
-    // },
-    // '/form/step-form/confirm': {
-    //   component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/StepForm/Step2')),
-    // },
-    // '/form/step-form/result': {
-    //   component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/StepForm/Step3')),
-    // },
-    // '/form/advanced-form': {
-    //   component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/AdvancedForm')),
-    // },
-    // '/list/table-list': {
-    //   component: dynamicWrapper(app, ['rule'], () => import('../routes/List/TableList')),
-    // },
-    // '/list/basic-list': {
-    //   component: dynamicWrapper(app, ['list'], () => import('../routes/List/BasicList')),
-    // },
-    // '/list/card-list': {
-    //   component: dynamicWrapper(app, ['list'], () => import('../routes/List/CardList')),
-    // },
-    // '/list/search': {
-    //   component: dynamicWrapper(app, ['list'], () => import('../routes/List/List')),
-    // },
-    // '/list/search/projects': {
-    //   component: dynamicWrapper(app, ['list'], () => import('../routes/List/Projects')),
-    // },
-    // '/list/search/applications': {
-    //   component: dynamicWrapper(app, ['list'], () => import('../routes/List/Applications')),
-    // },
-    // '/list/search/articles': {
-    //   component: dynamicWrapper(app, ['list'], () => import('../routes/List/Articles')),
-    // },
-    // '/profile/basic': {
-    //   component: dynamicWrapper(app, ['profile'], () => import('../routes/Profile/BasicProfile')),
-    // },
-    // '/profile/advanced': {
-    //   component: dynamicWrapper(app, ['profile'], () => import('../routes/Profile/AdvancedProfile')),
-    // },
-    // '/result/success': {
-    //   component: dynamicWrapper(app, [], () => import('../routes/Result/Success')),
-    // },
-    // '/result/fail': {
-    //   component: dynamicWrapper(app, [], () => import('../routes/Result/Error')),
-    // },
+    '/fightgroups/demand': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/Demand.js')),
+    },
+    '/fightgroups/list': {
+      component: dynamicWrapper(app, ['rule'], () => import('../routes/Fightgroups/List.js')),
+    },
+    '/order/flyingpig': {
+      component: dynamicWrapper(app, ['rule'], () => import('../routes/Order/Flyingpig.js')),
+    },
+    '/order/entrust': {
+      component: dynamicWrapper(app, ['rule'], () => import('../routes/Order/Entrust.js')),
+    },
+    '/order/entrust/:id': {
+      component: dynamicWrapper(app, ['rule'], () => import('../routes/Exception/500')),
+    },
+    '/order/refund': {
+      component: dynamicWrapper(app, ['rule'], () => import('../routes/Order/Refund.js')),
+    },
     '/exception/403': {
       component: dynamicWrapper(app, [], () => import('../routes/Exception/403')),
     },
