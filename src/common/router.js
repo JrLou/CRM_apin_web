@@ -70,9 +70,6 @@ export const getRouterData = (app) => {
       '/order/refund':{
         component: dynamicWrapper(app, ['rule'], () => import('../routes/Order/Refund.js')),
       },
-      // '/operations/banner':{
-      //   component: dynamicWrapper(app, ['rule'], () => import('../routes/Operations/Banner.js')),
-      // },
 
     // '/form/basic-form': {
     //   component: dynamicWrapper(app, ['form'], () => import('../routes/Forms/BasicForm')),
@@ -157,11 +154,14 @@ export const getRouterData = (app) => {
     },
     //政策管理
     '/supplier/supplierList': {
-      component: dynamicWrapper(app, [], () => import('../routes/Supplier/SupplierList')),
+      component: dynamicWrapper(app, ['rule'], () => import('../routes/Supplier/SupplierList')),
+    },
+    '/supplier/flyPigList': {
+      component: dynamicWrapper(app, ['rule'], () => import('../routes/Supplier/FlyPigList')),
     },
     //运营管理
     '/Operations/Banner': {
-      component: dynamicWrapper(app, [], () => import('../routes/Operations/Banner')),
+      component: dynamicWrapper(app, ['from'], () => import('../routes/Operations/Banner')),
     },
     // '/user/:id': {
     //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),

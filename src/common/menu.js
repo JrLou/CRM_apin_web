@@ -13,6 +13,9 @@ const menuData = [{
   children: [{
     name: '供应商资源',
     path: 'supplier/supplierList',
+  },{
+    name: '飞猪资源',
+    path: 'supplier/flyPigList',
   }],
 }, {
   name: '拼团管理',
@@ -47,7 +50,8 @@ const menuData = [{
     name: 'banner图片管理',
     path: 'operations/banner',
   }],
-// },  {
+},
+// {
 //   name: '财务管理',
 //   icon: 'table',
 //   path: 'finance',
@@ -70,17 +74,18 @@ const menuData = [{
 //     path: 'profile/advanced',
 //   }],
 // }, {
-  name: '权限管理',
-  icon: 'setting',
-  path: 'rightsManagement',
-  children: [{
-    name: '用户管理',
-    path: 'rightsManagement/RoleManage',
-  },{
-    name: '编辑角色',
-    path: 'rightsManagement/EditRole',
-  }],
-},];
+//   name: '权限管理',
+//   icon: 'setting',
+//   path: 'rightsManagement',
+//   children: [{
+//     name: '用户管理',
+//     path: 'rightsManagement/RoleManage',
+//   },{
+//     name: '编辑角色',
+//     path: 'rightsManagement/EditRole',
+//   }],
+// },
+];
 
 // function formatter(data, parentPath = '') {
 //   const list = [];
