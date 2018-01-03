@@ -19,7 +19,6 @@ class StandardTable extends PureComponent {
     this.props.onChange(pagination, filters, sorter);
   };
   render() {
-    console.log("chuancan",this.props);
     const { data, loading } = this.props;
     const columns = [
       {

@@ -123,11 +123,9 @@ export default class TableList extends PureComponent {
     });
   }
   render() {
-    console.log("props_______________", this.props);
     let {getFieldDecorator} = this.props.form;
     let {roleManageList}=this.props;
     let {selectedRows, modalVisible, addInputValue} = this.state;
-    console.log("xuanze", this.state.options);
     return (
       <PageHeaderLayout>
         <Card bordered={false}>

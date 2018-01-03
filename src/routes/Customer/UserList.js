@@ -147,7 +147,6 @@ export default class TableList extends PureComponent {
   }
 
   render() {
-    console.log("props_______________",this.props);
     const {userList: {loading: ruleLoading, data}} = this.props;
     const {selectedRows} = this.state;
 
