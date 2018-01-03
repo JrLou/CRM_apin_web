@@ -63,7 +63,6 @@ class BasicLayout extends React.PureComponent {
   }
   getChildContext() {
     const { location, routerData } = this.props;
-    console.log(routerData)
     return {
       location,
       breadcrumbNameMap: routerData,
@@ -82,8 +81,6 @@ class BasicLayout extends React.PureComponent {
     const {
       currentUser, collapsed, fetchingNotices, notices, routerData, match, location, dispatch,
     } = this.props;
-
-
     const redirectData = [];
     const getRedirect = (item) => {
       if (item && item.children) {
