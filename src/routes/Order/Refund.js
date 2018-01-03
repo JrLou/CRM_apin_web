@@ -1,106 +1,44 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { routerRedux } from 'dva/router';
-import { Row, Col, Card, Form, Input, Select, Icon, Button, Dropdown, Menu, InputNumber, DatePicker, Modal, message } from 'antd';
-import StandardTable from '../../components/StandardTable';
+import { Row, Col, Card, Form, Input, Select, Button, DatePicker, Modal, Table } from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './TableList.less';
 
+const { RangePicker } = DatePicker;
 const FormItem = Form.Item;
 const { Option } = Select;
-const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
 
 @connect(state => ({
-  rule: state.rule,
+  rule: state.refund,
 }))
 @Form.create()
 export default class TableList extends PureComponent {
   state = {
-    addInputValue: '',
     modalVisible: false,
-    expandForm: false,
-    selectedRows: [],
     formValues: {},
   };
 
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/fetch',
+      type: 'refund/fetch',
     });
   }
 
-  handleStandardTableChange = (pagination, filtersArg, sorter) => {
+  handleTableChange = (pagination) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
-
-    const filters = Object.keys(filtersArg).reduce((obj, key) => {
-      const newObj = { ...obj };
-      newObj[key] = getValue(filtersArg[key]);
-      return newObj;
-    }, {});
 
     const params = {
       currentPage: pagination.current,
       pageSize: pagination.pageSize,
       ...formValues,
-      ...filters,
     };
-    if (sorter.field) {
-      params.sorter = `${sorter.field}_${sorter.order}`;
-    }
-
     dispatch({
-      type: 'rule/fetch',
+      type: 'refund/fetch',
       payload: params,
     });
-  }
-
-  handleFormReset = () => {
-    const { form, dispatch } = this.props;
-    form.resetFields();
-    dispatch({
-      type: 'rule/fetch',
-      payload: {},
-    });
-  }
-
-  toggleForm = () => {
-    this.setState({
-      expandForm: !this.state.expandForm,
-    });
-  }
-
-  handleMenuClick = (e) => {
-    const { dispatch } = this.props;
-    const { selectedRows } = this.state;
-
-    if (!selectedRows) return;
-
-    switch (e.key) {
-      case 'remove':
-        dispatch({
-          type: 'rule/remove',
-          payload: {
-            no: selectedRows.map(row => row.no).join(','),
-          },
-          callback: () => {
-            this.setState({
-              selectedRows: [],
-            });
-          },
-        });
-        break;
-      default:
-        break;
-    }
-  }
-
-  handleSelectRows = (rows) => {
-    this.setState({
-      selectedRows: rows,
-    });
-  }
+  };
 
   handleSearch = (e) => {
     e.preventDefault();
@@ -109,18 +47,14 @@ export default class TableList extends PureComponent {
 
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-
       const values = {
         ...fieldsValue,
-        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
       };
-
       this.setState({
         formValues: values,
       });
-
       dispatch({
-        type: 'rule/fetch',
+        type: 'refund/fetch',
         payload: values,
       });
     });
@@ -132,84 +66,65 @@ export default class TableList extends PureComponent {
     });
   }
 
-  handleAddInput = (e) => {
-    this.setState({
-      addInputValue: e.target.value,
-    });
-  }
-
-  handleAdd = () => {
-    this.props.dispatch({
-      type: 'rule/add',
-      payload: {
-        description: this.state.addInputValue,
-      },
-    });
-
-    message.success('添加成功');
-    this.setState({
-      modalVisible: false,
-    });
-  }
-
-  handlePush =()=>{
-    this.props.dispatch(routerRedux.push('/order/entrust/232023'));
-  }
-  renderAdvancedForm() {
+  renderForm() {
     const { getFieldDecorator } = this.props.form;
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem label="规则编号">
-              {getFieldDecorator('no')(
+        <Row gutter={{ md: 6, lg: 24, xl: 48 }}>
+          <Col md={6} sm={24}>
+            <FormItem label="退款单号">
+              {getFieldDecorator('id')(
                 <Input placeholder="请输入" />
               )}
             </FormItem>
           </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="使用状态">
-              {getFieldDecorator('status')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">关闭</Option>
-                  <Option value="1">运行中</Option>
-                </Select>
+          <Col md={6} sm={24}>
+            <FormItem label="订单号">
+              {getFieldDecorator('orderId')(
+                <Input placeholder="请输入" />
               )}
             </FormItem>
           </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="调用次数">
-              {getFieldDecorator('number')(
-                <InputNumber style={{ width: '100%' }} />
+          <Col md={6} sm={24}>
+            <FormItem label="退款状态">
+              {getFieldDecorator('status', {
+                initialValue: '',
+              })(
+                <Select placeholder="请选择" style={{ width: '100%' }}>
+                  <Option value="">全部</Option>
+                  <Option value="1">已退款</Option>
+                  <Option value="2">退款失败</Option>
+                </Select>
+                )}
+            </FormItem>
+          </Col>
+          <Col md={6} sm={24}>
+            <FormItem label="联系人">
+              {getFieldDecorator('lianxi')(
+                <Input placeholder="请输入" />
               )}
             </FormItem>
           </Col>
         </Row>
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem label="更新日期">
-              {getFieldDecorator('date')(
-                <DatePicker style={{ width: '100%' }} placeholder="请输入更新日期" />
+        <Row gutter={{ md: 6, lg: 24, xl: 48 }}>
+          <Col md={6} sm={24}>
+            <FormItem label="退款时间">
+              {getFieldDecorator('time')(
+                <RangePicker style={{ width: '100%' }} />
               )}
             </FormItem>
           </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="使用状态">
-              {getFieldDecorator('status3')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">关闭</Option>
-                  <Option value="1">运行中</Option>
-                </Select>
+          <Col md={6} sm={24}>
+            <FormItem label="供应商名称">
+              {getFieldDecorator('name')(
+                <Input placeholder="请输入" />
               )}
             </FormItem>
           </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="使用状态">
-              {getFieldDecorator('status4')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">关闭</Option>
-                  <Option value="1">运行中</Option>
-                </Select>
+          <Col md={6} sm={24}>
+            <FormItem label="联系电话">
+              {getFieldDecorator('tel')(
+                <Input placeholder="请输入" />
               )}
             </FormItem>
           </Col>
@@ -217,10 +132,6 @@ export default class TableList extends PureComponent {
         <div style={{ overflow: 'hidden' }}>
           <span style={{ float: 'right', marginBottom: 24 }}>
             <Button type="primary" htmlType="submit">查询</Button>
-            <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>重置</Button>
-            <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-              收起 <Icon type="up" />
-            </a>
           </span>
         </div>
       </Form>
@@ -228,64 +139,69 @@ export default class TableList extends PureComponent {
   }
 
   render() {
-    const { rule: { loading: ruleLoading, data } } = this.props;
-    const { selectedRows, modalVisible, addInputValue } = this.state;
+    const { rule: { loading: ruleLoading, list, total } } = this.props;
+    const { modalVisible } = this.state;
 
-    const menu = (
-      <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="remove">删除</Menu.Item>
-        <Menu.Item key="approval">批量审批</Menu.Item>
-      </Menu>
-    );
+    const columns = [{
+      title: '退款单号',
+      dataIndex: 'id',
+    }, {
+      title: '退款状态',
+      dataIndex: 'status',
+      render: (text) => {
+        switch (text) {
+          case '1':
+            return '已退款';
+          case '2':
+            return '退款失败';
+          default:
+            break;
+        }
+      },
+    }, {
+      title: '退款金额',
+      dataIndex: 'money',
+    }, {
+      title: '订单号',
+      dataIndex: 'orderId',
+    }, {
+      title: '退款时间',
+      dataIndex: 'time',
+    }, {
+      title: '操作',
+      render: () => <a onClick={() => this.handleModalVisible(true)}>查看</a>,
+    }];
 
     return (
       <PageHeaderLayout title="查询表格">
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>
-              {this.renderAdvancedForm()}
+              {this.renderForm()}
             </div>
-            <div className={styles.tableListOperator}>
-              <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
-                新建
-              </Button>
-              <Button icon="plus" type="primary" onClick={() => this.handlePush()}>
-                跳转下级
-              </Button>
-              {
-                selectedRows.length > 0 && (
-                  <span>
-                    <Button>批量操作</Button>
-                    <Dropdown overlay={menu}>
-                      <Button>
-                        更多操作 <Icon type="down" />
-                      </Button>
-                    </Dropdown>
-                  </span>
-                )
-              }
-            </div>
-            <StandardTable
-              selectedRows={selectedRows}
+
+            <Table
+              dataSource={list}
+              columns={columns}
+              pagination={{ showSizeChanger: true, showQuickJumper: true, total }}
               loading={ruleLoading}
-              data={data}
-              onSelectRow={this.handleSelectRows}
-              onChange={this.handleStandardTableChange}
+              onChange={this.handleTableChange}
+              rowKey="id"
             />
           </div>
         </Card>
         <Modal
-          title="新建规则"
+          title="退款申请"
           visible={modalVisible}
-          onOk={this.handleAdd}
           onCancel={() => this.handleModalVisible()}
+          footer={null}
         >
           <FormItem
             labelCol={{ span: 5 }}
             wrapperCol={{ span: 15 }}
             label="描述"
           >
-            <Input placeholder="请输入" onChange={this.handleAddInput} value={addInputValue} />
+            <Input placeholder="请输入" />
           </FormItem>
         </Modal>
       </PageHeaderLayout>

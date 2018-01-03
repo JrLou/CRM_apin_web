@@ -57,7 +57,7 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Exception/500')),
     },
     '/order/refund': {
-      component: dynamicWrapper(app, ['rule'], () => import('../routes/Order/Refund.js')),
+      component: dynamicWrapper(app, ['refund'], () => import('../routes/Order/Refund.js')),
     },
     '/exception/403': {
       component: dynamicWrapper(app, [], () => import('../routes/Exception/403')),
