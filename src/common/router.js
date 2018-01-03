@@ -88,21 +88,21 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, ['role'], () => import('../routes/RightsManagement/EditRole')),
     },
     // 查看需求池
-    // '/fightgroups/demand/id': {
-    //   component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/View.js')),
-    // },
+    '/fightgroups/demand/id': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/View.js')),
+    },
     //推送方案-选择订单
-    // '/fightgroups/demand/choose': {
-    //   component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/Choose.js')),
-    // },
+    '/fightgroups/demand/choose': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/Choose.js')),
+    },
     //方案推送
-    // '/fightgroups/demand/push': {
-    //   component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/Push.js')),
-    // },
+    '/fightgroups/demand/push': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/Push.js')),
+    },
     // 查看拼团
-    // '/fightgroups/demand/result': {
-    //   component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/Result.js')),
-    // },
+    '/fightgroups/demand/result': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/Result.js')),
+    },
     //客户管理
     '/customer/userList': {
       component: dynamicWrapper(app, ['userList'], () => import('../routes/Customer/UserList')),
