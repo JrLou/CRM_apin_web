@@ -124,7 +124,7 @@ export default class TableList extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="微信昵称:">
-              {getFieldDecorator('wechatName', { initialValue: "", rules: [{ max: 30, message: '长度不能超过30' }], })
+              {getFieldDecorator('no', { initialValue:"", rules: [{ max: 30, message: '长度不能超过30' }], })
                 (<Input placeholder="请输入…" />)
               }
             </FormItem>

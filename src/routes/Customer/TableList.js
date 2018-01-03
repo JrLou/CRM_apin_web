@@ -29,7 +29,7 @@ class StandardTable extends PureComponent {
       },
       {
         title: '微信昵称',
-        dataIndex: 'wechatName',
+        dataIndex: 'no',
       },
       {
         title: '头像',

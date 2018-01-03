@@ -8,7 +8,7 @@ for (let i = 0; i < 46; i += 1) {
     disabled: ((i % 6) === 0),
     href: 'https://ant.design',
     avatar: ['https://gw.alipayobjects.com/zos/rmsportal/eeHMaZBwmTvLdIwMfBpg.png', 'https://gw.alipayobjects.com/zos/rmsportal/udxAbMEhpwthVVcjLXik.png'][i % 2],
-    wechatName: '曲丽丽',
+    no: `TradeCode ${i}`,
     iphone: Math.floor(Math.random() * 1000),
     status: Math.floor(Math.random() * 10) % 4,
     loginTime: new Date(`2017-07-${Math.floor(i / 2) + 1}`),
