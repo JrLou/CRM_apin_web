@@ -87,7 +87,22 @@ export const getRouterData = (app) => {
     '/RightsManagement/EditRole': {
       component: dynamicWrapper(app, ['role'], () => import('../routes/RightsManagement/EditRole')),
     },
-
+    // 查看需求池
+    '/fightgroups/demand/id': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/View.js')),
+    },
+    //推送方案-选择订单
+    '/fightgroups/demand/choose': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/Choose.js')),
+    },
+    //方案推送
+    '/fightgroups/demand/push': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/Push.js')),
+    },
+    // 查看拼团
+    '/fightgroups/demand/result': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/Result.js')),
+    },
     //客户管理
     '/customer/userList': {
       component: dynamicWrapper(app, ['userList'], () => import('../routes/Customer/UserList')),
@@ -98,6 +113,18 @@ export const getRouterData = (app) => {
     },
     '/supplier/flyPigList': {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Supplier/FlyPigList')),
+    },
+    //录入资源
+    '/supplier/supplierList/typeIn': {
+      component: dynamicWrapper(app, ['rule'], () => import('../routes/Supplier/TypeIn')),
+    },
+    //编辑资源
+    '/supplier/supplierList/edit': {
+      component: dynamicWrapper(app, ['rule'], () => import('../routes/Supplier/Edit')),
+    },
+    //航班库存价格
+    '/supplier/supplierList/price': {
+      component: dynamicWrapper(app, ['rule'], () => import('../routes/Supplier/Price')),
     },
     //运营管理
     '/Operations/Banner': {

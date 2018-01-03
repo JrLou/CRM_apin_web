@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Card, Button, Icon, List } from 'antd';
-
+import { Link } from 'dva/router';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import Ellipsis from '../../components/Ellipsis';
 
@@ -39,6 +39,24 @@ export default class Demand extends PureComponent {
         content={content}
         // extraContent={extraContent}
       >
+
+
+        {/*跳转三级页面*/}
+        <Link to={'/fightgroups/demand/id'}>
+          <Button>查看需求池</Button>
+        </Link>
+        <Link to={'/fightgroups/demand/choose'}>
+          <Button>推送方案-选择订单</Button>
+        </Link>
+        <Link to={'/fightgroups/demand/push'}>
+          < Button>方案推送</Button>
+        </Link>
+        <Link to={'/fightgroups/demand/result'}>
+          < Button>查看拼团</Button>
+        </Link>
+
+
+
         <div className={styles.cardList}>
           <List
             rowKey="id"

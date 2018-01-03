@@ -3,7 +3,7 @@ const menuData = [{
   icon: 'idcard',
   path: 'customer',
   children: [{
-    name: '用户列表',
+    name: '客户列表',
     path: 'customer/userList',
   }],
 }, {
@@ -13,7 +13,7 @@ const menuData = [{
   children: [{
     name: '供应商资源',
     path: 'supplier/supplierList',
-  },{
+  }, {
     name: '飞猪资源',
     path: 'supplier/flyPigList',
   }],
@@ -24,6 +24,19 @@ const menuData = [{
   children: [{
     name: '需求池',
     path: 'fightgroups/demand',
+    // children: [{
+    //   name: '查看需求池',
+    //   path: 'fightgroups/demand/:view',
+    // }, {
+    //   name: '推送方案-选择订单',
+    //   path: 'fightgroups/demand/choose',
+    // }, {
+    //   name: '方案推送',
+    //   path: 'fightgroups/demand/push',
+    // }, {
+    //   name: '查看拼团',
+    //   path: 'fightgroups/demand/result',
+    // }],
   }, {
     name: '拼团列表',
     path: 'fightgroups/list',
