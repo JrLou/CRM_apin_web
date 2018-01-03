@@ -65,7 +65,7 @@ export default class Demand extends PureComponent {
             dataSource={['', ...list]}
             renderItem={item => (
               <List.Item key={item.id}>
-                <Card hoverable className={styles.card} actions={[<a>查看历史拼团</a>, <a>方案推送</a>]}
+                <Card hoverable className={styles.card} actions={[<a>查看历史拼团</a>, <Link to={'/fightgroups/demand/id'}>方案推送</Link>]}
                   title='杭州 - 曼谷'
                   extra={30}>
                   <Card.Meta
