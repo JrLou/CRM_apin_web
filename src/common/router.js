@@ -109,10 +109,10 @@ export const getRouterData = (app) => {
     },
     //政策管理
     '/supplier/supplierList': {
-      component: dynamicWrapper(app, ['rule'], () => import('../routes/Supplier/SupplierList')),
+      component: dynamicWrapper(app, ['supplierlist'], () => import('../routes/Supplier/SupplierList')),
     },
     '/supplier/flyPigList': {
-      component: dynamicWrapper(app, ['rule'], () => import('../routes/Supplier/FlyPigList')),
+      component: dynamicWrapper(app, ['flypiglist'], () => import('../routes/Supplier/FlyPigList')),
     },
     //录入资源
     '/supplier/supplierList/typeIn': {

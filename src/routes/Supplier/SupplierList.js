@@ -39,7 +39,7 @@ const { Option } = Select;
 const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
 
 @connect(state => ({
-  rule: state.rule,
+  supplierlist: state.supplierlist,
 }))
 @Form.create()
 export default class TableList extends PureComponent {
@@ -54,7 +54,7 @@ export default class TableList extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/fetch',
+      type: 'supplierlist/fetch',
     });
   }
 
@@ -78,7 +78,7 @@ export default class TableList extends PureComponent {
       params.sorter = `${sorter.field}_${sorter.order}`;
     }
     dispatch({
-      type: 'rule/fetch',
+      type: 'supplierlist/fetch',
       payload: params,
     });
   }
@@ -90,7 +90,7 @@ export default class TableList extends PureComponent {
       formValues: {},
     });
     dispatch({
-      type: 'rule/fetch',
+      type: 'supplierlist/fetch',
       payload: {},
     });
   }
@@ -110,7 +110,7 @@ export default class TableList extends PureComponent {
     switch (e.key) {
       case 'remove':
         dispatch({
-          type: 'rule/remove',
+          type: 'supplierlist/remove',
           payload: {
             no: selectedRows.map(row => row.no).join(','),
           },
@@ -150,7 +150,7 @@ export default class TableList extends PureComponent {
       });
 
       dispatch({
-        type: 'rule/fetch',
+        type: 'supplierlist/fetch',
         payload: values,
       });
     });
@@ -170,7 +170,7 @@ export default class TableList extends PureComponent {
 
   handleAdd = () => {
     this.props.dispatch({
-      type: 'rule/add',
+      type: 'supplierlist/add',
       payload: {
         description: this.state.addInputValue,
       },
@@ -253,7 +253,7 @@ export default class TableList extends PureComponent {
   }
 
   render() {
-    const { rule: { loading: ruleLoading, data } } = this.props;
+    const { supplierlist: { loading: ruleLoading, data } } = this.props;
     const { selectedRows, modalVisible, addInputValue } = this.state;
     const menu = (
       <Menu onClick={this.handleMenuClick} selectedKeys={[]}>

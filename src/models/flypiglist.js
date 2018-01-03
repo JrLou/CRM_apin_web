@@ -1,8 +1,7 @@
-import { queryUserList } from '../services/api';
+import { queryFlyList } from '../services/api';
 
 export default {
-  namespace: 'supplierlist',
-
+  namespace: 'flypiglist',
   state: {
     data: {
       list: [],
@@ -16,7 +15,7 @@ export default {
         type: 'changeLoading',
         payload: true,
       });
-      const response = yield call(queryUserList, payload);
+      const response = yield call(queryFlyList, payload);
       yield put({
         type: 'save',
         payload: response,

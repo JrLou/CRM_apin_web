@@ -66,6 +66,9 @@ export async function queryUserList(params) {
 export async function querySupplierList(params) {
   return request(`/api/suplierList?${stringify(params)}`);
 }
+export async function queryFlyList(params) {
+  return request(`/api/flyList?${stringify(params)}`);
+}
 
 export async function AccountLogin(params) {
   const newparams = Object.assign({},{account:params.account,appid:'2ef8d902c12f454f9acdbb0484f8c05a'})
