@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'dva';
+import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import {
   Row,
   Col,
@@ -15,9 +16,9 @@ import {
 export default class Analysis extends Component {
   render() {
     return (
-      <div>
+      <PageHeaderLayout>
          飞猪资源
-      </div>
+      </PageHeaderLayout>
     );
   }
 }
