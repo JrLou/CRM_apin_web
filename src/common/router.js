@@ -87,7 +87,22 @@ export const getRouterData = (app) => {
     '/RightsManagement/EditRole': {
       component: dynamicWrapper(app, ['role'], () => import('../routes/RightsManagement/EditRole')),
     },
-
+    // 查看需求池
+    '/fightgroups/demand/id': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/view.js')),
+    },
+    //推送方案-选择订单
+    '/fightgroups/demand/choose': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/choose.js')),
+    },
+    //方案推送
+    '/fightgroups/demand/push': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/push.js')),
+    },
+    // 查看拼团
+    '/fightgroups/demand/result': {
+      component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/result.js')),
+    },
     //客户管理
     '/customer/userList': {
       component: dynamicWrapper(app, ['userList'], () => import('../routes/Customer/UserList')),
@@ -102,7 +117,6 @@ export const getRouterData = (app) => {
     '/supplier/typeIn': {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Supplier/TypeIn')),
     },
-
     //运营管理
     '/Operations/Banner': {
       component: dynamicWrapper(app, ['from'], () => import('../routes/Operations/Banner')),
