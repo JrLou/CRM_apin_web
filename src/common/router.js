@@ -35,6 +35,9 @@ export const getRouterData = (app) => {
     '/': {
       component: dynamicWrapper(app, ['user', 'login'], () => import('../layouts/BasicLayout')),
     },
+    '/welcome': {
+      component: dynamicWrapper(app, [], () => import('../routes/welcome.js')),
+    },
     '/finance/finance_payment': {
       component: dynamicWrapper(app, ['financePaymentList'], () => import('../routes/Finance/FinancePayment')),
     },
