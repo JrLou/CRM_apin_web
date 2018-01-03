@@ -3,7 +3,7 @@ const menuData = [{
   icon: 'idcard',
   path: 'customer',
   children: [{
-    name: '用户列表',
+    name: '客户列表',
     path: 'customer/userList',
   }],
 }, {
