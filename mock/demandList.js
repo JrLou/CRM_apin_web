@@ -164,13 +164,16 @@ export function getDemandList(req, res, u) {
   if (!url || Object.prototype.toString.call(url) !== '[object String]') {
     url = req.url; // eslint-disable-line
   }
-
   const params = getUrlParams(url);
-
   const count = (params.count * 1) || 20;
-
-  const result = fakeList(count);
-
+  const result = {
+    code: 1,
+    data: fakeList(count),
+    msg: '请求成功',
+    option: {
+      total:count,
+    },
+  };
   if (res && res.json) {
     res.json(result);
   } else {

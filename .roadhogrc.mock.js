@@ -1,6 +1,7 @@
 import mockjs from 'mockjs';
 import { getRule, postRule} from './mock/rule';
 import { getUserList} from './mock/userlist';
+import { getActivities, getNotice, getFakeList } from './mock/api';
 import { bannerList } from './mock/bannerList.js';
 import {getSuplierList} from './mock/supplierlist';
 import {getFlylist} from './mock/flylist';
