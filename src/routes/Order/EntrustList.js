@@ -43,8 +43,7 @@ class StandardTable extends PureComponent {
 
   render() {
     const { selectedRowKeys, totalCallNo } = this.state;
-    const { data: { list, pagination }, loading } = this.props;
-
+    const { data: { data, option }, loading } = this.props;
     const status = ['运行中', '选择方案中', '待出票', '已出票', '委托取消', '出票失败', '委托过期'];
 
     const columns = [
@@ -61,19 +60,19 @@ class StandardTable extends PureComponent {
       },
       {
         title: '联系人',
-        dataIndex: 'contact',
+        dataIndex: 'name',
       },
       {
         title: '联系电话',
-        dataIndex: 'phone',
+        dataIndex: 'tel',
       },
       {
         title: '出发城市',
-        dataIndex: 'goCity',
+        dataIndex: 'gocity',
       },
       {
         title: '到达城市',
-        dataIndex: 'backCity',
+        dataIndex: 'backcity',
       },
       {
         title: '出发时间(下单)',
@@ -83,11 +82,10 @@ class StandardTable extends PureComponent {
       {
         title: '人数',
         dataIndex: 'money',
-        dataIndex: 'numPeople',
       },
       {
         title: '已付金额',
-        dataIndex: 'money',
+        dataIndex: 'price',
         // sorter: true,
         align: 'right',
         render: val => `￥${val}`,
@@ -114,7 +112,7 @@ class StandardTable extends PureComponent {
     const paginationProps = {
       showSizeChanger: true,
       showQuickJumper: true,
-      ...pagination,
+      ...option,
     };
 
     // const rowSelection = {
@@ -131,7 +129,7 @@ class StandardTable extends PureComponent {
           loading={loading}
           rowKey={record => record.key}
           // rowSelection={rowSelection}
-          dataSource={list}
+          dataSource={data}
           columns={columns}
           pagination={paginationProps}
           onChange={this.handleTableChange}
