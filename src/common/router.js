@@ -45,7 +45,7 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Finance/FinanceVerify')),
     },
     '/fightgroups/demand': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/Demand.js')),
+      component: dynamicWrapper(app, ['demand'], () => import('../routes/Fightgroups/Demand.js')),
     },
     '/fightgroups/list': {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Fightgroups/List.js')),
