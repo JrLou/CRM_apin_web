@@ -103,7 +103,7 @@ class StandardTable extends PureComponent {
         render:(text, record, val) => {
           // 生成复杂数据的渲染函数，参数分别为当前行的值，当前行数据，行索引，@return里面可以设置表格行/列合并
           if (val != '3') {
-              return <Link to="/order/entrustProfile:id">查看</Link>
+              return <Link to="/order/entrustProfile/:id">查看</Link>
           } else {
               return <a href="">出票</a>
           }
