@@ -65,6 +65,12 @@ export async function queryUserList(params) {
 export async function queryBanner(params) {
   return request(`/api/bannerList?${stringify(params)}`);
 }
+export async function deleteBanner(params) {
+  return request(`/api/deleteBanner?${stringify(params)}`);
+}
+export async function changeStatus(params) {
+  return request(`/api/changeStatus?${stringify(params)}`);
+}
 export async function querySupplierList(params) {
   return request(`/api/suplierList?${stringify(params)}`);
 }

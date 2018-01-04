@@ -1,7 +1,7 @@
 import mockjs from 'mockjs';
 import { getRule, postRule} from './mock/rule';
 import { getUserList} from './mock/userlist';
-import { bannerList } from './mock/bannerList.js';
+import { bannerList} from './mock/bannerList.js';
 import {getSuplierList} from './mock/supplierlist';
 import {getFlylist} from './mock/flylist';
 import { getActivities, getNotice, getFakeList} from './mock/api';
@@ -72,6 +72,8 @@ const proxy = {
   'GET /api/fake_list': getFakeList,
   'GET /api/userList':getUserList,
   'GET /api/bannerList':bannerList,
+  'GET /api/deleteBanner':bannerList,
+  'GET /api/changeStatus':bannerList,
   'GET /api/suplierList' :getSuplierList,
   'GET /api/flyList' :getFlylist,
   'GET /api/fake_chart_data': getFakeChartData,

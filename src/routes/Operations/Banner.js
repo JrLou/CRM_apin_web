@@ -26,10 +26,9 @@ const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
   bannerList: state.bannerList,
 }))
 @Form.create()
-export default class TableList extends PureComponent {
+export default class BannerList extends PureComponent {
   state = {
     selectedRows: [],
-    formValues: {},
     page: {
       pageNo: 1,
       pageSize: 10
@@ -127,7 +126,18 @@ export default class TableList extends PureComponent {
     return (
       <PageHeaderLayout>
         <Card bordered={false}>
-          <Button>新增banner</Button>
+          <div className={styles.tools}>
+            <Button
+              className={styles.addBtn}
+              size={'large'}
+              type={'primary'}
+              onClick={()=>{
+                console.log(1);
+              }}
+            >
+              新增banner
+            </Button>
+          </div>
           <div className={styles.tableList}>
             <StandardTable
               selectedRows={selectedRows}
