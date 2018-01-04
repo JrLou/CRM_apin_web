@@ -17,12 +17,18 @@ export default class TableList extends PureComponent {
     modalVisible: false,
     formValues: {},
     record: {},
+    pagination: {
+      currentPage: 1,
+      pageSize: 10
+    }
   };
 
   componentDidMount() {
     const { dispatch } = this.props;
+    const { pagination } = this.state;
     dispatch({
       type: 'refund/fetch',
+      payload: pagination
     });
   }
 
@@ -45,11 +51,13 @@ export default class TableList extends PureComponent {
     e.preventDefault();
 
     const { dispatch, form } = this.props;
+    const { pagination } = this.state;
 
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       const values = {
         ...fieldsValue,
+        ...pagination
       };
       this.setState({
         formValues: values,
@@ -150,7 +158,7 @@ export default class TableList extends PureComponent {
       dataIndex: 'status',
       render: (text) => {
         const status = ['已退款', '退款失败'];
-        return status[+text - 1];
+        return status[text - 1];
       },
     }, {
       title: '退款金额',
