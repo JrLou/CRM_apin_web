@@ -62,7 +62,9 @@ export async function queryFakeList(params) {
 export async function queryUserList(params) {
   return request(`/api/userList?${stringify(params)}`);
 }
-
+export async function queryBanner(params) {
+  return request(`/api/bannerList?${stringify(params)}`);
+}
 export async function querySupplierList(params) {
   return request(`/api/suplierList?${stringify(params)}`);
 }

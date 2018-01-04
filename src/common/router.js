@@ -56,9 +56,12 @@ export const getRouterData = (app) => {
     '/order/entrust': {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Order/Entrust.js')),
     },
-    '/order/entrust/:id': {
-      component: dynamicWrapper(app, ['rule'], () => import('../routes/Exception/500')),
+    '/order/entrust/entrustProfile':{
+      component: dynamicWrapper(app, ['profile'], () => import('../routes/Order/EntrustProfile.js')),
     },
+    // '/order/entrust/entrustProfile': {
+    //   component: dynamicWrapper(app, ['rule'], () => import('../routes/Exception/EntrustProfile')),
+    // },
     '/order/refund': {
       component: dynamicWrapper(app, ['refund'], () => import('../routes/Order/Refund.js')),
     },
@@ -131,7 +134,7 @@ export const getRouterData = (app) => {
     },
     //运营管理
     '/Operations/Banner': {
-      component: dynamicWrapper(app, ['from'], () => import('../routes/Operations/Banner')),
+      component: dynamicWrapper(app, ['bannerList'], () => import('../routes/Operations/Banner.js')),
     },
     // '/user/:id': {
     //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),

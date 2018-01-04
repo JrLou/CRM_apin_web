@@ -1,154 +1,141 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Icon, Card, Tabs, DatePicker, Menu, Dropdown, Button, Upload, Form } from 'antd';
-// import numeral from 'numeral';
-import Trend from '../../components/Trend';
-import NumberInfo from '../../components/NumberInfo';
-import { getTimeDistance } from '../../utils/utils';
-import fetch from 'dva/fetch';
+import {
+  Row,
+  Col,
+  Card,
+  Form,
+  Input,
+  Select,
+  Button,
+  Modal,
+  DatePicker,
+  message
+} from 'antd';
+import StandardTable from './TableList';
+import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
-const { TabPane } = Tabs;
-const { RangePicker } = DatePicker;
+import styles from './TableList.less';
+
 const FormItem = Form.Item;
-
+const { Option } = Select;
+const RangePicker = DatePicker.RangePicker;
+const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
 
 @connect(state => ({
-  chart: state.chart,
+  bannerList: state.bannerList,
 }))
-export default class Analysis extends Component {
+@Form.create()
+export default class TableList extends PureComponent {
   state = {
-    salesType: 'all',
-    currentTabKey: '',
-    rangePickerValue: getTimeDistance('year'),
-  }
-
+    selectedRows: [],
+    formValues: {},
+    page: {
+      pageNo: 1,
+      pageSize: 10
+    }
+  };
   componentDidMount() {
     this.props.dispatch({
-      type: 'chart/fetch',
+      type: 'bannerList/fetch'
     });
   }
-  componentWillUnmount() {
+  // getList(){
+  //   const values = this.props.form.getFieldsValue();
+  //   for (let item in values) {
+  //     if (values[item] === undefined) {
+  //       values[item] = '';
+  //     }
+  //   }
+  //   this.setState({
+  //     formValues:values,
+  //   });
+  //   let {page}=this.state;
+  //   let params = Object.assign(page, values);
+  //   this.props.dispatch({
+  //     type: 'bannerList/fetch',
+  //     payload: params,
+  //   });
+  // }
+  handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
+    const { formValues } = this.state;
+
+    const filters = Object.keys(filtersArg).reduce((obj, key) => {
+      const newObj = { ...obj };
+      newObj[key] = getValue(filtersArg[key]);
+      return newObj;
+    }, {});
+    const params = {
+      currentPage: pagination.current,
+      pageSize: pagination.pageSize,
+      ...formValues,
+      ...filters,
+    };
+    if (sorter.field) {
+      params.sorter = `${sorter.field}_${sorter.order}`;
+    }
+
     dispatch({
-      type: 'chart/clear',
+      type: 'bannerList/fetch',
+      payload: params,
     });
-  }
-  handleChangeSalesType = (e) => {
+  };
+  handleFormReset = () => {
+    const { form, dispatch } = this.props;
+    form.resetFields();
+    dispatch({
+      type: 'bannerList/fetch',
+      payload: {},
+    });
+  };
+
+  handleSelectRows = (rows) => {
     this.setState({
-      salesType: e.target.value,
+      selectedRows: rows,
     });
   }
-  handleTabChange = (key) => {
-    this.setState({
-      currentTabKey: key,
-    });
-  }
-  handleRangePickerChange = (rangePickerValue) => {
-    this.setState({
-      rangePickerValue,
-    });
-    this.props.dispatch({
-      type: 'chart/fetchSalesData',
-    });
-  }
-  upload = (originData) => {
-    let formData = new FormData();
-    let a = 'yFnb1L-yqxkEjfjOwiQzb5wsRcIQRoaZUbrhFupD:jQTK9TU-kbECRBHD6k8JxopBDtc=:eyJzY29wZSI6ImFwaW4tdm91Y2hlciIsImRlYWRsaW5lIjoxNTE0NDY3MzU1fQ=='
-    formData.append("token", a);
-    formData.append('accept', "")
-    formData.append("file", originData.file,originData.file.name);
-    fetch('http://upload.qiniu.com/', {
-      method: "POST",
-      // headers: {
-      //   // 'Content-Type': `multipart/form-data; boundary=----${}`,
-      // },
-      body: formData
-    }).then((response) => {
-        return response.json();
+
+  handleSearch = (e) => {
+    e.preventDefault();
+
+    const { dispatch, form } = this.props;
+
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      const values = {
+        ...fieldsValue,
+        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
+      };
+      this.setState({
+        formValues: values,
       });
+      dispatch({
+        type: 'bannerList/fetch',
+        payload: values,
+      });
+    });
   }
-  beforeUpload(file) {
-    // var fileURL = file.name.split('.');
-    // const isElexce = fileURL[fileURL.length - 1] === 'xlsx' || fileURL[fileURL.length - 1] === "xls"
-    // if (!isElexce) {
-    //     message.error('只能上传excel文件，格式xlsx与xls');
-    // }
-    // return isElexce;
-  }
+
+
   render() {
-    const { rangePickerValue, salesType, currentTabKey } = this.state;
-    const { chart } = this.props;
-    const {
-      visitData,
-      visitData2,
-      salesData,
-      searchData,
-      offlineData,
-      offlineChartData,
-      salesTypeData,
-      salesTypeDataOnline,
-      salesTypeDataOffline,
-      loading,
-    } = chart;
-
-    const salesPieData = salesType === 'all' ?
-      salesTypeData
-      :
-      (salesType === 'online' ? salesTypeDataOnline : salesTypeDataOffline);
-
-    const menu = (
-      <Menu>
-        <Menu.Item>操作一</Menu.Item>
-        <Menu.Item>操作二</Menu.Item>
-      </Menu>
-    );
-
-    const activeKey = currentTabKey || (offlineData[0] && offlineData[0].name);
-
-
-    // const topColResponsiveProps = {
-    //   xs: 24,
-    //   sm: 12,
-    //   md: 12,
-    //   lg: 12,
-    //   xl: 6,
-    //   style: { marginBottom: 24 },
-    // };
+    const { bannerList: { loading: ruleLoading, data } } = this.props;
+    console.log(this.props.bannerList,"-------------------------bannerList")
+    console.log(data,"-------------------------data")
+    const { selectedRows } = this.state;
 
     return (
       <div>
-        <Card
-          loading={loading}
-          className={styles.offlineCard}
-          bordered={false}
-          bodyStyle={{ padding: '20px 0 32px 0' }}
-          style={{ marginTop: 32 }}
-        >
-
-            <Upload
-              showUploadList={false}
-              beforeUpload={this.beforeUpload}
-              customRequest={this.upload}
-            >
-             <Button type="primary">
-              <Icon type="upload" /> 上传
-                                    </Button>
-            </Upload>
-          {/* <Upload
-            className="avatar-uploader"
-            name="file"
-            showUploadList={false}
-            beforeUpload={this.beforeUpload.bind(this)}
-            onChange={this.handleChange.bind(this)}
-          >
-            <Button type="primary">
-              <Icon type="upload" /> 导入票号
-                                    </Button>
-          </Upload> */}
-          <input id="fileId2" type="file" multiple="multiple" name="file" />
-          <Button>
-            上传文件
-          </Button>
+        <Card bordered={false}>
+          <div className={styles.tableList}>
+            <StandardTable
+              selectedRows={selectedRows}
+              loading={ruleLoading}
+              data={data}
+              onSelectRow={this.handleSelectRows}
+              onChange={this.handleStandardTableChange}
+            />
+          </div>
         </Card>
       </div>
     );
