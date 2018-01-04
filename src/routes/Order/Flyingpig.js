@@ -231,11 +231,7 @@ export default class TableList extends PureComponent {
       title: '操作',
       render: (text, record) => {
         const title = record.status == 0 ? '出票' : '查看';
-        return <Link to={{
-          pathname: '/order/flyingpigDetail',
-          search: `?id=${record.id}`,
-          state: { price: 18 }
-        }}>{title}</Link>
+        return <Link to={`/order/flyingpigDetail/${record.id}`}>{title}</Link>
       }
     }];
 
