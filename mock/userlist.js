@@ -113,8 +113,10 @@ export function getUserList(req, res, u) {
   }
 
   const result = {
-    list: dataSource,
-    pagination: {
+    code: 1,
+    data: dataSource,
+    msg: '请求成功',
+    option: {
       total: dataSource.length,
       pageSize,
       current: parseInt(params.currentPage, 10) || 1,

@@ -63,7 +63,7 @@
 //     });
 // }
 import fetch from 'dva/fetch';
-import { notification,message} from 'antd';
+import { notification, message } from 'antd';
 import CookieHelp from './cookies'
 function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
@@ -78,72 +78,73 @@ function checkStatus(response) {
   throw error;
 }
 
-function checkaccessToken(json,url,options){
-    // >=1 操作成功
-// -1 ~ -99 固定错误编码，需要特殊处理
-// {
-//     -1  系统未捕获异常
-//     -2  未登录
-//     -3  没有权限访问
-//     -4  用户被禁用
-//     -5  列表无数据
-//     -6  接口不存在
-//     -7  非法请求
-//     ......
-// }
-// -199 ~ -100  用户输入信息校验错误
-// -299 ~ -200  后端业务提交错误
-    if(json.code>=1){
+function checkaccessToken(json, url, options) {
+  // >=1 操作成功
+  // -1 ~ -99 固定错误编码，需要特殊处理
+  // {
+  //     -1  系统未捕获异常
+  //     -2  未登录
+  //     -3  没有权限访问
+  //     -4  用户被禁用
+  //     -5  列表无数据
+  //     -6  接口不存在
+  //     -7  非法请求
+  //     ......
+  // }
+  // -199 ~ -100  用户输入信息校验错误
+  // -299 ~ -200  后端业务提交错误
+  if(json.code){
+    if (json.code >= 1) {
       return json
-    }else{
-      if(json.code==-1){
+    } else {
+      if (json.code == -1) {
         console.log('系统未捕获异常')
         message.error('系统未捕获导常')
-      }else if(json.code == -2){
+      } else if (json.code == -2) {
         console.log('未登录')
         message.error('未登录')
-      }else if(json.code == -3){
+      } else if (json.code == -3) {
         console.log('没有权限访问')
         message.error('没有权限访问')
-      }else if(json.code == -4){
+      } else if (json.code == -4) {
         console.log('用户被禁用')
         message.error('用户被禁用')
-      }else if(json.code == -5){
+      } else if (json.code == -5) {
         console.log('列表无数据')
         message.error('列表无数据')
-      }else if(json.code == -6){
+      } else if (json.code == -6) {
         console.log('接口不存在')
         message.error('接口不存在')
-      }else if(json.code == -7){
+      } else if (json.code == -7) {
         console.log('非法请求')
         message.error('非法请求')
       }
     }
+  }
+  return json
+  // if (json.code == 421) {
+  //     console.log('凭证过期')
+  //     message.error('凭证过期!');
+  //     let old_userInfo = CookieHelp.getUserInfo();
+  //     if(!old_userInfo){
+  //       return null
+  //     }
+  //   //  return  request('/crm/uc/authapi/v1.1/tokens',{
+  //   //     method: 'POST',
+  //   //     body: {
+  //   //       account: old_userInfo.username,
+  //   //       password: old_userInfo.password
+  //   //     },
+  //   //   }).then((json)=>{
 
-
-    // if (json.code == 421) {
-    //     console.log('凭证过期')
-    //     message.error('凭证过期!');
-    //     let old_userInfo = CookieHelp.getUserInfo();
-    //     if(!old_userInfo){
-    //       return null
-    //     }
-    //   //  return  request('/crm/uc/authapi/v1.1/tokens',{
-    //   //     method: 'POST',
-    //   //     body: {
-    //   //       account: old_userInfo.username,
-    //   //       password: old_userInfo.password
-    //   //     },
-    //   //   }).then((json)=>{
-
-    //   //     if(json.code==200){
-    //   //      return request(url,options)
-    //   //     }else{
-    //   //       return "1001"
-    //   //     }
-    //   //   }
-    //   //   )
-    // }
+  //   //     if(json.code==200){
+  //   //      return request(url,options)
+  //   //     }else{
+  //   //       return "1001"
+  //   //     }
+  //   //   }
+  //   //   )
+  // }
 
 }
 /**
@@ -178,7 +179,7 @@ export default function request(url, options) {
   return fetch(url, newOptions)
     .then(checkStatus)
     .then(response => response.json())
-    // .then(json => checkaccessToken(json, url, options))
+    .then(json => checkaccessToken(json, url, options))
     .catch((error) => {
       if (error.code) {
         notification.error({
