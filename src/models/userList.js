@@ -1,12 +1,12 @@
-import { querySupplierList } from '../services/api';
+import { queryUserList } from '../services/api';
 
 export default {
   namespace: 'userList',
 
   state: {
     data: {
-      list: [],
-      pagination: {},
+      data: [],
+      option: {},
     },
     loading: true,
   },
@@ -16,11 +16,13 @@ export default {
         type: 'changeLoading',
         payload: true,
       });
-      const response = yield call(querySupplierList, payload);
-      yield put({
-        type: 'save',
-        payload: response,
-      });
+      const response = yield call(queryUserList, payload);
+      if (response && response.code >= 1) {
+        yield put({
+          type: 'save',
+          payload: response,
+        });
+      }
       yield put({
         type: 'changeLoading',
         payload: false,
@@ -31,7 +33,7 @@ export default {
     save(state, action) {
       return {
         ...state,
-        data:action.payload,
+        data: action.payload,
       };
     },
     changeLoading(state, action) {

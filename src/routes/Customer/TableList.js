@@ -21,7 +21,7 @@ class StandardTable extends PureComponent {
     this.props.onChange(pagination, filters, sorter);
   };
   render() {
-    const { data: { list, pagination }, loading } = this.props;
+    const { data: { data, option }, loading } = this.props;
     const columns = [
       {
         title: 'ID',
@@ -58,14 +58,14 @@ class StandardTable extends PureComponent {
     const paginationProps = {
       showSizeChanger: true,
       showQuickJumper: true,
-      ...pagination,
+      ...option,
     };
     return (
       <div className={styles.standardTable}>
         <Table
           loading={loading}
-          rowKey={record => record.key}
-          dataSource={list}
+          rowKey={record => record.id}
+          dataSource={data}
           columns={columns}
           pagination={paginationProps}
           onChange={this.handleTableChange}
