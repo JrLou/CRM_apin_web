@@ -73,6 +73,8 @@ const proxy = {
   'GET /api/userList':getUserList,
   'GET /api/bannerList':bannerList,
   'GET /api/groupsList':groupsList,
+  'GET /api/deleteBanner':bannerList,
+  'GET /api/changeStatus':bannerList,
   'GET /api/suplierList' :getSuplierList,
   'GET /api/flyList' :getFlylist,
   'GET /api/fake_chart_data': getFakeChartData,
