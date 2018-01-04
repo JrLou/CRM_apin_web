@@ -4,23 +4,23 @@ import { getUrlParams } from './utils';
 let tableListDataSource = [];
 for (let i = 0; i < 46; i += 1) {
   tableListDataSource.push({
-    id: i,
-    startCity: 'aa',
-    arrCity: 'bb',
-    lianxi: '2wew',
-    name: '2wew',
+    key: i,
     disabled: ((i % 6) === 0),
+    href: 'https://ant.design',
+    avatar: ['https://gw.alipayobjects.com/zos/rmsportal/eeHMaZBwmTvLdIwMfBpg.png', 'https://gw.alipayobjects.com/zos/rmsportal/udxAbMEhpwthVVcjLXik.png'][i % 2],
     no: `TradeCode ${i}`,
-    num: Math.floor(Math.random() * 1000),
-    tel: Math.floor(Math.random() * 1000),
-    money: Math.floor(Math.random() * 1000),
-    iphone: Math.floor(Math.random() * 1000),
-    status: Math.floor(Math.random() * 10) % 3,
-    source: Math.floor(Math.random() * 10) % 2,
-    time: new Date(`2017-07-${Math.floor(i / 2) + 1}`),
-    createTime: new Date(`2017-07-${Math.floor(i / 2) + 1}`),
-    loginTime: new Date(`2017-07-${Math.floor(i / 2) + 1}`),
-    registerTime: new Date(`2017-07-${Math.floor(i / 2) + 1}`),
+    title: `一个任务名称 ${i}`,
+    name:`my name ${i}`,
+    tel:`13700000000${i}`,
+    gocity:`gocity ${i}`,
+    backcity:`backcity ${i}`,
+    owner: '曲丽丽',
+    description: '这是一段描述',
+    callNo: Math.floor(Math.random() * 1000),
+    price:`price ${i}`,
+    status: Math.floor(Math.random() * 10) % 4,
+    updatedAt: new Date(`2017-07-${Math.floor(i / 2) + 1}`),
+    createdAt: new Date(`2017-07-${Math.floor(i / 2) + 1}`),
     progress: Math.ceil(Math.random() * 100),
   });
 }
@@ -80,7 +80,7 @@ export function getRule(req, res, u) {
     return result;
   }
 }
-export function getFlylist(req, res, u) {
+export function entrust(req, res, u) {
   let url = u;
   if (!url || Object.prototype.toString.call(url) !== '[object String]') {
     url = req.url; // eslint-disable-line
@@ -121,8 +121,8 @@ export function getFlylist(req, res, u) {
   }
 
   const result = {
-    list: dataSource,
-    pagination: {
+    data: dataSource,
+    option: {
       total: dataSource.length,
       pageSize,
       current: parseInt(params.currentPage, 10) || 1,
@@ -185,7 +185,7 @@ export function postRule(req, res, u, b) {
 }
 
 export default {
-  getFlylist,
+  entrust,
   getRule,
   postRule,
 };
