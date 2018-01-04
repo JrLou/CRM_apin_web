@@ -12,7 +12,7 @@ const { Option } = Select;
 const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
 
 @connect(state => ({
-  rule: state.rule,
+  entrust: state.entrust,
 }))
 @Form.create()
 export default class TableList extends PureComponent {
@@ -27,7 +27,7 @@ export default class TableList extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'rule/fetch',
+      type: 'entrust/fetch',
     });
   }
 
@@ -52,7 +52,7 @@ export default class TableList extends PureComponent {
     }
 
     dispatch({
-      type: 'rule/fetch',
+      type: 'entrust/fetch',
       payload: params,
     });
   }
@@ -61,7 +61,7 @@ export default class TableList extends PureComponent {
     const { form, dispatch } = this.props;
     form.resetFields();
     dispatch({
-      type: 'rule/fetch',
+      type: 'entrust/fetch',
       payload: {},
     });
   }
@@ -90,7 +90,7 @@ export default class TableList extends PureComponent {
       });
 
       dispatch({
-        type: 'rule/fetch',
+        type: 'entrust/fetch',
         payload: values,
       });
     });
@@ -174,9 +174,8 @@ export default class TableList extends PureComponent {
 
 
   render() {
-    const { rule: { loading: ruleLoading, data } } = this.props;
+    const { entrust: { loading: ruleLoading, data } } = this.props;
     const { selectedRows, modalVisible, addInputValue } = this.state;
-
     return (
       <PageHeaderLayout>
         <Card bordered={false}>
