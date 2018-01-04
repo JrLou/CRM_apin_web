@@ -1,76 +1,76 @@
-{
-  "parser": "babel-eslint",
-  "extends": "airbnb",
-  "plugins": ["compat"],
-  "env": {
-    "browser": true,
-    "node": true,
-    "es6": true,
-    "mocha": true,
-    "jest": true,
-    "jasmine": true
-  },
-  "rules": {
-    "generator-star-spacing": [0], //函数空格
-    "consistent-return": [0],
-    "react/forbid-prop-types": [0],
-    "react/jsx-filename-extension": [1, { "extensions": [".js"] }],  // react文件只能是JX 不能是JSX 需要自已添加进来
-    "global-require": [1],  //要求 require() 出现在顶层模块作用域中
-    "import/prefer-default-export": [0],
-    "react/jsx-no-bind": [0], //当在 render() 里使用事件处理方法时, 提前在构造函数里把 this 绑定上去
-    "react/prop-types": [0], //
-    "no-multi-comp": [0], // 原则上每个文件只写一个组件, 多个无状态组件可以放在单个文件中
-    "no-multi-spaces": [0],
-    "react/jsx-max-props-per-line": [0],
-    "react/jsx-tag-spacing": [0],
-    "react/jsx-curly-spacing":[0],
-    "react/jsx-first-prop-new-line": [0],
-    "jsx-closing-bracket-location": [0],
-    "react/prefer-stateless-function": [0],
-    "react/jsx-wrap-multilines": ["error", {
-      "declaration": "parens-new-line",
-      "assignment": "parens-new-line",
-      "return": "parens-new-line",
-      "arrow": "parens-new-line",
-      "condition": "parens-new-line",
-      "logical": "parens-new-line",
-      "prop": "ignore"
-    }],
-    "object-curly-spacing":[0],
-    "spaced-comment":[0],
-    "no-else-return": [0],
-    "no-restricted-syntax": [0],
-    "import/no-extraneous-dependencies": [0],
-    "no-use-before-define": [0],
-    "jsx-a11y/no-static-element-interactions": [0],
-    "jsx-a11y/no-noninteractive-element-interactions": [0],
-    "jsx-a11y/click-events-have-key-events": [0],
-    "jsx-a11y/anchor-is-valid": [0],
-    "no-nested-ternary": [0],
-    "arrow-body-style": [0],
-    "import/extensions": [0],
-    "no-bitwise": [0],
-    "no-cond-assign": [0],
-    "import/no-unresolved": [0],
-    "comma-dangle": ["error", {
-      "arrays": "always-multiline",
-      "objects": "always-multiline",
-      "imports": "always-multiline",
-      "exports": "always-multiline",
-      "functions": "ignore"
-    }],
-    "object-curly-newline": [0],
-    "function-paren-newline": [0],
-    "no-restricted-globals": [0],
-    "require-yield": [1],
-    "compat/compat": "error"
-  },
-  "parserOptions": {
-    "ecmaFeatures": {
-      "experimentalObjectRestSpread": true
-    }
-  },
-  "settings": {
-    "polyfills": ["fetch", "promises"]
-  }
-}
+//{
+//  "parser": "babel-eslint",
+//  "extends": "airbnb",
+//  "plugins": ["compat"],
+//  "env": {
+//    "browser": true,
+//    "node": true,
+//    "es6": true,
+//    "mocha": true,
+//    "jest": true,
+//    "jasmine": true
+//  },
+//  "rules": {
+//    "generator-star-spacing": [0], //函数空格
+//    "consistent-return": [0],
+//    "react/forbid-prop-types": [0],
+//    "react/jsx-filename-extension": [1, { "extensions": [".js"] }],  // react文件只能是JX 不能是JSX 需要自已添加进来
+//    "global-require": [1],  //要求 require() 出现在顶层模块作用域中
+//    "import/prefer-default-export": [0],
+//    "react/jsx-no-bind": [0], //当在 render() 里使用事件处理方法时, 提前在构造函数里把 this 绑定上去
+//    "react/prop-types": [0], //
+//    "no-multi-comp": [0], // 原则上每个文件只写一个组件, 多个无状态组件可以放在单个文件中
+//    "no-multi-spaces": [0],
+//    "react/jsx-max-props-per-line": [0],
+//    "react/jsx-tag-spacing": [0],
+//    "react/jsx-curly-spacing":[0],
+//    "react/jsx-first-prop-new-line": [0],
+//    "jsx-closing-bracket-location": [0],
+//    "react/prefer-stateless-function": [0],
+//    "react/jsx-wrap-multilines": ["error", {
+//      "declaration": "parens-new-line",
+//      "assignment": "parens-new-line",
+//      "return": "parens-new-line",
+//      "arrow": "parens-new-line",
+//      "condition": "parens-new-line",
+//      "logical": "parens-new-line",
+//      "prop": "ignore"
+//    }],
+//    "object-curly-spacing":[0],
+//    "spaced-comment":[0],
+//    "no-else-return": [0],
+//    "no-restricted-syntax": [0],
+//    "import/no-extraneous-dependencies": [0],
+//    "no-use-before-define": [0],
+//    "jsx-a11y/no-static-element-interactions": [0],
+//    "jsx-a11y/no-noninteractive-element-interactions": [0],
+//    "jsx-a11y/click-events-have-key-events": [0],
+//    "jsx-a11y/anchor-is-valid": [0],
+//    "no-nested-ternary": [0],
+//    "arrow-body-style": [0],
+//    "import/extensions": [0],
+//    "no-bitwise": [0],
+//    "no-cond-assign": [0],
+//    "import/no-unresolved": [0],
+//    "comma-dangle": ["error", {
+//      "arrays": "always-multiline",
+//      "objects": "always-multiline",
+//      "imports": "always-multiline",
+//      "exports": "always-multiline",
+//      "functions": "ignore"
+//    }],
+//    "object-curly-newline": [0],
+//    "function-paren-newline": [0],
+//    "no-restricted-globals": [0],
+//    "require-yield": [1],
+//    "compat/compat": "error"
+//  },
+//  "parserOptions": {
+//    "ecmaFeatures": {
+//      "experimentalObjectRestSpread": true
+//    }
+//  },
+//  "settings": {
+//    "polyfills": ["fetch", "promises"]
+//  }
+//}

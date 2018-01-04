@@ -128,7 +128,7 @@ export const getRouterData = (app) => {
     },
     //运营管理
     '/Operations/Banner': {
-      component: dynamicWrapper(app, ['from'], () => import('../routes/Operations/Banner')),
+      component: dynamicWrapper(app, ['bannerList'], () => import('../routes/Operations/Banner.js')),
     },
     // '/user/:id': {
     //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),
