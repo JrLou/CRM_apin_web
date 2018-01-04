@@ -59,12 +59,10 @@ export const getRouterData = (app) => {
     '/order/entrust': {
       component: dynamicWrapper(app, ['entrust'], () => import('../routes/Order/Entrust.js')),
     },
-    '/order/entrust/entrustProfile':{
+    '/order/entrustProfile/:id':{
       component: dynamicWrapper(app, ['profile'], () => import('../routes/Order/EntrustProfile.js')),
     },
-    // '/order/entrust/entrustProfile': {
-    //   component: dynamicWrapper(app, ['rule'], () => import('../routes/Exception/EntrustProfile')),
-    // },
+
     '/order/refund': {
       component: dynamicWrapper(app, ['refund'], () => import('../routes/Order/Refund.js')),
     },
