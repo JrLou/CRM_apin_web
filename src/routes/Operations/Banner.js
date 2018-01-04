@@ -15,7 +15,7 @@ import {
 import StandardTable from './TableList';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
-import styles from './TableList.less';
+import styles from './Banner.less';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -125,8 +125,9 @@ export default class TableList extends PureComponent {
     const { selectedRows } = this.state;
 
     return (
-      <div>
+      <PageHeaderLayout>
         <Card bordered={false}>
+          <Button>新增banner</Button>
           <div className={styles.tableList}>
             <StandardTable
               selectedRows={selectedRows}
@@ -137,7 +138,7 @@ export default class TableList extends PureComponent {
             />
           </div>
         </Card>
-      </div>
+      </PageHeaderLayout>
     );
   }
 }
