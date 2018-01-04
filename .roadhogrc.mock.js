@@ -1,11 +1,12 @@
 import mockjs from 'mockjs';
 import { getRule, postRule} from './mock/rule';
 import { getUserList} from './mock/userlist';
+import {groupsList} from './mock/groupsList'
+import { getActivities, getNotice, getFakeList } from './mock/api';
 import { bannerList } from './mock/bannerList.js';
 import { entrust } from './mock/entrust.js';
 import {getSuplierList} from './mock/supplierlist';
 import {getFlylist} from './mock/flylist';
-import { getActivities, getNotice, getFakeList} from './mock/api';
 import { getFakeChartData } from './mock/chart';
 import { imgMap } from './mock/utils';
 import { getProfileBasicData } from './mock/profile';
@@ -69,10 +70,13 @@ const proxy = {
   },
   'GET /api/tags': mockjs.mock({
     'list|100': [{ name: '@city', 'value|1-100': 150, 'type|0-2': 1 }]
-  }),
-  'GET /api/fake_list': getFakeList,
+  }), 
+  'GET /api/fake_list': getFakeList, 
   'GET /api/userList':getUserList,
   'GET /api/bannerList':bannerList,
+  'GET /api/groupsList':groupsList,
+  'GET /api/deleteBanner':bannerList,
+  'GET /api/changeStatus':bannerList,
   'GET /api/suplierList' :getSuplierList,
   'GET /api/flyList' :getFlylist,
   'GET /api/fake_chart_data': getFakeChartData,
@@ -93,14 +97,17 @@ const proxy = {
   'GET /api/entrust': entrust,
   'GET /api/getRefundList': (req, res) => {
     const query = req.query;
-    const pageSize = req.pageSize || 10;
+    const pageSize = query.pageSize || 10;
+    const status = query.status || '@integer(1,2)';
     res.send(mockjs.mock({
       [`list|${pageSize}`]: [{
         id: '@natural',
-        status: `@string('12',1)`,
+        status,
         money: '@integer(1,10000)',
         orderId:'@natural',
         time: '@dateTime',
+        kefu: '@name',
+        beizhu: '备注'
       }],
       total: 100
     }));

@@ -23,7 +23,7 @@ const fakeAuth = () => {
 const PrivateRoute = ({ component: Component, ...rest }) => {
   return (
     <Route path={rest.path} render={(props) => {
-      if (fakeAuth()) {
+      if (true) {
         // Loadmenu().then((json)=>{
         //     console.log(json)
         // })

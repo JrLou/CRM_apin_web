@@ -16,6 +16,7 @@ export default class TableList extends PureComponent {
   state = {
     modalVisible: false,
     formValues: {},
+    record: {},
   };
 
   componentDidMount() {
@@ -60,9 +61,10 @@ export default class TableList extends PureComponent {
     });
   }
 
-  handleModalVisible = (flag) => {
+  handleModalVisible = (flag, record) => {
     this.setState({
       modalVisible: !!flag,
+      record
     });
   }
 
@@ -70,22 +72,22 @@ export default class TableList extends PureComponent {
     const { getFieldDecorator } = this.props.form;
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 6, lg: 24, xl: 48 }}>
-          <Col md={6} sm={24}>
+        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+          <Col md={8} sm={24}>
             <FormItem label="退款单号">
               {getFieldDecorator('id')(
                 <Input placeholder="请输入" />
               )}
             </FormItem>
           </Col>
-          <Col md={6} sm={24}>
+          <Col md={8} sm={24}>
             <FormItem label="订单号">
               {getFieldDecorator('orderId')(
                 <Input placeholder="请输入" />
               )}
             </FormItem>
           </Col>
-          <Col md={6} sm={24}>
+          <Col md={8} sm={24}>
             <FormItem label="退款状态">
               {getFieldDecorator('status', {
                 initialValue: '',
@@ -98,30 +100,28 @@ export default class TableList extends PureComponent {
                 )}
             </FormItem>
           </Col>
-          <Col md={6} sm={24}>
+          <Col md={8} sm={24}>
             <FormItem label="联系人">
               {getFieldDecorator('lianxi')(
                 <Input placeholder="请输入" />
               )}
             </FormItem>
           </Col>
-        </Row>
-        <Row gutter={{ md: 6, lg: 24, xl: 48 }}>
-          <Col md={6} sm={24}>
+          <Col md={8} sm={24}>
             <FormItem label="退款时间">
               {getFieldDecorator('time')(
                 <RangePicker style={{ width: '100%' }} />
               )}
             </FormItem>
           </Col>
-          <Col md={6} sm={24}>
+          <Col md={8} sm={24}>
             <FormItem label="供应商名称">
               {getFieldDecorator('name')(
                 <Input placeholder="请输入" />
               )}
             </FormItem>
           </Col>
-          <Col md={6} sm={24}>
+          <Col md={8} sm={24}>
             <FormItem label="联系电话">
               {getFieldDecorator('tel')(
                 <Input placeholder="请输入" />
@@ -139,8 +139,8 @@ export default class TableList extends PureComponent {
   }
 
   render() {
-    const { rule: { loading: ruleLoading, list, total } } = this.props;
-    const { modalVisible } = this.state;
+    const { rule: { loading, list, total } } = this.props;
+    const { modalVisible, record } = this.state;
 
     const columns = [{
       title: '退款单号',
@@ -149,14 +149,8 @@ export default class TableList extends PureComponent {
       title: '退款状态',
       dataIndex: 'status',
       render: (text) => {
-        switch (text) {
-          case '1':
-            return '已退款';
-          case '2':
-            return '退款失败';
-          default:
-            break;
-        }
+        const status = ['已退款', '退款失败'];
+        return status[+text - 1];
       },
     }, {
       title: '退款金额',
@@ -169,11 +163,11 @@ export default class TableList extends PureComponent {
       dataIndex: 'time',
     }, {
       title: '操作',
-      render: () => <a onClick={() => this.handleModalVisible(true)}>查看</a>,
+      render: (text, record) => <a onClick={() => this.handleModalVisible(true, record)}>查看</a>,
     }];
 
     return (
-      <PageHeaderLayout title="查询表格">
+      <PageHeaderLayout>
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>
@@ -184,7 +178,7 @@ export default class TableList extends PureComponent {
               dataSource={list}
               columns={columns}
               pagination={{ showSizeChanger: true, showQuickJumper: true, total }}
-              loading={ruleLoading}
+              loading={loading}
               onChange={this.handleTableChange}
               rowKey="id"
             />
@@ -196,13 +190,41 @@ export default class TableList extends PureComponent {
           onCancel={() => this.handleModalVisible()}
           footer={null}
         >
-          <FormItem
-            labelCol={{ span: 5 }}
-            wrapperCol={{ span: 15 }}
-            label="描述"
-          >
-            <Input placeholder="请输入" />
-          </FormItem>
+          {record && <Form layout="inline">
+            <Row>
+              <Col span={12}>
+                <FormItem label="订单号">
+                  {record.orderId}
+                </FormItem>
+              </Col>
+              <Col span={12}>
+                <FormItem label="退款单号">
+                  {record.id}
+                </FormItem>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <FormItem label="退款金额">
+                  {record.money}
+                </FormItem>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <FormItem label="处理客服">
+                  {record.kefu}
+                </FormItem>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <FormItem label="备注">
+                  {record.beizhu}
+                </FormItem>
+              </Col>
+            </Row>
+          </Form>}
         </Modal>
       </PageHeaderLayout>
     );

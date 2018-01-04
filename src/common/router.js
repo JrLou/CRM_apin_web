@@ -45,13 +45,13 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Finance/FinanceVerify')),
     },
     '/fightgroups/demand': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/Demand.js')),
+      component: dynamicWrapper(app, ['demand'], () => import('../routes/Fightgroups/Demand.js')),
     },
     '/fightgroups/list': {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Fightgroups/List.js')),
     },
     '/order/flyingpig': {
-      component: dynamicWrapper(app, ['rule'], () => import('../routes/Order/Flyingpig.js')),
+      component: dynamicWrapper(app, ['flyingpig'], () => import('../routes/Order/Flyingpig.js')),
     },
     '/order/entrust': {
       component: dynamicWrapper(app, ['entrust'], () => import('../routes/Order/Entrust.js')),
