@@ -1,4 +1,5 @@
 import {queryBanner,deleteBanner,changeStatus} from '../services/api';
+import {routerRedux} from 'dva/router';
 
 export default {
   namespace: 'bannerList',
@@ -8,11 +9,16 @@ export default {
       list: [],
       pagination: {},
     },
+    editData:{
+
+    },
     loading: true,
   },
+
   effects:
     {
       * fetch({payload}, {call, put}) {
+        //列表页，请求数据
         yield put({
           type: 'changeLoading',
           payload: true,
@@ -28,6 +34,7 @@ export default {
         });
       },
       * delete({payload,callback},{call,put}){
+        //列表页，删除一个banner
         yield put({
           type: 'changeLoading',
           payload: true,
@@ -46,6 +53,7 @@ export default {
         });
       },
       * changeStatus({payload,callback},{call,put}){
+        //列表页，改变上架下架状态
         yield put({
           type: 'changeLoading',
           payload: true,
@@ -62,6 +70,18 @@ export default {
           type: 'changeLoading',
           payload: false,
         });
+      },
+      * toAdd({payload},{call,put}){
+        //列表页，跳转到添加/编辑页面
+        yield put(routerRedux.push('/operations/bannerEdit'))
+      },
+      * cancelEdit({payload},{call,put}){
+        //取消编辑，跳转到列表页
+        yield put(routerRedux.push('/operations/banner'))
+      },
+      * checkEdit({payload},{call,put}){
+        //确定编辑，成功以后跳转到列表页
+        yield put(routerRedux.push('/operations/banner'))
       }
     },
   reducers: {
@@ -69,6 +89,12 @@ export default {
       return {
         ...state,
         data: action.payload,
+      };
+    },
+    changeEditData(state, action){
+      return {
+        ...state,
+        editData: action.payload,
       };
     },
     changeLoading(state, action) {

@@ -39,23 +39,7 @@ export default class BannerList extends PureComponent {
       type: 'bannerList/fetch'
     });
   }
-  // getList(){
-  //   const values = this.props.form.getFieldsValue();
-  //   for (let item in values) {
-  //     if (values[item] === undefined) {
-  //       values[item] = '';
-  //     }
-  //   }
-  //   this.setState({
-  //     formValues:values,
-  //   });
-  //   let {page}=this.state;
-  //   let params = Object.assign(page, values);
-  //   this.props.dispatch({
-  //     type: 'bannerList/fetch',
-  //     payload: params,
-  //   });
-  // }
+
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
@@ -116,6 +100,12 @@ export default class BannerList extends PureComponent {
     });
   }
 
+  handleAdd = ()=>{
+    this.props.dispatch({
+      type: 'bannerList/toAdd',
+    });
+  }
+
 
   render() {
     const { bannerList: { loading: ruleLoading, data } } = this.props;
@@ -132,7 +122,7 @@ export default class BannerList extends PureComponent {
               size={'large'}
               type={'primary'}
               onClick={()=>{
-                console.log(1);
+                this.handleAdd();
               }}
             >
               新增banner

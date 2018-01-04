@@ -139,6 +139,10 @@ export const getRouterData = (app) => {
     '/Operations/Banner': {
       component: dynamicWrapper(app, ['bannerList'], () => import('../routes/Operations/Banner.js')),
     },
+    //banner添加/编辑
+    '/Operations/BannerEdit': {
+      component: dynamicWrapper(app, ['bannerList'], () => import('../routes/Operations/BannerEdit.js')),
+    },
     // '/user/:id': {
     //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),
     // },

@@ -4,7 +4,7 @@ import { getUrlParams } from './utils';
 let tableListDataSource = [];
 for (let i = 0; i < 46; i += 1) {
   tableListDataSource.push({
-    index:i,
+    index:i%5+1,
     id: `imgID${i}`,
     imgName:`imgName${i}`,
     goLink: 'https://ant.design',
