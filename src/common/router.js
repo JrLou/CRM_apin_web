@@ -51,7 +51,7 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Fightgroups/List.js')),
     },
     '/order/flyingpig': {
-      component: dynamicWrapper(app, ['rule'], () => import('../routes/Order/Flyingpig.js')),
+      component: dynamicWrapper(app, ['flyingpig'], () => import('../routes/Order/Flyingpig.js')),
     },
     '/order/entrust': {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Order/Entrust.js')),
