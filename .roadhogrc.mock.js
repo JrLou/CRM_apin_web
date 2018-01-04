@@ -4,7 +4,6 @@ import { getUserList} from './mock/userlist';
 import { bannerList } from './mock/bannerList.js';
 import {getSuplierList} from './mock/supplierlist';
 import {getFlylist} from './mock/flylist';
-import { getActivities, getNotice, getFakeList} from './mock/api';
 import { getFakeChartData } from './mock/chart';
 import { imgMap } from './mock/utils';
 import { getProfileBasicData } from './mock/profile';
@@ -69,7 +68,6 @@ const proxy = {
   'GET /api/tags': mockjs.mock({
     'list|100': [{ name: '@city', 'value|1-100': 150, 'type|0-2': 1 }]
   }),
-  'GET /api/fake_list': getFakeList,
   'GET /api/userList':getUserList,
   'GET /api/bannerList':bannerList,
   'GET /api/suplierList' :getSuplierList,
