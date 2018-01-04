@@ -1,17 +1,17 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Card, Form, Input, Select, Icon, Button, Dropdown, Menu, InputNumber, DatePicker, Modal, message } from 'antd';
-import StandardTable from '../../components/StandardTable';
+import { Row, Col, Card, Form, Input, Select, Icon, Button, Dropdown, Menu, InputNumber, DatePicker, Modal, message, Table } from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
 import styles from './TableList.less';
 
+const { RangePicker } = DatePicker;
 const FormItem = Form.Item;
 const { Option } = Select;
 const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
 
 @connect(state => ({
-  rule: state.rule,
+  rule: state.flyingpig,
 }))
 @Form.create()
 export default class TableList extends PureComponent {
@@ -71,37 +71,6 @@ export default class TableList extends PureComponent {
     });
   }
 
-  handleMenuClick = (e) => {
-    const { dispatch } = this.props;
-    const { selectedRows } = this.state;
-
-    if (!selectedRows) return;
-
-    switch (e.key) {
-      case 'remove':
-        dispatch({
-          type: 'rule/remove',
-          payload: {
-            no: selectedRows.map(row => row.no).join(','),
-          },
-          callback: () => {
-            this.setState({
-              selectedRows: [],
-            });
-          },
-        });
-        break;
-      default:
-        break;
-    }
-  }
-
-  handleSelectRows = (rows) => {
-    this.setState({
-      selectedRows: rows,
-    });
-  }
-
   handleSearch = (e) => {
     e.preventDefault();
 
@@ -132,117 +101,79 @@ export default class TableList extends PureComponent {
     });
   }
 
-  handleAddInput = (e) => {
-    this.setState({
-      addInputValue: e.target.value,
-    });
-  }
-
-  handleAdd = () => {
-    this.props.dispatch({
-      type: 'rule/add',
-      payload: {
-        description: this.state.addInputValue,
-      },
-    });
-
-    message.success('添加成功');
-    this.setState({
-      modalVisible: false,
-    });
-  }
-
-  renderSimpleForm() {
+  renderForm() {
     const { getFieldDecorator } = this.props.form;
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
-            <FormItem label="规则编号">
-              {getFieldDecorator('no')(
+            <FormItem label="订单号">
+              {getFieldDecorator('id')(
                 <Input placeholder="请输入" />
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="使用状态">
-              {getFieldDecorator('status')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">关闭</Option>
-                  <Option value="1">运行中</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <span className={styles.submitButtons}>
-              <Button type="primary" htmlType="submit">查询</Button>
-              <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>重置</Button>
-              <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-                展开 <Icon type="down" />
-              </a>
-            </span>
-          </Col>
-        </Row>
-      </Form>
-    );
-  }
-
-  renderAdvancedForm() {
-    const { getFieldDecorator } = this.props.form;
-    return (
-      <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem label="规则编号">
-              {getFieldDecorator('no')(
+            <FormItem label="出发城市">
+              {getFieldDecorator('startCity')(
                 <Input placeholder="请输入" />
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="使用状态">
-              {getFieldDecorator('status')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">关闭</Option>
-                  <Option value="1">运行中</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="调用次数">
-              {getFieldDecorator('number')(
-                <InputNumber style={{ width: '100%' }} />
+            <FormItem label="到达城市">
+              {getFieldDecorator('arrCity')(
+                <Input placeholder="请输入" />
               )}
             </FormItem>
           </Col>
         </Row>
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
-            <FormItem label="更新日期">
-              {getFieldDecorator('date')(
-                <DatePicker style={{ width: '100%' }} placeholder="请输入更新日期" />
+            <FormItem label="订单状态">
+              {getFieldDecorator('status', {
+                initialValue: ''
+              })(
+                <Select placeholder="请选择" style={{ width: '100%' }}>
+                  <Option value="">全部</Option>
+                  <Option value="1">待出票</Option>
+                  <Option value="2">已出票</Option>
+                  <Option value="3">出票失败</Option>
+                </Select>
+                )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="订单来源">
+              {getFieldDecorator('source', {
+                initialValue: ''
+              })(
+                <Select placeholder="请选择" style={{ width: '100%' }}>
+                  <Option value="">全部</Option>
+                  <Option value="1">飞猪</Option>
+                  <Option value="2">供应商</Option>
+                </Select>
+                )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="下单时间">
+              {getFieldDecorator('time')(
+                <RangePicker style={{ width: '100%' }} />
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="使用状态">
-              {getFieldDecorator('status3')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">关闭</Option>
-                  <Option value="1">运行中</Option>
-                </Select>
+            <FormItem label="联系人">
+              {getFieldDecorator('lianxi')(
+                <Input placeholder="请输入" />
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="使用状态">
-              {getFieldDecorator('status4')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">关闭</Option>
-                  <Option value="1">运行中</Option>
-                </Select>
+            <FormItem label="联系电话">
+              {getFieldDecorator('tel')(
+                <Input placeholder="请输入" />
               )}
             </FormItem>
           </Col>
@@ -251,77 +182,90 @@ export default class TableList extends PureComponent {
           <span style={{ float: 'right', marginBottom: 24 }}>
             <Button type="primary" htmlType="submit">查询</Button>
             <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>重置</Button>
-            <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-              收起 <Icon type="up" />
-            </a>
           </span>
         </div>
       </Form>
     );
   }
 
-  renderForm() {
-    return this.state.expandForm ? this.renderAdvancedForm() : this.renderSimpleForm();
-  }
-
   render() {
-    const { rule: { loading: ruleLoading, data } } = this.props;
-    const { selectedRows, modalVisible, addInputValue } = this.state;
+    const { rule: { loading, list, total } } = this.props;
+    const { modalVisible } = this.state;
 
-    const menu = (
-      <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="remove">删除</Menu.Item>
-        <Menu.Item key="approval">批量审批</Menu.Item>
-      </Menu>
-    );
+    const columns = [{
+      title: '订单号',
+      dataIndex: 'id',
+    }, {
+      title: '订单状态',
+      dataIndex: 'status',
+      render: (text) => {
+        switch (text) {
+          case '1':
+            return '已退款';
+          case '2':
+            return '退款失败';
+          default:
+            break;
+        }
+      },
+    }, {
+      title: '联系人',
+      dataIndex: 'money',
+    }, {
+      title: '联系电话',
+      dataIndex: 'orderId',
+    }, {
+      title: '出发城市',
+      dataIndex: 'time',
+    }, {
+      title: '到达城市',
+      render: (text, record) => <a onClick={() => this.handleModalVisible(true, record)}>查看</a>,
+    }, {
+      title: '出发日期',
+      render: (text, record) => <a onClick={() => this.handleModalVisible(true, record)}>查看</a>,
+    }, {
+      title: '到达城市',
+      render: (text, record) => <a onClick={() => this.handleModalVisible(true, record)}>查看</a>,
+    }, {
+      title: '出发航班号',
+      render: (text, record) => <a onClick={() => this.handleModalVisible(true, record)}>查看</a>,
+    }, {
+      title: '到达城市',
+      render: (text, record) => <a onClick={() => this.handleModalVisible(true, record)}>查看</a>,
+    }, {
+      title: '人数',
+      render: (text, record) => <a onClick={() => this.handleModalVisible(true, record)}>查看</a>,
+    }, {
+      title: '已付金额',
+      render: (text, record) => <a onClick={() => this.handleModalVisible(true, record)}>查看</a>,
+    }, {
+      title: '订单来源',
+      render: (text, record) => <a onClick={() => this.handleModalVisible(true, record)}>查看</a>,
+    }, {
+      title: '下单时间',
+      render: (text, record) => <a onClick={() => this.handleModalVisible(true, record)}>查看</a>,
+    }, {
+      title: '操作',
+      render: (text, record) => <a onClick={() => this.handleModalVisible(true, record)}>查看</a>,
+    }];
 
     return (
-      <PageHeaderLayout title="查询表格">
+      <PageHeaderLayout>
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>
               {this.renderForm()}
             </div>
-            <div className={styles.tableListOperator}>
-              <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
-                新建
-              </Button>
-              {
-                selectedRows.length > 0 && (
-                  <span>
-                    <Button>批量操作</Button>
-                    <Dropdown overlay={menu}>
-                      <Button>
-                        更多操作 <Icon type="down" />
-                      </Button>
-                    </Dropdown>
-                  </span>
-                )
-              }
-            </div>
-            <StandardTable
-              selectedRows={selectedRows}
-              loading={ruleLoading}
-              data={data}
-              onSelectRow={this.handleSelectRows}
-              onChange={this.handleStandardTableChange}
+            <Table
+              dataSource={list}
+              columns={columns}
+              pagination={{ showSizeChanger: true, showQuickJumper: true, total }}
+              loading={loading}
+              onChange={this.handleTableChange}
+              rowKey="id"
             />
           </div>
         </Card>
-        <Modal
-          title="新建规则"
-          visible={modalVisible}
-          onOk={this.handleAdd}
-          onCancel={() => this.handleModalVisible()}
-        >
-          <FormItem
-            labelCol={{ span: 5 }}
-            wrapperCol={{ span: 15 }}
-            label="描述"
-          >
-            <Input placeholder="请输入" onChange={this.handleAddInput} value={addInputValue} />
-          </FormItem>
-        </Modal>
       </PageHeaderLayout>
     );
   }

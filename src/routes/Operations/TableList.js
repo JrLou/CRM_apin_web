@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import moment from 'moment';
 import { Table, Divider } from 'antd';
 import ImageWrapper from '../../components/ImageWrapper';
-import styles from './Banner.less';
+import styles from './TableList.less';
 class StandardTable extends PureComponent {
   state = {
     selectedRowKeys: [],
