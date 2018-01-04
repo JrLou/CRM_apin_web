@@ -2,7 +2,7 @@ import React from 'react'
 import { Spin } from 'antd';
 import { connect } from 'dva';
 import NotAuth from '../routes/Exception/403';
-import {Route} from 'dva/router'
+import { Route } from 'dva/router'
 export default ({ component: Component, ...rest }) => {
   class AuthRoute extends React.Component {
     // constructor(props) {
@@ -16,15 +16,17 @@ export default ({ component: Component, ...rest }) => {
     //     type: 'global/fetchMenus',
     //   });
     // }
+    shouldComponentUpdate(nextProps, nextState) {
+      console.log(nextProps, "nextProps------------------")
+      console.log(nextState, "nextProps------------------")
+    }
     render() {
-      const Auth =this.props.menus.some(item=> item&&item.path&&item.path==rest.path
-      )
-      console.log("1---------11")
-      return  <Route {...rest} render={props => (
-            !null ? (
-          <Component {...props}/>
-        ) : <NotAuth/>
-      )}/>
+      const Auth = this.props.menus.some(item => item && item.path && item.path == rest.path)
+      return <Route {...rest} render={props => (
+        !null ? (
+          <Component {...props} />
+        ) : <NotAuth />
+      )} />
     }
   }
   const A = connect(state => ({
@@ -39,4 +41,4 @@ export default ({ component: Component, ...rest }) => {
 //   fetchingNotices: state.global.fetchingNotices,
 //   notices: state.global.notices,
 // }))(Loadmenu);
-{/* <Spin size="large" className={styles.globalSpin} />; */}
+{/* <Spin size="large" className={styles.globalSpin} />; */ }

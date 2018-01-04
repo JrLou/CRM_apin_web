@@ -35,6 +35,9 @@ export const getRouterData = (app) => {
     '/': {
       component: dynamicWrapper(app, ['user', 'login'], () => import('../layouts/BasicLayout')),
     },
+    '/welcome': {
+      component: dynamicWrapper(app, [], () => import('../routes/welcome.js')),
+    },
     '/finance/finance_payment': {
       component: dynamicWrapper(app, ['financePaymentList'], () => import('../routes/Finance/FinancePayment')),
     },
@@ -57,7 +60,7 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Exception/500')),
     },
     '/order/refund': {
-      component: dynamicWrapper(app, ['rule'], () => import('../routes/Order/Refund.js')),
+      component: dynamicWrapper(app, ['refund'], () => import('../routes/Order/Refund.js')),
     },
     '/exception/403': {
       component: dynamicWrapper(app, [], () => import('../routes/Exception/403')),
