@@ -96,7 +96,6 @@ class BasicLayout extends React.PureComponent {
       }
     };
     getMenuData().forEach(getRedirect); //把一级栏目 重定向首个子栏目·
-    // console.log(this.props.menus)
     const layout = (
       <Layout>
         <SiderMenu

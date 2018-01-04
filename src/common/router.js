@@ -72,7 +72,8 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, [], () => import('../routes/Exception/404')),
     },
     '/order/entrust/:id': {
-      component: dynamicWrapper(app, [], () => import('../routes/Exception/500')),
+      name:"0032023",
+      component: dynamicWrapper(app, ['rule'], () => import('../routes/Order/Entrust.js')),
     },
     '/exception/500': {
       component: dynamicWrapper(app, [], () => import('../routes/Exception/500')),
