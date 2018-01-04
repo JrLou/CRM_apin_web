@@ -65,6 +65,9 @@ export async function queryUserList(params) {
 export async function queryBanner(params) {
   return request(`/api/bannerList?${stringify(params)}`);
 }
+export async function entrust(params) {
+  return request(`/api/entrust?${stringify(params)}`);
+}
 export async function querySupplierList(params) {
   return request(`/api/suplierList?${stringify(params)}`);
 }

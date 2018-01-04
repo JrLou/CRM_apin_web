@@ -42,8 +42,7 @@ class StandardTable extends PureComponent {
 
   render() {
     const { selectedRowKeys, totalCallNo } = this.state;
-    const { data: { list, pagination }, loading } = this.props;
-
+    const { data: { data, option }, loading } = this.props;
     const status = ['关闭', '运行中', '已上线', '异常'];
 
     const columns = [
@@ -78,23 +77,23 @@ class StandardTable extends PureComponent {
       },
       {
         title: '联系人',
-        dataIndex: 'description',
+        dataIndex: 'name',
       },
       {
         title: '联系电话',
-        dataIndex: 'description',
+        dataIndex: 'tel',
       },
       {
         title: '出发城市',
-        dataIndex: 'description',
+        dataIndex: 'gocity',
       },
       {
         title: '到达城市',
-        dataIndex: 'description',
+        dataIndex: 'backcity',
       },
       {
         title: '出发时间(下单)',
-        dataIndex: 'updatedAt',
+        dataIndex: 'createdAt',
         // sorter: true,
         render: val => <span>{moment(val).format('YYYY年MM月DD日')}</span>,
       },
@@ -104,7 +103,7 @@ class StandardTable extends PureComponent {
       },
       {
         title: '已付金额',
-        dataIndex: 'callNo',
+        dataIndex: 'price',
         // sorter: true,
         align: 'right',
         render: val => `￥${val}`,
@@ -131,7 +130,7 @@ class StandardTable extends PureComponent {
     const paginationProps = {
       showSizeChanger: true,
       showQuickJumper: true,
-      ...pagination,
+      ...option,
     };
 
     // const rowSelection = {
@@ -141,7 +140,6 @@ class StandardTable extends PureComponent {
     //     disabled: record.disabled,
     //   }),
     // };
-
     return (
       <div className={styles.standardTable}>
         <div className={styles.tableAlert}>
@@ -161,7 +159,7 @@ class StandardTable extends PureComponent {
           loading={loading}
           rowKey={record => record.key}
           // rowSelection={rowSelection}
-          dataSource={list}
+          dataSource={data}
           columns={columns}
           pagination={paginationProps}
           onChange={this.handleTableChange}
