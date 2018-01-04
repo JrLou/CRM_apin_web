@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
+import { Link } from 'dva/router';
 import { Row, Col, Card, Form, Input, Select, Icon, Button, Dropdown, Menu, InputNumber, DatePicker, Modal, message, Table } from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
@@ -8,7 +9,9 @@ import styles from './TableList.less';
 const { RangePicker } = DatePicker;
 const FormItem = Form.Item;
 const { Option } = Select;
-const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
+
+const status = ['待出票', '已出票', '出票失败'];
+const source = ['飞猪', '供应商'];
 
 @connect(state => ({
   rule: state.flyingpig,
@@ -16,58 +19,46 @@ const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
 @Form.create()
 export default class TableList extends PureComponent {
   state = {
-    addInputValue: '',
-    modalVisible: false,
-    expandForm: false,
-    selectedRows: [],
     formValues: {},
+    pagination: {
+      currentPage: 1,
+      pageSize: 10,
+    },
+    id: ''
   };
 
   componentDidMount() {
     const { dispatch } = this.props;
+    const { pagination } = this.state;
     dispatch({
-      type: 'rule/fetch',
+      type: 'flyingpig/fetch',
+      payload: pagination
     });
   }
 
-  handleStandardTableChange = (pagination, filtersArg, sorter) => {
+  handleTableChange = (pagination) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
-
-    const filters = Object.keys(filtersArg).reduce((obj, key) => {
-      const newObj = { ...obj };
-      newObj[key] = getValue(filtersArg[key]);
-      return newObj;
-    }, {});
-
     const params = {
       currentPage: pagination.current,
       pageSize: pagination.pageSize,
       ...formValues,
-      ...filters,
     };
-    if (sorter.field) {
-      params.sorter = `${sorter.field}_${sorter.order}`;
-    }
 
     dispatch({
-      type: 'rule/fetch',
+      type: 'flyingpig/fetch',
       payload: params,
     });
   }
 
   handleFormReset = () => {
     const { form, dispatch } = this.props;
+    const { pagination } = this.state;
+
     form.resetFields();
     dispatch({
-      type: 'rule/fetch',
-      payload: {},
-    });
-  }
-
-  toggleForm = () => {
-    this.setState({
-      expandForm: !this.state.expandForm,
+      type: 'flyingpig/fetch',
+      payload: pagination,
     });
   }
 
@@ -75,13 +66,14 @@ export default class TableList extends PureComponent {
     e.preventDefault();
 
     const { dispatch, form } = this.props;
+    const { pagination } = this.state;
 
     form.validateFields((err, fieldsValue) => {
       if (err) return;
 
       const values = {
         ...fieldsValue,
-        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
+        ...pagination
       };
 
       this.setState({
@@ -89,7 +81,7 @@ export default class TableList extends PureComponent {
       });
 
       dispatch({
-        type: 'rule/fetch',
+        type: 'flyingpig/fetch',
         payload: values,
       });
     });
@@ -136,9 +128,9 @@ export default class TableList extends PureComponent {
               })(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
                   <Option value="">全部</Option>
-                  <Option value="1">待出票</Option>
-                  <Option value="2">已出票</Option>
-                  <Option value="3">出票失败</Option>
+                  {
+                    status.map((item, index) => <Option value={index} key={index}>{item}</Option>)
+                  }
                 </Select>
                 )}
             </FormItem>
@@ -150,8 +142,9 @@ export default class TableList extends PureComponent {
               })(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
                   <Option value="">全部</Option>
-                  <Option value="1">飞猪</Option>
-                  <Option value="2">供应商</Option>
+                  {
+                    source.map((item, index) => <Option value={index} key={index}>{item}</Option>)
+                  }
                 </Select>
                 )}
             </FormItem>
@@ -190,7 +183,7 @@ export default class TableList extends PureComponent {
 
   render() {
     const { rule: { loading, list, total } } = this.props;
-    const { modalVisible } = this.state;
+    const { id } = this.state;
 
     const columns = [{
       title: '订单号',
@@ -199,74 +192,70 @@ export default class TableList extends PureComponent {
       title: '订单状态',
       dataIndex: 'status',
       render: (text) => {
-        switch (text) {
-          case '1':
-            return '已退款';
-          case '2':
-            return '退款失败';
-          default:
-            break;
-        }
+        return status[text];
       },
     }, {
       title: '联系人',
-      dataIndex: 'money',
+      dataIndex: 'lianxi',
     }, {
       title: '联系电话',
-      dataIndex: 'orderId',
+      dataIndex: 'tel',
     }, {
       title: '出发城市',
-      dataIndex: 'time',
+      dataIndex: 'startCity',
     }, {
       title: '到达城市',
-      render: (text, record) => <a onClick={() => this.handleModalVisible(true, record)}>查看</a>,
+      dataIndex: 'arrCity'
     }, {
       title: '出发日期',
-      render: (text, record) => <a onClick={() => this.handleModalVisible(true, record)}>查看</a>,
-    }, {
-      title: '到达城市',
-      render: (text, record) => <a onClick={() => this.handleModalVisible(true, record)}>查看</a>,
+      dataIndex: 'time',
     }, {
       title: '出发航班号',
-      render: (text, record) => <a onClick={() => this.handleModalVisible(true, record)}>查看</a>,
-    }, {
-      title: '到达城市',
-      render: (text, record) => <a onClick={() => this.handleModalVisible(true, record)}>查看</a>,
+      dataIndex: 'no',
     }, {
       title: '人数',
-      render: (text, record) => <a onClick={() => this.handleModalVisible(true, record)}>查看</a>,
+      dataIndex: 'num',
     }, {
       title: '已付金额',
-      render: (text, record) => <a onClick={() => this.handleModalVisible(true, record)}>查看</a>,
+      dataIndex: 'money',
     }, {
       title: '订单来源',
-      render: (text, record) => <a onClick={() => this.handleModalVisible(true, record)}>查看</a>,
+      dataIndex: 'source',
+      render: (text) => {
+        return source[text];
+      },
     }, {
       title: '下单时间',
-      render: (text, record) => <a onClick={() => this.handleModalVisible(true, record)}>查看</a>,
+      dataIndex: 'createTime',
     }, {
       title: '操作',
-      render: (text, record) => <a onClick={() => this.handleModalVisible(true, record)}>查看</a>,
+      render: (text, record) => {
+        const title = record.status == 0 ? '出票' : '查看';
+        return <Link to={{
+          pathname: '/order/flyingpigDetail',
+          search: `?id=${record.id}`,
+          state: { price: 18 }
+        }}>{title}</Link>
+      }
     }];
 
-    return (
-      <PageHeaderLayout>
-        <Card bordered={false}>
-          <div className={styles.tableList}>
-            <div className={styles.tableListForm}>
-              {this.renderForm()}
-            </div>
-            <Table
-              dataSource={list}
-              columns={columns}
-              pagination={{ showSizeChanger: true, showQuickJumper: true, total }}
-              loading={loading}
-              onChange={this.handleTableChange}
-              rowKey="id"
-            />
+    return (<PageHeaderLayout>
+      <Card bordered={false}>
+        <div className={styles.tableList}>
+          <div className={styles.tableListForm}>
+            {this.renderForm()}
           </div>
-        </Card>
-      </PageHeaderLayout>
+          <Table
+            dataSource={list}
+            columns={columns}
+            pagination={{ showSizeChanger: true, showQuickJumper: true, total }}
+            loading={loading}
+            onChange={this.handleTableChange}
+            rowKey="id"
+          />
+        </div>
+      </Card>
+    </PageHeaderLayout>
     );
   }
 }
