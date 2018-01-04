@@ -176,6 +176,7 @@ export default class TableList extends PureComponent {
   render() {
     const { entrust: { loading: ruleLoading, data } } = this.props;
     const { selectedRows, modalVisible, addInputValue } = this.state;
+
     return (
       <PageHeaderLayout>
         <Card bordered={false}>

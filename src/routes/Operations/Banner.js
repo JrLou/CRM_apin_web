@@ -119,8 +119,6 @@ export default class BannerList extends PureComponent {
 
   render() {
     const { bannerList: { loading: ruleLoading, data } } = this.props;
-    console.log(this.props.bannerList,"-------------------------bannerList")
-    console.log(data,"-------------------------data")
     const { selectedRows } = this.state;
 
     return (

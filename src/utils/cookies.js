@@ -70,11 +70,6 @@ let CookieHelp = {
         }else{
             v= JSON.stringify(value)
         }
-
-        console.log("========")
-        console.log(key)
-        console.log(value)
-        console.log("========")
         var Days = 365;
         var exp = new Date();
         exp.setTime(exp.getTime() + Days*24*60*60*1000);

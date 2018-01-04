@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import moment from 'moment';
+import { Link } from 'dva/router';
 import { Table, Alert, Badge, Divider } from 'antd';
 import styles from './TableList.less';
 
@@ -43,7 +44,7 @@ class StandardTable extends PureComponent {
   render() {
     const { selectedRowKeys, totalCallNo } = this.state;
     const { data: { data, option }, loading } = this.props;
-    const status = ['关闭', '运行中', '已上线', '异常'];
+    const status = ['运行中', '选择方案中', '待出票', '已出票', '委托取消', '出票失败', '委托过期'];
 
     const columns = [
       {
@@ -53,24 +54,6 @@ class StandardTable extends PureComponent {
       {
         title: '订单状态',
         dataIndex: 'status',
-        filters: [
-          {
-            text: status[0],
-            value: 0,
-          },
-          {
-            text: status[1],
-            value: 1,
-          },
-          {
-            text: status[2],
-            value: 2,
-          },
-          {
-            text: status[3],
-            value: 3,
-          },
-        ],
         render(val) {
           return <Badge status={statusMap[val]} text={status[val]} />;
         },
@@ -93,14 +76,12 @@ class StandardTable extends PureComponent {
       },
       {
         title: '出发时间(下单)',
-        dataIndex: 'createdAt',
-        // sorter: true,
+        dataIndex: 'startOff',
         render: val => <span>{moment(val).format('YYYY年MM月DD日')}</span>,
       },
       {
         title: '人数',
         dataIndex: 'money',
-        dataIndex: 'numPeople',
       },
       {
         title: '已付金额',
@@ -117,10 +98,10 @@ class StandardTable extends PureComponent {
       },
       {
         title: '操作',
-        render:(text, record, index) => {
+        render:(text, record, val) => {
           // 生成复杂数据的渲染函数，参数分别为当前行的值，当前行数据，行索引，@return里面可以设置表格行/列合并
-          if (!record.img_url) {
-              return <a href="">查看</a>
+          if (val != '3') {
+              return <Link to="/order/entrustProfile/:id">查看</Link>
           } else {
               return <a href="">出票</a>
           }
@@ -141,6 +122,7 @@ class StandardTable extends PureComponent {
     //     disabled: record.disabled,
     //   }),
     // };
+
     return (
       <div className={styles.standardTable}>
         <Table

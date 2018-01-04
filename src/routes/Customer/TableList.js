@@ -55,11 +55,11 @@ class StandardTable extends PureComponent {
         dataIndex: 'loginTime',
       },
     ];
-    // const paginationProps = {
-    //   showSizeChanger: true,
-    //   showQuickJumper: true,
-    //   ...option,
-    // };
+    const paginationProps = {
+      showSizeChanger: true,
+      showQuickJumper: true,
+      ...option,
+    };
     return (
       <div className={styles.standardTable}>
         <Table
@@ -67,7 +67,7 @@ class StandardTable extends PureComponent {
           rowKey={record => record.id}
           dataSource={data}
           columns={columns}
-          // pagination={paginationProps}
+          pagination={paginationProps}
           onChange={this.handleTableChange}
         />
       </div>
