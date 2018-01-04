@@ -78,33 +78,34 @@ class StandardTable extends PureComponent {
       },
       {
         title: '联系人',
-        dataIndex: 'description',
+        dataIndex: 'contact',
       },
       {
         title: '联系电话',
-        dataIndex: 'description',
+        dataIndex: 'phone',
       },
       {
         title: '出发城市',
-        dataIndex: 'description',
+        dataIndex: 'goCity',
       },
       {
         title: '到达城市',
-        dataIndex: 'description',
+        dataIndex: 'backCity',
       },
       {
         title: '出发时间(下单)',
-        dataIndex: 'updatedAt',
+        dataIndex: 'startOff',
         // sorter: true,
         render: val => <span>{moment(val).format('YYYY年MM月DD日')}</span>,
       },
       {
         title: '人数',
-        dataIndex: 'callNo',
+        dataIndex: 'money',
+        dataIndex: 'numPeople',
       },
       {
         title: '已付金额',
-        dataIndex: 'callNo',
+        dataIndex: 'money',
         // sorter: true,
         align: 'right',
         render: val => `￥${val}`,
@@ -144,19 +145,6 @@ class StandardTable extends PureComponent {
 
     return (
       <div className={styles.standardTable}>
-        <div className={styles.tableAlert}>
-          {/* <Alert
-            message={(
-              <div>
-                已选择 <a style={{ fontWeight: 600 }}>{selectedRowKeys.length}</a> 项&nbsp;&nbsp;
-                服务调用总计 <span style={{ fontWeight: 600 }}>{totalCallNo}</span> 万
-                <a onClick={this.cleanSelectedKeys} style={{ marginLeft: 24 }}>清空</a>
-              </div>
-            )}
-            type="info"
-            showIcon
-          /> */}
-        </div>
         <Table
           loading={loading}
           rowKey={record => record.key}

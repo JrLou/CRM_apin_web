@@ -6,6 +6,7 @@ import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
 import styles from './TableList.less';
 
+const {RangePicker} = DatePicker;
 const FormItem = Form.Item;
 const { Option } = Select;
 const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
@@ -127,18 +128,25 @@ export default class TableList extends PureComponent {
                 <Select placeholder="全部" style={{ width: '100%' }}>
                   <Option value="0">全部</Option>
                   <Option value="1">运行中</Option>
-                  <Option value="1">选择方案中</Option>
-                  <Option value="1">待出票</Option>
-                  <Option value="1">已出票</Option>
-                  <Option value="1">委托取消</Option>
-                  <Option value="1">出票失败</Option>
-                  <Option value="1">委托过期</Option>
+                  <Option value="2">选择方案中</Option>
+                  <Option value="3">待出票</Option>
+                  <Option value="4">已出票</Option>
+                  <Option value="5">委托取消</Option>
+                  <Option value="6">出票失败</Option>
+                  <Option value="7">委托过期</Option>
                 </Select>
               )}
             </FormItem>
           </Col>
         </Row>
         <Row gutter={{ md: 6, lg: 24, xl: 48 }}>
+          <Col md={6} sm={24}>
+            <FormItem label="下单时间">
+              {getFieldDecorator('date')(
+                <RangePicker style={{ width: '100%' }} />
+              )}
+            </FormItem>
+          </Col>
           <Col md={6} sm={24}>
             <FormItem label="联系人">
               {getFieldDecorator('contacts')(
@@ -153,14 +161,7 @@ export default class TableList extends PureComponent {
               )}
             </FormItem>
           </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="下单时间">
-              {getFieldDecorator('date')(
-                <DatePicker style={{ width: '100%' }} placeholder="请输入更新日期" />
-              )}
-            </FormItem>
-          </Col>
-          <Col md={4} sm={24}>
+          <Col md={6} sm={24}>
             <div style={{ float: 'right', marginBottom: 24 }}>
               <Button type="primary" htmlType="submit">查询</Button>
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>重置</Button>
