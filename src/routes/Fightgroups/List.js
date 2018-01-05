@@ -9,6 +9,7 @@ import {
   List,
   message,
   Icon,
+  Spin
 } from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import {Link} from 'dva/router';
@@ -33,19 +34,19 @@ export default class TableList extends PureComponent {
 
   componentDidMount() {
     //请求数据
-    this.doLoading(true, () => {
-        request("api/groupsList", {method: 'POST', body: {count: 8}})//todo 这里看看是否有异常情况
-          .then(obj => {
-            if (obj instanceof Error) {
-              this.doLoading(false);
-              return;
-            }
-            console.log("obj", obj);
-            this.setState({
-              dataList: obj.data
-            }, () => this.doLoading(false));
-          });
-      }
+    this.loadTableData();
+    // this.doLoading(true, () => {
+    //     request("api/groupsList", {method: 'POST', body: {count: 8}})//todo 这里看看是否有异常情况
+    //       .then(obj => {
+    //         if (obj instanceof Error) {
+    //           this.doLoading(false);
+    //           return;
+    //         }
+    //         this.setState({
+    //           dataList: obj.data
+    //         }, () => this.doLoading(false));
+    //       });
+    //   }
       // this.loadTableData({}, (code, msg, data) => {
       //   if (code > 0) {
       //     this.setState({
@@ -60,38 +61,54 @@ export default class TableList extends PureComponent {
       //     message.error(msg);
       //   }
       // })
+    // );
+
+
+  }
+
+  loadTableData(param = {}) {
+    this.doLoading(true, () => {
+        request("api/groupsList", {method: 'POST', body: {count: 8,...param}})//todo 这里看看是否有异常情况
+          .then(obj => {
+            if (obj instanceof Error) {
+              this.doLoading(false);
+              return;
+            }
+            this.setState({
+              dataList: obj.data
+            }, () => this.doLoading(false));
+          });
+      }
     );
-
-
   }
 
   //模拟数据
-  loadTableData(param, cb) {//一个是请求的json对象，一个是回调函数
-    this.doLoading(true, () => {
-      setTimeout(() => {
-        const code = Math.random() - 0.1;
-        let data = [];
-        if (code > 0) {
-          for (let i = 0; i < (Math.random() * 20 + 5); i++) {
-            data.push({
-              key: i.toString(),
-              groupOrderId: i.toString(),
-              groupState: Math.floor(Math.random() * 4),//拼团状态； 0=>拼团中，1=>拼团完成，2=>拼团成功，3=>拼团关闭
-              groupTotal: Math.floor(Math.random() * 100),
-              groupNum: Math.random(),//团号
-              groupBeginTime: '18-01-01 12:00',//拼团创建时间
-              fromAddr: '上海',
-              toAddr: '北京',
-              hadPayOrder: Math.floor(Math.random() * 10),
-              needPayOrder: Math.floor(Math.random() * 10),
-              refusedPayOrder: Math.floor(Math.random() * 10),
-            });
-          }
-        }
-        cb(code, code > 0 ? "成功" : "失败", data);
-      }, Math.random() * 1000);
-    });
-  }
+  // loadTableData(param, cb) {//一个是请求的json对象，一个是回调函数
+  //   this.doLoading(true, () => {
+  //     setTimeout(() => {
+  //       const code = Math.random() - 0.1;
+  //       let data = [];
+  //       if (code > 0) {
+  //         for (let i = 0; i < (Math.random() * 20 + 5); i++) {
+  //           data.push({
+  //             key: i.toString(),
+  //             groupOrderId: i.toString(),
+  //             groupState: Math.floor(Math.random() * 4),//拼团状态； 0=>拼团中，1=>拼团完成，2=>拼团成功，3=>拼团关闭
+  //             groupTotal: Math.floor(Math.random() * 100),
+  //             groupNum: Math.random(),//团号
+  //             groupBeginTime: '18-01-01 12:00',//拼团创建时间
+  //             fromAddr: '上海',
+  //             toAddr: '北京',
+  //             hadPayOrder: Math.floor(Math.random() * 10),
+  //             needPayOrder: Math.floor(Math.random() * 10),
+  //             refusedPayOrder: Math.floor(Math.random() * 10),
+  //           });
+  //         }
+  //       }
+  //       cb(code, code > 0 ? "成功" : "失败", data);
+  //     }, Math.random() * 1000);
+  //   });
+  // }
 
   doLoading(loading, cb) {
     this.setState({
@@ -104,6 +121,7 @@ export default class TableList extends PureComponent {
       <GroupSearchForm
         onAction={data => {
           console.log("form收集的data为：", data);
+          this.loadTableData(data);
         }}
       />
     );
@@ -173,31 +191,36 @@ export default class TableList extends PureComponent {
 
 
   renderGroupCard() {
-    const {dataList} = this.state;
+    const {dataList, loading} = this.state;
     return (
-      dataList.length === 0 ?
-        <h1 style={{textAlign: 'center'}}>无拼团数据</h1>
-        :
-        <List
-          grid={{gutter: 24, lg: 4, md: 2, sm: 1, xs: 1}}
-          dataSource={dataList}
+      <Spin spinning={loading}>
+        {
 
-          renderItem={item => {
-            const headerContent = this.getCardHeader(item);
-            const bodyContent = this.getCardBody(item);
-            const footerContent = this.getCardFooter(item);
+          <List
+            grid={{gutter: 24, lg: 4, md: 2, sm: 1, xs: 1}}
+            dataSource={dataList}
+            // loading={loading}
+            renderItem={item => {
+              const headerContent = this.getCardHeader(item);
+              const bodyContent = this.getCardBody(item);
+              const footerContent = this.getCardFooter(item);
 
-            return (
-              <List.Item key={item.id}>
-                <div className={less.groupCard}>
-                  <div className={less.groupCard_header}>{headerContent}</div>
-                  <div className={less.groupCard_body}>{bodyContent}</div>
-                  <div className={less.groupCard_footer}>{footerContent}</div>
-                </div>
-              </List.Item>
-            )
-          }}
-        />
+              return (
+                dataList.length === 0 ?
+                  <h1 style={{textAlign: 'center'}}>无拼团数据</h1>
+                  :
+                  <List.Item key={item.id}>
+                    <div className={less.groupCard}>
+                      <div className={less.groupCard_header}>{headerContent}</div>
+                      <div className={less.groupCard_body}>{bodyContent}</div>
+                      <div className={less.groupCard_footer}>{footerContent}</div>
+                    </div>
+                  </List.Item>
+              )
+            }}
+          />
+        }
+      </Spin>
     );
   }
 
@@ -210,9 +233,10 @@ export default class TableList extends PureComponent {
       >
         <Card
           bordered={false}
-          loading={loading}
+          // loading={loading}
         >
           {this.renderForm()}
+
           {this.renderGroupCard()}
         </Card>
       </PageHeaderLayout>
