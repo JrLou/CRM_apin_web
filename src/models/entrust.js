@@ -1,11 +1,13 @@
-import { getFlylist } from '../services/flyingpig';
+import { entrust } from '../services/api';
 
 export default {
-  namespace: "flyingpig",
+  namespace: 'entrust',
   state: {
     loading: true,
-    list: [],
-    total: 0,
+    data: {
+      data: [],
+      option: {},
+    }
   },
   effects: {
     *fetch({ payload }, { call, put }) {
@@ -13,7 +15,7 @@ export default {
         type: 'changeLoading',
         payload: true,
       });
-      const response = yield call(getFlylist, payload);
+      const response = yield call(entrust, payload);
       yield put({
         type: 'save',
         payload: response,
@@ -25,19 +27,17 @@ export default {
     },
   },
   reducers: {
-    save(state, { payload }) {
+    save(state, action) {
       return {
         ...state,
-        list: payload.list,
-        total: payload.pagination.total,
+        data: action.payload,
       };
     },
-    changeLoading(state, { payload }) {
+    changeLoading(state, action) {
       return {
         ...state,
-        loading: payload,
+        loading: action.payload,
       };
     },
   },
 };
-

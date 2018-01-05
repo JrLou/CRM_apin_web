@@ -26,10 +26,9 @@ const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
   bannerList: state.bannerList,
 }))
 @Form.create()
-export default class TableList extends PureComponent {
+export default class BannerList extends PureComponent {
   state = {
     selectedRows: [],
-    formValues: {},
     page: {
       pageNo: 1,
       pageSize: 10
@@ -40,23 +39,7 @@ export default class TableList extends PureComponent {
       type: 'bannerList/fetch'
     });
   }
-  // getList(){
-  //   const values = this.props.form.getFieldsValue();
-  //   for (let item in values) {
-  //     if (values[item] === undefined) {
-  //       values[item] = '';
-  //     }
-  //   }
-  //   this.setState({
-  //     formValues:values,
-  //   });
-  //   let {page}=this.state;
-  //   let params = Object.assign(page, values);
-  //   this.props.dispatch({
-  //     type: 'bannerList/fetch',
-  //     payload: params,
-  //   });
-  // }
+
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
@@ -117,17 +100,32 @@ export default class TableList extends PureComponent {
     });
   }
 
+  handleAdd = ()=>{
+    this.props.dispatch({
+      type: 'bannerList/toAdd',
+    });
+  }
+
 
   render() {
     const { bannerList: { loading: ruleLoading, data } } = this.props;
-    console.log(this.props.bannerList,"-------------------------bannerList")
-    console.log(data,"-------------------------data")
     const { selectedRows } = this.state;
 
     return (
       <PageHeaderLayout>
         <Card bordered={false}>
-          <Button>新增banner</Button>
+          <div className={styles.tools}>
+            <Button
+              className={styles.addBtn}
+              size={'large'}
+              type={'primary'}
+              onClick={()=>{
+                this.handleAdd();
+              }}
+            >
+              新增banner
+            </Button>
+          </div>
           <div className={styles.tableList}>
             <StandardTable
               selectedRows={selectedRows}

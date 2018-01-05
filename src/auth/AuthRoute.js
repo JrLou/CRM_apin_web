@@ -16,10 +16,6 @@ export default ({ component: Component, ...rest }) => {
     //     type: 'global/fetchMenus',
     //   });
     // }
-    shouldComponentUpdate(nextProps, nextState) {
-      console.log(nextProps, "nextProps------------------")
-      console.log(nextState, "nextProps------------------")
-    }
     render() {
       const Auth = this.props.menus.some(item => item && item.path && item.path == rest.path)
       return <Route {...rest} render={props => (

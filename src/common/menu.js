@@ -12,7 +12,7 @@ const menuData = [{
   path: 'supplier',
   children: [{
     name: '供应商资源',
-    path: 'supplier/supplierList',
+    path: 'supplier/:supplierList',
   }, {
     name: '飞猪资源',
     path: 'supplier/flyPigList',
