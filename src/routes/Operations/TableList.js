@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Table,Button,message } from 'antd';
 import ImageWrapper from '../../components/ImageWrapper';
+import TimeHelp from '../../utils/TimeHelp.js';
 import styles from './TableList.less';
 
 @connect(state => ({
@@ -72,6 +73,14 @@ class StandardTable extends PureComponent {
     });
   };
 
+  //编辑
+  handleEdit = (data)=>{
+    this.props.dispatch({
+      type: 'bannerList/toAdd',
+      payload:data,
+    });
+  };
+
 
   render() {
     const { data: { list, pagination }, loading } = this.props;
@@ -102,7 +111,10 @@ class StandardTable extends PureComponent {
       },
       {
         title: '有效期',
-        dataIndex: 'validity',
+        dataIndex: 'validityStart',
+        render:(text,record,index)=>{
+          return <span>{TimeHelp.getYMDHM(record.validityStart)+' - '+TimeHelp.getYMDHM(record.validityEnd)}</span>
+        }
       },
       {
         title: '状态',
@@ -114,6 +126,9 @@ class StandardTable extends PureComponent {
       {
         title: '更新时间',
         dataIndex: 'updataTime',
+        render:(text,record,index)=>{
+          return <span>{TimeHelp.getYMDHM(text)}</span>
+        }
       },
       {
         title: '操作',
@@ -158,6 +173,9 @@ class StandardTable extends PureComponent {
         <Button
           type={'primary'}
           className={styles.btn}
+          onClick={()=>{
+            this.handleEdit(record);
+          }}
         >
           编辑
         </Button>

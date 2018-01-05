@@ -98,14 +98,14 @@ export default class BannerList extends PureComponent {
         payload: values,
       });
     });
-  }
+  };
 
   handleAdd = ()=>{
     this.props.dispatch({
       type: 'bannerList/toAdd',
+      payload:{}
     });
-  }
-
+  };
 
   render() {
     const { bannerList: { loading: ruleLoading, data } } = this.props;

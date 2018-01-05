@@ -12,8 +12,9 @@ for (let i = 0; i < 46; i += 1) {
     no: `TradeCode ${i}`,
     iphone: Math.floor(Math.random() * 1000),
     status: ((i % 3) === 0)?1:0,
-    updataTime:new Date(`2017-07-${Math.floor(i / 2) + 1}`),
-    validity: new Date(`2017-07-${Math.floor(i / 2) + 1}`),
+    updataTime:(new Date).valueOf(),
+    validityStart: (new Date().getTime() - (1000 * 60 * 60 * 2 * i)),
+    validityEnd: (new Date().getTime() - (1000 * 60 * 60 * 1 * i)),
   });
 }
 
