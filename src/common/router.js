@@ -47,6 +47,7 @@ export const getRouterData = (app) => {
     '/fightgroups/list': {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Fightgroups/List.js')),
     },
+    //订单管理
     '/order/flyingpig': {
       component: dynamicWrapper(app, ['flyingpig'], () => import('../routes/Order/Flyingpig.js')),
     },
@@ -56,22 +57,19 @@ export const getRouterData = (app) => {
     '/order/entrust': {
       component: dynamicWrapper(app, ['entrust'], () => import('../routes/Order/Entrust.js')),
     },
-    '/order/entrustProfile/:id':{
+    '/order/entrust/:id':{
+      name:"委托订单详情",
       component: dynamicWrapper(app, ['profile'], () => import('../routes/Order/EntrustProfile.js')),
     },
-
     '/order/refund': {
       component: dynamicWrapper(app, ['refund'], () => import('../routes/Order/Refund.js')),
     },
+    //异常页
     '/exception/403': {
       component: dynamicWrapper(app, [], () => import('../routes/Exception/403')),
     },
     '/exception/404': {
       component: dynamicWrapper(app, [], () => import('../routes/Exception/404')),
-    },
-    '/order/entrust/:id': {
-      name:"0032023",
-      component: dynamicWrapper(app, ['rule'], () => import('../routes/Order/Entrust.js')),
     },
     '/exception/500': {
       component: dynamicWrapper(app, [], () => import('../routes/Exception/500')),
