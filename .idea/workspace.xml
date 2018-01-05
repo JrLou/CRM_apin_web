@@ -2,12 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="60b4d4fd-22c7-4a6e-af2f-58e0abe9e734" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/common/router.js" afterPath="$PROJECT_DIR$/src/common/router.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/routes/Fightgroups/Choose.js" afterPath="$PROJECT_DIR$/src/routes/Fightgroups/Choose.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/routes/Fightgroups/Demand.js" afterPath="$PROJECT_DIR$/src/routes/Fightgroups/Demand.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/routes/Fightgroups/Demand.less" afterPath="$PROJECT_DIR$/src/routes/Fightgroups/Demand.less" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/routes/Fightgroups/View.js" afterPath="$PROJECT_DIR$/src/routes/Fightgroups/View.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/utils/utils.js" afterPath="$PROJECT_DIR$/src/utils/utils.js" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -191,6 +185,12 @@
             <path>
               <item name="web_crm" type="b2602c69:ProjectViewProjectNode" />
               <item name="web_crm" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="utils" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="web_crm" type="b2602c69:ProjectViewProjectNode" />
+              <item name="web_crm" type="462c0819:PsiDirectoryNode" />
               <item name="tests" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -267,13 +267,12 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="23177000" />
+    <option name="totallyTimeSpent" value="23185000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14752372" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14752372" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33913043" sideWeight="0.50421494" order="8" side_tool="true" content_ui="tabs" />
