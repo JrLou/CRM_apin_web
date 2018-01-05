@@ -73,14 +73,30 @@ export default {
       },
       * toAdd({payload},{call,put}){
         //列表页，跳转到添加/编辑页面
+        yield put({
+          type: 'changeEditData',
+          payload:payload,
+        });
         yield put(routerRedux.push('/operations/bannerEdit'))
       },
       * cancelEdit({payload},{call,put}){
         //取消编辑，跳转到列表页
+        yield put({
+          type: 'changeEditData',
+          payload:{},
+        });
         yield put(routerRedux.push('/operations/banner'))
       },
-      * checkEdit({payload},{call,put}){
+      * checkEdit({payload,callback},{call,put}){
         //确定编辑，成功以后跳转到列表页
+        const response = yield call(queryBanner, payload);
+        if(callback){
+          callback(response);
+        }
+        yield put({
+          type: 'changeEditData',
+          payload:{},
+        });
         yield put(routerRedux.push('/operations/banner'))
       }
     },
