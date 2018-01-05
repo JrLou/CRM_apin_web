@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
-import moment from 'moment';
-import { Table, Divider } from 'antd';
+import { Table } from 'antd';
 import ImageWrapper from '../../components/ImageWrapper';
+import TimeHelp from '../../utils/TimeHelp.js';
 import styles from './TableList.less';
 class StandardTable extends PureComponent {
   state = {
@@ -49,10 +49,16 @@ class StandardTable extends PureComponent {
       {
         title: '注册时间',
         dataIndex: 'registerTime',
+        render:(text,record,index)=>{
+          return <span>{TimeHelp.getYMDHMS(text)}</span>
+        }
       },
       {
         title: '最近登录时间',
         dataIndex: 'loginTime',
+        render:(text,record,index)=>{
+          return <span>{TimeHelp.getYMDHMS(text)}</span>
+        }
       },
     ];
     const paginationProps = {

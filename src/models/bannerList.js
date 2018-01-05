@@ -87,8 +87,12 @@ export default {
         });
         yield put(routerRedux.push('/operations/banner'))
       },
-      * checkEdit({payload},{call,put}){
+      * checkEdit({payload,callback},{call,put}){
         //确定编辑，成功以后跳转到列表页
+        const response = yield call(queryBanner, payload);
+        if(callback){
+          callback(response);
+        }
         yield put({
           type: 'changeEditData',
           payload:{},

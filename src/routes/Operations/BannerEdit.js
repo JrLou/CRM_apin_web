@@ -3,7 +3,7 @@ import {connect} from 'dva';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
-import {Card, Form, Row, Col, Input, Button,Select,Radio,DatePicker} from 'antd';
+import {Card, Form, Row, Col, Input, Button,Select,Radio,DatePicker,message} from 'antd';
 import styles from './BannerEdit.less';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
@@ -19,7 +19,6 @@ const {RangePicker} = DatePicker;
 @Form.create()
 
 class BannerEdit extends PureComponent {
-  state = {};
 
   handleSubmit = (e) => {
     e.preventDefault();
@@ -32,6 +31,11 @@ class BannerEdit extends PureComponent {
         ...fieldsValue,
       };
 
+      if(!values.validityTime[0]||!values.validityTime[1]){
+        message.warning('请输入图片有效期');
+        return;
+      }
+
       values.validityStart = values.validityTime[0]._i;
       values.validityEnd = values.validityTime[1]._i;
 
@@ -40,6 +44,13 @@ class BannerEdit extends PureComponent {
       dispatch({
         type: 'bannerList/checkEdit',
         payload: values,
+        callback:(response)=>{
+          if(response.code==200){
+            message.success(response.message);
+          }else{
+            message.error(response.message);
+          }
+        }
       });
     });
   };
