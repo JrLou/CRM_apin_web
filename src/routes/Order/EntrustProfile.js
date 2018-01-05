@@ -137,7 +137,7 @@ export default class BasicProfile extends Component {
       },
     }];
     return (
-      <PageHeaderLayout title="委托订单详情页">
+      <PageHeaderLayout>
         <Card bordered={false}>
           {/* <div className={styles.title}>图片查看</div>
           <ImageWrapper className={styles.picWrapper} src="https://os.alipayobjects.com/rmsportal/mgesTPFxodmIwpi.png" desc="示意图"/> */}
