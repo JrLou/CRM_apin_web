@@ -68,7 +68,7 @@ export default class MyForm extends Component {
         //todo antd@2.0 之后，时间类组件的 value 改为 moment 类型，所以在提交前需要预处理。
         this.props.onAction && this.props.onAction(dataObj);
       },                                                            //function(dataObj)                                             点击“搜索”的回调，参数为：收集到的form的dataObj
-      onCancelafter: () => {
+      onCancelAfter: () => {
 
       },                                                            //function                                                      点击“重置”后的回调
       layout: "inline",                                             //string    		                    'inline'	                  表单排列的方式，  参数为：'horizontal'|'vertical'|'inline'

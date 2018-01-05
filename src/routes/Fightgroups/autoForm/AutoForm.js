@@ -26,7 +26,6 @@ export default class AutoForm extends React.Component {
   }
 
   handleSearch = (e) => {
-    const onSearch = this.props.data.onSearch;
     e.preventDefault();
     this.props.form.validateFields((err, fieldsValue) => {
       if (err) {
@@ -68,7 +67,8 @@ export default class AutoForm extends React.Component {
             fieldsValue[key1] = momentValue1.format(formatProps);
             delete fieldsValue[key];
           }
-        } else {}
+        } else {
+        }
       }
       // for(let k in newData){
       //   if(newData[k].type === 3){
@@ -108,6 +108,7 @@ export default class AutoForm extends React.Component {
       // }
 
       //values里面有所有form的数据
+      const onSearch = this.props.data.onSearch;
       onSearch && onSearch(fieldsValue);
     });
   };
@@ -118,7 +119,15 @@ export default class AutoForm extends React.Component {
 
   handleReset = () => {
     this.props.form.resetFields();
-    this.props.form.validateFields();
+    this.props.form.validateFields((err, fieldsValue) => {
+        if (err) {
+          return;
+        }
+        const onCancelAfter = this.props.data.onCancelAfter;
+        onCancelAfter && onCancelAfter(fieldsValue);
+      }
+    );
+
   };
 
   cloneObj = (obj) => {//深度克隆,对象或者数组
@@ -233,7 +242,7 @@ export default class AutoForm extends React.Component {
           />;
           break;
         case 2:
-          console.log("formItemSonProps",formItemSonProps);
+          console.log("formItemSonProps", formItemSonProps);
           formItemEle = <Select {...formItemSonProps}>
             {itemData.options.map(option => <Option key={option.value} value={option.value}>{option.txt}</Option>)}
           </Select>;

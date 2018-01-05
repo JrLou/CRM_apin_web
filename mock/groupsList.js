@@ -150,10 +150,10 @@ export function groupsList(req, res, u) {
 
   const params = getUrlParams(url);
 
-  const count = (req.body.count * 1) || 20;
+  const pageSize = (req.body.pageSize * 1) || 20;
   const result = {
     code: 1,
-    data: fakeList(count),
+    data: fakeList(pageSize),
     msg: '请求成功',
     option: {
       total:100,
