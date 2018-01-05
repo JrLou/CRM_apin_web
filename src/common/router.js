@@ -113,7 +113,7 @@ export const getRouterData = (app) => {
     },
     // 查看拼团
     '/fightgroups/demand/result': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/Result.js')),
+      component: dynamicWrapper(app, ['profile'], () => import('../routes/Fightgroups/Result.js')),
     },
     //客户管理
     '/customer/userList': {
