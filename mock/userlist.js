@@ -11,8 +11,8 @@ for (let i = 0; i < 46; i += 1) {
     no: `TradeCode ${i}`,
     iphone: Math.floor(Math.random() * 1000),
     status: Math.floor(Math.random() * 10) % 4,
-    loginTime: new Date(`2017-07-${Math.floor(i / 2) + 1}`),
-    registerTime: new Date(`2017-07-${Math.floor(i / 2) + 1}`),
+    loginTime: (new Date().getTime() - (1000 * 60 * 60 * 2 * i)),
+    registerTime: (new Date().getTime() - (1000 * 60 * 60 * 5 * i)),
     progress: Math.ceil(Math.random() * 100),
   });
 }
