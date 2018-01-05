@@ -1,14 +1,23 @@
+//需求池页面
 import React, {PureComponent} from 'react';
 import {connect} from 'dva';
-import {Card, Button, Icon, List} from 'antd';
+import {Card, Button, List, Form, Input, Select, DatePicker, Row, Col} from 'antd';
 import {Link} from 'dva/router';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './Demand.less';
 
+const {RangePicker} = DatePicker;
+const FormItem = Form.Item;
+const {Option} = Select;
 // @connect(state => ({
 //   demand: state.demand,
 // }))
+@Form.create()
 export default class Demand extends PureComponent {
+  state = {
+    formValues: {},
+  };
+
   componentDidMount() {
     // this.props.dispatch({
     //   type: 'demand/fetch',
@@ -16,6 +25,79 @@ export default class Demand extends PureComponent {
     //     count: 8,
     //   },
     // });
+  }
+
+  handleSearch = (e) => {
+    e.preventDefault();
+    const {dispatch, form} = this.props;
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      const values = {
+        ...fieldsValue,
+      };
+      this.setState({
+        formValues: values,
+      });
+      // dispatch({
+      //   type: 'refund/fetch',
+      //   payload: values,
+      // });
+    });
+  }
+
+  resetValue() {
+    this.props.form.resetFields();
+    const param = this.props.form.getFieldsValue();
+    this.setState({
+      formValues: param,
+    });
+    // dispatch({
+    //   type: 'refund/fetch',
+    //   payload: values,
+    // });
+  }
+
+  renderForm() {
+    const {getFieldDecorator} = this.props.form;
+    return (
+      <Form onSubmit={this.handleSearch} layout="inline">
+        <Row gutter={{md: 8, lg: 24, xl: 48}}>
+          <Col md={8} sm={24}>
+            <FormItem label="出发城市">
+              {getFieldDecorator('id')(
+                <Input placeholder="请输入"/>
+              )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="到达城市">
+              {getFieldDecorator('orderId')(
+                <Input placeholder="请输入"/>
+              )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="需求池类型">
+              {getFieldDecorator('status', {
+                initialValue: '',
+              })(
+                <Select placeholder="请选择" style={{width: '100%'}}>
+                  <Option value="">全部</Option>
+                  <Option value="1">国内</Option>
+                  <Option value="2">国际</Option>
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+        </Row>
+        <div style={{overflow: 'hidden'}}>
+          <span style={{float: 'right'}}>
+            <Button type="primary" htmlType="submit" style={{marginRight: 6}}>查询</Button>
+            <Button type="default" onClick={::this.resetValue}>重置</Button>
+          </span>
+        </div>
+      </Form>
+    );
   }
 
   render() {
@@ -30,7 +112,6 @@ export default class Demand extends PureComponent {
       {id: 1, name: "园园", desc: '这是一段描述'},
       {id: 1, name: "园园", desc: '这是一段描述'},
     ];
-    const title=<span className={styles.cardTitle}><b></b>杭州 - 曼谷w</span>
     return (
       <PageHeaderLayout>
         {/*跳转三级页面*/}
@@ -46,6 +127,12 @@ export default class Demand extends PureComponent {
         {/*<Link to={'/fightgroups/demand/result'}>*/}
         {/*< Button>查看拼团</Button>*/}
         {/*</Link>*/}
+        <Card bordered={false}>
+          <div className={styles.tableListForm}>
+            {this.renderForm()}
+          </div>
+        </Card>
+
         <div className={styles.cardList}>
           <List
             rowKey="id"
@@ -55,8 +142,9 @@ export default class Demand extends PureComponent {
             renderItem={item => (
               <List.Item key={item.id}>
                 <Card hoverable className={styles.card}
-                      actions={[<Link to={'/fightgroups/demand/id'}>查看历史拼团</Link>, <Link to={'/fightgroups/demand/id'}><Button type="primary">方案推送</Button></Link>]}
-                      title={title}
+                      actions={[<Link to='/fightgroups/demand/id'>查看历史拼团</Link>,
+                        <Link to={'/fightgroups/demand/choose'}><Button type="primary">方案推送</Button></Link>]}
+                      title={<span><b className={styles.cardTitle}></b>杭州 - 曼谷323</span>}
                       extra={30}>
                   <Card.Meta
                     description={(

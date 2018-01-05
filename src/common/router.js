@@ -44,9 +44,6 @@ export const getRouterData = (app) => {
     '/finance/finance_verify': {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Finance/FinanceVerify')),
     },
-    '/fightgroups/demand': {
-      component: dynamicWrapper(app, ['demand'], () => import('../routes/Fightgroups/Demand.js')),
-    },
     '/fightgroups/list': {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Fightgroups/List.js')),
     },
@@ -96,9 +93,13 @@ export const getRouterData = (app) => {
     '/RightsManagement/EditRole': {
       component: dynamicWrapper(app, ['role'], () => import('../routes/RightsManagement/EditRole')),
     },
+    //需求池
+    '/fightgroups/demand': {
+      component: dynamicWrapper(app, ['demand'], () => import('../routes/Fightgroups/Demand.js')),
+    },
     // 查看需求池
     '/fightgroups/demand/id': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/View.js')),
+      component: dynamicWrapper(app, ['demand'], () => import('../routes/Fightgroups/View.js')),
     },
     //推送方案-选择订单
     '/fightgroups/demand/choose': {
