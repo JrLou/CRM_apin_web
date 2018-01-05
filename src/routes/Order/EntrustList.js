@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react';
 import moment from 'moment';
 import { Link } from 'dva/router';
-import { Table, Alert, Badge, Divider } from 'antd';
+import { Table, Alert, Divider } from 'antd';
 import styles from './TableList.less';
 
-const statusMap = ['default', 'processing', 'success', 'error'];
+// const statusMap = ['default', 'processing', 'success', 'error'];
 class StandardTable extends PureComponent {
   state = {
     selectedRowKeys: [],
@@ -55,7 +55,7 @@ class StandardTable extends PureComponent {
         title: '订单状态',
         dataIndex: 'status',
         render(val) {
-          return <Badge status={statusMap[val]} text={status[val]} />;
+          return <span>{status[val]}</span>;
         },
       },
       {
@@ -81,7 +81,7 @@ class StandardTable extends PureComponent {
       },
       {
         title: '人数',
-        dataIndex: 'money',
+        dataIndex: 'numPeople',
       },
       {
         title: '已付金额',
