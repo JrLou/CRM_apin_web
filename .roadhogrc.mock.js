@@ -73,7 +73,7 @@ const proxy = {
   }),
   'GET /api/userList':getUserList,
   'GET /api/bannerList':bannerList,
-  'GET /api/groupsList':groupsList,
+  'POST /api/groupsList':groupsList,
   'GET /api/deleteBanner':bannerList,
   'GET /api/changeStatus':bannerList,
   'GET /api/suplierList' :getSuplierList,

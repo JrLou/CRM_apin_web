@@ -1,327 +1,220 @@
-import React, { PureComponent } from 'react';
-import { connect } from 'dva';
-import { Row, Col, Card, Form, Input, Select, Icon, Button, Dropdown, Menu, InputNumber, DatePicker, Modal, message } from 'antd';
-import StandardTable from '../../components/StandardTable';
+import React, {PureComponent} from 'react';
+import moment from 'moment';
+import {
+  Row,
+  Col,
+  Card,
+  Form,
+  Select,
+  List,
+  message,
+  Icon,
+} from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
+import {Link} from 'dva/router';
+import GroupSearchForm from './autoForm/GroupSearchForm';
+import request from '../../utils/request';
 
-import styles from './TableList.less';
+import less from './List.less';
 
 const FormItem = Form.Item;
-const { Option } = Select;
+const {Option} = Select;
 const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
 
-@connect(state => ({
-  rule: state.rule,
-}))
-@Form.create()
+// @Form.create()
 export default class TableList extends PureComponent {
-  state = {
-    addInputValue: '',
-    modalVisible: false,
-    expandForm: false,
-    selectedRows: [],
-    formValues: {},
-  };
+  constructor() {
+    super();
+    this.state = {
+      loading: true,
+      dataList: [],
+    }
+  }
 
   componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'rule/fetch',
-    });
-  }
-
-  handleStandardTableChange = (pagination, filtersArg, sorter) => {
-    const { dispatch } = this.props;
-    const { formValues } = this.state;
-
-    const filters = Object.keys(filtersArg).reduce((obj, key) => {
-      const newObj = { ...obj };
-      newObj[key] = getValue(filtersArg[key]);
-      return newObj;
-    }, {});
-
-    const params = {
-      currentPage: pagination.current,
-      pageSize: pagination.pageSize,
-      ...formValues,
-      ...filters,
-    };
-    if (sorter.field) {
-      params.sorter = `${sorter.field}_${sorter.order}`;
-    }
-
-    dispatch({
-      type: 'rule/fetch',
-      payload: params,
-    });
-  }
-
-  handleFormReset = () => {
-    const { form, dispatch } = this.props;
-    form.resetFields();
-    dispatch({
-      type: 'rule/fetch',
-      payload: {},
-    });
-  }
-
-  toggleForm = () => {
-    this.setState({
-      expandForm: !this.state.expandForm,
-    });
-  }
-
-  handleMenuClick = (e) => {
-    const { dispatch } = this.props;
-    const { selectedRows } = this.state;
-
-    if (!selectedRows) return;
-
-    switch (e.key) {
-      case 'remove':
-        dispatch({
-          type: 'rule/remove',
-          payload: {
-            no: selectedRows.map(row => row.no).join(','),
-          },
-          callback: () => {
+    //请求数据
+    this.doLoading(true, () => {
+        request("api/groupsList", {method: 'POST', body: {count: 8}})//todo 这里看看是否有异常情况
+          .then(obj => {
+            if (obj instanceof Error) {
+              this.doLoading(false);
+              return;
+            }
+            console.log("obj", obj);
             this.setState({
-              selectedRows: [],
+              dataList: obj.data
+            }, () => this.doLoading(false));
+          });
+      }
+      // this.loadTableData({}, (code, msg, data) => {
+      //   if (code > 0) {
+      //     this.setState({
+      //       dataList: data,
+      //       loading: false
+      //     });
+      //   } else {
+      //     this.setState({
+      //       dataList: [],
+      //       loading: false
+      //     });
+      //     message.error(msg);
+      //   }
+      // })
+    );
+
+
+  }
+
+  //模拟数据
+  loadTableData(param, cb) {//一个是请求的json对象，一个是回调函数
+    this.doLoading(true, () => {
+      setTimeout(() => {
+        const code = Math.random() - 0.1;
+        let data = [];
+        if (code > 0) {
+          for (let i = 0; i < (Math.random() * 20 + 5); i++) {
+            data.push({
+              key: i.toString(),
+              groupOrderId: i.toString(),
+              groupState: Math.floor(Math.random() * 4),//拼团状态； 0=>拼团中，1=>拼团完成，2=>拼团成功，3=>拼团关闭
+              groupTotal: Math.floor(Math.random() * 100),
+              groupNum: Math.random(),//团号
+              groupBeginTime: '18-01-01 12:00',//拼团创建时间
+              fromAddr: '上海',
+              toAddr: '北京',
+              hadPayOrder: Math.floor(Math.random() * 10),
+              needPayOrder: Math.floor(Math.random() * 10),
+              refusedPayOrder: Math.floor(Math.random() * 10),
             });
-          },
-        });
-        break;
-      default:
-        break;
-    }
+          }
+        }
+        cb(code, code > 0 ? "成功" : "失败", data);
+      }, Math.random() * 1000);
+    });
   }
 
-  handleSelectRows = (rows) => {
+  doLoading(loading, cb) {
     this.setState({
-      selectedRows: rows,
-    });
-  }
-
-  handleSearch = (e) => {
-    e.preventDefault();
-
-    const { dispatch, form } = this.props;
-
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-
-      const values = {
-        ...fieldsValue,
-        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
-      };
-
-      this.setState({
-        formValues: values,
-      });
-
-      dispatch({
-        type: 'rule/fetch',
-        payload: values,
-      });
-    });
-  }
-
-  handleModalVisible = (flag) => {
-    this.setState({
-      modalVisible: !!flag,
-    });
-  }
-
-  handleAddInput = (e) => {
-    this.setState({
-      addInputValue: e.target.value,
-    });
-  }
-
-  handleAdd = () => {
-    this.props.dispatch({
-      type: 'rule/add',
-      payload: {
-        description: this.state.addInputValue,
-      },
-    });
-
-    message.success('添加成功');
-    this.setState({
-      modalVisible: false,
-    });
-  }
-
-  renderSimpleForm() {
-    const { getFieldDecorator } = this.props.form;
-    return (
-      <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem label="规则编号">
-              {getFieldDecorator('no')(
-                <Input placeholder="请输入" />
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="使用状态">
-              {getFieldDecorator('status')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">关闭</Option>
-                  <Option value="1">运行中</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <span className={styles.submitButtons}>
-              <Button type="primary" htmlType="submit">查询</Button>
-              <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>重置</Button>
-              <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-                展开 <Icon type="down" />
-              </a>
-            </span>
-          </Col>
-        </Row>
-      </Form>
-    );
-  }
-
-  renderAdvancedForm() {
-    const { getFieldDecorator } = this.props.form;
-    return (
-      <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem label="规则编号">
-              {getFieldDecorator('no')(
-                <Input placeholder="请输入" />
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="使用状态">
-              {getFieldDecorator('status')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">关闭</Option>
-                  <Option value="1">运行中</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="调用次数">
-              {getFieldDecorator('number')(
-                <InputNumber style={{ width: '100%' }} />
-              )}
-            </FormItem>
-          </Col>
-        </Row>
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem label="更新日期">
-              {getFieldDecorator('date')(
-                <DatePicker style={{ width: '100%' }} placeholder="请输入更新日期" />
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="使用状态">
-              {getFieldDecorator('status3')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">关闭</Option>
-                  <Option value="1">运行中</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="使用状态">
-              {getFieldDecorator('status4')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">关闭</Option>
-                  <Option value="1">运行中</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-        </Row>
-        <div style={{ overflow: 'hidden' }}>
-          <span style={{ float: 'right', marginBottom: 24 }}>
-            <Button type="primary" htmlType="submit">查询</Button>
-            <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>重置</Button>
-            <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-              收起 <Icon type="up" />
-            </a>
-          </span>
-        </div>
-      </Form>
-    );
+      loading
+    }, cb);
   }
 
   renderForm() {
-    return this.state.expandForm ? this.renderAdvancedForm() : this.renderSimpleForm();
+    return (
+      <GroupSearchForm
+        onAction={data => {
+          console.log("form收集的data为：", data);
+        }}
+      />
+    );
+  }
+
+  getGroupState(groupState) {
+    const styleProp = {
+      display: 'inline-block',
+      width: '8px',
+      height: '8px',
+      marginRight: '10px',
+      borderRadius: '50%',
+      marginBottom: "2px",
+    };
+    let result = '';
+    switch (groupState) {
+      case 0:
+        result = <span><span style={{...styleProp, backgroundColor: '#df8600'}}></span>拼团中</span>;
+        break;
+      case 1:
+        result = <span><span style={{...styleProp, backgroundColor: '#33cc66'}}></span>拼团完成</span>;
+        break;
+      case 2:
+        result = <span><span style={{...styleProp, backgroundColor: '#33cc66'}}></span>拼团成功</span>;
+        break;
+      case 3:
+        result = <span><span style={{...styleProp, backgroundColor: '#999'}}></span>拼团关闭</span>;
+        break;
+    }
+    return result;
+  }
+
+  getCardHeader(item) {
+    return (
+      <div>
+        <span style={{float: 'right'}}>{item.groupTotal}人</span>
+        <div style={{textAlign: 'center'}}>{this.getGroupState(item.groupState)}</div>
+      </div>
+    );
+
+  }
+
+  getCardBody(item) {
+    return (
+      <div>
+        <p className={less.groupCard_body_lineA}><span
+          style={{float: 'right'}}>{item.groupBeginTime.substring(0, 19)}</span>团号：{item.id}&nbsp;&nbsp;&nbsp;</p>
+        <p className={less.groupCard_body_lineB}><span
+          style={{float: 'right', fontSize: '14px'}}>{item.groupBeginTime.substring(0, 10)}出发</span>{item.fromAddr}
+          - {item.toAddr}
+        </p>
+        <div className={less.groupCard_body_lineC}>
+          <p>已支付订单：{item.hadPayOrder}</p>
+          <p>待支付订单：{item.needPayOrder}</p>
+          <p>已拒绝订单：{item.refusedPayOrder}</p>
+        </div>
+      </div>
+    );
+  }
+
+  getCardFooter(item) {
+    return <div>
+      <a style={{float: 'right'}} href="#">查看</a>
+      <span>处理客服：盼盼</span>
+    </div>;
+  }
+
+
+  renderGroupCard() {
+    const {dataList} = this.state;
+    return (
+      dataList.length === 0 ?
+        <h1 style={{textAlign: 'center'}}>无拼团数据</h1>
+        :
+        <List
+          grid={{gutter: 24, lg: 4, md: 2, sm: 1, xs: 1}}
+          dataSource={dataList}
+
+          renderItem={item => {
+            const headerContent = this.getCardHeader(item);
+            const bodyContent = this.getCardBody(item);
+            const footerContent = this.getCardFooter(item);
+
+            return (
+              <List.Item key={item.id}>
+                <div className={less.groupCard}>
+                  <div className={less.groupCard_header}>{headerContent}</div>
+                  <div className={less.groupCard_body}>{bodyContent}</div>
+                  <div className={less.groupCard_footer}>{footerContent}</div>
+                </div>
+              </List.Item>
+            )
+          }}
+        />
+    );
   }
 
   render() {
-    const { rule: { loading: ruleLoading, data } } = this.props;
-    const { selectedRows, modalVisible, addInputValue } = this.state;
-
-    const menu = (
-      <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="remove">删除</Menu.Item>
-        <Menu.Item key="approval">批量审批</Menu.Item>
-      </Menu>
-    );
+    const {loading} = this.state;
 
     return (
-      <PageHeaderLayout title="查询表格">
-        <Card bordered={false}>
-          <div className={styles.tableList}>
-            <div className={styles.tableListForm}>
-              {this.renderForm()}
-            </div>
-            <div className={styles.tableListOperator}>
-              <Button icon="plus" type="primary" onClick={() => this.handleModalVisible(true)}>
-                新建
-              </Button>
-              {
-                selectedRows.length > 0 && (
-                  <span>
-                    <Button>批量操作</Button>
-                    <Dropdown overlay={menu}>
-                      <Button>
-                        更多操作 <Icon type="down" />
-                      </Button>
-                    </Dropdown>
-                  </span>
-                )
-              }
-            </div>
-            <StandardTable
-              selectedRows={selectedRows}
-              loading={ruleLoading}
-              data={data}
-              onSelectRow={this.handleSelectRows}
-              onChange={this.handleStandardTableChange}
-            />
-          </div>
-        </Card>
-        <Modal
-          title="新建规则"
-          visible={modalVisible}
-          onOk={this.handleAdd}
-          onCancel={() => this.handleModalVisible()}
+      <PageHeaderLayout
+        title="卡片列表"
+      >
+        <Card
+          bordered={false}
+          loading={loading}
         >
-          <FormItem
-            labelCol={{ span: 5 }}
-            wrapperCol={{ span: 15 }}
-            label="描述"
-          >
-            <Input placeholder="请输入" onChange={this.handleAddInput} value={addInputValue} />
-          </FormItem>
-        </Modal>
+          {this.renderForm()}
+          {this.renderGroupCard()}
+        </Card>
       </PageHeaderLayout>
     );
   }

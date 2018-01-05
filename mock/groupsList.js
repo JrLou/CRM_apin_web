@@ -65,19 +65,19 @@ export function fakeList(count) {
   const list = [];
   for (let i = 0; i < count; i += 1) {
     list.push({
-      id: `fake-list-${i}`,
+      id: `fake-list-${Math.random().toFixed(6)}`,
       owner: user[i % 10],
       title: titles[i % 8],
       avatar: avatars[i % 8],
-      fromAddr: parseInt(i / 4, 10) % 2 === 0 ? covers[i % 4] : covers[3 - (i % 4)],
-      toAddr: ['active', 'exception', 'normal'][i % 3],
+      fromAddr: [ '杭州', '北京', '上海', '广州'][i % 4],
+      toAddr: ['北京', '上海', '广州', '杭州'][i % 4],
       percent: Math.ceil(Math.random() * 50) + 50,
       groupBeginTime: new Date(new Date().getTime() - (1000 * 60 * 60 * 2 * i)),
       createdAt: new Date(new Date().getTime() - (1000 * 60 * 60 * 2 * i)),
       subDescription: desc[i % 5],
       groupNum: Math.ceil(Math.random() * 100000) + 100000,
       groupTotal: Math.ceil(Math.random() * 1000) + 1000,
-      groupState: Math.ceil(Math.random() * 100) + 100,
+      groupState: Math.floor(Math.random() * 4),
       hadPayOrder: Math.ceil(Math.random() * 100) + 100,
       needPayOrder: Math.ceil(Math.random() * 10) + 10,
       refusedPayOrder:Math.ceil(Math.random() * 10) + 10,
@@ -150,13 +150,13 @@ export function groupsList(req, res, u) {
 
   const params = getUrlParams(url);
 
-  const count = (params.count * 1) || 20;
+  const count = (req.body.count * 1) || 20;
   const result = {
     code: 1,
     data: fakeList(count),
     msg: '请求成功',
     option: {
-      total:count,
+      total:100,
     },
   };
 
