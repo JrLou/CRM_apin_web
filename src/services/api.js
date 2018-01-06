@@ -73,10 +73,10 @@ export async function queryFlyList(params) {
 }
 
 export async function AccountLogin(params) {
-  const newparams = Object.assign({},{account:params.account,appid:'2ef8d902c12f454f9acdbb0484f8c05a'})
+  const newparams = Object.assign({}, { account: params.account, appid: '2ef8d902c12f454f9acdbb0484f8c05a' })
   const response = await request(`/crm/uc/authapi/v1.1/tokens/codes?${stringify(newparams)}`);
-  if(response&&response.data){
-    const newparams2 = Object.assign({},{account:params.account,signature:md5(md5(params.account + md5(params.password)) + response.data)})
+  if (response && response.data) {
+    const newparams2 = Object.assign({}, { account: params.account, signature: md5(md5(params.account + md5(params.password)) + response.data) })
     return request(`/crm/uc/authapi/v1.1/tokens?${stringify(newparams2)}`);
   }
 }
@@ -93,4 +93,13 @@ export async function financePaymentList(params) {
 //刘园园权限管理
 export async function roleManageList(params) {
   return request(`/crm/cr/v2/accounts/role/list?${stringify(params)}`);
+}
+export async function postGroupData(params) {
+  return request('/api/group/postGroupData', { method: 'POST', body: params });
+}
+export async function searchFlights(params) {
+  return request('/api/group/searchFlights', { method: 'POST', body: params });
+}
+export async function addFlights(params) {
+  return request('/api/group/addFlights', { method: 'POST', body: params });
 }
