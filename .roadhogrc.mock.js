@@ -103,13 +103,77 @@ const proxy = {
         id: '@natural',
         status,
         money: '@integer(1,10000)',
-        orderId:'@natural',
+        orderId: '@natural',
         time: '@dateTime',
         kefu: '@name',
         beizhu: '备注'
       }],
       total: 100
     }));
+  },
+  'POST /api/group/postGroupData': (req, res) => {
+    res.send({
+      code: 1,
+      message: 'success'
+    });
+  },
+  'POST /api/group/searchFlights': (req, res) => {
+    res.send({
+      code: 1,
+      message: 'success',
+      data: [
+        {
+          id: 1,
+          flightDepAirport: "萧山机场",
+          flightDep: "杭州",
+          flightDeptimePlanDate: "12:09",
+          flightNo: "sn434",
+          flightArrAirport: "天河机场",
+          flightArr: "武汉",
+          flightArrtimePlanDate: "13:00",
+          flightCompany: '东方航空公司'
+        },
+        {
+          id: 2,
+          flightDepAirport: "萧山机场",
+          flightDep: "杭州",
+          flightDeptimePlanDate: "12:09",
+          flightNo: "sn434",
+          flightArrAirport: "天河机场",
+          flightArr: "武汉",
+          flightArrtimePlanDate: "13:00",
+          flightCompany: '东方航空公司'
+        },
+        {
+          id: 3,
+          flightDepAirport: "萧山机场",
+          flightDep: "杭州",
+          flightDeptimePlanDate: "12:09",
+          flightNo: "sn434",
+          flightArrAirport: "天河机场",
+          flightArr: "武汉",
+          flightArrtimePlanDate: "13:00",
+          flightCompany: '东方航空公司'
+        },
+        {
+          id: 4,
+          flightDepAirport: "萧山机场",
+          flightDep: "杭州",
+          flightDeptimePlanDate: "12:09",
+          flightNo: "sn434",
+          flightArrAirport: "天河机场",
+          flightArr: "武汉",
+          flightArrtimePlanDate: "13:00",
+          flightCompany: '东方航空公司'
+        }
+      ]
+    });
+  },
+  'POST /api/group/addFlights': (req, res) => {
+    res.send({
+      code: 1,
+      message: 'success',
+    });
   },
 };
 

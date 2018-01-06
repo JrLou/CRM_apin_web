@@ -105,9 +105,9 @@ export const getRouterData = (app) => {
     '/fightgroups/demand/choose': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/Choose.js')),
     },
-    //方案推送
+    //方案推送  杨利波
     '/fightgroups/demand/push': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/Push.js')),
+      component: dynamicWrapper(app, ['push'], () => import('../routes/Fightgroups/Push.js')),
     },
     // 查看拼团
     '/fightgroups/demand/result': {
