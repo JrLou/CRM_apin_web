@@ -42,11 +42,8 @@ export default class Choose extends PureComponent {
     // });
   };
 
-  handleSearch = (e) => {
-    e.preventDefault();
-
+  handleSearch(){
     const { dispatch, form } = this.props;
-
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       const values = {
@@ -55,6 +52,7 @@ export default class Choose extends PureComponent {
       this.setState({
         formValues: values,
       });
+      console.log("sss",values);
       // dispatch({
       //   type: 'refund/fetch',
       //   payload: values,
@@ -81,7 +79,7 @@ export default class Choose extends PureComponent {
   getCheckBox(){
     let checkBoxArr=[];
     for(let i=0;i<13;i++){
-      checkBoxArr.push(<Checkbox key={i} value={this.state.checkNick}>{i===12?'13-20':i+1}天</Checkbox>);
+      checkBoxArr.push(<Checkbox key={i} value={i===12?'13-20':i+1}>{i===12?'13-20':i+1}天</Checkbox>);
     }
     return checkBoxArr
   }
@@ -91,20 +89,25 @@ export default class Choose extends PureComponent {
       labelCol: { span: 4 },
       wrapperCol: { span: 8 },
     };
-    const inputWidth = "250px";
     return (
-      <Form onSubmit={this.handleSearch} layout="inline">
-        <FormItem label="订单号" {...formItemLayout}>
-          {getFieldDecorator('id')(
-            <Input placeholder="请输入" style={{ width: inputWidth }}/>
-          )}
-        </FormItem>
-        <FormItem label="起飞时间" {...formItemLayout}>
-          {getFieldDecorator('orderId')(
-            <RangePicker onChange={this.onChange}  style={{ width: inputWidth }} />
-          )}
-        </FormItem>
-        <FormItem label="航班时间段" {...formItemLayout}>
+      <Form layout="inline">
+        <Row gutter={20}>
+          <Col span={8}>
+            <FormItem label="订单号" {...formItemLayout}>
+              {getFieldDecorator('id')(
+                <Input placeholder="请输入" style={{ width: '100%' }}/>
+              )}
+            </FormItem>
+          </Col>
+          <Col span={8}>
+            <FormItem label="起飞时间" {...formItemLayout}>
+              {getFieldDecorator('orderId')(
+                <RangePicker onChange={this.onChange}  style={{ width: '100%' }} />
+              )}
+            </FormItem>
+          </Col>
+        </Row>
+        <FormItem >
           {getFieldDecorator('status', {
             initialValue: '',
           })(
@@ -128,7 +131,7 @@ export default class Choose extends PureComponent {
         </FormItem>
         <div style={{ overflow: 'hidden' }}>
           <span style={{ float: 'right', marginBottom: 24 }}>
-            <Button type="primary" htmlType="submit">查询</Button>
+            <Button type="primary" htmlType="submit" onClick={::this.handleSearch}>查询</Button>
           </span>
         </div>
       </Form>
