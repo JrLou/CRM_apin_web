@@ -67,15 +67,15 @@ export default class MyForm extends Component {
       /*************************************************************  类型（*前缀为必填项）*************  默认值  *******************  说明  ***/
       onSearch: dataObj => {
         //todo antd@2.0 之后，时间类组件的 value 改为 moment 类型，所以在提交前需要预处理。
-        this.props.onAction && this.props.onAction(dataObj);
+        this.props.onSearch && this.props.onSearch(dataObj);
       },                                                            //function(dataObj)                                             点击“搜索”的回调，参数为：收集到的form的dataObj
-      onCancelafter: () => {
-
+      onCancelAfter: dataObj => {
+        this.props.onCancelAfter && this.props.onCancelAfter(dataObj);
       },                                                            //function                                                      点击“重置”后的回调
       layout: "inline",                                             //string    		                    'inline'	                  表单排列的方式，  参数为：'horizontal'|'vertical'|'inline'
       formItemLayout4Each: {                                        //object                                                        每个表单控件的布局,参考antd中的formItemLayout      只有在  layout === horizontal  的时候该属性才生效
-        labelCol: {style: {width: "100px"}},
-        wrapperCol: {style: {width: "200px"}},
+        // labelCol: {style: {width: "100px"}},
+        // wrapperCol: {style: {width: "200px"}},
       },
       formItemStyle4Each: {                                               //object                                                        每个表单控件的样式,
         width: "350px",

@@ -118,15 +118,12 @@ class BasicLayout extends React.PureComponent {
                     <Redirect key={item.from} exact from={item.from} to={item.to} />
                   )
                 }
- 
-                  {/* <Route exact path="/order/entrust/:id" component={routerData['/order/entrust/:id'].component} /> */}
- 
+
                   <Route exact path="/order/entrust/:id" component={routerData['/order/entrust/:id'].component} />
- 
+
                   <Route exact path="/fightgroups/demand/push" component={routerData['/fightgroups/demand/push'].component} />
- 
-                  {/* <Route exact path="/order/entrustProfile/:id" component={routerData['/order/entrustProfile/:id'].component} /> */}
- 
+
+
                 {
                   getRoutes(match.path, routerData).map(item => (
                     <Route

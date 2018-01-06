@@ -92,8 +92,8 @@ export function fakeList(count) {
       owner: user[i % 10],
       title: titles[i % 8],
       avatar: avatars[i % 8],
-      fromAddr: ['杭州', '北京', '上海', '广州'][i % 4],
-      toAddr: ['北京', '上海', '广州', '杭州'][i % 4],
+      fromAddr: [ '杭州', '北京', '上海', '广州','深圳'][Math.floor(Math.random()*5)],
+      toAddr: ['北京', '上海', '广州','深圳','杭州'][Math.floor(Math.random()*5)],
       percent: Math.ceil(Math.random() * 50) + 50,
       groupBeginTime: new Date(new Date().getTime() - (1000 * 60 * 60 * 2 * i)),
       createdAt: new Date(new Date().getTime() - (1000 * 60 * 60 * 2 * i)),
@@ -171,10 +171,16 @@ export function groupsList(req, res, u) {
     url = req.url; // eslint-disable-line
   }
 
+<<<<<<< HEAD
   const count = (req.body.count * 1) || 20;
+=======
+  const params = getUrlParams(url);
+
+  const pageSize = (req.body.pageSize * 1) || 20;
+>>>>>>> 49c7eaac604edaba330c8bda5767b3927e839999
   const result = {
     code: 1,
-    data: fakeList(count),
+    data: fakeList(pageSize),
     msg: '请求成功',
     option: {
       total: 100,

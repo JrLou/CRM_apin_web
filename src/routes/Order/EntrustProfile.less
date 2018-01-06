@@ -2,9 +2,19 @@
 
 .title {
   color: @heading-color;
-  font-size: 16px;
+  font-size: 18px;
+  height:25px;
   font-weight: 500;
-  margin-bottom: 16px;
+  margin-bottom:30px;
+  border-bottom:1px dashed #ccc;
+  position: relative;
+  &>span{
+    background: #fff;
+    display: block;
+    position: absolute;
+    top: 10px;
+    padding-right: 5PX;
+  }
 }
 .picWrapper{
   width:300px;
@@ -25,4 +35,10 @@
       display: inline-block;
     }
   }
+}
+
+.ticketBtn{
+ width: 100%;
+ margin: 0 auto;
+ text-align: center;
 }
