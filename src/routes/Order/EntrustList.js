@@ -15,31 +15,15 @@ class StandardTable extends PureComponent {
     // clean state
     if (nextProps.selectedRows.length === 0) {
       this.setState({
-        selectedRowKeys: [],
-        totalCallNo: 0,
+        // selectedRowKeys: [],
+        // totalCallNo: 0,
       });
     }
   }
 
-  // handleRowSelectChange = (selectedRowKeys, selectedRows) => {
-  //   const totalCallNo = selectedRows.reduce((sum, val) => {
-  //     return sum + parseFloat(val.callNo, 10);
-  //   }, 0);
-
-  //   if (this.props.onSelectRow) {
-  //     this.props.onSelectRow(selectedRows);
-  //   }
-
-  //   this.setState({ selectedRowKeys, totalCallNo });
-  // }
-
   handleTableChange = (pagination, filters, sorter) => {
     this.props.onChange(pagination, filters, sorter);
   }
-
-  // cleanSelectedKeys = () => {
-  //   this.handleRowSelectChange([], []);
-  // }
 
   render() {
     const { selectedRowKeys, totalCallNo } = this.state;
@@ -100,10 +84,10 @@ class StandardTable extends PureComponent {
         title: '操作',
         render:(text, record, val) => {
           // 生成复杂数据的渲染函数，参数分别为当前行的值，当前行数据，行索引，@return里面可以设置表格行/列合并
-          if (val != '3') {
+          if (val != 3) {
               return <Link to="/order/entrust/:id">查看</Link>
           } else {
-              return <a href="">出票</a>
+              return <Link to="/order/entrust/:id">出票</Link>
           }
         }
       },
