@@ -1,32 +1,25 @@
-import React, { Component } from 'react';
-import { connect } from 'dva';
-import { Card, Badge, Table, Divider,Icon,Row,Col,Button } from 'antd';
+import React, {Component} from 'react';
+import {connect} from 'dva';
+import {Card, Badge, Table, Divider, Icon, Row, Col, Button} from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import DescriptionList from '../../components/DescriptionList';
 import ImageWrapper from '../../components/ImageWrapper';
 import styles from './Result.less';
 
-const { Description } = DescriptionList;
+const {Description} = DescriptionList;
 
 const progressColumns = [{
   title: '操作时间',
   dataIndex: 'time',
   key: 'time',
-},{
-  title: '操作员ID',
+}, {
+  title: '操作员',
   dataIndex: 'operator',
   key: 'operator',
-},  {
-  title:"操作内容",
-  key:"img_url",
-  render:(text, record, index) => {
-    // 生成复杂数据的渲染函数，参数分别为当前行的值，当前行数据，行索引，@return里面可以设置表格行/列合并
-    if (!record.img_url) {
-      return <ImageWrapper className={styles.picTable} src="https://os.alipayobjects.com/rmsportal/mgesTPFxodmIwpi.png" desc="示意图"/>
-    } else {
-      return <span>无</span>
-    }}
-
+}, {
+  title: "操作内容",
+  dataIndex: 'rate',
+  key: "rate",
 }];
 
 @connect(state => ({
@@ -34,29 +27,16 @@ const progressColumns = [{
 }))
 export default class BasicProfile extends Component {
   componentDidMount() {
-    const { dispatch } = this.props;
+    const {dispatch} = this.props;
     dispatch({
       type: 'profile/fetchBasic',
     });
   }
 
   render() {
-    const { profile } = this.props;
-    const { basicGoods, basicProgress, basicLoading } = profile;
-    let goodsData = [];
-    if (basicGoods.length) {
-      let num = 0;
-      let amount = 0;
-      basicGoods.forEach((item) => {
-        num += Number(item.num);
-        amount += Number(item.amount);
-      });
-      goodsData = basicGoods.concat({
-        id: '总计',
-        num,
-        amount,
-      });
-    }
+    const {profile} = this.props;
+    const {basicGoods, basicProgress, basicLoading} = profile;
+    let goodsData = basicGoods;
     const renderContent = (value, row, index) => {
       const obj = {
         children: value,
@@ -72,7 +52,7 @@ export default class BasicProfile extends Component {
       dataIndex: 'id',
       key: 'id',
     }, {
-      title:'订单状态',
+      title: '订单状态',
       dataIndex: 'name',
       key: 'name',
       render: renderContent,
@@ -94,7 +74,7 @@ export default class BasicProfile extends Component {
         if (index < basicGoods.length) {
           return text;
         }
-        return <span style={{ fontWeight: 600 }}>{text}</span>;
+        return <span style={{fontWeight: 600}}>{text}</span>;
       },
     }, {
       title: '推送次数',
@@ -104,9 +84,9 @@ export default class BasicProfile extends Component {
         if (index < basicGoods.length) {
           return text;
         }
-        return <span style={{ fontWeight: 600 }}>{text}</span>;
+        return <span style={{fontWeight: 600}}>{text}</span>;
       },
-    },{
+    }, {
       title: '操作',
       dataIndex: 'action',
       key: 'action',
@@ -119,8 +99,9 @@ export default class BasicProfile extends Component {
         <Card bordered={false}>
           {/* <div className={styles.title}>图片查看</div>
           <ImageWrapper className={styles.picWrapper} src="https://os.alipayobjects.com/rmsportal/mgesTPFxodmIwpi.png" desc="示意图"/> */}
-          <div className={styles.title}><Icon type="profile" />拼团信息<Button type="primary" className={styles.btn}>关闭拼团</Button></div>
-          <DescriptionList size="large" style={{ marginBottom: 32 }} col={4}>
+          <div className={styles.title}><Icon type="profile"/>拼团信息<Button type="primary"
+                                                                          className={styles.btn}>关闭拼团</Button></div>
+          <DescriptionList size="large" style={{marginBottom: 32}} col={4}>
             <Description term="拼团单号">1000000000</Description>
             <Description term="拼团状态">拼团中</Description>
             <Description term="出发城市">杭州</Description>
@@ -132,24 +113,24 @@ export default class BasicProfile extends Component {
             <Description term="支付人数">10人</Description>
             <Description term="处理客服">园园</Description>
           </DescriptionList>
-          <Divider style={{ marginBottom: 32 }} />
+          <Divider style={{marginBottom: 32}}/>
           <div className={styles.title}><Icon type="schedule"/>
             订单信息
-            <Button type="primary" className={styles.btn}>批量导出乘机人</Button>
-            <Button type="primary" className={styles.btn}>继续添加页面</Button>
+            <Button type="primary" className={styles.btn}>批量导出乘机人 / 出票</Button>
+            <Button type="primary" className={styles.btn}>继续添加订单</Button>
           </div>
           <Table
-            style={{ marginBottom: 24 }}
+            style={{marginBottom: 24}}
             pagination={false}
             loading={basicLoading}
             dataSource={goodsData}
             columns={goodsColumns}
             rowKey="id"
           />
-          <Divider style={{ marginBottom: 32 }} />
-          <div className={styles.title}><Icon type="schedule" /> 方案明细</div>
+          <Divider style={{marginBottom: 32}}/>
+          <div className={styles.title}><Icon type="schedule"/> 方案明细</div>
           <div className={styles.schemeInfo}>
-            <DescriptionList size="large" style={{ marginBottom: 32 }} col={2}>
+            <DescriptionList size="large" style={{marginBottom: 32}} col={2}>
               <Description term="起飞日期">2018-01-01</Description>
               <Description term="返回日期">2018-01-03</Description>
             </DescriptionList>
@@ -163,7 +144,7 @@ export default class BasicProfile extends Component {
                 <Col span={12} className={styles.item}>中国东方航空</Col>
               </Row>
             </div>
-            <div className={styles.descAir} style={{marginLeft:'40px'}}>
+            <div className={styles.descAir} style={{marginLeft: '40px'}}>
               <p>MU9885</p>
               <Row>
                 <Col span={12} className={styles.item}>杭州萧山</Col>
@@ -173,16 +154,16 @@ export default class BasicProfile extends Component {
                 <Col span={12} className={styles.item}>中国东方航空</Col>
               </Row>
             </div>
-            <DescriptionList size="large" style={{ marginTop: 32 }} col={2}>
+            <DescriptionList size="large" style={{marginTop: 32}} col={2}>
               <Description term="销售价格">1222</Description>
               <Description term="方案有效时间">24小时</Description>
               <Description term="折扣">2.7折</Description>
             </DescriptionList>
           </div>
-          <Divider style={{ marginBottom: 32 }} />
-          <div className={styles.title}><Icon type="form" /> 日志信息</div>
+          <Divider style={{marginBottom: 32}}/>
+          <div className={styles.title}><Icon type="form"/> 日志信息</div>
           <Table
-            style={{ marginBottom: 16 }}
+            style={{marginBottom: 16}}
             pagination={false}
             loading={basicLoading}
             dataSource={basicProgress}
