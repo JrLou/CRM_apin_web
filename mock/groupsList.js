@@ -60,7 +60,30 @@ const user = [
   '谭小仪',
   '仲尼',
 ];
+const depCity = [
+  '兰州', '西安', '郑州', '临沂', '娄底', '陇南', '合肥', '哈尔滨', '大同', '南昌'
+];
+const arrCity = [
+  '杭州', '厦门', '青岛', '嘉兴', '武汉', '长沙', '邵阳', '福州', '昆明', '桂林'
+];
 
+export function fakeList2(count) {
+  const list = [];
+  for (let i = 0; i < count; i += 1) {
+    list.push({
+      id: `fake-list-${Math.random().toFixed(6)}`,
+      peopleCounts: Math.ceil(Math.random() * 50),
+      fromAddr: depCity[i % 4],
+      toAddr: arrCity[i % 4],
+      threeOrders: Math.ceil(Math.random() * 10),
+      waitOrders: Math.ceil(Math.random() * 20),
+      waitPeopleCounts: Math.ceil(Math.random() * 30),
+      alreadyOrders: Math.ceil(Math.random() * 20)
+    });
+  }
+
+  return list;
+}
 export function fakeList(count) {
   const list = [];
   for (let i = 0; i < count; i += 1) {
@@ -69,7 +92,7 @@ export function fakeList(count) {
       owner: user[i % 10],
       title: titles[i % 8],
       avatar: avatars[i % 8],
-      fromAddr: [ '杭州', '北京', '上海', '广州'][i % 4],
+      fromAddr: ['杭州', '北京', '上海', '广州'][i % 4],
       toAddr: ['北京', '上海', '广州', '杭州'][i % 4],
       percent: Math.ceil(Math.random() * 50) + 50,
       groupBeginTime: new Date(new Date().getTime() - (1000 * 60 * 60 * 2 * i)),
@@ -80,7 +103,7 @@ export function fakeList(count) {
       groupState: Math.floor(Math.random() * 4),
       hadPayOrder: Math.ceil(Math.random() * 100) + 100,
       needPayOrder: Math.ceil(Math.random() * 10) + 10,
-      refusedPayOrder:Math.ceil(Math.random() * 10) + 10,
+      refusedPayOrder: Math.ceil(Math.random() * 10) + 10,
     });
   }
 
@@ -148,15 +171,35 @@ export function groupsList(req, res, u) {
     url = req.url; // eslint-disable-line
   }
 
-  const params = getUrlParams(url);
-
   const count = (req.body.count * 1) || 20;
   const result = {
     code: 1,
     data: fakeList(count),
     msg: '请求成功',
     option: {
-      total:100,
+      total: 100,
+    },
+  };
+
+  if (res && res.json) {
+    res.json(result);
+  } else {
+    return result;
+  }
+}
+export function demandList(req, res, u) {
+  let url = u;
+  if (!url || Object.prototype.toString.call(url) !== '[object String]') {
+    url = req.url; // eslint-disable-line
+  }
+
+  const count =(req.body.pageSize * 1) || 12;
+  const result = {
+    code: 1,
+    data: fakeList2(count),
+    msg: '请求成功',
+    option: {
+      total: 100,
     },
   };
 
@@ -336,4 +379,5 @@ export default {
   getNotice,
   getActivities,
   groupsList,
+  demandList
 };

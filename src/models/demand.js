@@ -3,7 +3,7 @@ import { demandList } from '../services/api';
 export default {
   namespace: 'demand',
   state: {
-    list: [],
+    list: {},
     loading: false,
   },
   effects: {
@@ -15,7 +15,7 @@ export default {
       const response = yield call(demandList, payload);
       yield put({
         type: 'queryList',
-        payload: Array.isArray(response) ? response : [],
+        payload: response,
       });
       yield put({
         type: 'changeLoading',

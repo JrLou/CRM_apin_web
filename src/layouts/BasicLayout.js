@@ -125,7 +125,7 @@ class BasicLayout extends React.PureComponent {
  
                   <Route exact path="/fightgroups/demand/push" component={routerData['/fightgroups/demand/push'].component} />
  
-                  <Route exact path="/order/entrustProfile/:id" component={routerData['/order/entrustProfile/:id'].component} />
+                  {/* <Route exact path="/order/entrustProfile/:id" component={routerData['/order/entrustProfile/:id'].component} /> */}
  
                 {
                   getRoutes(match.path, routerData).map(item => (

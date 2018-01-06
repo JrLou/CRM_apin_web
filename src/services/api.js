@@ -60,7 +60,7 @@ export async function queryFakeList(params) {
   return request(`/api/fake_list?${stringify(params)}`);
 }
 export async function demandList(params) {
-  return request(`/api/demandList?${stringify(params)}`);
+  return request(`/api/group/demandList`, { method: 'POST', body: params });
 }
 export async function queryUserList(params) {
   return request(`/api/userList?${stringify(params)}`);
