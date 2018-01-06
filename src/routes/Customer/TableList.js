@@ -24,10 +24,6 @@ class StandardTable extends PureComponent {
     const { data: { data, option }, loading } = this.props;
     const columns = [
       {
-        title: 'ID',
-        dataIndex: 'id',
-      },
-      {
         title: '微信昵称',
         dataIndex: 'no',
       },
@@ -54,7 +50,7 @@ class StandardTable extends PureComponent {
         }
       },
       {
-        title: '最近登录时间',
+        title: '最近打开时间',
         dataIndex: 'loginTime',
         render:(text,record,index)=>{
           return <span>{TimeHelp.getYMDHMS(text)}</span>
