@@ -22,21 +22,6 @@ export default {
         payload: false,
       });
     },
-    *appendFetch({ payload }, { call, put }) {
-      yield put({
-        type: 'changeLoading',
-        payload: true,
-      });
-      const response = yield call(demandList, payload);
-      yield put({
-        type: 'appendList',
-        payload: Array.isArray(response) ? response : [],
-      });
-      yield put({
-        type: 'changeLoading',
-        payload: false,
-      });
-    },
   },
 
   reducers: {
@@ -44,12 +29,6 @@ export default {
       return {
         ...state,
         list: action.payload,
-      };
-    },
-    appendList(state, action) {
-      return {
-        ...state,
-        list: state.list.concat(action.payload),
       };
     },
     changeLoading(state, action) {
