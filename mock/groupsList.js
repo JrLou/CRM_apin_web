@@ -170,14 +170,8 @@ export function groupsList(req, res, u) {
   if (!url || Object.prototype.toString.call(url) !== '[object String]') {
     url = req.url; // eslint-disable-line
   }
-
-<<<<<<< HEAD
-  const count = (req.body.count * 1) || 20;
-=======
-  const params = getUrlParams(url);
-
+  
   const pageSize = (req.body.pageSize * 1) || 20;
->>>>>>> 49c7eaac604edaba330c8bda5767b3927e839999
   const result = {
     code: 1,
     data: fakeList(pageSize),
