@@ -4,15 +4,23 @@ import { getUrlParams } from './utils';
 let tableListDataSource = [];
 for (let i = 0; i < 46; i += 1) {
   tableListDataSource.push({
-    id: i,
+    key: i,
     disabled: ((i % 6) === 0),
     href: 'https://ant.design',
     avatar: ['https://gw.alipayobjects.com/zos/rmsportal/eeHMaZBwmTvLdIwMfBpg.png', 'https://gw.alipayobjects.com/zos/rmsportal/udxAbMEhpwthVVcjLXik.png'][i % 2],
     no: `TradeCode ${i}`,
-    iphone: Math.floor(Math.random() * 1000),
+    title: `一个任务名称 ${i}`,
+    name:`my name ${i}`,
+    tel:`13700000000${i}`,
+    gocity:`gocity ${i}`,
+    backcity:`backcity ${i}`,
+    owner: '曲丽丽',
+    description: '这是一段描述',
+    callNo: Math.floor(Math.random() * 1000),
+    price:`price ${i}`,
     status: Math.floor(Math.random() * 10) % 4,
-    loginTime: (new Date().getTime() - (1000 * 60 * 60 * 2 * i)),
-    registerTime: (new Date().getTime() - (1000 * 60 * 60 * 5 * i)),
+    updatedAt: new Date(`2017-07-${Math.floor(i / 2) + 1}`),
+    createdAt: new Date(`2017-07-${Math.floor(i / 2) + 1}`),
     progress: Math.ceil(Math.random() * 100),
   });
 }
@@ -72,7 +80,7 @@ export function getRule(req, res, u) {
     return result;
   }
 }
-export function getUserList(req, res, u) {
+export function entrust(req, res, u) {
   let url = u;
   if (!url || Object.prototype.toString.call(url) !== '[object String]') {
     url = req.url; // eslint-disable-line
@@ -113,9 +121,7 @@ export function getUserList(req, res, u) {
   }
 
   const result = {
-    code: 1,
     data: dataSource,
-    msg: '请求成功',
     option: {
       total: dataSource.length,
       pageSize,
@@ -179,7 +185,7 @@ export function postRule(req, res, u, b) {
 }
 
 export default {
-  getUserList,
+  entrust,
   getRule,
   postRule,
 };

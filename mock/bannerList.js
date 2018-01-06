@@ -4,77 +4,20 @@ import { getUrlParams } from './utils';
 let tableListDataSource = [];
 for (let i = 0; i < 46; i += 1) {
   tableListDataSource.push({
-    id: i,
+    index:i%5+1,
+    id: `imgID${i}`,
     imgName:`imgName${i}`,
-    disabled: ((i % 6) === 0),
     goLink: 'https://ant.design',
-    avatar: ['https://gw.alipayobjects.com/zos/rmsportal/eeHMaZBwmTvLdIwMfBpg.png', 'https://gw.alipayobjects.com/zos/rmsportal/udxAbMEhpwthVVcjLXik.png'][i % 2],
+    imgUrl: ['https://gw.alipayobjects.com/zos/rmsportal/eeHMaZBwmTvLdIwMfBpg.png', 'https://gw.alipayobjects.com/zos/rmsportal/udxAbMEhpwthVVcjLXik.png'][i % 2],
     no: `TradeCode ${i}`,
     iphone: Math.floor(Math.random() * 1000),
-    status: Math.floor(Math.random() * 10) % 4,
-    loginTime: new Date(`2017-07-${Math.floor(i / 2) + 1}`),
-    updataTime:new Date(`2017-07-${Math.floor(i / 2) + 1}`),
-    validity: new Date(`2017-07-${Math.floor(i / 2) + 1}`),
-    registerTime: new Date(`2017-07-${Math.floor(i / 2) + 1}`),
-    progress: Math.ceil(Math.random() * 100),
+    status: ((i % 3) === 0)?1:0,
+    updataTime:(new Date).valueOf(),
+    validityStart: (new Date().getTime() - (1000 * 60 * 60 * 2 * i)),
+    validityEnd: (new Date().getTime() - (1000 * 60 * 60 * 1 * i)),
   });
 }
 
-export function getRule(req, res, u) {
-  let url = u;
-  if (!url || Object.prototype.toString.call(url) !== '[object String]') {
-    url = req.url; // eslint-disable-line
-  }
-
-  const params = getUrlParams(url);
-
-  let dataSource = [...tableListDataSource];
-
-  // if (params.sorter) {
-  //   const s = params.sorter.split('_');
-  //   dataSource = dataSource.sort((prev, next) => {
-  //     if (s[1] === 'descend') {
-  //       return next[s[0]] - prev[s[0]];
-  //     }
-  //     return prev[s[0]] - next[s[0]];
-  //   });
-  // }
-
-  if (params.status) {
-    const status = params.status.split(',');
-    let filterDataSource = [];
-    status.forEach((s) => {
-      filterDataSource = filterDataSource.concat(
-        [...dataSource].filter(data => parseInt(data.status, 10) === parseInt(s[0], 10))
-      );
-    });
-    dataSource = filterDataSource;
-  }
-
-  if (params.no) {
-    dataSource = dataSource.filter(data => data.no.indexOf(params.no) > -1);
-  }
-
-  let pageSize = 10;
-  if (params.pageSize) {
-    pageSize = params.pageSize * 1;
-  }
-
-  const result = {
-    list: dataSource,
-    pagination: {
-      total: dataSource.length,
-      pageSize,
-      current: parseInt(params.currentPage, 10) || 1,
-    },
-  };
-
-  if (res && res.json) {
-    res.json(result);
-  } else {
-    return result;
-  }
-}
 export function bannerList(req, res, u) {
   let url = u;
   if (!url || Object.prototype.toString.call(url) !== '[object String]') {
@@ -85,15 +28,6 @@ export function bannerList(req, res, u) {
 
   let dataSource = [...tableListDataSource];
 
-  if (params.sorter) {
-    const s = params.sorter.split('_');
-    dataSource = dataSource.sort((prev, next) => {
-      if (s[1] === 'descend') {
-        return next[s[0]] - prev[s[0]];
-      }
-      return prev[s[0]] - next[s[0]];
-    });
-  }
 
   if (params.status) {
     const status = params.status.split(',');
@@ -110,18 +44,34 @@ export function bannerList(req, res, u) {
     dataSource = dataSource.filter(data => data.no.indexOf(params.no) > -1);
   }
 
+  if (params.id && params.status===undefined) {
+    dataSource = dataSource.filter(data => data.id.indexOf(params.id) < 0);
+  }
+
+  if(params.id && params.status!==undefined){
+    for(let key in dataSource){
+      if(dataSource[key].id == params.id){
+        dataSource[key].status = params.status;
+      }
+    }
+  }
+
   let pageSize = 10;
   if (params.pageSize) {
     pageSize = params.pageSize * 1;
   }
 
   const result = {
-    list: dataSource,
-    pagination: {
-      total: dataSource.length,
-      pageSize,
-      current: parseInt(params.currentPage, 10) || 1,
+    data:{
+      list: dataSource,
+      pagination: {
+        total: dataSource.length,
+        pageSize,
+        current: parseInt(params.currentPage, 10) || 1,
+      },
     },
+    message:'success',
+    code:200,
   };
 
   if (res && res.json) {
@@ -130,57 +80,8 @@ export function bannerList(req, res, u) {
     return result;
   }
 }
-export function postRule(req, res, u, b) {
-  let url = u;
-  if (!url || Object.prototype.toString.call(url) !== '[object String]') {
-    url = req.url; // eslint-disable-line
-  }
 
-  const body = (b && b.body) || req.body;
-  const { method, no, description } = body;
-
-  switch (method) {
-    /* eslint no-case-declarations:0 */
-    case 'delete':
-      tableListDataSource = tableListDataSource.filter(item => no.indexOf(item.no) === -1);
-      break;
-    case 'post':
-      const i = Math.ceil(Math.random() * 10000);
-      tableListDataSource.unshift({
-        key: i,
-        href: 'https://ant.design',
-        avatar: ['https://gw.alipayobjects.com/zos/rmsportal/eeHMaZBwmTvLdIwMfBpg.png', 'https://gw.alipayobjects.com/zos/rmsportal/udxAbMEhpwthVVcjLXik.png'][i % 2],
-        no: `TradeCode ${i}`,
-        title: `一个任务名称 ${i}`,
-        owner: '曲丽丽',
-        description,
-        callNo: Math.floor(Math.random() * 1000),
-        status: Math.floor(Math.random() * 10) % 2,
-        updatedAt: new Date(),
-        createdAt: new Date(),
-        progress: Math.ceil(Math.random() * 100),
-      });
-      break;
-    default:
-      break;
-  }
-
-  const result = {
-    list: tableListDataSource,
-    pagination: {
-      total: tableListDataSource.length,
-    },
-  };
-
-  if (res && res.json) {
-    res.json(result);
-  } else {
-    return result;
-  }
-}
 
 export default {
   bannerList,
-  getRule,
-  postRule,
 };

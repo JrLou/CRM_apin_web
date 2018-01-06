@@ -146,7 +146,6 @@ export default class TableList extends PureComponent {
                         <Select placeholder="请选择" style={{width: '100%'}}>
                           {roleManageList.data?
                             roleManageList.data.map((v, k) => {
-                              console.log("u+++++++++++++", v);
                               options.push(<Option key={v.id} value={v.id}>{v.name}</Option>)
                             }):null
                           }

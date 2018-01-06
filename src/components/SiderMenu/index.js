@@ -3,7 +3,7 @@ import { Layout, Menu, Icon } from 'antd';
 import { Link } from 'dva/router';
 import logo from '../../assets/logo.png';
 import styles from './index.less';
-import { getMenuData } from '../../common/menu';
+// import { getMenuData } from '../../common/menu';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -52,22 +52,29 @@ export default class SiderMenu extends PureComponent {
         keys.push(item.path);
       }
     });
+
     return keys;
   }
   getSelectedMenuKeys = (path) => {
     const flatMenuKeys = this.getFlatMenuKeys(this.menus);
-
     if (flatMenuKeys.indexOf(path.replace(/^\//, '')) > -1) {
       return [path.replace(/^\//, '')];
     }
     if (flatMenuKeys.indexOf(path.replace(/^\//, '').replace(/\/$/, '')) > -1) {
       return [path.replace(/^\//, '').replace(/\/$/, '')];
     }
-    return flatMenuKeys.filter((item) => {
+    let MenuKeys=flatMenuKeys.filter((item) => {
       const itemRegExpStr = `^${item.replace(/:[\w-]+/g, '[\\w-]+')}$`;
       const itemRegExp = new RegExp(itemRegExpStr);
+
       return itemRegExp.test(path.replace(/^\//, ''));
     });
+    if(!MenuKeys.length>=1){
+      return flatMenuKeys.filter((item)=>{
+          return path.indexOf(item)>-1
+      })
+    }
+    return MenuKeys
   }
   getNavMenuItems(menusData) {
     if (!menusData) {

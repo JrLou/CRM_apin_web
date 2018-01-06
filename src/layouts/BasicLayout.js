@@ -96,7 +96,6 @@ class BasicLayout extends React.PureComponent {
       }
     };
     getMenuData().forEach(getRedirect); //把一级栏目 重定向首个子栏目·
-    // console.log(this.props.menus)
     const layout = (
       <Layout>
         <SiderMenu
@@ -120,7 +119,11 @@ class BasicLayout extends React.PureComponent {
                   )
                 }
                   <Route exact path="/order/entrust/:id" component={routerData['/order/entrust/:id'].component} />
+<<<<<<< HEAD
                   <Route exact path="/fightgroups/demand/push" component={routerData['/fightgroups/demand/push'].component} />
+=======
+                  <Route exact path="/order/entrustProfile/:id" component={routerData['/order/entrustProfile/:id'].component} />
+>>>>>>> dcb9428448f15898f19bcfd39616766aa2cbae98
                 {
                   getRoutes(match.path, routerData).map(item => (
                     <Route
