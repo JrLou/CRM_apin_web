@@ -58,18 +58,18 @@ function checkCode(json) {
     6: '接口不存在',
     7: '非法请求',
   };
-  // if(1>json.code>-7){
-  //   const errortext = codeMessage[json.code*-1];
-  //   notification.error({
-  //     message: "请求错误",
-  //     description: errortext,
-  //   });
-  // }else if(json.code<-7){
-  //   notification.error({
-  //     message: "数据错误",
-  //     description: json.msg||"",
-  //   });
-  // }
+  if(json.code&&json.code*1<1&&json.code*1>-7){
+    const errortext = codeMessage[json.code*-1];
+    notification.error({
+      message: "请求错误",
+      description: errortext,
+    });
+  }else if(json.code&&json.code<-7){
+    notification.error({
+      message: "数据错误",
+      description: json.msg||"",
+    });
+  }
   return json
   }
 
