@@ -113,7 +113,7 @@ export default class TableList extends PureComponent {
 
   getCardFooter(item) {
     return <div>
-      <Link to='/fightgroups/demand/result'><span style={{float: 'right'}} href="#">查看</span></Link>
+      <Link to='/fightgroups/demand/checkFightGroups'><span style={{float: 'right'}} href="#">查看</span></Link>
       <span>处理客服：盼盼</span>
     </div>;
   }
@@ -189,7 +189,7 @@ export default class TableList extends PureComponent {
 
   render() {
     return (
-      <PageHeaderLayout title="卡片列表">
+      <PageHeaderLayout>
         <div className={less.page}>
           <Card bordered={false}>
             {this.renderForm()}

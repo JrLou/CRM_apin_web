@@ -1,15 +1,10 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'dva';
 import {
-  Row,
-  Col,
   Card,
   Form,
   Input,
-  Select,
   Button,
-  Modal,
-  DatePicker,
   message
 } from 'antd';
 import StandardTable from './TableList';
@@ -18,8 +13,6 @@ import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './UserList.less';
 
 const FormItem = Form.Item;
-const {Option} = Select;
-const RangePicker = DatePicker.RangePicker;
 const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
 
 @connect(state => ({
@@ -96,7 +89,7 @@ export default class TableList extends PureComponent {
     this.setState({
       selectedRows: rows,
     });
-  }
+  };
 
   handleSearch = (e) => {
     e.preventDefault();
@@ -117,7 +110,7 @@ export default class TableList extends PureComponent {
         payload: values,
       });
     });
-  }
+  };
 
   renderForm() {
     const {getFieldDecorator} = this.props.form;
@@ -131,7 +124,7 @@ export default class TableList extends PureComponent {
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <FormItem label="微信昵称:" style={formItemStyle}>
-          {getFieldDecorator('no', {
+          {getFieldDecorator('weChatNickname', {
             initialValue: "",
             rules: [{max: 30, message: '长度不能超过30'}],
           })
@@ -139,7 +132,7 @@ export default class TableList extends PureComponent {
           }
         </FormItem>
         <FormItem label="手机号:" style={formItemStyle}>
-          {getFieldDecorator('iphone', {
+          {getFieldDecorator('phoneNo', {
             initialValue: "",
             rules: [{
               pattern: /^\d{0,11}$/,
@@ -160,8 +153,19 @@ export default class TableList extends PureComponent {
   render() {
     const {userList: {loading: ruleLoading, data}} = this.props;
     const {selectedRows} = this.state;
+    // const breadcrumbList = [{
+    //   title: '一级菜单',
+    //   href: '/',
+    // }, {
+    //   title: '二级菜单',
+    //   href: '/',
+    // }, {
+    //   title: '三级菜单',
+    // }];
     return (
-      <PageHeaderLayout>
+      <PageHeaderLayout
+        // breadcrumbList={breadcrumbList}
+      >
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>

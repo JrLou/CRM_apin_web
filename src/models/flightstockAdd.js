@@ -1,28 +1,25 @@
-import { queryUserList } from '../services/api';
+import { queryFlyList } from '../services/api';
 
 export default {
-  namespace: 'userList',
-
+  namespace: 'flightstockAdd',
   state: {
     data: {
-      data: [],
-      option: {},
+      list: [],
+      pagination: {},
     },
     loading: true,
   },
   effects: {
-    *fetch({ payload }, { call, put }) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
+    *fetch({ payload }, { call, put }) {
       yield put({
         type: 'changeLoading',
         payload: true,
       });
-      const response = yield call(queryUserList, payload);
-      if (response && response.code >= 1) {
-        yield put({
-          type: 'save',
-          payload: response,
-        });
-      }
+      const response = yield call(queryFlyList, payload);
+      yield put({
+        type: 'save',
+        payload: response,
+      });
       yield put({
         type: 'changeLoading',
         payload: false,
@@ -33,7 +30,7 @@ export default {
     save(state, action) {
       return {
         ...state,
-        data: action.payload,
+        data:action.payload,
       };
     },
     changeLoading(state, action) {

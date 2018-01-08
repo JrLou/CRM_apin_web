@@ -130,7 +130,7 @@ export default class Demand extends PureComponent {
         {/*<Link to={'/fightgroups/demand/push'}>*/}
         {/*< Button>方案推送</Button>*/}
         {/*</Link>*/}
-        <Link to={'/fightgroups/demand/result'}>
+        <Link to={'/fightgroups/demand/checkFightGroups'}>
           < Button>查看拼团</Button>
         </Link>
         <Card bordered={false}>
