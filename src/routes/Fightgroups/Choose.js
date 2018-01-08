@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import { Row, Col, Card, Form, Input, Select, Button, DatePicker, Modal, Table, Checkbox } from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './TableList.less';
-import { Link } from 'dva/router'; 
+import { Link, routerRedux } from 'dva/router';
 const { RangePicker } = DatePicker;
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -13,12 +13,19 @@ const period = [
   { label: '下午航班（12:00-19:00）', value: '1' },
   { label: '晚上航班（19:00-06:00）', value: '2' },
 ];
- 
+
 @connect(state => ({
   choose: state.choose,
 }))
 @Form.create()
 export default class Choose extends PureComponent {
+  constructor() {
+    super()
+    this.page = {
+      page: 1,
+      pageSize: 10
+    }
+  }
   state = {
     modalVisible: false,
     formValues: {},
@@ -30,12 +37,23 @@ export default class Choose extends PureComponent {
     indeterminate: false,
     checkAll: false,
   };
-
+  componentWillMount() {
+    const { dispatch } = this.props;
+    if (!this.props.location.state) {
+      dispatch(routerRedux.push('/fightgroups/demand/'));
+    }
+  }
   componentDidMount() {
-    // const { dispatch } = this.props;
-    // dispatch({
-    //   type: 'refund/fetch',
-    // });
+    const { dispatch } = this.props;
+    const { id } = this.props.location.state ? this.props.location.state : {};
+    const params = {
+      ...this.page,
+      id: id
+    }
+    dispatch({
+      type: 'choose/fetch',
+      payload: params,
+    });
   }
 
   handleTableChange = (pagination) => {
@@ -103,7 +121,7 @@ export default class Choose extends PureComponent {
   onCheckAllChange = (e) => {
     console.log(e.target.checked)
     this.setState({
-      checkedList: e.target.checked ? ['0','1','2'] : [],
+      checkedList: e.target.checked ? ['0', '1', '2'] : [],
       indeterminate: false,
       checkAll: e.target.checked,
     });
