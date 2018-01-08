@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'dva';
 import {Link} from 'dva/router';
-import {Card, Modal, Table, Divider, Icon, Row, Col, Button, Input} from 'antd';
+import {Card, Modal, Table, Divider, Icon, Row, Col, Button} from 'antd';
+import {CloseReasonModal, SendLogModal, ExportPassengerModal} from './components/ModalCpm';
 
-const {TextArea} = Input;
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import DescriptionList from '../../components/DescriptionList';
 import ImageWrapper from '../../components/ImageWrapper';
@@ -32,7 +32,6 @@ export default class CheckFightGroups extends Component {
   constructor() {
     super();
     this.state = {
-      closeReason: '',//关闭原因
       modalType: 0,//0 => 关闭拼团， 1 => 查看日志， 2=> 导出乘机人
     };
   }
@@ -217,26 +216,33 @@ export default class CheckFightGroups extends Component {
 
   getCloseFightGroupsModal(showModal, modalConfirmLoading) {
     return (
-      <Modal
+      <CloseReasonModal
         title="请确认是否关闭拼团，关闭请输入原因："
         visible={showModal}
         onOk={this.handleOk.bind(this)}
         onCancel={this.handleCancel.bind(this)}
         confirmLoading={modalConfirmLoading}
-      >
-        {
-          //TODO 这里的placeholder需要产品确认
-        }
-        <TextArea
-          placeholder="请输入关闭拼团原因，最多100个字"
-          autosize={{minRows: 2, maxRows: 4}}
-          value={this.state.closeReason}
-          onChange={(e) => {
-            const value = e.target.value;
-            value.length <= 100 && this.setState({closeReason: value});
-          }}
-        />
-      </Modal>
+      />
+      // <Modal
+      //   title="请确认是否关闭拼团，关闭请输入原因："
+      //   visible={showModal}
+      //   onOk={this.handleOk.bind(this)}
+      //   onCancel={this.handleCancel.bind(this)}
+      //   confirmLoading={modalConfirmLoading}
+      // >
+      //   {
+      //     //TODO 这里的placeholder需要产品确认
+      //   }
+      //   <TextArea
+      //     placeholder="请输入关闭拼团原因，最多100个字"
+      //     autosize={{minRows: 2, maxRows: 4}}
+      //     value={this.state.closeReason}
+      //     onChange={(e) => {
+      //       const value = e.target.value;
+      //       value.length <= 100 && this.setState({closeReason: value});
+      //     }}
+      //   />
+      // </Modal>
     );
   }
 
@@ -332,129 +338,3 @@ export default class CheckFightGroups extends Component {
   }
 }
 
-@connect(state => ({
-  checkFightGroups: state.checkFightGroups,
-}))
-class SendLogModal extends Component {
-  constructor() {
-    super();
-    this.state = {};
-  }
-
-  handleCancel = () => {
-    this.props.changeVisible && this.props.changeVisible();
-  };
-
-  render() {
-    const {basicGoods, basicLoading} = this.props.checkFightGroups;
-
-    const columns = [
-      {
-        title: '推送时间',
-        dataIndex: 'id',
-        key: 'id',
-      }, {
-        title: '航班号',
-        dataIndex: 'name',
-        key: 'name',
-      }, {
-        title: '起飞日期',
-        dataIndex: 'barcode',
-        key: 'barcode',
-      }, {
-        title: '返回日期',
-        dataIndex: 'price',
-        key: 'price',
-      }, {
-        title: '销售价',
-        dataIndex: 'num',
-        key: 'num',
-      }, {
-        title: '用户反馈',
-        dataIndex: 'amount',
-        key: 'amount',
-      }, {
-        title: '原因',
-        dataIndex: 'action',
-        key: 'action',
-      }];
-
-    return (
-      <Modal
-        title="日志"
-        onCancel={this.handleCancel}
-        footer={null}
-        {...this.props}
-      >
-        <Table
-          style={{marginBottom: 24}}
-          pagination={false}
-          loading={basicLoading}
-          dataSource={basicGoods}
-          columns={columns}
-          rowKey="id"
-        />
-      </Modal>
-    );
-  }
-}
-
-@connect(state => ({
-  checkFightGroups: state.checkFightGroups,
-}))
-class ExportPassengerModal extends Component {
-  constructor() {
-    super();
-    this.state = {};
-  }
-
-  handleCancel = () => {
-    this.props.changeVisible && this.props.changeVisible();
-  };
-
-  render() {
-    const {basicGoods, basicLoading} = this.props.checkFightGroups;
-
-    const columns = [
-      {
-        title: '订单号',
-        dataIndex: 'id',
-        key: 'id',
-      }, {
-        title: '乘机人',
-        dataIndex: 'name',
-        key: 'name',
-      }, {
-        title: '乘机人类型',
-        dataIndex: 'barcode',
-        key: 'barcode',
-      }, {
-        title: '证件号码',
-        dataIndex: 'price',
-        key: 'price',
-      }, {
-        title: '票号',
-        dataIndex: 'num',
-        key: 'num',
-      }
-    ];
-
-    return (
-      <Modal
-        title={"乘机人信息—" + (this.props.passengerType === 0 ? "国内" : "国际")}
-        onCancel={this.handleCancel}
-        footer={null}
-        {...this.props}
-      >
-        <Table
-          style={{marginBottom: 24}}
-          pagination={false}
-          loading={basicLoading}
-          dataSource={basicGoods}
-          columns={columns}
-          rowKey="id"
-        />
-      </Modal>
-    );
-  }
-}

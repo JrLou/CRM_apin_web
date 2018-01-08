@@ -16,6 +16,7 @@ export default {
     // },`
     // loading: true,
     modalConfirmLoading: false,
+    closeReason: '',//关闭的原因
   },
 
   effects: {
@@ -79,6 +80,12 @@ export default {
       };
     },
     changeLoading(state, {payload}) {
+      return {
+        ...state,
+        ...payload,
+      };
+    },
+    saveCloseReason(state, {payload}) {
       return {
         ...state,
         ...payload,
