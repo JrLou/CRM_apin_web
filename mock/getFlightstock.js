@@ -69,7 +69,7 @@ export function getFlightstock(req, res, u) {
     pagination: {
       total: dataSource.length,
       pageSize,
-      current: parseInt(params.currentPage, 10) || 1,
+      current: parseInt(params.current),
     },
   };
 

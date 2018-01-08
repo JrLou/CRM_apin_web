@@ -88,6 +88,14 @@ export async function queryFlyList(params) {
 export async function flightstockList(params) {
   return request(`/api/flightstock?${stringify(params)}`);
 }
+//上架
+export async function stateAirLine(params) {
+  return request(`/api/resource/stateAirLine?${stringify(params)}`);
+}
+//日志
+export async function getAirLineLogs(params) {
+  return request(`/api/resource/getAirLineLogs?${stringify(params)}`);
+}
 
 export async function AccountLogin(params) {
   const newparams = Object.assign({}, { account: params.account, appid: '2ef8d902c12f454f9acdbb0484f8c05a' })

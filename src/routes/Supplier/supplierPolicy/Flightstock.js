@@ -76,9 +76,7 @@ class page extends Component {
     }
     this.setState({
       filter: dates,
-      p: 1,
     });
-    this.loadData(0, APILXF.api_airlines, dates);
   }
 
   render() {
@@ -119,27 +117,20 @@ class page extends Component {
   }
 
   getTableView() {
-    const columns = [{
-      title: '操作时间',
-      dataIndex: 'createdTime',
-      key: 'createdTime',
-    }, {
-      title: '操作环境',
-      dataIndex: 'eventSource',
-      key: 'eventSource',
-    }, {
-      title: '操作内容',
-      dataIndex: 'eventName',
-      key: 'eventName',
-    }, {
-      title: '操作人',
-      dataIndex: 'operatorUser',
-      key: 'operatorUser',
-    }, {
-      title: '日志',
-      dataIndex: 'message',
-      key: 'message',
-    }];
+    const columns = [
+      {
+        title: '操作人',
+        dataIndex: 'operatorUser',
+        key: 'operatorUser',
+      }, {
+        title: '操作时间',
+        dataIndex: 'createdTime',
+        key: 'createdTime',
+      }, {
+        title: '操作内容',
+        dataIndex: 'eventName',
+        key: 'eventName',
+      }];
     const {flightstock: {loading: ruleLoading, data: {list, pagination: {current, pageSize, total}}}} = this.props;
     return (
       <div className={css.table_container}>
@@ -148,9 +139,9 @@ class page extends Component {
           dataSource={list}
           rowKey={'id'}
           pagination={{
-            pageSize: pageSize,
-            total: total,
-            current: current,
+            pageSize: pageSize ? pageSize : 10,
+            total: total ? total : 0,
+            current: current ? current : 1,
             showSizeChanger: true,
             showQuickJumper: true
           }}
@@ -158,7 +149,10 @@ class page extends Component {
             let val = this.state.filter;
             val.current = pagination.current;
             val.pageSize = pagination.pageSize;
-
+            this.props.dispatch({
+              type: 'flightstock/fetch',
+              payload: val,
+            });
           }}
         >
           <Column
@@ -263,60 +257,41 @@ class page extends Component {
 
   operating(data, ole, txt, ide) {
     let _this = this;
-    let {filter} = this.state;
-    filter.page = _this.state.p;
-    filter.size = _this.state.pc;
-    const turn = (ole) => {
-      data.purpose = ole;
-      _this.props.openTab({
-        path: "FlightstockAdd",
-        title: txt,
-        post: data,
-        callBack: (state) => {
-          _this.loadData(0, APILXF.api_airlines, filter)
-        }
-      })
-    };
-    const confirms = (api, data, titlea) => {
+    const confirms = (data, titlea) => {
       confirm({
         title: titlea,
-        // content: titleb,
         onOk() {
-          return _this.loadData(1, api, data);
+          _this.props.dispatch({
+            type: 'flightstock/changeStatus',
+            payload: data,
+          });
         },
         onCancel() {
         },
       });
     }
     switch (ole) {
-      case 0:
-        turn('editor');
-        break;
       case 1:
-        confirms(APILXF.api_onshelve, {
-          airlineStatus: 1,
-          supplierName: data.supplierName,
+        confirms({
+          airlineStatus: 0,
           id: data.id,
-        }, "您确定要上架吗？");
-        break;
-      case 2:
-        confirms(APILXF.api_delete, {id: data.id}, "您确定要删除吗？");
+        }, "确定是否上架？");
         break;
       case 3:
         let datas = this.state.data;
-        _this.loadData(2, APILXF.api_logs, {lineId: data.id});
         datas.visible = true;
         this.setState({data: datas})
+        _this.props.dispatch({
+          type: 'flightstock/log',
+          payload: {
+            p: 1,
+            pc: 100,
+            uuid: data.id,
+          },
+        });
         break;
-      case 4:
-        turn('view');
-        break;
-
     }
   }
 }
 
-// page.contextTypes = {
-//     router: React.PropTypes.object
-// }
 module.exports = page;
