@@ -1,4 +1,4 @@
-import { queryBasicProfile, queryAdvancedProfile } from '../services/api';
+import { queryBasicProfile, queryAdvancedProfile, changeStatus } from '../services/api';
 //TODO 这个文件刚刚copy下来，都需修改
 export default {
   namespace: 'checkFightGroups',
@@ -13,8 +13,9 @@ export default {
     // data: {
     //   xxx: [],
     //   xx: {},
-    // },
+    // },`
     // loading: true,
+    modalConfirmLoading:false,
   },
 
   effects: {
@@ -48,6 +49,26 @@ export default {
         payload: { advancedLoading: false },
       });
     },
+    *fetchSaveCloseFightGroups({ payload }, { call, put }) {
+      yield put({
+        type: 'changeLoading',
+        payload: { modalConfirmLoading: true },
+      });
+      console.log("payload",payload);
+      const response = yield call(changeStatus, payload);
+      yield put({
+        type: 'show',
+        payload: response,
+      });
+      yield put({
+        type: 'changeLoading',
+        payload: { modalConfirmLoading: false },
+      });//todo 这里如果请求异常了，不应该再走下一步，记得处理
+      yield put({
+        type: 'changeModalLoading',
+        payload: { modalLoading: false },
+      });
+    },
   },
 
   reducers: {
@@ -58,6 +79,12 @@ export default {
       };
     },
     changeLoading(state, { payload }) {
+      return {
+        ...state,
+        ...payload,
+      };
+    },
+    changeModalLoading(state, { payload }) {
       return {
         ...state,
         ...payload,
