@@ -1,4 +1,4 @@
-import { queryBasicProfile, queryAdvancedProfile, changeStatus } from '../services/api';
+import {queryBasicProfile, queryAdvancedProfile, changeStatus} from '../services/api';
 //TODO 这个文件刚刚copy下来，都需修改
 export default {
   namespace: 'checkFightGroups',
@@ -15,14 +15,14 @@ export default {
     //   xx: {},
     // },`
     // loading: true,
-    modalConfirmLoading:false,
+    modalConfirmLoading: false,
   },
 
   effects: {
-    *fetchBasic(_, { call, put }) {
+    * fetchBasic(_, {call, put}) {
       yield put({
         type: 'changeLoading',
-        payload: { basicLoading: true },
+        payload: {basicLoading: true},
       });
       const response = yield call(queryBasicProfile);
       yield put({
@@ -31,13 +31,13 @@ export default {
       });
       yield put({
         type: 'changeLoading',
-        payload: { basicLoading: false },
+        payload: {basicLoading: false},
       });
     },
-    *fetchAdvanced(_, { call, put }) {
+    * fetchAdvanced(_, {call, put}) {
       yield put({
         type: 'changeLoading',
-        payload: { advancedLoading: true },
+        payload: {advancedLoading: true},
       });
       const response = yield call(queryAdvancedProfile);
       yield put({
@@ -46,15 +46,15 @@ export default {
       });
       yield put({
         type: 'changeLoading',
-        payload: { advancedLoading: false },
+        payload: {advancedLoading: false},
       });
     },
-    *fetchSaveCloseFightGroups({ payload }, { call, put }) {
+    * fetchSaveCloseFightGroups({payload}, {call, put}) {
       yield put({
         type: 'changeLoading',
-        payload: { modalConfirmLoading: true },
+        payload: {modalConfirmLoading: true},
       });
-      console.log("payload",payload);
+      console.log("payload", payload);
       const response = yield call(changeStatus, payload);
       yield put({
         type: 'show',
@@ -62,29 +62,29 @@ export default {
       });
       yield put({
         type: 'changeLoading',
-        payload: { modalConfirmLoading: false },
+        payload: {modalConfirmLoading: false},
       });//todo 这里如果请求异常了，不应该再走下一步，记得处理
       yield put({
         type: 'changeModalLoading',
-        payload: { modalLoading: false },
+        payload: {showModal: false},
       });
     },
   },
 
   reducers: {
-    show(state, { payload }) {
+    show(state, {payload}) {
       return {
         ...state,
         ...payload,
       };
     },
-    changeLoading(state, { payload }) {
+    changeLoading(state, {payload}) {
       return {
         ...state,
         ...payload,
       };
     },
-    changeModalLoading(state, { payload }) {
+    changeModalLoading(state, {payload}) {
       return {
         ...state,
         ...payload,

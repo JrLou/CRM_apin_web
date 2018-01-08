@@ -32,9 +32,8 @@ export default class CheckFightGroups extends Component {
   constructor() {
     super();
     this.state = {
-      modalVisible: false,
       closeReason: '',//关闭原因
-      logModalVisible: false,//
+      modalType: 0,//0 => 关闭拼团， 1 => 查看日志， 2=> 导出乘机人
     };
   }
 
@@ -57,13 +56,9 @@ export default class CheckFightGroups extends Component {
             className={styles.btn}
             disabled={false}
             onClick={() => {
-              const {dispatch} = this.props;
-              dispatch({
-                type: 'checkFightGroups/changeModalLoading',//modalConfirmLoading
-                payload: {modalLoading: true},//传过去的参数
+              this.setState({modalType: 0}, () => {
+                this.handleshowModal()
               });
-              // 弹出modal
-              // this.changeShowModal(true);
             }}
           >
             关闭拼团
@@ -122,7 +117,9 @@ export default class CheckFightGroups extends Component {
           return (
             <a
               onClick={() => {
-                this.setState({logModalVisible: true});
+                this.setState({modalType: 1}, () => {
+                  this.handleshowModal()
+                });
               }}
             >
               推送日志
@@ -138,7 +135,17 @@ export default class CheckFightGroups extends Component {
       <div>
         <div className={styles.title}><Icon type="schedule"/>
           订单信息
-          <Button type="primary" className={styles.btn}>批量导出乘机人 / 出票</Button>
+          <Button
+            type="primary"
+            className={styles.btn}
+            onClick={() => {
+              this.setState({modalType: 2}, () => {
+                this.handleshowModal()
+              });
+            }}
+          >
+            批量导出乘机人 / 出票
+          </Button>
           <Link to={'/fightgroups/demand/choose'}>
             <Button type="primary" className={styles.btn}>继续添加订单</Button>
           </Link>
@@ -150,9 +157,6 @@ export default class CheckFightGroups extends Component {
           dataSource={basicGoods}
           columns={goodsColumns}
           rowKey="id"
-          ref={ref => {
-            this.logTable = ref;
-          }}
         />
       </div>
     );
@@ -211,6 +215,79 @@ export default class CheckFightGroups extends Component {
     );
   }
 
+  getCloseFightGroupsModal(showModal, modalConfirmLoading) {
+    return (
+      <Modal
+        title="请确认是否关闭拼团，关闭请输入原因："
+        visible={showModal}
+        onOk={this.handleOk.bind(this)}
+        onCancel={this.handleCancel.bind(this)}
+        confirmLoading={modalConfirmLoading}
+      >
+        {
+          //TODO 这里的placeholder需要产品确认
+        }
+        <TextArea
+          placeholder="请输入关闭拼团原因，最多100个字"
+          autosize={{minRows: 2, maxRows: 4}}
+          value={this.state.closeReason}
+          onChange={(e) => {
+            const value = e.target.value;
+            value.length <= 100 && this.setState({closeReason: value});
+          }}
+        />
+      </Modal>
+    );
+  }
+
+  getSendLogModal(showModal, modalConfirmLoading) {
+    return (
+      <SendLogModal
+        visible={showModal}
+        width={920}
+        changeVisible={this.handleCancel.bind(this)}
+      />
+    );
+  }
+
+  getExportPassengerModal(showModal, modalConfirmLoading) {
+    return (
+      <ExportPassengerModal
+        visible={showModal}
+        width={920}
+        changeVisible={this.handleCancel.bind(this)}
+      />
+    );
+  }
+
+  switchModalView() {
+    const {showModal, modalConfirmLoading} = this.props.checkFightGroups;
+    let ModalView = null;
+    switch (this.state.modalType) {
+      case 0:
+        ModalView = this.getCloseFightGroupsModal(showModal, modalConfirmLoading);
+        break;
+      case 1:
+        ModalView = this.getSendLogModal(showModal, modalConfirmLoading);
+        break;
+      case 2:
+        ModalView = this.getExportPassengerModal(showModal, modalConfirmLoading);
+        break;
+      default:
+        ModalView = 1;
+        break;
+    }
+    return ModalView;
+  }
+
+  handleshowModal() {
+    const {dispatch} = this.props;
+    dispatch({
+      type: 'checkFightGroups/changeModalLoading',//modalConfirmLoading
+      payload: {showModal: true},//传过去的参数
+    });
+  }
+
   handleOk(e) {
     const {dispatch} = this.props;
     dispatch({
@@ -223,7 +300,7 @@ export default class CheckFightGroups extends Component {
     const {dispatch} = this.props;
     dispatch({
       type: 'checkFightGroups/changeModalLoading',
-      payload: {modalLoading: false},//传过去的参数
+      payload: {showModal: false},//传过去的参数
     });
   }
 
@@ -231,7 +308,7 @@ export default class CheckFightGroups extends Component {
     const {checkFightGroups} = this.props;
     const {basicGoods, basicProgress, basicLoading} = checkFightGroups;
     const goodsColumns = this.getGoodsColumns();
-    const {modalConfirmLoading, modalLoading} = this.props.checkFightGroups;
+    const {modalConfirmLoading, showModal} = this.props.checkFightGroups;
 
     return (
       <PageHeaderLayout>
@@ -247,33 +324,8 @@ export default class CheckFightGroups extends Component {
 
           {this.getLogInfoView(basicProgress)}
 
-          <Modal
-            title="请确认是否关闭拼团，关闭请输入原因："
-            visible={modalLoading}
-            onOk={this.handleOk.bind(this)}
-            onCancel={this.handleCancel.bind(this)}
-            confirmLoading={modalConfirmLoading}
-          >
-            {
-              //TODO 这里的placeholder需要产品确认
-            }
-            <TextArea
-              placeholder="请输入关闭拼团原因，最多100个字"
-              autosize={{minRows: 2, maxRows: 4}}
-              value={this.state.closeReason}
-              onChange={(e) => {
-                const value = e.target.value;
-                value.length <= 100 && this.setState({closeReason: value});
-              }}
-            />
-          </Modal>
-          <MyModal
-            visible={this.state.logModalVisible}
-            width={920}
-            changeVisible={logModalVisible => {
-              this.setState({logModalVisible})
-            }}
-          />
+
+          {this.switchModalView()}
         </Card>
       </PageHeaderLayout>
     );
@@ -283,14 +335,14 @@ export default class CheckFightGroups extends Component {
 @connect(state => ({
   checkFightGroups: state.checkFightGroups,
 }))
-class MyModal extends Component {
+class SendLogModal extends Component {
   constructor() {
     super();
     this.state = {};
   }
 
   handleCancel = () => {
-    this.props.changeVisible && this.props.changeVisible(false);
+    this.props.changeVisible && this.props.changeVisible();
   };
 
   render() {
@@ -333,7 +385,6 @@ class MyModal extends Component {
         onCancel={this.handleCancel}
         footer={null}
         {...this.props}
-        // getContainer={() => this.logTable[0]}
       >
         <Table
           style={{marginBottom: 24}}
@@ -342,7 +393,6 @@ class MyModal extends Component {
           dataSource={basicGoods}
           columns={columns}
           rowKey="id"
-
         />
       </Modal>
     );
@@ -359,51 +409,42 @@ class ExportPassengerModal extends Component {
   }
 
   handleCancel = () => {
-    this.props.changeVisible && this.props.changeVisible(false);
+    this.props.changeVisible && this.props.changeVisible();
   };
 
   render() {
     const {basicGoods, basicLoading} = this.props.checkFightGroups;
-    console.log("basicGoods", basicGoods);
 
     const columns = [
       {
-        title: '推送时间',
+        title: '订单号',
         dataIndex: 'id',
         key: 'id',
       }, {
-        title: '航班号',
+        title: '乘机人',
         dataIndex: 'name',
         key: 'name',
       }, {
-        title: '起飞日期',
+        title: '乘机人类型',
         dataIndex: 'barcode',
         key: 'barcode',
       }, {
-        title: '返回日期',
+        title: '证件号码',
         dataIndex: 'price',
         key: 'price',
       }, {
-        title: '销售价',
+        title: '票号',
         dataIndex: 'num',
         key: 'num',
-      }, {
-        title: '用户反馈',
-        dataIndex: 'amount',
-        key: 'amount',
-      }, {
-        title: '原因',
-        dataIndex: 'action',
-        key: 'action',
-      }];
+      }
+    ];
 
     return (
       <Modal
-        title="日志"
+        title={"乘机人信息—" + (this.props.passengerType === 0 ? "国内" : "国际")}
         onCancel={this.handleCancel}
         footer={null}
         {...this.props}
-        // getContainer={() => this.logTable[0]}
       >
         <Table
           style={{marginBottom: 24}}
@@ -412,7 +453,6 @@ class ExportPassengerModal extends Component {
           dataSource={basicGoods}
           columns={columns}
           rowKey="id"
-
         />
       </Modal>
     );
