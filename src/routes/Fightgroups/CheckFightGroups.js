@@ -4,7 +4,7 @@ import {Card, Modal, Table, Divider, Icon, Row, Col, Button} from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import DescriptionList from '../../components/DescriptionList';
 import ImageWrapper from '../../components/ImageWrapper';
-import styles from './Result.less';
+import styles from './CheckFightGroups.less';
 
 const {Description} = DescriptionList;
 
@@ -23,19 +23,19 @@ const progressColumns = [{
 }];
 
 @connect(state => ({
-  profile: state.profile,
+  checkFightGroups: state.checkFightGroups,
 }))
 export default class BasicProfile extends Component {
   componentDidMount() {
     const {dispatch} = this.props;
     dispatch({
-      type: 'profile/fetchBasic',
+      type: 'checkFightGroups/fetchBasic',
     });
   }
 
   render() {
-    const {profile} = this.props;
-    const {basicGoods, basicProgress, basicLoading} = profile;
+    const {checkFightGroups} = this.props;
+    const {basicGoods, basicProgress, basicLoading} = checkFightGroups;
     let goodsData = basicGoods;
     const renderContent = (value, row, index) => {
       const obj = {
@@ -104,7 +104,7 @@ export default class BasicProfile extends Component {
             <Button
               type="primary"
               className={styles.btn}
-              onClick={()=>{
+              onClick={() => {
                 //弹出modal
               }}
             >

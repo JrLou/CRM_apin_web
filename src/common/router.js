@@ -111,7 +111,7 @@ export const getRouterData = (app) => {
     },
     // 查看拼团
     '/fightgroups/demand/checkFightGroups': {
-      component: dynamicWrapper(app, ['checkFightGroups'], () => import('../routes/Fightgroups/checkFightGroups.js')),
+      component: dynamicWrapper(app, ['checkFightGroups'], () => import('../routes/Fightgroups/CheckFightGroups.js')),
     },
     //客户管理
     '/customer/userList': {
