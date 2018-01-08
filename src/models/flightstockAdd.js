@@ -1,10 +1,13 @@
-import { demandList } from '../services/api';
+import { queryFlyList } from '../services/api';
 
 export default {
-  namespace: 'demand',
+  namespace: 'flightstockAdd',
   state: {
-    list: {},
-    loading: false,
+    data: {
+      list: [],
+      pagination: {},
+    },
+    loading: true,
   },
   effects: {
     *fetch({ payload }, { call, put }) {
@@ -12,9 +15,9 @@ export default {
         type: 'changeLoading',
         payload: true,
       });
-      const response = yield call(demandList, payload);
+      const response = yield call(queryFlyList, payload);
       yield put({
-        type: 'queryList',
+        type: 'save',
         payload: response,
       });
       yield put({
@@ -23,12 +26,11 @@ export default {
       });
     },
   },
-
   reducers: {
-    queryList(state, action) {
+    save(state, action) {
       return {
         ...state,
-        list: action.payload,
+        data:action.payload,
       };
     },
     changeLoading(state, action) {

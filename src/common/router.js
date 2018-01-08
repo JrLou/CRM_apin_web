@@ -121,6 +121,15 @@ export const getRouterData = (app) => {
     '/supplier/supplierList': {
       component: dynamicWrapper(app, ['supplierlist'], () => import('../routes/Supplier/SupplierList')),
     },
+    //供应商政策
+    '/supplier/supplierPolicy/flightstock': {
+      component: dynamicWrapper(app, ['flightstock'], () => import('../routes/Supplier/supplierPolicy/Flightstock')),
+    },
+    //供应商政策-新增
+    '/supplier/supplierPolicy/flightstockAdd': {
+      component: dynamicWrapper(app, ['flightstockAdd'], () => import('../routes/Supplier/supplierPolicy/FlightstockAdd')),
+    },
+    //飞猪资源
     '/supplier/flyPigList': {
       component: dynamicWrapper(app, ['flypiglist'], () => import('../routes/Supplier/FlyPigList')),
     },
