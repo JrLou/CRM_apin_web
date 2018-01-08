@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'dva';
-import {Modal, Table, Input} from 'antd';
+import {Modal, Table, Input, Button} from 'antd';
+import less from './ModalCpm.less'
 
 const {TextArea} = Input;
 
@@ -184,6 +185,11 @@ class ExportPassengerModal extends Component {
           columns={columns}
           rowKey="id"
         />
+        <div className={less.btnContainer}>
+          <Button type='primary'>导出乘机人信息</Button>
+          <Button type='primary'>导入票号信息</Button>
+          <Button type='primary'>确认提交</Button>
+        </div>
       </Modal>
     );
   }
