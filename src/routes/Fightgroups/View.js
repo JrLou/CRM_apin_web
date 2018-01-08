@@ -93,7 +93,7 @@ export default class View extends PureComponent {
       dataIndex: 'is',
     }, {
       title: '操作',
-      render: (text, record) => <Link to={'/fightgroups/demand/result'}>查看</Link>,
+      render: (text, record) => <Link to={'/fightgroups/demand/checkFightGroups'}>查看</Link>,
     }];
     let data = [
       {id: 1, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0},

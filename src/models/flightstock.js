@@ -1,4 +1,4 @@
-import { queryFlyList } from '../services/api';
+import {flightstockList} from '../services/api';
 
 export default {
   namespace: 'flightstock',
@@ -10,12 +10,12 @@ export default {
     loading: true,
   },
   effects: {
-    *fetch({ payload }, { call, put }) {
+    * fetch({payload}, {call, put}) {
       yield put({
         type: 'changeLoading',
         payload: true,
       });
-      const response = yield call(queryFlyList, payload);
+      const response = yield call(flightstockList, payload);
       yield put({
         type: 'save',
         payload: response,
@@ -30,7 +30,7 @@ export default {
     save(state, action) {
       return {
         ...state,
-        data:action.payload,
+        data: action.payload,
       };
     },
     changeLoading(state, action) {
