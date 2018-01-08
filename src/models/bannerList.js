@@ -1,4 +1,4 @@
-import {queryBanner,deleteBanner,changeStatus} from '../services/api';
+import {queryBanner,deleteBanner,changeStatus,baseImg} from '../services/api';
 import {routerRedux} from 'dva/router';
 
 export default {
@@ -98,6 +98,17 @@ export default {
           payload:{},
         });
         yield put(routerRedux.push('/operations/banner'))
+      },
+      * baseImg({payload,callback},{call,put}){
+        //base64传给后台 后台返一个 图片url
+        const response = yield call(baseImg, payload);
+        if(callback){
+          callback(response);
+        }
+        yield put({
+          type: 'changeBaseImg',
+          payload:{},
+        });
       }
     },
   reducers: {
@@ -117,6 +128,12 @@ export default {
       return {
         ...state,
         loading: action.payload,
+      };
+    },
+    changeBaseImg(state, action) {
+      return {
+        ...state,
+        imageUrl: action.payload,
       };
     },
   },

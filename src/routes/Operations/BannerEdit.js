@@ -137,7 +137,7 @@ class BannerEdit extends PureComponent {
                   {/*{getFieldDecorator('imgUrl', {initialValue: data.imgUrl?data.imgUrl:undefined, rules: [{required: true, message: '请选择图片'}],})*/}
                   {/*(<Input placeholder="请输入…"/>)*/}
                   {/*}*/}
-                  <PicturesWall imgurl='/api/common/uploadImage'/>
+                  <PicturesWall/>
                 </FormItem>
               </Col>
             </Row>
