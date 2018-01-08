@@ -11,7 +11,7 @@ export default {
     loading: true,
   },
   effects: {
-    *fetch({ payload }, { call, put }) {
+    *fetch({ payload }, { call, put }) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
       yield put({
         type: 'changeLoading',
         payload: true,

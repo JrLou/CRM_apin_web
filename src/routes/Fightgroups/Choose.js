@@ -179,7 +179,7 @@ export default class Choose extends PureComponent {
       dataIndex: 'is',
     }, {
       title: '操作',
-      render: (text, record) => <Link to={'/fightgroups/demand/result'}>查看</Link>,
+      render: (text, record) => <Link to={'/fightgroups/demand/checkFightGroups'}>查看</Link>,
     }];
     const rowSelection = {
       selectedRowKeys: this.state.selectedRowKeys,
