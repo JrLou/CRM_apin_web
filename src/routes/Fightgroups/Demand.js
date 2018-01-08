@@ -39,7 +39,7 @@ export default class Demand extends PureComponent {
         // 保留搜索参数
         this.searchValues = values;
         // 搜索或重置置为第1页
-        this.page.page=1
+        this.page.page = 1
         this.getData(values)
       }
     });
@@ -149,8 +149,11 @@ export default class Demand extends PureComponent {
             renderItem={item => (
               <List.Item key={item.id}>
                 <Card hoverable className={styles.card}
-                  actions={[<Link to='/fightgroups/demand/id'>查看历史拼团</Link>,
-                  <Link to={'/fightgroups/demand/choose'}><Button type="primary">方案推送</Button></Link>]}
+                  actions={[
+                    <Link
+                      to={{ pathname: '/fightgroups/demand/viewDemand', state: { id: item.id, line: item.fromAddr + '-' + item.toAddr } }}>
+                      查看历史拼团</Link>,
+                    <Link to={'/fightgroups/demand/choose'}><Button type="primary">方案推送</Button></Link>]}
                   title={<span><b className={styles.cardTitle}></b>{item.fromAddr + '-' + item.toAddr}</span>}
                   extra={item.peopleCounts + '人'}>
                   <Card.Meta

@@ -1,12 +1,12 @@
 import mockjs from 'mockjs';
-import { getRule, postRule} from './mock/rule';
-import { getUserList} from './mock/userlist';
+import { getRule, postRule } from './mock/rule';
+import { getUserList } from './mock/userlist';
 import { entrust } from './mock/entrust';
-import {groupsList,demandList} from './mock/groupsList'
+import { groupsList, demandList,viewList } from './mock/groupsList'
 import { getActivities, getNotice, getFakeList } from './mock/api';
 import { bannerList } from './mock/bannerList.js';
-import {getSuplierList} from './mock/supplierlist';
-import {getFlylist} from './mock/flylist';
+import { getSuplierList } from './mock/supplierlist';
+import { getFlylist } from './mock/flylist';
 import { getFakeChartData } from './mock/chart';
 import { imgMap } from './mock/utils';
 import { getProfileBasicData } from './mock/profile';
@@ -71,14 +71,14 @@ const proxy = {
   'GET /api/tags': mockjs.mock({
     'list|100': [{ name: '@city', 'value|1-100': 150, 'type|0-2': 1 }]
   }),
-  'GET /api/userList':getUserList,
-  'GET /api/bannerList':bannerList,
-  'POST /api/groupsList':groupsList,
-  'GET /api/deleteBanner':bannerList,
-  'GET /api/changeStatus':bannerList,
-  'GET /api/suplierList' :getSuplierList,
-  'GET /api/flyList' :getFlylist,
-  'GET /api/entrust' :entrust,
+  'GET /api/userList': getUserList,
+  'GET /api/bannerList': bannerList,
+  'POST /api/groupsList': groupsList,
+  'GET /api/deleteBanner': bannerList,
+  'GET /api/changeStatus': bannerList,
+  'GET /api/suplierList': getSuplierList,
+  'GET /api/flyList': getFlylist,
+  'GET /api/entrust': entrust,
   'GET /api/fake_chart_data': getFakeChartData,
   'GET /api/profile/basic': getProfileBasicData,
   'GET /api/profile/advanced': getProfileAdvancedData,
@@ -175,7 +175,9 @@ const proxy = {
       message: 'success',
     });
   },
-  'POST /api/group/demandList':demandList,
+  'POST /api/group/demandList': demandList,
+  'POST /api/group/viewList': viewList
+
 };
 
 export default noProxy ? {} : delay(proxy, 1000);

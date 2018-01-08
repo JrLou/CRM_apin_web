@@ -98,8 +98,9 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, ['demand'], () => import('../routes/Fightgroups/Demand.js')),
     },
     // 查看需求池
-    '/fightgroups/demand/id': {
-      component: dynamicWrapper(app, ['demand'], () => import('../routes/Fightgroups/View.js')),
+    '/fightgroups/demand/viewDemand': {
+      name:'查看需求池',
+      component: dynamicWrapper(app, ['view'], () => import('../routes/Fightgroups/View.js')),
     },
     //推送方案-选择订单
     '/fightgroups/demand/choose': {
@@ -110,7 +111,8 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, ['push'], () => import('../routes/Fightgroups/Push.js')),
     },
     // 查看拼团
-    '/fightgroups/demand/result': {
+    '/fightgroups/demand/result/:id': {
+      name:'查看拼团',
       component: dynamicWrapper(app, ['profile'], () => import('../routes/Fightgroups/Result.js')),
     },
     //客户管理

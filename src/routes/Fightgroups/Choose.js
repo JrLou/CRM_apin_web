@@ -1,15 +1,22 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Card, Form, Input, Select, Button, DatePicker, Modal, Table,Checkbox  } from 'antd';
+import { Row, Col, Card, Form, Input, Select, Button, DatePicker, Modal, Table, Checkbox } from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './TableList.less';
-import {Link} from 'dva/router';
+import { Link } from 'dva/router'; 
 const { RangePicker } = DatePicker;
 const FormItem = Form.Item;
 const { Option } = Select;
-// @connect(state => ({
-//   rule: state.refund,
-// }))
+const CheckboxGroup = Checkbox.Group;
+const period = [
+  { label: '上午航班（06:00-12:00）', value: '0' },
+  { label: '下午航班（12:00-19:00）', value: '1' },
+  { label: '晚上航班（19:00-06:00）', value: '2' },
+];
+ 
+@connect(state => ({
+  choose: state.choose,
+}))
 @Form.create()
 export default class Choose extends PureComponent {
   state = {
@@ -17,7 +24,11 @@ export default class Choose extends PureComponent {
     formValues: {},
     record: {},
     selectedRowKeys: [],
-    selectRows:[],
+    selectRows: [],
+
+    checkedList: [],
+    indeterminate: false,
+    checkAll: false,
   };
 
   componentDidMount() {
@@ -42,7 +53,7 @@ export default class Choose extends PureComponent {
     // });
   };
 
-  handleSearch(){
+  handleSearch() {
     const { dispatch, form } = this.props;
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -52,7 +63,6 @@ export default class Choose extends PureComponent {
       this.setState({
         formValues: values,
       });
-      console.log("sss",values);
       // dispatch({
       //   type: 'refund/fetch',
       //   payload: values,
@@ -66,7 +76,7 @@ export default class Choose extends PureComponent {
       record
     });
   }
-   onChange=(date, dateString) =>{
+  onChange = (date, dateString) => {
     console.log(date, dateString);
   }
   selectChange(selectedRowKeys, selectedRows) {
@@ -76,62 +86,80 @@ export default class Choose extends PureComponent {
       selectedRowKeys: selectedRowKeys
     })
   }
-  getCheckBox(){
-    let checkBoxArr=[];
-    for(let i=0;i<13;i++){
-      checkBoxArr.push(<Checkbox key={i} value={i===12?'13-20':i+1}>{i===12?'13-20':i+1}天</Checkbox>);
+  getCheckBox() {
+    let checkBoxArr = [];
+    for (let i = 0; i < 13; i++) {
+      checkBoxArr.push(<Checkbox key={i} value={i === 12 ? '13-20' : i + 1}>{i === 12 ? '13-20' : i + 1}天</Checkbox>);
     }
     return checkBoxArr
+  }
+  peroidChange = (checkedList) => {
+    this.setState({
+      checkedList,
+      indeterminate: !!checkedList.length && (checkedList.length < period.length),
+      checkAll: checkedList.length === period.length,
+    });
+  }
+  onCheckAllChange = (e) => {
+    console.log(e.target.checked)
+    this.setState({
+      checkedList: e.target.checked ? ['0','1','2'] : [],
+      indeterminate: false,
+      checkAll: e.target.checked,
+    });
   }
   renderForm() {
     const { getFieldDecorator } = this.props.form;
     const formItemLayout = {
       labelCol: { span: 4 },
-      wrapperCol: { span: 8 },
+      wrapperCol: { span: 16 },
     };
+
     return (
-      <Form layout="inline">
+      <Form>
         <Row gutter={20}>
           <Col span={8}>
-            <FormItem label="订单号" {...formItemLayout}>
-              {getFieldDecorator('id')(
-                <Input placeholder="请输入" style={{ width: '100%' }}/>
+            <FormItem label="起飞时间" {...formItemLayout}>
+              {getFieldDecorator('orderId')(
+                <RangePicker onChange={this.onChange} />
               )}
             </FormItem>
           </Col>
           <Col span={8}>
-            <FormItem label="起飞时间" {...formItemLayout}>
-              {getFieldDecorator('orderId')(
-                <RangePicker onChange={this.onChange}  style={{ width: '100%' }} />
+            <FormItem label="订单号" {...formItemLayout}>
+              {getFieldDecorator('id')(
+                <Input placeholder="请输入" />
               )}
             </FormItem>
           </Col>
         </Row>
         <FormItem >
+          <Checkbox
+            indeterminate={this.state.indeterminate}
+            onChange={this.onCheckAllChange}
+            checked={this.state.checkAll}
+          >
+            不限
+          </Checkbox>
           {getFieldDecorator('status', {
-            initialValue: '',
+            initialValue: this.state.checkedList,
           })(
-            <span>
-                  <Checkbox value={this.state.checkNick}>不限</Checkbox>
-                   <Checkbox value={this.state.checkNick}>上午航班(6:00-12:00)</Checkbox>
-                   <Checkbox value={this.state.checkNick}>下午航班(12:00-19:00)</Checkbox>
-                   <Checkbox value={this.state.checkNick}>晚间航班(19:00-6:00)</Checkbox>
-                </span>
-          )}
+            <CheckboxGroup options={period} onChange={this.peroidChange} className={styles.inlineGroup} />
+            )}
         </FormItem>
         <FormItem label="出行天数" {...formItemLayout}>
           {getFieldDecorator('day', {
             initialValue: '',
           })(
             <span>
-                  <Checkbox value={this.state.checkNick}>全选</Checkbox>
-                  {this.getCheckBox()}
-                </span>
-          )}
+              <Checkbox value={this.state.checkNick}>全选</Checkbox>
+              {this.getCheckBox()}
+            </span>
+            )}
         </FormItem>
         <div style={{ overflow: 'hidden' }}>
           <span style={{ float: 'right', marginBottom: 24 }}>
-            <Button type="primary" htmlType="submit" onClick={::this.handleSearch}>查询</Button>
+            <Button type="primary" htmlType="submit" onClick={this.handleSearch.bind(this)}>查询</Button>
           </span>
         </div>
       </Form>
@@ -142,12 +170,12 @@ export default class Choose extends PureComponent {
     // const { rule: { loading, list, total } } = this.props;
     const { modalVisible, record } = this.state;
     let data = [
-      {id: 1, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0},
-      {id: 2, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0},
-      {id: 3, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0},
-      {id: 4, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0},
-      {id: 5, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0},
-      {id: 6, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0},
+      { id: 1, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0 },
+      { id: 2, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0 },
+      { id: 3, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0 },
+      { id: 4, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0 },
+      { id: 5, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0 },
+      { id: 6, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0 },
     ];
     const columns = [{
       title: '拼团编号',
@@ -251,3 +279,4 @@ export default class Choose extends PureComponent {
     );
   }
 }
+

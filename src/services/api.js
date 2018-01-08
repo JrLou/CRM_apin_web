@@ -115,3 +115,6 @@ export async function searchFlights(params) {
 export async function addFlights(params) {
   return request('/api/group/addFlights', { method: 'POST', body: params });
 }
+export async function viewList(params) {
+  return request('/api/group/viewList', { method: 'POST', body: params });
+}
