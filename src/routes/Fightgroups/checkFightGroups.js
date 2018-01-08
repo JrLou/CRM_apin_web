@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'dva';
-import {Card, Badge, Table, Divider, Icon, Row, Col, Button} from 'antd';
+import {Card, Modal, Table, Divider, Icon, Row, Col, Button} from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import DescriptionList from '../../components/DescriptionList';
 import ImageWrapper from '../../components/ImageWrapper';
@@ -95,12 +95,22 @@ export default class BasicProfile extends Component {
       },
     }];
     return (
-      <PageHeaderLayout title="查看拼团">
+      <PageHeaderLayout>
         <Card bordered={false}>
           {/* <div className={styles.title}>图片查看</div>
           <ImageWrapper className={styles.picWrapper} src="https://os.alipayobjects.com/rmsportal/mgesTPFxodmIwpi.png" desc="示意图"/> */}
-          <div className={styles.title}><Icon type="profile"/>拼团信息<Button type="primary"
-                                                                          className={styles.btn}>关闭拼团</Button></div>
+          <div className={styles.title}><Icon type="profile"/>
+            拼团信息
+            <Button
+              type="primary"
+              className={styles.btn}
+              onClick={()=>{
+                //弹出modal
+              }}
+            >
+              关闭拼团
+            </Button>
+          </div>
           <DescriptionList size="large" style={{marginBottom: 32}} col={4}>
             <Description term="拼团单号">1000000000</Description>
             <Description term="拼团状态">拼团中</Description>
@@ -170,6 +180,16 @@ export default class BasicProfile extends Component {
             columns={progressColumns}
           />
         </Card>
+        <Modal
+          title="Basic Modal"
+          visible={false}//this.state.visible
+          onOk={this.handleOk}
+          onCancel={this.handleCancel}
+        >
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+        </Modal>
       </PageHeaderLayout>
     );
   }
