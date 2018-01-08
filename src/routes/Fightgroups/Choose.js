@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import { Row, Col, Card, Form, Input, Select, Button, DatePicker, Modal, Table, Checkbox } from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './TableList.less';
-import { Link } from 'dva/router'; 
+import { Link } from 'dva/router';
 const { RangePicker } = DatePicker;
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -13,7 +13,7 @@ const period = [
   { label: '下午航班（12:00-19:00）', value: '1' },
   { label: '晚上航班（19:00-06:00）', value: '2' },
 ];
- 
+
 @connect(state => ({
   choose: state.choose,
 }))
@@ -143,8 +143,9 @@ export default class Choose extends PureComponent {
           </Checkbox>
           {getFieldDecorator('status', {
             initialValue: this.state.checkedList,
+            valuePropName: 'checked',
           })(
-            <CheckboxGroup options={period} onChange={this.peroidChange} className={styles.inlineGroup} />
+            <CheckboxGroup options={period} onChange={this.peroidChange} value={this.state.checkedList} className={styles.inlineGroup} />
             )}
         </FormItem>
         <FormItem label="出行天数" {...formItemLayout}>
