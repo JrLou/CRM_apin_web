@@ -16,13 +16,15 @@ export default ({ component: Component, ...rest }) => {
     //     type: 'global/fetchMenus',
     //   });
     // }
+
     render() {
-      const Auth = this.props.menus.some(item => item && item.path && item.path == rest.path)
-      return <Route {...rest} render={props => (
-        !null ? (
+
+      // const Auth = this.props.menus.some(item => item && item.path && item.path == rest.path)
+      return <Route path={rest.path}  key={rest.key} exact={rest.exact} render={props => {
+        return (!null ? (
           <Component {...props} />
         ) : <NotAuth />
-      )} />
+        )} }/>
     }
   }
   const A = connect(state => ({
