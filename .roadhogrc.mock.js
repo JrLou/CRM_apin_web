@@ -7,6 +7,7 @@ import { getActivities, getNotice, getFakeList } from './mock/api';
 import { bannerList } from './mock/bannerList.js';
 import {getSuplierList} from './mock/supplierlist';
 import {getFlylist} from './mock/flylist';
+import {getFlightstock} from './mock/getFlightstock';
 import { getFakeChartData } from './mock/chart';
 import { imgMap } from './mock/utils';
 import { getProfileBasicData } from './mock/profile';
@@ -78,6 +79,7 @@ const proxy = {
   'GET /api/changeStatus':bannerList,
   'GET /api/suplierList' :getSuplierList,
   'GET /api/flyList' :getFlylist,
+  'GET /api/flightstock' :getFlightstock,
   'GET /api/entrust' :entrust,
   'GET /api/fake_chart_data': getFakeChartData,
   'GET /api/profile/basic': getProfileBasicData,
