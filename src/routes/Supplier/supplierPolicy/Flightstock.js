@@ -3,11 +3,13 @@
  */
 import React, {Component} from 'react';
 import css from './Flightstock.less';
+import {connect, Link} from 'dva';
 // import {routerRedux} from 'dva/router';
 import {
   message,
   Table,
   Modal,
+  Divider,
 } from 'antd';
 import moment from 'moment';
 
@@ -17,13 +19,13 @@ const {Column,} = Table;
 // import APILXF from '../../../http/APILXF.js';
 import Filter from '../../../components/screening/Filter.js';
 
+@connect(state => ({
+  flightstock: state.flightstock,
+}))
 class page extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      p: 1,
-      pc: 10,
-      total: 0,
       filter: {
         airlineStatus: 1,
       },
@@ -37,104 +39,19 @@ class page extends Component {
     const data = this.state.data;
     const val = this.state.filter;
     val.airlineStatus = 1
-    data.tableLoading = false;
     data.visible = false;
-    // console.log(CookieHelp.getAccountId());
-    // this.loadData(0, APILXF.api_airlines, {
-    //     page: this.state.p,
-    //     size: this.state.pc,
-    //     airlineStatus: this.state.filter.airlineStatus
-    // });
-    this.setState({
-      data: data,
-      filter: val,
-    })
-  }
-
-  loadData(ole, url, param) {
-    let {data} = this.state;
-    let {filter} = this.state;
-    let _this = this;
-    HttpTool.post(url,
-      (code, msg, json, option) => {
-        if (code == 200) {
-          switch (ole) {
-            case 0:
-              if (json && json.length > 0) {
-                json.map((v, k) => {
-                  v.indexCol = k + 1
-                })
-                _this.setState({
-                  total: option.option.totalRows,
-                  tableDataSource: json,
-                })
-              } else {
-                _this.setState({
-                  tableDataSource: [],
-                  total: option.option.totalRows,
-                })
-              }
-              data.tableLoading = false;
-              _this.setState({
-                data: data,
-              })
-              break;
-            case 1:
-              message.success(msg);
-              filter.page = _this.state.p;
-              filter.size = _this.state.pc;
-              filter.airlineStatus = _this.state.filter.airlineStatus;
-              for (let i in filter) {
-                if (filter[i] == undefined) {
-                  delete filter[i];
-                }
-              }
-              _this.loadData(0, APILXF.api_airlines, filter);
-              break;
-            case 2:
-              data.dataSource = json;
-              for (let i = 0; i < json.length; i++) {
-                json[i].createdTime = moment(json[i].createdTime).format('YYYY-MM-DD:HH:mm')
-              }
-              _this.setState({
-                data: data,
-              })
-              break;
-
-          }
-        } else {
-          message.warning(msg);
-        }
-
-      },
-      (code, msg, option) => {
-        switch (ole) {
-          case 0:
-            data.tableLoading = false;
-            this.setState({
-              data: data,
-              tableDataSource: [],
-            });
-            break;
-          case 1:
-            message.success(msg);
-            break;
-        }
-
-        message.warning(msg);
-      }
-      , param
-    )
-
+    const {dispatch} = this.props;
+    dispatch({
+      type: 'flightstock/fetch',
+    });
   }
 
   companyname(ole, e, event) { //全局函数（根据ole作为标识可以快速查找各功能实现位置）
     switch (ole) {
       case 0: //新增政策跳转新增页面
-        console.log('ddddd');
-        // this.props.dispatch({
-        //   type: 'supplier/supplierPolicy/flightstockAdd',
-        // });
+              // this.props.dispatch({
+              //   type: 'supplier/supplierPolicy/flightstockAdd',
+              // });
         this.props.history.push('flightstockAdd');
         break;
       case 1: //弹窗确认按钮所调函数
@@ -146,7 +63,6 @@ class page extends Component {
   }
 
   dataProcess(ole) {
-    console.log(ole);
     ole.departureDateStart = (ole.departureTime && ole.departureTime.length > 0) ? moment(ole.departureTime[0]).format("YYYY-MM-DD") : undefined;
     ole.departureDateEnd = (ole.departureTime && ole.departureTime.length > 0) ? moment(ole.departureTime[1]).format("YYYY-MM-DD") : undefined;
     ole.departureTime = undefined;
@@ -160,9 +76,7 @@ class page extends Component {
     }
     this.setState({
       filter: dates,
-      p: 1,
     });
-    this.loadData(0, APILXF.api_airlines, dates);
   }
 
   render() {
@@ -203,192 +117,129 @@ class page extends Component {
   }
 
   getTableView() {
-    const columns = [{
-      title: '操作时间',
-      dataIndex: 'createdTime',
-      key: 'createdTime',
-    }, {
-      title: '操作环境',
-      dataIndex: 'eventSource',
-      key: 'eventSource',
-    }, {
-      title: '操作内容',
-      dataIndex: 'eventName',
-      key: 'eventName',
-    }, {
-      title: '操作人',
-      dataIndex: 'operatorUser',
-      key: 'operatorUser',
-    }, {
-      title: '日志',
-      dataIndex: 'message',
-      key: 'message',
-    }];
+    const columns = [
+      {
+        title: '操作人',
+        dataIndex: 'operatorUser',
+        key: 'operatorUser',
+      }, {
+        title: '操作时间',
+        dataIndex: 'createdTime',
+        key: 'createdTime',
+      }, {
+        title: '操作内容',
+        dataIndex: 'eventName',
+        key: 'eventName',
+      }];
+    const {flightstock: {loading: ruleLoading, data: {list, pagination: {current, pageSize, total}}}} = this.props;
     return (
       <div className={css.table_container}>
         <Table
-          loading={this.state.data.tableLoading}
-          dataSource={this.state.tableDataSource}
-          rowKey={record => record.indexCol}
-          bordered={true}
+          loading={ruleLoading}
+          dataSource={list}
+          rowKey={'id'}
           pagination={{
-            pageSize: this.state.pc,
-            total: this.state.total,
+            pageSize: pageSize ? pageSize : 10,
+            total: total ? total : 0,
+            current: current ? current : 1,
             showSizeChanger: true,
-            showQuickJumper: true,
-            current: this.state.p
+            showQuickJumper: true
           }}
           onChange={(pagination, filters, sorter) => {
             let val = this.state.filter;
-            val.page = pagination.current;
-            val.size = pagination.pageSize;
-            this.loadData(0, APILXF.api_airlines, val);
-            this.state.pc = pagination.pageSize;
-            this.setState({
-              p: pagination.current,
+            val.current = pagination.current;
+            val.pageSize = pagination.pageSize;
+            this.props.dispatch({
+              type: 'flightstock/fetch',
+              payload: val,
             });
-            setTimeout(() => {
-              console.log(this.state.p)
-            }, 1000)
           }}
         >
           <Column
             title="机票资源号"
-            dataIndex="airlineNo"
-            key="airlineNo"
+            dataIndex="id"
+            key="id"
           />
           <Column
             title="供应商名称"
-            dataIndex="supplierName"
-            key="supplierName"
-            render={(text, record, index) => {
-              if (record.supplierName == "undefined") {
-                return <span>未知</span>
-              } else {
-                return <span>{record.supplierName}</span>
-              }
-            }}
+            dataIndex="arrCity"
+            key="arrCity"
           />
           <Column
             title="出发/回程城市"
-            dataIndex="voyage"
-            key="voyage"
+            dataIndex="lianxi"
+            key="lianxi"
           />
           <Column
             title="出发/回程航班"
-            dataIndex="flightNumber"
-            key="flightNumber"
+            dataIndex="startCity"
+            key="startCity"
           />
           <Column
-            title="资源负责人"
-            dataIndex="manager"
-            key="manager"
+            title="航班周期"
+            dataIndex="registerTime"
+            key="registerTime"
           />
           <Column
-            title="出发日期"
-            dataIndex="flightDate"
-            key="flightDate"
+            title="往返天数"
+            dataIndex="progress"
+            key="progress"
           />
           <Column
-            title="回程日期"
-            dataIndex="returnDate"
-            key="returnDate"
-            render={(text, record, index) => {
-              switch (record.flightType) {
-                case 1:
-                  return <span>{record.returnDate}</span>
-                  break;
-                case 2:
-                  return <span>{record.returnDate}</span>
-                  break;
-              }
-            }}
-          />
-
-          <Column
-            title="成人价"
-            dataIndex="adultPrice"
-            key="adultPrice"
+            title="航班负责人"
+            dataIndex="money"
+            key="money"
           />
           <Column
-            title="可售库存"
-            dataIndex="unsaldCount"
-            key="unsaldCount"
-          />
-          <Column
-            title="行程类型"
-            dataIndex="flightType"
-            key="flightType"
-            render={(text, record, index) => {
-              switch (record.flightType) {
-                case 1:
-                  return <span>单程</span>
-                  break;
-                case 2:
-                  return <span>往返</span>
-                  break;
-                case 3:
-                  return <span>多程</span>
-                  break;
-              }
-            }}
+            title="状态"
+            dataIndex="tel"
+            key="tel"
           />
           <Column
             title="创建时间"
-            dataIndex="createdTime"
-            key="createdTime"
+            dataIndex="time"
+            key="time"
           />
           <Column
             title="操作"
             className={css.lastCol}
             key="action"
             render={(text, record, index) => {
-              if (record.resType == 0) {
-                switch (record.airlineStatus) {
-                  case 0:
-                    return <div>
-                      <a
-                        style={{cursor: "pointer", margin: "6px"}}
-                        onClick={this.operating.bind(this, record, 0, '编辑航班库存')}>编辑
-                      </a>
-                      <a style={{cursor: "pointer", margin: "6px"}}
-                         onClick={this.operating.bind(this, record, 1)}>上架
-                      </a>
-                      <a style={{cursor: "pointer", margin: "6px"}}
-                         onClick={this.operating.bind(this, record, 2)}>删除
-                      </a>
-                      <a style={{cursor: "pointer", margin: "6px"}}
-                         onClick={this.operating.bind(this, record, 3)}>日志
-                      </a>
-                    </div>
-                    break;
-                  case 1:
-                    return <div>
-                      <a
-                        style={{cursor: "pointer", margin: "6px"}}
-                        onClick={this.operating.bind(this, record, 0, '编辑航班库存')}>编辑
-                      </a>
-                      <a
-                        style={{cursor: "pointer", margin: "6px"}}
-                        onClick={this.operating.bind(this, record, 4, '查看航班库存')}>查看
-                      </a>
-                      <a style={{cursor: "pointer", margin: "6px"}}
-                         onClick={this.operating.bind(this, record, 2)}>删除
-                      </a>
-                      <a style={{cursor: "pointer", margin: "6px"}}
-                         onClick={this.operating.bind(this, record, 3)}>日志
-                      </a>
-                    </div>
-                    break;
-                }
-              } else {
-                return <a
-                  style={{cursor: "pointer", margin: "6px"}}
-                  onClick={this.operating.bind(this, record, 4, '查看航班库存')}>查看
-                </a>
-
+              switch (record.disabled) {
+                case true:
+                  return <div>
+                    <a
+                      style={{cursor: "pointer", margin: "6px"}}
+                      onClick={this.operating.bind(this, record, 0, '编辑航班库存')}>编辑
+                    </a>
+                    <Divider type="vertical"/>
+                    <a style={{cursor: "pointer", margin: "6px"}}
+                       onClick={this.operating.bind(this, record, 1)}>上架
+                    </a>
+                    <Divider type="vertical"/>
+                    <a style={{cursor: "pointer", margin: "6px"}}
+                       onClick={this.operating.bind(this, record, 3)}>日志
+                    </a>
+                  </div>
+                  break;
+                case false:
+                  return <div>
+                    <a
+                      style={{cursor: "pointer", margin: "6px"}}
+                      onClick={this.operating.bind(this, record, 0, '编辑航班库存')}>编辑
+                    </a>
+                    <Divider type="vertical"/>
+                    <a
+                      style={{cursor: "pointer", margin: "6px"}}
+                      onClick={this.operating.bind(this, record, 4, '查看航班库存')}>查看
+                    </a>
+                    <Divider type="vertical"/>
+                    <a style={{cursor: "pointer", margin: "6px"}}
+                       onClick={this.operating.bind(this, record, 3)}>日志
+                    </a>
+                  </div>
+                  break;
               }
-
             }}
           />
         </Table>
@@ -406,60 +257,41 @@ class page extends Component {
 
   operating(data, ole, txt, ide) {
     let _this = this;
-    let {filter} = this.state;
-    filter.page = _this.state.p;
-    filter.size = _this.state.pc;
-    const turn = (ole) => {
-      data.purpose = ole;
-      _this.props.openTab({
-        path: "FlightstockAdd",
-        title: txt,
-        post: data,
-        callBack: (state) => {
-          _this.loadData(0, APILXF.api_airlines, filter)
-        }
-      })
-    };
-    const confirms = (api, data, titlea) => {
+    const confirms = (data, titlea) => {
       confirm({
         title: titlea,
-        // content: titleb,
         onOk() {
-          return _this.loadData(1, api, data);
+          _this.props.dispatch({
+            type: 'flightstock/changeStatus',
+            payload: data,
+          });
         },
         onCancel() {
         },
       });
     }
     switch (ole) {
-      case 0:
-        turn('editor');
-        break;
       case 1:
-        confirms(APILXF.api_onshelve, {
-          airlineStatus: 1,
-          supplierName: data.supplierName,
+        confirms({
+          airlineStatus: 0,
           id: data.id,
-        }, "您确定要上架吗？");
-        break;
-      case 2:
-        confirms(APILXF.api_delete, {id: data.id}, "您确定要删除吗？");
+        }, "确定是否上架？");
         break;
       case 3:
         let datas = this.state.data;
-        _this.loadData(2, APILXF.api_logs, {lineId: data.id});
         datas.visible = true;
         this.setState({data: datas})
+        _this.props.dispatch({
+          type: 'flightstock/log',
+          payload: {
+            p: 1,
+            pc: 100,
+            uuid: data.id,
+          },
+        });
         break;
-      case 4:
-        turn('view');
-        break;
-
     }
   }
 }
 
-// page.contextTypes = {
-//     router: React.PropTypes.object
-// }
 module.exports = page;

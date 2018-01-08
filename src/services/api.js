@@ -71,6 +71,14 @@ export async function entrust(params) {
 export async function queryBanner(params) {
   return request(`/api/bannerList?${stringify(params)}`);
 }
+
+//base64 banner图上传
+export async function baseImg(params) {
+  return request('/api/common/uploadImage', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function deleteBanner(params) {
   return request(`/api/deleteBanner?${stringify(params)}`);
 }
@@ -82,6 +90,19 @@ export async function querySupplierList(params) {
 }
 export async function queryFlyList(params) {
   return request(`/api/flyList?${stringify(params)}`);
+}
+//李斯奇 政策管理供应商资源
+//供应商列表资源列表
+export async function flightstockList(params) {
+  return request(`/api/flightstock?${stringify(params)}`);
+}
+//上架
+export async function stateAirLine(params) {
+  return request(`/api/resource/stateAirLine?${stringify(params)}`);
+}
+//日志
+export async function getAirLineLogs(params) {
+  return request(`/api/resource/getAirLineLogs?${stringify(params)}`);
 }
 
 export async function AccountLogin(params) {
@@ -114,4 +135,7 @@ export async function searchFlights(params) {
 }
 export async function addFlights(params) {
   return request('/api/group/addFlights', { method: 'POST', body: params });
+}
+export async function viewList(params) {
+  return request('/api/group/viewList', { method: 'POST', body: params });
 }
