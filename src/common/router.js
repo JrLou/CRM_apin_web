@@ -111,14 +111,8 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, ['push'], () => import('../routes/Fightgroups/Push.js')),
     },
     // 查看拼团
-<<<<<<< HEAD
-    '/fightgroups/demand/result/:id': {
-      name:'查看拼团',
-      component: dynamicWrapper(app, ['profile'], () => import('../routes/Fightgroups/Result.js')),
-=======
     '/fightgroups/demand/checkFightGroups': {
       component: dynamicWrapper(app, ['checkFightGroups'], () => import('../routes/Fightgroups/CheckFightGroups.js')),
->>>>>>> d2e52ab8721aaa8d9c5724e0b46d406186cbde8a
     },
     //客户管理
     '/customer/userList': {
