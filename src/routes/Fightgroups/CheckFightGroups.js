@@ -11,6 +11,8 @@ import styles from './CheckFightGroups.less';
 
 const {Description} = DescriptionList;
 
+//TODO a. 点击关闭拼团按钮弹出页面，录入需要备注的内容，  点击【保存】 下方日志信息  *****应该刷新*****
+
 const progressColumns = [{
   title: '操作时间',
   dataIndex: 'time',
@@ -32,7 +34,7 @@ export default class CheckFightGroups extends Component {
   constructor() {
     super();
     this.state = {
-      modalType: 0,//0 => 关闭拼团， 1 => 查看日志， 2=> 导出乘机人
+      modalType: 0,//控制哪个模态框弹出：0 => 关闭拼团， 1 => 查看日志， 2=> 导出乘机人
     };
   }
 
@@ -262,6 +264,7 @@ export default class CheckFightGroups extends Component {
         visible={showModal}
         width={920}
         changeVisible={this.handleCancel.bind(this)}
+        passengerType={0}//todo 乘机人类型  国内 or 国际
       />
     );
   }
