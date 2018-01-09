@@ -2,7 +2,7 @@ import mockjs from 'mockjs';
 import { getRule, postRule } from './mock/rule';
 import { getUserList } from './mock/userlist';
 import { entrust } from './mock/entrust';
-import { groupsList, demandList,viewList } from './mock/groupsList'
+import { groupsList, demandList,viewList,orderList } from './mock/groupsList'
 import { getActivities, getNotice, getFakeList } from './mock/api';
 import { bannerList } from './mock/bannerList.js';
 import {getSuplierList} from './mock/supplierlist';
@@ -178,7 +178,8 @@ const proxy = {
     });
   },
   'POST /api/group/demandList': demandList,
-  'POST /api/group/viewList': viewList
+  'POST /api/group/viewList': viewList,
+  'POST /api/group/orderList': orderList,
 
 };
 
