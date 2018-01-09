@@ -102,7 +102,14 @@ export async function financePaymentList(params) {
     body: params,
   });
 }
-//刘园园权限管理
+//权限管理
 export async function roleManageList(params) {
   return request(`/crm/cr/v2/accounts/role/list?${stringify(params)}`);
+}
+//刘园园
+export async function getFlylist(params) {
+  return request('/api/order/getOrderList', {
+    method: 'POST',
+    body: params,
+  });
 }
