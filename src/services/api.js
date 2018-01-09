@@ -162,3 +162,6 @@ export async function viewList(params) {
 export async function orderList(params) {
   return request('/api/group/orderList', { method: 'POST', body: params });
 }
+export async function logList(params) {
+  return request(`/api/group/logs?${stringify(params)}`);
+}
