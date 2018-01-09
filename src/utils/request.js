@@ -60,12 +60,12 @@ function checkCode(json) {
   if(json.code&&json.code*1<1&&json.code*1>-7){
     const errortext = codeMessage[json.code*-1];
     notification.error({
-      message: `错误码${json.code}`,
+      message: `提示`,
       description: errortext,
     });
   }else if(json.code>=-100&&json.code<-7){
     notification.error({
-      message: `错误码${json.code}`,
+      message: `提示`,
       description: json.msg||"",
     });
   }else if(json.code*1<=-100&&json.code*1>=-199){
