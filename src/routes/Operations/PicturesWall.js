@@ -41,19 +41,11 @@ class PicturesWall extends React.Component {
         imageUrl,
         loading: false,
       },()=>{
-        console.log(this.state.imageUrl)
         let image = this.state.imageUrl;
         const { dispatch } = this.props;
         dispatch({
           type: 'bannerList/baseImg',
-          payload: image,
-          callback:(response)=>{
-            if(response.code==200){
-              console.log(response)
-            }else{
-              console.log('error')
-            }
-          }
+          payload: {image}
         });
       }));
     }
