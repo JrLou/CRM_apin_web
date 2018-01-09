@@ -132,6 +132,7 @@ export async function getFlylist(params) {
     method: 'POST',
     body: params,
   });
+}
 export async function postGroupData(params) {
   return request('/api/group/postGroupData', { method: 'POST', body: params });
 }
