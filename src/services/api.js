@@ -127,6 +127,11 @@ export async function financePaymentList(params) {
 export async function roleManageList(params) {
   return request(`/crm/cr/v2/accounts/role/list?${stringify(params)}`);
 }
+export async function getFlylist(params) {
+  return request('/api/order/getOrderList', {
+    method: 'POST',
+    body: params,
+  });
 export async function postGroupData(params) {
   return request('/api/group/postGroupData', { method: 'POST', body: params });
 }
