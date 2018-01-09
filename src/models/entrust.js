@@ -1,16 +1,14 @@
 import { entrust } from '../services/api';
 
 export default {
-  namespace: 'entrust',
+  namespace: "entrustList",
   state: {
     loading: true,
-    data: {
-      data: [],
-      option: {},
-    }
+    list: [],
+    total: 0,
   },
   effects: {
-    *fetch({ payload }, { call, put }) {
+    *getList({ payload }, { call, put }) {
       yield put({
         type: 'changeLoading',
         payload: true,
@@ -27,17 +25,19 @@ export default {
     },
   },
   reducers: {
-    save(state, action) {
+    save(state, { payload }) {
       return {
         ...state,
-        data: action.payload,
+        list: payload.data,
+        total: payload.option.total,
       };
     },
-    changeLoading(state, action) {
+    changeLoading(state, { payload }) {
       return {
         ...state,
-        loading: action.payload,
+        loading: payload,
       };
     },
   },
 };
+
