@@ -13,6 +13,7 @@ export default {
 
     },
     loading: true,
+    banner_url:'',
   },
 
   effects:
@@ -102,12 +103,9 @@ export default {
       * baseImg({payload,callback},{call,put}){
         //base64传给后台 后台返一个 图片url
         const response = yield call(baseImg, payload);
-        if(callback){
-          callback(response);
-        }
         yield put({
           type: 'changeBaseImg',
-          payload:{},
+          payload:response.data,
         });
       }
     },
@@ -133,7 +131,7 @@ export default {
     changeBaseImg(state, action) {
       return {
         ...state,
-        imageUrl: action.payload,
+        banner_url: action.payload,
       };
     },
   },

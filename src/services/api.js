@@ -70,14 +70,18 @@ export async function entrust(params) {
 }
 export async function queryBanner(params) {
   return request(`/api/bannerList?${stringify(params)}`);
+  // return request('/crm/api/banner/addBanner', {
+  //   method: 'POST',
+  //   body: params,
+  // });
 }
 
 //base64 banner图上传
 export async function baseImg(params) {
-  return request('/api/common/uploadImage', {
-    method: 'POST',
-    body: params,
-  });
+    return request('/crm/api/common/uploadImage', {
+      method: 'POST',
+      body: params,
+    });
 }
 export async function deleteBanner(params) {
   return request(`/api/deleteBanner?${stringify(params)}`);

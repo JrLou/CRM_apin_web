@@ -19,7 +19,12 @@ const {RangePicker} = DatePicker;
 @Form.create()
 
 class BannerEdit extends PureComponent {
-
+  onChange = (date, dateString) => {
+    this.setState({
+      start_time: dateString[0],
+      end_time: dateString[1],
+    });
+  }
   handleSubmit = (e) => {
     e.preventDefault();
 
@@ -35,20 +40,20 @@ class BannerEdit extends PureComponent {
         message.warning('请输入图片有效期');
         return;
       }
-
-      values.validityStart = values.validityTime[0]._i;
-      values.validityEnd = values.validityTime[1]._i;
-
-      console.log(values);
-
+      values.start_time = this.state.start_time;
+      values.end_time = this.state.start_time;
+      values.banner_url = this.props.bannerList.banner_url;
+      delete(values["validityTime"]);
+      delete(values["actionType"]);
       dispatch({
         type: 'bannerList/checkEdit',
         payload: values,
         callback:(response)=>{
-          if(response.code==200){
-            message.success(response.message);
+          if(response.code==1){
+            console.log(response);
+
           }else{
-            message.error(response.message);
+            console.log(response.msg);
           }
         }
       });
@@ -61,13 +66,13 @@ class BannerEdit extends PureComponent {
     })
   };
 
-  handlePreview = (file) => {
-    console.log(file.thumbUrl)
-    this.setState({
-      previewImage: file.url || file.thumbUrl,
-      previewVisible: true,
-    });
-  }
+  // handlePreview = (file) => {
+  //   console.log(file.thumbUrl)
+  //   this.setState({
+  //     previewImage: file.url || file.thumbUrl,
+  //     previewVisible: true,
+  //   });
+  // }
 
 
   render() {
@@ -105,9 +110,9 @@ class BannerEdit extends PureComponent {
             <Row>
               <Col md={16} sm={24}>
                 <FormItem label="图片名称:" {...formItemLayout}>
-                  {getFieldDecorator('imgName', {
+                  {getFieldDecorator('title', {
                     initialValue: data.imgName?data.imgName:undefined,
-                    rules: [{max: 30, message: '长度不能超过30'}, {required: true, message: '请填写图片名称'}],
+                    rules: [{max: 32, message: '长度不能超过32'}, {required: true, message: '请填写图片名称'}],
                   })
                   (<Input placeholder="请输入…"/>)
                   }
@@ -157,7 +162,7 @@ class BannerEdit extends PureComponent {
             <Row>
               <Col md={16} sm={24}>
                 <FormItem label="指向地址:" {...formItemLayout}>
-                  {getFieldDecorator('goLink', {initialValue: data.goLink?data.goLink:undefined, rules: [{max: 128, message: '长度不能超过128'},{required: true, message: '请输入指向地址'}],})
+                  {getFieldDecorator('link_url', {initialValue: data.link_url?data.link_url:undefined})
                   (<Input placeholder="请输入…"/>)
                   }
                 </FormItem>
@@ -170,6 +175,7 @@ class BannerEdit extends PureComponent {
                     {getFieldDecorator('validityTime', {initialValue: validityTime, rules: [{required: true, message: '请选择图片有效期'}],})
                     (
                       <RangePicker
+                        onChange={this.onChange.bind(this)}
                         showTime={{
                           format:'HH:mm',
                         }}
@@ -183,7 +189,7 @@ class BannerEdit extends PureComponent {
               <Row>
                 <Col md={16} sm={24}>
                   <FormItem label="状态:" {...formItemLayout}>
-                    {getFieldDecorator('status', {initialValue: data.status?data.status:1, rules: [{required: true, message: '请选择状态'}],})
+                    {getFieldDecorator('state', {initialValue: data.state?data.state:1, rules: [{required: true, message: '请选择状态'}],})
                     (
                       <RadioGroup>
                         <Radio value={1}>上架</Radio>
