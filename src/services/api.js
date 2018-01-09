@@ -128,7 +128,7 @@ export async function roleManageList(params) {
   return request(`/crm/cr/v2/accounts/role/list?${stringify(params)}`);
 }
 export async function getFlylist(params) {
-  return request('/api/order/getOrderList', {
+  return request('/crm/api/order/getOrderList', {
     method: 'POST',
     body: params,
   });
