@@ -280,7 +280,7 @@ export default class CheckFightGroups extends Component {
         ModalView = this.getExportPassengerModal(showModal, modalConfirmLoading);
         break;
       default:
-        ModalView = 1;
+        ModalView = null;
         break;
     }
     return ModalView;
