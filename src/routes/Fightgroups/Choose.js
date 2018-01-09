@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Card, Form, Input, Select, Button, DatePicker, Modal, Table, Checkbox } from 'antd';
+import { Row, Col, Card, Form, Input, Select, Button, DatePicker, Modal, Table, Checkbox, message } from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './TableList.less';
-import { Link } from 'dva/router';
+import { Link, routerRedux } from 'dva/router';
+import moment from 'moment';
 const { RangePicker } = DatePicker;
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -13,61 +14,124 @@ const period = [
   { label: '下午航班（12:00-19:00）', value: '1' },
   { label: '晚上航班（19:00-06:00）', value: '2' },
 ];
-
+const daysArr = [
+  { label: '2天', value: '0' },
+  { label: '3天', value: '1' },
+  { label: '4天', value: '2' },
+  { label: '5天', value: '3' },
+  { label: '6天', value: '4' },
+  { label: '7天', value: '5' },
+  { label: '8天', value: '6' },
+  { label: '9天', value: '7' },
+  { label: '10天', value: '8' },
+  { label: '11天', value: '9' },
+  { label: '12天', value: '10' },
+  { label: '13-20天', value: '11' },
+]
+const allValues = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']
 @connect(state => ({
-  choose: state.choose,
+  chooseData: state.choose,
 }))
 @Form.create()
 export default class Choose extends PureComponent {
+  constructor() {
+    super()
+    this.page = {
+      page: 1,
+      pageSize: 10
+    }
+    this.searchValue = {}
+  }
   state = {
     modalVisible: false,
-    formValues: {},
-    record: {},
     selectedRowKeys: [],
     selectRows: [],
 
     checkedList: [],
     indeterminate: false,
     checkAll: false,
-  };
 
-  componentDidMount() {
-    // const { dispatch } = this.props;
-    // dispatch({
-    //   type: 'refund/fetch',
-    // });
+    daysCheckedList: [],
+    daysIndeterminate: false,
+    daysCheckAll: false,
+
+  };
+  componentWillMount() {
+    const { dispatch } = this.props;
+    if (!this.props.location.state) {
+      dispatch(routerRedux.push('/fightgroups/demand/'));
+    }
   }
+  componentDidMount() {
+    const { dispatch } = this.props;
+    const { id } = this.props.location.state ? this.props.location.state : {};
+    const params = {
+      ...this.page,
+      id: id
+    }
+    dispatch({
+      type: 'choose/fetch',
+      payload: params,
+    });
+  }
+
 
   handleTableChange = (pagination) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
-
+    const { id } = this.props.location.state ? this.props.location.state : {};
     const params = {
-      currentPage: pagination.current,
+      page: pagination.current,
       pageSize: pagination.pageSize,
-      ...formValues,
+      id: id,
+      ...this.searchValue,
     };
-    // dispatch({
-    //   type: 'refund/fetch',
-    //   payload: params,
-    // });
+    dispatch({
+      type: 'choose/fetch',
+      payload: params,
+    });
   };
 
   handleSearch() {
     const { dispatch, form } = this.props;
-    form.validateFields((err, fieldsValue) => {
+    const { id } = this.props.location.state ? this.props.location.state : {};
+
+    form.validateFields((err, values) => {
       if (err) return;
-      const values = {
-        ...fieldsValue,
-      };
-      this.setState({
-        formValues: values,
+      console.log('参数');
+      values.flightStartTime = values.flightTime ? moment(values.flightTime[0]).format('YYYY-MM-DD') : '';
+      values.flightEndTime = values.flightTime ? moment(values.flightTime[1]).format('YYYY-MM-DD') : '';
+
+      console.log(values);
+      this.searchValue = values;
+      dispatch({
+        type: 'choose/fetch',
+        payload: { ...values, id: id },
       });
-      // dispatch({
-      //   type: 'refund/fetch',
-      //   payload: values,
-      // });
     });
+  }
+  resetSearch = () => {
+    this.props.form.resetFields();
+    // 全选的特殊处理
+    this.setState({
+      checkedList: [],
+      indeterminate: false,
+      checkAll: false,
+
+      daysCheckedList: [],
+      daysIndeterminate: false,
+      daysCheckAll: false,
+    }, this.handleSearch)
+
+  }
+  pushScheme = () => {
+    const { dispatch } = this.props;
+    const { id } = this.props.location.state
+    if (!this.state.selectedRowKeys.length) {
+      message.warning('请先选择需要推送方案的订单')
+      return
+    }
+    dispatch(routerRedux.push({ pathname: '/fightgroups/demand/push', state: { demandId: id, orderList: this.state.selectRows } }));
   }
 
   handleModalVisible = (flag, record) => {
@@ -75,24 +139,16 @@ export default class Choose extends PureComponent {
       modalVisible: !!flag,
       record
     });
+
   }
-  onChange = (date, dateString) => {
-    console.log(date, dateString);
-  }
+
   selectChange(selectedRowKeys, selectedRows) {
-    let rows = selectedRows.map(row => row.id);
     this.setState({
-      selectRows: rows,
+      selectRows: selectedRows,
       selectedRowKeys: selectedRowKeys
     })
   }
-  getCheckBox() {
-    let checkBoxArr = [];
-    for (let i = 0; i < 13; i++) {
-      checkBoxArr.push(<Checkbox key={i} value={i === 12 ? '13-20' : i + 1}>{i === 12 ? '13-20' : i + 1}天</Checkbox>);
-    }
-    return checkBoxArr
-  }
+
   peroidChange = (checkedList) => {
     this.setState({
       checkedList,
@@ -103,11 +159,27 @@ export default class Choose extends PureComponent {
   onCheckAllChange = (e) => {
     console.log(e.target.checked)
     this.setState({
-      checkedList: e.target.checked ? ['0','1','2'] : [],
+      checkedList: e.target.checked ? ['0', '1', '2'] : [],
       indeterminate: false,
       checkAll: e.target.checked,
     });
   }
+  daysPeroidChange = (daysCheckedList) => {
+    this.setState({
+      daysCheckedList,
+      daysIndeterminate: !!daysCheckedList.length && (daysCheckedList.length < daysArr.length),
+      daysCheckAll: daysCheckedList.length === daysArr.length,
+    });
+  }
+  daysOnCheckAllChange = (e) => {
+    console.log(e.target.checked)
+    this.setState({
+      daysCheckedList: e.target.checked ? allValues : [],
+      daysIndeterminate: false,
+      daysCheckAll: e.target.checked,
+    });
+  }
+
   renderForm() {
     const { getFieldDecorator } = this.props.form;
     const formItemLayout = {
@@ -120,14 +192,14 @@ export default class Choose extends PureComponent {
         <Row gutter={20}>
           <Col span={8}>
             <FormItem label="起飞时间" {...formItemLayout}>
-              {getFieldDecorator('orderId')(
-                <RangePicker onChange={this.onChange} />
+              {getFieldDecorator('flightTime')(
+                <RangePicker />
               )}
             </FormItem>
           </Col>
           <Col span={8}>
             <FormItem label="订单号" {...formItemLayout}>
-              {getFieldDecorator('id')(
+              {getFieldDecorator('orderId')(
                 <Input placeholder="请输入" />
               )}
             </FormItem>
@@ -141,26 +213,34 @@ export default class Choose extends PureComponent {
           >
             不限
           </Checkbox>
-          {getFieldDecorator('status', {
+          {getFieldDecorator('dayPeriod', {
             initialValue: this.state.checkedList,
             valuePropName: 'checked',
           })(
             <CheckboxGroup options={period} onChange={this.peroidChange} value={this.state.checkedList} className={styles.inlineGroup} />
             )}
         </FormItem>
-        <FormItem label="出行天数" {...formItemLayout}>
-          {getFieldDecorator('day', {
-            initialValue: '',
+        <FormItem label="出行天数">
+          <Checkbox
+            indeterminate={this.state.daysIndeterminate}
+            onChange={this.daysOnCheckAllChange}
+            checked={this.state.daysCheckAll}
+          >
+            全选
+          </Checkbox>
+          {getFieldDecorator('days', {
+            initialValue: this.state.daysCheckedList,
+            valuePropName: 'checked',
           })(
-            <span>
-              <Checkbox value={this.state.checkNick}>全选</Checkbox>
-              {this.getCheckBox()}
-            </span>
+            <CheckboxGroup options={daysArr} onChange={this.daysPeroidChange} value={this.state.daysCheckedList} className={styles.inlineGroup} />
             )}
         </FormItem>
+
         <div style={{ overflow: 'hidden' }}>
-          <span style={{ float: 'right', marginBottom: 24 }}>
+          <span style={{ float: 'right', marginBottom: 24 }} className={styles.btnBox}>
             <Button type="primary" htmlType="submit" onClick={this.handleSearch.bind(this)}>查询</Button>
+            <Button type="default" onClick={this.resetSearch.bind(this)}>重置</Button>
+            <Button type="primary" onClick={this.pushScheme.bind(this)}>推送方案</Button>
           </span>
         </div>
       </Form>
@@ -170,42 +250,33 @@ export default class Choose extends PureComponent {
   render() {
     // const { rule: { loading, list, total } } = this.props;
     const { modalVisible, record } = this.state;
-    let data = [
-      { id: 1, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0 },
-      { id: 2, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0 },
-      { id: 3, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0 },
-      { id: 4, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0 },
-      { id: 5, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0 },
-      { id: 6, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0 },
-    ];
+
     const columns = [{
       title: '拼团编号',
       dataIndex: 'id',
+      render: (text, record) => <Link to={'/fightgroups/demand/checkFightGroups'}>{text}</Link>,
     }, {
       title: '推送时间',
-      dataIndex: 'status',
-      render: (text) => {
-        const status = ['已退款', '退款失败'];
-        return status[text];
-      },
+      dataIndex: 'createTime',
+
     }, {
       title: '出发机场',
-      dataIndex: 'money',
+      dataIndex: 'depAirport',
     }, {
       title: '到达机场',
-      dataIndex: 'orderId',
+      dataIndex: 'arrAirport',
     }, {
       title: '航班号',
-      dataIndex: 'time',
+      dataIndex: 'flightNo',
     }, {
       title: '成交人数',
-      dataIndex: 'num',
+      dataIndex: 'peopleCount',
     }, {
       title: '销售价格',
       dataIndex: 'price',
     }, {
       title: '是否成团',
-      dataIndex: 'is',
+      dataIndex: 'isGroup',
     }, {
       title: '操作',
       render: (text, record) => <Link to={'/fightgroups/demand/checkFightGroups'}>查看</Link>,
@@ -214,6 +285,7 @@ export default class Choose extends PureComponent {
       selectedRowKeys: this.state.selectedRowKeys,
       onChange: this.selectChange.bind(this)
     };
+    const { chooseData: { tableData, loading } } = this.props;
     return (
       <PageHeaderLayout>
         <Card bordered={false}>
@@ -224,9 +296,9 @@ export default class Choose extends PureComponent {
 
             <Table
               // dataSource={list}
-              dataSource={data}
+              dataSource={tableData && tableData.data}
               columns={columns}
-              pagination={{ showSizeChanger: true, showQuickJumper: true, }}
+              pagination={{ showSizeChanger: true, showQuickJumper: true, total: tableData.option && tableData.option.total }}
               // loading={loading}
               onChange={this.handleTableChange}
               rowKey="id"

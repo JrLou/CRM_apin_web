@@ -6,10 +6,10 @@ export default {
   state: {
     basicGoods: [],
     basicLoading: true,
-    advancedOperation1: [],
-    advancedOperation2: [],
-    advancedOperation3: [],
-    advancedLoading: true,
+    // advancedOperation1: [],
+    // advancedOperation2: [],
+    // advancedOperation3: [],
+    // advancedLoading: true,
     // data: {
     //   xxx: [],
     //   xx: {},
@@ -70,9 +70,37 @@ export default {
         payload: {showModal: false},
       });
     },
+    * fetchConfirmExport({payload, callback}, {call, put}) {
+      yield put({
+        type: 'changeLoading',
+        payload: {modalConfirmLoading: true},
+      });
+      const response = yield call(changeStatus, payload);
+      if(callback){
+        callback(response);
+      }
+      yield put({
+        type: 'save',
+        payload: response.data,
+      });
+      yield put({
+        type: 'changeLoading',
+        payload: {modalConfirmLoading: false},
+      });//todo 这里如果请求异常了，不应该再走下一步，记得处理
+      yield put({
+        type: 'changeModalLoading',
+        payload: {showModal: false},
+      });
+    },
   },
 
   reducers: {
+    save(state, action) {
+      return {
+        ...state,
+        data: action.payload,
+      };
+    },
     show(state, {payload}) {
       return {
         ...state,
