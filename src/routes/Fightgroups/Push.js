@@ -26,10 +26,10 @@ export default class PushScheme extends PureComponent {
       >
         <Card bordered={false}>
           <Spin spinning={loading}>
-            <SearchFlight></SearchFlight>
+            <SearchFlight {...this.props}></SearchFlight>
           </Spin>
         </Card>
-      </PageHeaderLayout>
+      </PageHeaderLayout >
     );
   }
 }
