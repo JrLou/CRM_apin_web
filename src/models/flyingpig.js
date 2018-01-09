@@ -1,14 +1,14 @@
-import { getFlylist } from '../services/flyingpig';
+import { getFlylist } from '../services/api';
 
 export default {
-  namespace: "flyingpig",
+  namespace: "flyingpigList",
   state: {
     loading: true,
     list: [],
     total: 0,
   },
   effects: {
-    *fetch({ payload }, { call, put }) {
+    *getList({ payload }, { call, put }) {
       yield put({
         type: 'changeLoading',
         payload: true,

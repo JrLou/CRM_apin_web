@@ -45,7 +45,7 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Finance/FinanceVerify')),
     },
     '/fightgroups/list': {
-      component: dynamicWrapper(app, ['rule'], () => import('../routes/Fightgroups/List.js')),
+      component: dynamicWrapper(app, ['rule'], () => import('../routes/Fightgroups/FightGroupsList.js')),
     },
     //订单管理
     '/order/flyingpig': {

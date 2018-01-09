@@ -68,6 +68,11 @@ class BasicLayout extends React.PureComponent {
       breadcrumbNameMap: routerData,
     };
   }
+  componentDidMount(){
+    this.props.dispatch({
+      type: 'user/fetchCurrent',
+    });
+  }
   getPageTitle() {
     const { routerData, location } = this.props;
     const { pathname } = location;

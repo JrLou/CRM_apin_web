@@ -28,11 +28,6 @@ export default class MyForm extends Component {
    * 设置某些属性等于状态机的属性
    * @param dataArr
    */
-  // reSetData(dataArr) {
-  //   for (let i = 0; i < dataArr.length; i++) {
-  //     dataArr[i].type === 1.1 && (dataArr[i].dataSource = this.state.dataSource);
-  //   }
-  // }
 
   loadSearchData(param, cb) {
     //mock AJAX
@@ -84,7 +79,7 @@ export default class MyForm extends Component {
       span: 6,                                                      //number                                                        栅格值，一行一共24个栅格，只有在  layout === horizontal  的时候该属性才生效
       data: [                                                       //*object[]                                                      生成所有表单控件的JSON格式数据
         {
-          type: 1.1,					                                        //*number		                          1				                  表单控件的type;1=>Input  2=>Select  3=>DatePicker  3.1=>RangePicker   5=>Button
+          type: 1,					                                        //*number		                          1				                  表单控件的type;1=>Input  2=>Select  3=>DatePicker  3.1=>RangePicker   5=>Button
           fieldDecorator: "name",				                            //*string		                    				                        与后台数据传输的“键名”
           initialValue: "",				                                  //按需			                            ""				                仅当需要回显的时候才需要出入值
           label: "出发城市",				                                  //string|ReactNode						                                  label标签的文本
@@ -102,7 +97,7 @@ export default class MyForm extends Component {
           colon: true,                                              //boolean                             true                    是否有冒号
           fieldsProps: {size: "default"},                            //object	                                                    直接传递表单控件的属性，即:<Input/Select/DatePicker/等 {...setFieldsProps}>  如和上面传递的属性相同：以此为准;具体可用参数详见antd各组件的支持属性
         }, {
-          type: 1.1,
+          type: 1,
           fieldDecorator: "contactName",
           initialValue: "",
           label: "目的城市",
@@ -114,33 +109,6 @@ export default class MyForm extends Component {
           ],
           placeholder: "请输入目的城市",
           style: {},
-          dataSource: this.state.dataSourceToAddr,
-          fieldsProps: {
-            onSelect: (value) => {
-              this.loadSelectData({key: value}, (code, msg, data) => {
-                if (code > 0) {
-                  console.log(msg, data);
-                } else {
-                  console.log(msg, data);
-                }
-              });
-            },
-            onSearch: (value) => {//名称固定
-              if (value !== '') {
-                this.loadSearchData({value}, (code, msg, data) => {
-                  if (code > 0) {
-                    console.log("succ", msg);
-                    this.setState({dataSourceToAddr: data});
-                  } else {
-                    this.setState({dataSourceToAddr: []});
-                    console.log("err", msg);
-                  }
-                });
-              } else {
-                this.setState({dataSourceToAddr: []});
-              }
-            },
-          },
         }, {
           type: 2,
           fieldDecorator: "checker",
@@ -173,7 +141,7 @@ export default class MyForm extends Component {
             }
           ],
         }, {
-          type: 1.1,
+          type: 1,
           fieldDecorator: "asfd1",
           initialValue: "",
           label: "拼团单号",
@@ -185,34 +153,6 @@ export default class MyForm extends Component {
           ],
           placeholder: "请输入拼团单号",
           style: {},
-          dataSource: [],
-          fieldsProps: {
-            onSelect: (value) => {
-              // this.loadSelectData({key: value}, (code, msg, data) => {
-              //   if (code > 0) {
-              //     console.log(msg, data);
-              //   } else {
-              //     console.log(msg, data);
-              //   }
-              // });
-            },
-            onSearch: (value) => {//名称固定
-              // if (value !== '') {
-              //   this.loadSearchData({value}, (code, msg, data) => {
-              //     if (code > 0) {
-              //       console.log("succ", msg);
-              //       this.setState({dataSource: data});
-              //     } else {
-              //       this.setState({dataSource: []});
-              //       console.log("err", msg);
-              //     }
-              //   });
-              // } else {
-              //   this.setState({dataSource: []});
-              // }
-
-            },
-          },
         }, {
           type: 2,
           fieldDecorator: "asfd",

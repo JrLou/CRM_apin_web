@@ -27,7 +27,7 @@ function checkStatus(response) {
   const errortext = codeMessage[response.status] || response.statusText;
   notification.error({
     message: `请求错误 ${response.status}: ${response.url}`,
-    description: errortext,
+    description: response.statusText,
   });
   const error = new Error(errortext);
   error.name = response.status;
@@ -58,18 +58,18 @@ function checkCode(json) {
     6: '接口不存在',
     7: '非法请求',
   };
-  // if(1>json.code>-7){
-  //   const errortext = codeMessage[json.code*-1];
-  //   notification.error({
-  //     message: "请求错误",
-  //     description: errortext,
-  //   });
-  // }else if(json.code<-7){
-  //   notification.error({
-  //     message: "数据错误",
-  //     description: json.msg||"",
-  //   });
-  // }
+  if(json.code&&json.code*1<1&&json.code*1>-7){
+    const errortext = codeMessage[json.code*-1];
+    notification.error({
+      message: `错误码${json.code}`,
+      description: errortext,
+    });
+  }else if(json.code&&json.code<-7){
+    notification.error({
+      message: `错误码${json.code}`,
+      description: json.msg||"",
+    });
+  }
   return json
   }
 
