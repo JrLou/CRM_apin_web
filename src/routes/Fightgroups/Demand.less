@@ -87,7 +87,6 @@
     }
   }
 }
-
 @media screen and (max-width: @screen-md) {
   .extraImg {
     display: none;
@@ -114,7 +113,6 @@
   }
 }
 
-<<<<<<< HEAD
 .formItem {
   margin-bottom: 10px;
 }
@@ -123,13 +121,15 @@
   float: right;
   margin-top: 3px;
   width: 28%;
-  padding: 0 0;
+  padding: 0;
   text-align: center;
 }
-.noFlight{
+
+.noFlight {
   text-align: center;
   margin: 15px 0;
 }
+
 :global {
   .searchForm {
     .ant-calendar-picker,
@@ -141,38 +141,42 @@
       width: 70%;
     }
   }
-=======
-.tableListForm {
-  :global {
-    .ant-form-item {
-      margin-bottom: 24px;
-      margin-right: 0;
-      display: flex;
-      > .ant-form-item-label {
-        width: auto;
-        line-height: 32px;
-        padding-right: 8px;
+
+  .tableListForm {
+    :global {
+      .ant-form-item {
+        margin-bottom: 24px;
+        margin-right: 0;
+        display: flex;
+
+        > .ant-form-item-label {
+          width: auto;
+          line-height: 32px;
+          padding-right: 8px;
+        }
+      }
+
+      .ant-form-item-control-wrapper {
+        flex: 1;
       }
     }
-    .ant-form-item-control-wrapper {
-      flex: 1;
+
+    .submitButtons {
+      white-space: nowrap;
+      margin-bottom: 24px;
     }
   }
-  .submitButtons {
-    white-space: nowrap;
-    margin-bottom: 24px;
+  //card
+  .cardTitle {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: rgba(182, 88, 8, 0.73);
+    border-radius: 50%;
+    margin-right: 10px;
+
+    &.success {
+      background: #17ff27;
+    }
   }
-}
-//card
-.cardTitle {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  background: rgba(182, 88, 8, 0.73);
-  border-radius: 50%;
-  margin-right:10px;
-  &.success{
-    background: #17ff27;
-  }
->>>>>>> dcb9428448f15898f19bcfd39616766aa2cbae98
 }
