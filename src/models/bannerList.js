@@ -5,14 +5,14 @@ export default {
   namespace: 'bannerList',
 
   state: {
-    data: {
-      list: [],
-      pagination: {},
+    data  : {
+
     },
     editData:{
 
     },
     loading: true,
+    banner_url:'',
   },
 
   effects:
@@ -24,10 +24,13 @@ export default {
           payload: true,
         });
         const response = yield call(queryBanner, payload);
-        yield put({
-          type: 'save',
-          payload: response.data,
-        });
+        debugger;
+        if(!response && response.data.length > 0){
+          yield put({
+            type: 'save',
+            payload: response.data,
+          });
+        }
         yield put({
           type: 'changeLoading',
           payload: false,
@@ -102,12 +105,9 @@ export default {
       * baseImg({payload,callback},{call,put}){
         //base64传给后台 后台返一个 图片url
         const response = yield call(baseImg, payload);
-        if(callback){
-          callback(response);
-        }
         yield put({
           type: 'changeBaseImg',
-          payload:{},
+          payload:response.data,
         });
       }
     },
@@ -133,7 +133,7 @@ export default {
     changeBaseImg(state, action) {
       return {
         ...state,
-        imageUrl: action.payload,
+        banner_url: action.payload,
       };
     },
   },

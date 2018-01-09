@@ -1,21 +1,20 @@
-import { entrust } from '../services/api';
+import { viewList } from '../services/api';
 
 export default {
-  namespace: "entrustList",
+  namespace: 'view',
   state: {
-    loading: true,
-    list: [],
-    total: 0,
+    tableData: {},
+    loading: false,
   },
   effects: {
-    *getList({ payload }, { call, put }) {
+    *fetch({ payload }, { call, put }) {
       yield put({
         type: 'changeLoading',
         payload: true,
       });
-      const response = yield call(entrust, payload);
+      const response = yield call(viewList, payload);
       yield put({
-        type: 'save',
+        type: 'queryList',
         payload: response,
       });
       yield put({
@@ -24,20 +23,19 @@ export default {
       });
     },
   },
+
   reducers: {
-    save(state, { payload }) {
+    queryList(state, action) {
       return {
         ...state,
-        list: payload.data,
-        total: payload.option.total,
+        tableData: action.payload,
       };
     },
-    changeLoading(state, { payload }) {
+    changeLoading(state, action) {
       return {
         ...state,
-        loading: payload,
+        loading: action.payload,
       };
     },
   },
 };
-
