@@ -86,7 +86,7 @@ export default class TableList extends PureComponent {
           'end_time': timeArr[1] ? timeArr[1] : '',
         };
         values.group_type = Number(values.group_type);
-        values.order_status = values.order_status ? Number(values.order_status) : '';
+        values.order_status = Number(values.order_status);
         for (let item in values) {
           if (values[item] === undefined) {
             values[item] = '';
@@ -96,7 +96,6 @@ export default class TableList extends PureComponent {
           formValues: values,
         });
         let params = Object.assign(pagination, values);
-        console.log("参数", params, timeArr);
         dispatch({
           type: 'flyingpigList/getList',
           payload: params,
@@ -141,7 +140,7 @@ export default class TableList extends PureComponent {
                 <Select placeholder="请选择" style={{width: '100%'}}>
                   <Option value="">全部</Option>
                   {
-                    status.map((item, index) => <Option value={index} key={index}>{item}</Option>)
+                    status.map((item, index) => <Option value={index} key={index}>{item+index}</Option>)
                   }
                 </Select>
               )}

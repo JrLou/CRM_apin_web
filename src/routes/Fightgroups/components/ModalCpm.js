@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'dva';
-import {Modal, Table, Input, Button} from 'antd';
+import {Modal, Table, Input, Button, message} from 'antd';
 import less from './ModalCpm.less'
 
 const {TextArea} = Input;
@@ -143,32 +143,82 @@ class ExportPassengerModal extends Component {
     this.props.changeVisible && this.props.changeVisible();
   };
 
-  render() {
-    const {basicGoods, basicLoading} = this.props.checkFightGroups;
+  getColumns() {
+    let columns = [];
+    if(this.props.passengerType === 0){//todo 点击【批量导出】按钮  页面应该传过来，【乘客类型】  0=>国内， 1=> 国际
+      columns = [
+        {
+          title: '订单号',
+          dataIndex: 'id',
+          key: 'id',
+        }, {
+          title: '乘机人',
+          dataIndex: 'name',
+          key: 'name',
+        }, {
+          title: '乘机人类型',
+          dataIndex: 'barcode',
+          key: 'barcode',
+        }, {
+          title: '证件号码',
+          dataIndex: 'price',
+          key: 'price',
+        }, {
+          title: '票号',
+          dataIndex: 'num',
+          key: 'num',
+        }
+      ];
+    } else {
+      columns = [
+        {
+          title: '订单号',
+          dataIndex: 'id',
+          key: 'id',
+        }, {
+          title: '乘机人',
+          dataIndex: 'name',
+          key: 'name',
+        }, {
+          title: '乘机人类型',
+          dataIndex: 'barcode',
+          key: 'barcode',
+        }, {
+          title: '证件号码',
+          dataIndex: 'price',
+          key: 'price',
+        }, {
+          title: '出生年月日',
+          dataIndex: 'num',
+          key: 'num',
+        }, {
+          title: '性别',
+          dataIndex: 'bbb',
+          key: 'bbb',
+        }, {
+          title: '证件有效期',
+          dataIndex: 'aaac',
+          key: 'aaac',
+        }, {
+          title: '国籍',
+          dataIndex: 'b',
+          key: 'b',
+        }, {
+          title: '票号',
+          dataIndex: 'pb',
+          key: 'pb',
+        }
+      ];
+    }
+    return columns;
+  }
 
-    const columns = [
-      {
-        title: '订单号',
-        dataIndex: 'id',
-        key: 'id',
-      }, {
-        title: '乘机人',
-        dataIndex: 'name',
-        key: 'name',
-      }, {
-        title: '乘机人类型',
-        dataIndex: 'barcode',
-        key: 'barcode',
-      }, {
-        title: '证件号码',
-        dataIndex: 'price',
-        key: 'price',
-      }, {
-        title: '票号',
-        dataIndex: 'num',
-        key: 'num',
-      }
-    ];
+  render() {
+    const {basicGoods, basicLoading, modalConfirmLoading} = this.props.checkFightGroups;
+    const {dispatch} = this.props;
+    console.log("this.props.checkFightGroups", this.props.checkFightGroups);
+
+    const columns = this.getColumns();
 
     return (
       <Modal
@@ -186,9 +236,43 @@ class ExportPassengerModal extends Component {
           rowKey="id"
         />
         <div className={less.btnContainer}>
-          <Button type='primary'>导出乘机人信息</Button>
-          <Button type='primary'>导入票号信息</Button>
-          <Button type='primary'>确认提交</Button>
+          <Button
+            type='primary'
+            onClick={() => {
+
+            }}
+          >
+            导出乘机人信息
+          </Button>
+          <Button
+            type='primary'
+            onClick={() => {//todo 这里是难点
+
+            }}
+          >
+            导入票号信息
+          </Button>
+          <Button
+            type='primary'
+            loading={modalConfirmLoading}
+            onClick={() => {
+              dispatch({
+                type: 'checkFightGroups/fetchConfirmExport',
+                payload: {},
+                callback: response => {
+                  if (response.code == 200) {
+                    message.success("操作成功");
+                    console.log(response);
+                  } else {
+                    message.success("操作失败");
+                    console.log('error');
+                  }
+                }
+              });
+            }}
+          >
+            确认提交
+          </Button>
         </div>
       </Modal>
     );

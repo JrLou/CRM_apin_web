@@ -30,13 +30,17 @@ export default class BannerList extends PureComponent {
   state = {
     selectedRows: [],
     page: {
-      pageNo: 1,
-      pageSize: 10
+      p: 1,
+      pc: 10
     }
   };
   componentDidMount() {
     this.props.dispatch({
-      type: 'bannerList/fetch'
+      type: 'bannerList/fetch',
+      payload: {
+        p:1,
+        pc:10
+      },
     });
   }
 
@@ -50,8 +54,8 @@ export default class BannerList extends PureComponent {
       return newObj;
     }, {});
     const params = {
-      currentPage: pagination.current,
-      pageSize: pagination.pageSize,
+      p: pagination.current,
+      pc: pagination.pageSize,
       ...formValues,
       ...filters,
     };
@@ -109,6 +113,12 @@ export default class BannerList extends PureComponent {
 
   render() {
     const { bannerList: { loading: ruleLoading, data } } = this.props;
+    Object.assign(data, {
+        pagination:{
+          current:this.state.p,
+          pageSize:this.state.pc
+        }
+      })
     const { selectedRows } = this.state;
 
     return (
