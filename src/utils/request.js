@@ -54,7 +54,6 @@ function checkCode(json) {
     2: '未登录',
     3: '没有权限访问',
     4: '用户被禁用',
-    5: '列表无数据',
     6: '接口不存在',
     7: '非法请求',
   };
@@ -64,9 +63,19 @@ function checkCode(json) {
       message: `错误码${json.code}`,
       description: errortext,
     });
-  }else if(json.code&&json.code<-7){
+  }else if(json.code>=-100&&json.code<-7){
     notification.error({
       message: `错误码${json.code}`,
+      description: json.msg||"",
+    });
+  }else if(json.code*1<=-100&&json.code*1>=-199){
+    notification.error({
+      message: "用户输入信息校验错误",
+      description: json.msg||"",
+    });
+  }else if(json.code*1<=-200&&json.code*1>=-299){
+    notification.error({
+      message: "后端业务提交错误",
       description: json.msg||"",
     });
   }
