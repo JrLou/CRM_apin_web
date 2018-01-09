@@ -40,7 +40,6 @@ function RouterConfig({ history, app }) {
   const routerData = getRouterData(app);
   const UserLayout = routerData['/user'].component;
   const BasicLayout = routerData['/'].component;
-  console.log('23232323232323232323232323232323232323')
   return (
     <LocaleProvider locale={zhCN}>
       <Router history={history}>
