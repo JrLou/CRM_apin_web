@@ -1,7 +1,7 @@
 import React from 'react'
 import { Spin } from 'antd';
 import { connect } from 'dva';
-export default (WrappedComponent, props) => {
+export default (WrappedComponent) => {
   class Loadmenu2 extends React.Component {
     // constructor(props) {
     //   super(props);
@@ -15,13 +15,13 @@ export default (WrappedComponent, props) => {
       });
     }
     render() {
-      return this.props.menusload?<WrappedComponent {...props} />: <Spin size="large" style={{ width: "100%",margin: "40px 0 !important"}} />
+      return this.props.menusload?WrappedComponent: <Spin size="large" style={{ width: "100%",margin: "40px 0 !important"}} />
     }
   }
   const A = connect(state => ({
     menusload: state.global.menusload,
   }))(Loadmenu2)
-  return <A />
+  return <A/>
 }
 
 // export default connect(state => ({
