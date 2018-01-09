@@ -145,3 +145,6 @@ export async function addFlights(params) {
 export async function viewList(params) {
   return request('/api/group/viewList', { method: 'POST', body: params });
 }
+export async function orderList(params) {
+  return request('/api/group/orderList', { method: 'POST', body: params });
+}
