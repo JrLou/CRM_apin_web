@@ -104,7 +104,7 @@ export const getRouterData = (app) => {
     },
     //推送方案-选择订单
     '/fightgroups/demand/choose': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/Choose.js')),
+      component: dynamicWrapper(app, ['choose'], () => import('../routes/Fightgroups/Choose.js')),
     },
     //方案推送  杨利波
     '/fightgroups/demand/push': {

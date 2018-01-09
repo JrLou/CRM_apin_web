@@ -103,6 +103,24 @@ export function fakeList3(count) {
 
   return list;
 }
+export function fakeList4(count) {
+  // { id: 6, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0 },
+  const list = [];
+  for (let i = 0; i < count; i += 1) {
+    list.push({
+      id: `fake-list-${Math.random().toFixed(6)}`, 
+      createTime:'2018-01-21',
+      depAirport:'萧山机场',
+      arrAirport:'咸阳机场',
+      flightNo:'SA22',
+      peopleCount: Math.ceil(Math.random() * 40)-1,
+      price:Math.ceil(Math.random() *1140)-1,
+      isGroup: Math.ceil(Math.random() * 2)-1
+    });
+  }
+
+  return list;
+}
 export function fakeList(count) {
   const list = [];
   for (let i = 0; i < count; i += 1) {
@@ -238,6 +256,28 @@ export function viewList(req, res, u) {
   const result = {
     code: 1,
     data: fakeList3(count),
+    msg: '请求成功',
+    option: {
+      total: 100,
+    },
+  };
+
+  if (res && res.json) {
+    res.json(result);
+  } else {
+    return result;
+  }
+}
+export function orderList(req, res, u) {
+  let url = u;
+  if (!url || Object.prototype.toString.call(url) !== '[object String]') {
+    url = req.url; // eslint-disable-line
+  }
+
+  const count =(req.body.pageSize * 1) || 10;
+  const result = {
+    code: 1,
+    data: fakeList4(count),
     msg: '请求成功',
     option: {
       total: 100,
@@ -421,5 +461,6 @@ export default {
   getActivities,
   groupsList,
   demandList,
-  viewList
+  viewList,
+  orderList
 };
