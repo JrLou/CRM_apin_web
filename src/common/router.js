@@ -45,7 +45,7 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Finance/FinanceVerify')),
     },
     '/fightgroups/list': {
-      component: dynamicWrapper(app, ['rule'], () => import('../routes/Fightgroups/List.js')),
+      component: dynamicWrapper(app, ['rule'], () => import('../routes/Fightgroups/FightGroupsList.js')),
     },
     //订单管理
     '/order/flyingpig': {
@@ -98,20 +98,21 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, ['demand'], () => import('../routes/Fightgroups/Demand.js')),
     },
     // 查看需求池
-    '/fightgroups/demand/id': {
-      component: dynamicWrapper(app, ['demand'], () => import('../routes/Fightgroups/View.js')),
+    '/fightgroups/demand/viewDemand': {
+      name:'查看需求池',
+      component: dynamicWrapper(app, ['view'], () => import('../routes/Fightgroups/View.js')),
     },
     //推送方案-选择订单
     '/fightgroups/demand/choose': {
       component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/Choose.js')),
     },
-    //方案推送
+    //方案推送  杨利波
     '/fightgroups/demand/push': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/Push.js')),
+      component: dynamicWrapper(app, ['push'], () => import('../routes/Fightgroups/Push.js')),
     },
     // 查看拼团
-    '/fightgroups/demand/result': {
-      component: dynamicWrapper(app, ['profile'], () => import('../routes/Fightgroups/Result.js')),
+    '/fightgroups/demand/checkFightGroups': {
+      component: dynamicWrapper(app, ['checkFightGroups'], () => import('../routes/Fightgroups/CheckFightGroups.js')),
     },
     //客户管理
     '/customer/userList': {
@@ -121,6 +122,15 @@ export const getRouterData = (app) => {
     '/supplier/supplierList': {
       component: dynamicWrapper(app, ['supplierlist'], () => import('../routes/Supplier/SupplierList')),
     },
+    //供应商政策
+    '/supplier/supplierPolicy/flightstock': {
+      component: dynamicWrapper(app, ['flightstock'], () => import('../routes/Supplier/supplierPolicy/Flightstock')),
+    },
+    //供应商政策-新增
+    '/supplier/supplierPolicy/flightstockAdd': {
+      component: dynamicWrapper(app, ['flightstockAdd'], () => import('../routes/Supplier/supplierPolicy/FlightstockAdd')),
+    },
+    //飞猪资源
     '/supplier/flyPigList': {
       component: dynamicWrapper(app, ['flypiglist'], () => import('../routes/Supplier/FlyPigList')),
     },

@@ -1,12 +1,13 @@
 import mockjs from 'mockjs';
-import { getRule, postRule} from './mock/rule';
-import { getUserList} from './mock/userlist';
+import { getRule, postRule } from './mock/rule';
+import { getUserList } from './mock/userlist';
 import { entrust } from './mock/entrust';
-import {groupsList} from './mock/groupsList'
+import { groupsList, demandList,viewList } from './mock/groupsList'
 import { getActivities, getNotice, getFakeList } from './mock/api';
 import { bannerList } from './mock/bannerList.js';
 import {getSuplierList} from './mock/supplierlist';
 import {getFlylist} from './mock/flylist';
+import {getFlightstock} from './mock/getFlightstock';
 import { getFakeChartData } from './mock/chart';
 import { imgMap } from './mock/utils';
 import { getProfileBasicData } from './mock/profile';
@@ -78,6 +79,7 @@ const proxy = {
   'GET /api/changeStatus':bannerList,
   'GET /api/suplierList' :getSuplierList,
   'GET /api/flyList' :getFlylist,
+  'GET /api/flightstock' :getFlightstock,
   'GET /api/entrust' :entrust,
   'GET /api/fake_chart_data': getFakeChartData,
   'GET /api/profile/basic': getProfileBasicData,
@@ -103,7 +105,7 @@ const proxy = {
         id: '@natural',
         status,
         money: '@integer(1,10000)',
-        orderId:'@natural',
+        orderId: '@natural',
         time: '@dateTime',
         kefu: '@name',
         beizhu: '备注'
@@ -111,6 +113,73 @@ const proxy = {
       total: 100
     }));
   },
+  'POST /api/group/postGroupData': (req, res) => {
+    res.send({
+      code: 1,
+      message: 'success'
+    });
+  },
+  'POST /api/group/searchFlights': (req, res) => {
+    res.send({
+      code: 1,
+      message: 'success',
+      data: [
+        {
+          id: 1,
+          flightDepAirport: "萧山机场",
+          flightDep: "杭州",
+          flightDeptimePlanDate: "12:09",
+          flightNo: "sn434",
+          flightArrAirport: "天河机场",
+          flightArr: "武汉",
+          flightArrtimePlanDate: "13:00",
+          flightCompany: '东方航空公司'
+        },
+        {
+          id: 2,
+          flightDepAirport: "萧山机场",
+          flightDep: "杭州",
+          flightDeptimePlanDate: "12:09",
+          flightNo: "sn434",
+          flightArrAirport: "天河机场",
+          flightArr: "武汉",
+          flightArrtimePlanDate: "13:00",
+          flightCompany: '东方航空公司'
+        },
+        {
+          id: 3,
+          flightDepAirport: "萧山机场",
+          flightDep: "杭州",
+          flightDeptimePlanDate: "12:09",
+          flightNo: "sn434",
+          flightArrAirport: "天河机场",
+          flightArr: "武汉",
+          flightArrtimePlanDate: "13:00",
+          flightCompany: '东方航空公司'
+        },
+        {
+          id: 4,
+          flightDepAirport: "萧山机场",
+          flightDep: "杭州",
+          flightDeptimePlanDate: "12:09",
+          flightNo: "sn434",
+          flightArrAirport: "天河机场",
+          flightArr: "武汉",
+          flightArrtimePlanDate: "13:00",
+          flightCompany: '东方航空公司'
+        }
+      ]
+    });
+  },
+  'POST /api/group/addFlights': (req, res) => {
+    res.send({
+      code: 1,
+      message: 'success',
+    });
+  },
+  'POST /api/group/demandList': demandList,
+  'POST /api/group/viewList': viewList
+
 };
 
 export default noProxy ? {} : delay(proxy, 1000);

@@ -3,10 +3,10 @@ import {connect} from 'dva';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
-import {Card, Form, Row, Col, Input, Button,Select,Radio,DatePicker,message} from 'antd';
+import {Card, Form, Row, Col, Input, Button,Select,Radio,DatePicker,message,Upload,Icon } from 'antd';
 import styles from './BannerEdit.less';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
-
+import PicturesWall from './PicturesWall.js';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -61,11 +61,19 @@ class BannerEdit extends PureComponent {
     })
   };
 
+  handlePreview = (file) => {
+    console.log(file.thumbUrl)
+    this.setState({
+      previewImage: file.url || file.thumbUrl,
+      previewVisible: true,
+    });
+  }
+
+
   render() {
     const { bannerList:{editData:data} } = this.props;
     const {getFieldDecorator} = this.props.form;
 
-    console.log( data);
     let validityStart = data.validityStart?moment(data.validityStart):undefined;
     let validityEnd = data.validityEnd?moment(data.validityEnd):undefined;
     let validityTime = [validityStart,validityEnd];
@@ -78,6 +86,17 @@ class BannerEdit extends PureComponent {
         sm: {span: 14},
       },
     };
+
+
+    const fileList = [];
+
+    const upimgprops = {
+      action: '',
+      listType: 'picture',
+      defaultFileList: fileList,
+    };
+
+
 
     return (
       <PageHeaderLayout>
@@ -115,9 +134,10 @@ class BannerEdit extends PureComponent {
             <Row>
               <Col md={16} sm={24}>
                 <FormItem label="上传图片:" {...formItemLayout}>
-                  {getFieldDecorator('imgUrl', {initialValue: data.imgUrl?data.imgUrl:undefined, rules: [{required: true, message: '请选择图片'}],})
-                  (<Input placeholder="请输入…"/>)
-                  }
+                  {/*{getFieldDecorator('imgUrl', {initialValue: data.imgUrl?data.imgUrl:undefined, rules: [{required: true, message: '请选择图片'}],})*/}
+                  {/*(<Input placeholder="请输入…"/>)*/}
+                  {/*}*/}
+                  <PicturesWall/>
                 </FormItem>
               </Col>
             </Row>

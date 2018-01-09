@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Card, Badge, Table, Divider,Icon, Input } from 'antd';
+import { Card, Badge, Table, Divider,Icon, Input, Button } from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import DescriptionList from '../../components/DescriptionList';
 import ImageWrapper from '../../components/ImageWrapper';
@@ -137,17 +137,16 @@ export default class BasicProfile extends Component {
     return (
       <PageHeaderLayout>
         <Card bordered={false}>
-          {/* <div className={styles.title}>图片查看</div>
-          <ImageWrapper className={styles.picWrapper} src="https://os.alipayobjects.com/rmsportal/mgesTPFxodmIwpi.png" desc="示意图"/> */}
-          <div className={styles.title}><Icon type="profile" /> 订单信息</div>
+          <div>委托中</div>
+          <div className={styles.title}><span><Icon type="profile" />订单信息</span></div>
           <DescriptionList size="large" style={{ marginBottom: 32 }} col={4}>
             <Description term="订单号">1000000000</Description>
             <Description term="联系人">测试1</Description>
             <Description term="联系电话">13100000001</Description>
             <Description term="微信昵称">付小小</Description>
           </DescriptionList>
-          <Divider style={{ marginBottom: 32 }} />
-          <div className={styles.title}><Icon type="red-envelope" /> 支付信息</div>
+          {/* <Divider style={{ marginBottom: 32 }} /> */}
+          <div className={styles.title}><span><Icon type="red-envelope" /> 支付信息</span></div>
           <Table
             style={{ marginBottom: 24 }}
             pagination={false}
@@ -156,7 +155,7 @@ export default class BasicProfile extends Component {
             columns={paymentColumns}
             rowKey="id"
           />
-          <div className={styles.title}><Icon type="usergroup-add" /> 乘客信息</div>
+          <div className={styles.title}><span><Icon type="usergroup-add" /> 乘客信息</span></div>
           <Table
             style={{ marginBottom: 24 }}
             pagination={false}
@@ -164,7 +163,8 @@ export default class BasicProfile extends Component {
             dataSource={basicGoods}
             columns={passengerColumns}
           />
-          <div className={styles.title}><Icon type="schedule" /> 委托信息</div>
+          <div className={styles.ticketBtn}><Button type="primary" htmlType="submit">出票</Button></div>
+          <div className={styles.title}><span><Icon type="schedule" /> 委托信息</span></div>
           <Table
             style={{ marginBottom: 24 }}
             pagination={false}
@@ -173,7 +173,7 @@ export default class BasicProfile extends Component {
             columns={entrustColumns}
             rowKey="id"
           />
-          <div className={styles.title}><Icon type="pushpin-o" /> 方案推送记录</div>
+          <div className={styles.title}><span><Icon type="pushpin-o" /> 方案推送记录</span></div>
           <Table
             style={{ marginBottom: 24 }}
             pagination={false}
@@ -182,7 +182,7 @@ export default class BasicProfile extends Component {
             columns={entrustColumns}
             rowKey="id"
           />
-          <div className={styles.title}><Icon type="form" /> 日志信息</div>
+          <div className={styles.title}><span><Icon type="form" /> 日志信息</span></div>
           <Table
             style={{ marginBottom: 16 }}
             pagination={false}

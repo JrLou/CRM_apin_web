@@ -1,0 +1,48 @@
+@border: 1px solid #d9d9d9;
+.page {
+  .groupCard {
+    background: #fff;
+    border: @border;
+    font-size: 14px;
+    color: #333;
+    &_header {
+      padding: 0 32px;
+      border-bottom: @border;
+      border-radius: 2px 2px 0 0;
+      zoom: 1;
+      margin-bottom: -1px;
+      min-height: 48px;
+      line-height: 48px;
+    }
+
+    &_body {
+      padding: 24px 32px;
+      &_lineA {
+        color: #aaa;
+      }
+      &_lineB {
+        &_city {
+          font-size: 16px;
+          font-weight: bold;
+        }
+      }
+      &_lineC {
+      }
+    }
+    &_footer {
+      padding: 0 32px;
+      border-top: @border;
+      border-bottom: @border;
+      border-radius: 2px 2px 0 0;
+      zoom: 1;
+      margin-bottom: -1px;
+      min-height: 48px;
+      line-height: 48px;
+    }
+  }
+  :global {
+    .ant-list-something-after-last-item .ant-list-item:last-child {
+      border-bottom: none;
+    }
+  }
+}

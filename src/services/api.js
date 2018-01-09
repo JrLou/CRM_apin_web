@@ -60,7 +60,7 @@ export async function queryFakeList(params) {
   return request(`/api/fake_list?${stringify(params)}`);
 }
 export async function demandList(params) {
-  return request(`/api/demandList?${stringify(params)}`);
+  return request(`/api/group/demandList`, { method: 'POST', body: params });
 }
 export async function queryUserList(params) {
   return request(`/api/userList?${stringify(params)}`);
@@ -70,6 +70,14 @@ export async function entrust(params) {
 }
 export async function queryBanner(params) {
   return request(`/api/bannerList?${stringify(params)}`);
+}
+
+//base64 banner图上传
+export async function baseImg(params) {
+  return request('/api/common/uploadImage', {
+    method: 'POST',
+    body: params,
+  });
 }
 export async function deleteBanner(params) {
   return request(`/api/deleteBanner?${stringify(params)}`);
@@ -83,12 +91,25 @@ export async function querySupplierList(params) {
 export async function queryFlyList(params) {
   return request(`/api/flyList?${stringify(params)}`);
 }
+//李斯奇 政策管理供应商资源
+//供应商列表资源列表
+export async function flightstockList(params) {
+  return request(`/api/flightstock?${stringify(params)}`);
+}
+//上架
+export async function stateAirLine(params) {
+  return request(`/api/resource/stateAirLine?${stringify(params)}`);
+}
+//日志
+export async function getAirLineLogs(params) {
+  return request(`/api/resource/getAirLineLogs?${stringify(params)}`);
+}
 
 export async function AccountLogin(params) {
-  const newparams = Object.assign({},{account:params.account,appid:'2ef8d902c12f454f9acdbb0484f8c05a'})
+  const newparams = Object.assign({}, { account: params.account, appid: '2ef8d902c12f454f9acdbb0484f8c05a' })
   const response = await request(`/crm/uc/authapi/v1.1/tokens/codes?${stringify(newparams)}`);
-  if(response&&response.data){
-    const newparams2 = Object.assign({},{account:params.account,signature:md5(md5(params.account + md5(params.password)) + response.data)})
+  if (response && response.data) {
+    const newparams2 = Object.assign({}, { account: params.account, signature: md5(md5(params.account + md5(params.password)) + response.data) })
     return request(`/crm/uc/authapi/v1.1/tokens?${stringify(newparams2)}`);
   }
 }
@@ -102,14 +123,19 @@ export async function financePaymentList(params) {
     body: params,
   });
 }
-//权限管理
+//刘园园权限管理
 export async function roleManageList(params) {
   return request(`/crm/cr/v2/accounts/role/list?${stringify(params)}`);
 }
-//刘园园
-export async function getFlylist(params) {
-  return request('/api/order/getOrderList', {
-    method: 'POST',
-    body: params,
-  });
+export async function postGroupData(params) {
+  return request('/api/group/postGroupData', { method: 'POST', body: params });
+}
+export async function searchFlights(params) {
+  return request('/api/group/searchFlights', { method: 'POST', body: params });
+}
+export async function addFlights(params) {
+  return request('/api/group/addFlights', { method: 'POST', body: params });
+}
+export async function viewList(params) {
+  return request('/api/group/viewList', { method: 'POST', body: params });
 }
