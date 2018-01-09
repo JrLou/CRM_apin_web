@@ -4,7 +4,7 @@ import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import {Link} from 'dva/router';
 import GroupSearchForm from './autoForm/GroupSearchForm';
 import request from '../../utils/request';
-import less from './List.less';
+import less from './FightGroupsList.less';
 
 // @Form.create()  不需要这个装饰器，
 export default class TableList extends PureComponent {

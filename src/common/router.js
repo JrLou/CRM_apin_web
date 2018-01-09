@@ -45,7 +45,7 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Finance/FinanceVerify')),
     },
     '/fightgroups/list': {
-      component: dynamicWrapper(app, ['rule'], () => import('../routes/Fightgroups/List.js')),
+      component: dynamicWrapper(app, ['rule'], () => import('../routes/Fightgroups/FightGroupsList.js')),
     },
     //订单管理
     '/order/flyingpig': {
@@ -98,12 +98,13 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, ['demand'], () => import('../routes/Fightgroups/Demand.js')),
     },
     // 查看需求池
-    '/fightgroups/demand/id': {
-      component: dynamicWrapper(app, ['demand'], () => import('../routes/Fightgroups/View.js')),
+    '/fightgroups/demand/viewDemand': {
+      name:'查看需求池',
+      component: dynamicWrapper(app, ['view'], () => import('../routes/Fightgroups/View.js')),
     },
     //推送方案-选择订单
     '/fightgroups/demand/choose': {
-      component: dynamicWrapper(app, ['list'], () => import('../routes/Fightgroups/Choose.js')),
+      component: dynamicWrapper(app, ['choose'], () => import('../routes/Fightgroups/Choose.js')),
     },
     //方案推送  杨利波
     '/fightgroups/demand/push': {

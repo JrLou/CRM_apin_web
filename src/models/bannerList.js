@@ -5,9 +5,8 @@ export default {
   namespace: 'bannerList',
 
   state: {
-    data: {
-      list: [],
-      pagination: {},
+    data  : {
+
     },
     editData:{
 
@@ -25,10 +24,13 @@ export default {
           payload: true,
         });
         const response = yield call(queryBanner, payload);
-        yield put({
-          type: 'save',
-          payload: response.data,
-        });
+        debugger;
+        if(!response && response.data.length > 0){
+          yield put({
+            type: 'save',
+            payload: response.data,
+          });
+        }
         yield put({
           type: 'changeLoading',
           payload: false,

@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Form, Button, DatePicker, Row, Col, Input, message, Modal, Spin } from 'antd';
-import styles from '../Demand.less';
+import styles from './SearchFlight.less';
 const FormItem = Form.Item;
 import FlightCard from './FlightCard';
 import moment from 'moment';

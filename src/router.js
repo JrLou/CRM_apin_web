@@ -20,14 +20,12 @@ const fakeAuth = () => {
 // const Loadmenu = ()=>{
 //   return request('/crm/uc/authapi/v1.1/modules?');
 // }
+// (Component?<Component {...props}/>:render(props))
 const PrivateRoute = ({ component: Component, ...rest }) => {
   return (
     <Route path={rest.path} render={(props) => {
       if (true) {
-        // Loadmenu().then((json)=>{
-        //     console.log(json)
-        // })
-        return Loadmenu(Component, { ...props, ...rest });
+        return <Component {...props} />
       } else {
         return <Redirect to={{ pathname: '/user/login', state: {from: rest.location}}} />;
         }

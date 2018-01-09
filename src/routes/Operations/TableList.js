@@ -83,7 +83,8 @@ class StandardTable extends PureComponent {
 
 
   render() {
-    const { data: { list, pagination }, loading } = this.props;
+    const { data: { data, pagination,options }, loading } = this.props;
+    Object.assign(pagination,{total:options && options.total||0});
     const columns = [
       {
         title: '显示顺序',
@@ -148,7 +149,7 @@ class StandardTable extends PureComponent {
         <Table
           loading={loading}
           rowKey={record => record.key}
-          dataSource={list}
+          dataSource={data}
           columns={columns}
           pagination={paginationProps}
           onChange={this.handleTableChange}

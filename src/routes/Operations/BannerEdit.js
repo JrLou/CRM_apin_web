@@ -65,16 +65,6 @@ class BannerEdit extends PureComponent {
       type: 'bannerList/cancelEdit',
     })
   };
-
-  // handlePreview = (file) => {
-  //   console.log(file.thumbUrl)
-  //   this.setState({
-  //     previewImage: file.url || file.thumbUrl,
-  //     previewVisible: true,
-  //   });
-  // }
-
-
   render() {
     const { bannerList:{editData:data} } = this.props;
     const {getFieldDecorator} = this.props.form;

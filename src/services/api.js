@@ -69,11 +69,10 @@ export async function entrust(params) {
   return request(`/api/entrust?${stringify(params)}`);
 }
 export async function queryBanner(params) {
-  return request(`/api/bannerList?${stringify(params)}`);
-  // return request('/crm/api/banner/addBanner', {
-  //   method: 'POST',
-  //   body: params,
-  // });
+  return request('/crm/api/banner/getBannerList', {
+    method: 'POST',
+    body: params,
+  });
 }
 
 //base64 banner图上传
@@ -100,6 +99,14 @@ export async function queryFlyList(params) {
 export async function flightstockList(params) {
   return request(`/api/flightstock?${stringify(params)}`);
 }
+//上架
+export async function stateAirLine(params) {
+  return request(`/api/resource/stateAirLine?${stringify(params)}`);
+}
+//日志
+export async function getAirLineLogs(params) {
+  return request(`/api/resource/getAirLineLogs?${stringify(params)}`);
+}
 
 export async function AccountLogin(params) {
   const newparams = Object.assign({}, { account: params.account, appid: '2ef8d902c12f454f9acdbb0484f8c05a' })
@@ -123,6 +130,12 @@ export async function financePaymentList(params) {
 export async function roleManageList(params) {
   return request(`/crm/cr/v2/accounts/role/list?${stringify(params)}`);
 }
+export async function getFlylist(params) {
+  return request('/crm/api/order/getOrderList', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function postGroupData(params) {
   return request('/api/group/postGroupData', { method: 'POST', body: params });
 }
@@ -131,4 +144,10 @@ export async function searchFlights(params) {
 }
 export async function addFlights(params) {
   return request('/api/group/addFlights', { method: 'POST', body: params });
+}
+export async function viewList(params) {
+  return request('/api/group/viewList', { method: 'POST', body: params });
+}
+export async function orderList(params) {
+  return request('/api/group/orderList', { method: 'POST', body: params });
 }
