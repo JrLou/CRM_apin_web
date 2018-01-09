@@ -65,6 +65,14 @@ export async function demandList(params) {
 export async function queryUserList(params) {
   return request(`/api/userList?${stringify(params)}`);
 }
+//客户列表
+export async function queryCustomerList(params) {// /api/member/getMemberList
+  return request('/crm/api/member/getMemberList', {
+    method: 'POST',
+    body: params,
+  });
+}
+
 export async function entrust(params) {
   return request(`/api/entrust?${stringify(params)}`);
 }
