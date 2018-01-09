@@ -10,11 +10,11 @@ import styles from './index.less';
 const { Header } = Layout;
 
 export default class GlobalHeader extends PureComponent {
-  componentDidMount() {
-    this.props.dispatch({
-      type: 'user/fetchCurrent',
-    });
-  }
+  // componentDidMount() {
+  //   this.props.dispatch({
+  //     type: 'user/fetchCurrent',
+  //   });
+  // }
   componentWillUnmount() {
     this.triggerResizeEvent.cancel();
   }
