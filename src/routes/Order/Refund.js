@@ -100,9 +100,10 @@ export default class TableList extends PureComponent {
 
   renderForm() {
     const {getFieldDecorator} = this.props.form;
+    const layoutForm={md: 8, lg: 24, xl: 48};
     return (
       <Form layout="inline">
-        <Row gutter={{md: 8, lg: 24, xl: 48}}>
+        <Row gutter={layoutForm}>
           <Col md={8} sm={24}>
             <FormItem label="退款单号">
               {getFieldDecorator('id')(
@@ -131,7 +132,7 @@ export default class TableList extends PureComponent {
             </FormItem>
           </Col>
         </Row>
-        <Row gutter={{md: 8, lg: 24, xl: 48}}>
+        <Row gutter={layoutForm}>
           <Col md={8} sm={24}>
             <FormItem label="退款时间">
               {getFieldDecorator('start_time')(

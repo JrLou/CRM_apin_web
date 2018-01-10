@@ -5,6 +5,7 @@ import { Card, Button, List, Form, Input, Select, Row, Col } from 'antd';
 import { Link } from 'dva/router';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './Demand.less';
+import { getPar, formatPar } from '../../utils/utils';
 const FormItem = Form.Item;
 const { Option } = Select;
 @connect(state => ({
@@ -151,21 +152,21 @@ export default class Demand extends PureComponent {
                 <Card hoverable className={styles.card}
                   actions={[
                     <Link
-                      to={{ pathname: '/fightgroups/demand/viewDemand', state: { id: item.id, line: item.fromAddr + '-' + item.toAddr } }}>
+                      to={'/fightgroups/demand/viewDemand/' + formatPar({ id: item.id, line: item.fromAddr + '-' + item.toAddr })}>
                       查看历史拼团</Link>,
-                    <Link to={{ pathname: '/fightgroups/demand/choose', state: { id: item.id }}}><Button type="primary">方案推送</Button></Link>]}
+                    <Link to={'/fightgroups/demand/choose/' + formatPar({ id: item.id, line: item.fromAddr + '-' + item.toAddr })} > <Button type="primary">方案推送</Button></Link>]}
                   title={<span><b className={styles.cardTitle}></b>{item.fromAddr + '-' + item.toAddr}</span>}
-                extra={item.peopleCounts + '人'}>
+                  extra={item.peopleCounts + '人'}>
                   <Card.Meta
-                  description={(
-                    <div>
-                      <p>3天内需要处理的订单数：<span style={{ color: '#f00' }}>{item.threeOrders}</span></p>
-                      <p>待推方案订单数：{item.waitOrders}</p>
-                      <p>待推方案总人数：{item.waitPeopleCounts}</p>
-                      <p>已成团订单数：{item.alreadyOrders}</p>
-                    </div>
-                  )}
-                />
+                    description={(
+                      <div>
+                        <p>3天内需要处理的订单数：<span style={{ color: '#f00' }}>{item.threeOrders}</span></p>
+                        <p>待推方案订单数：{item.waitOrders}</p>
+                        <p>待推方案总人数：{item.waitPeopleCounts}</p>
+                        <p>已成团订单数：{item.alreadyOrders}</p>
+                      </div>
+                    )}
+                  />
                 </Card>
               </List.Item>
             )}

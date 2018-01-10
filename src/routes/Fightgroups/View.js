@@ -5,31 +5,32 @@ import { Link, routerRedux } from 'dva/router';
 import { Card, Table, Spin } from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './TableList.less';
-
+import { getPar, formatPar } from '../../utils/utils';
 
 @connect(state => ({
   view: state.view,
 }))
 export default class View extends PureComponent {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.params = {
       page: 1,
       pageSize: 10,
-    }; 
+    };
+    this.par = getPar(this, 'data')
   }
 
-  componentWillMount() { 
+  componentWillMount() {
     const { dispatch } = this.props;
-    if (!this.props.location.state) {
+    if (!this.par.id) {
       // this.props.history.replace('/fightgroups/demand/');
       dispatch(routerRedux.push('/fightgroups/demand/'));
     }
   }
 
-  componentDidMount() { 
+  componentDidMount() {
     const { dispatch } = this.props;
-    const { id } = this.props.location.state ? this.props.location.state : {};
+    const { id } = this.par;
     dispatch({
       type: 'view/fetch',
       payload: { ...this.params, id: id },
@@ -96,7 +97,7 @@ export default class View extends PureComponent {
       { id: 5, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0 },
       { id: 6, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0 },
     ];
-    const { line } = this.props.location.state ? this.props.location.state : {};
+    const { line } = this.par;
     const { view: { tableData, loading } } = this.props;
     return (
       <PageHeaderLayout>

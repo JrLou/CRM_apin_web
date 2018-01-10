@@ -109,17 +109,48 @@ const progressColumns = [{
   title: '操作内容',
   dataIndex: 'rate',
   key: 'rate',
-}, {
-  title:"城市图片",
-  key:"img_url",
-  render:(text, record, index) => {
-      // 生成复杂数据的渲染函数，参数分别为当前行的值，当前行数据，行索引，@return里面可以设置表格行/列合并
-      if (!record.img_url) {
-          return <ImageWrapper className={styles.picTable} src="https://os.alipayobjects.com/rmsportal/mgesTPFxodmIwpi.png" desc="示意图"/>
-      } else {
-          return <span>无</span>
-      }}
+}];
 
+const orderColumns = [{
+  title: '航班号',
+  dataIndex: 'flight_no',
+  key: 'flight_no',
+}, {
+  title: '出发机场',
+  dataIndex: 'airport_dep_name',
+  key: 'airport_dep_name'
+}, {
+  title: '到达机场',
+  dataIndex: 'airport_arr_name',
+  key: 'airport_arr_name'
+}, {
+  title: '出发时间',
+  dataIndex: 'time_dep',
+  key: 'time_dep'
+}, {
+  title: '到达时间',
+  dataIndex: 'time_arr',
+  key: 'time_arr'
+}, {
+  title: '人数',
+  dataIndex: 'group_id',
+  key: 'group_id'
+}];
+
+let basicOrder = [{
+  flight_no:'222',
+  airport_dep_name:'22222222222',
+  airport_arr_name:'333333',
+  time_dep:'111111111',
+  time_arr:'111111111111',
+  group_id:'2'
+}, {
+  flight_no:'222',
+  airport_dep_name:'22222222222',
+  airport_arr_name:'333333',
+  time_dep:'111111111',
+  time_arr:'111111111111',
+  group_id:'2'
 }];
 
 @connect(state => ({
@@ -137,6 +168,7 @@ export default class BasicProfile extends Component {
       type: 'profile/fetchBasic',
     });
   }
+  //实际结算价格
   priceMoney(e) {
     this.setState({
       inputPrice:e.target.value,
@@ -148,21 +180,20 @@ export default class BasicProfile extends Component {
       amend:!this.state.amend,
     })
   }
-
+  //出票
   ticketConfirm() {
     confirm({
       title: '是否确认出票?',
-      content: '出票后，将无法修改',
+      content: '出票后,将无法修改',
       onOk() {},
       onCancel() {},
     });
   }
 
-
   render() {
-    const { profile } = this.props;
+    const { profile } = this.props, {id} = this.props.match.params;
     const { basicGoods, basicProgress, basicLoading } = profile;
-    const { inputPrice, amend } = this.state;
+    const { inputPrice, amend, visible, textValue } = this.state;
     return (
       <PageHeaderLayout>
         <Card bordered={false}>
@@ -175,7 +206,16 @@ export default class BasicProfile extends Component {
             <Description term="联系电话">13100000001</Description>
             <Description term="微信昵称">付小小</Description>
           </DescriptionList>
-          {/* <Divider style={{ marginBottom: 32 }} /> */}
+          <div className={styles.myTable}>
+            <Table
+              style={{ marginBottom: 24 }}
+              pagination={false}
+              loading={basicLoading}
+              dataSource={basicOrder}
+              columns={orderColumns}
+            />
+          </div>
+          <Divider style={{ marginBottom: 32 }} />
           <div className={styles.title}><span><Icon type="usergroup-add" /> 乘客信息</span></div>
           <Table
             style={{ marginBottom: 24 }}
@@ -184,7 +224,8 @@ export default class BasicProfile extends Component {
             dataSource={basicGoods}
             columns={passengerColumns}
           />
-          <div className={styles.ticketBtn}><Button type="primary" onClick={::this.ticketConfirm}>出票</Button> <Button type="primary">出票失败</Button></div>
+          <div className={styles.ticketBtn}><Button type="primary" onClick={::this.ticketConfirm}>出票</Button></div>
+          <Divider style={{ marginBottom: 32 }} />
           <div className={styles.title}><span><Icon type="red-envelope" /> 支付信息</span></div>
           <div className={styles.paymentPrice}>
             <div><p>机票销售价</p><p>5000.00元=2500.00元（成人价）*2 </p></div>
@@ -204,6 +245,7 @@ export default class BasicProfile extends Component {
             columns={paymentColumns}
             rowKey="id"
           />
+          <Divider style={{ marginBottom: 32 }} />
           <div className={styles.title}><span><Icon type="schedule" /> 委托信息</span></div>
           <Table
             style={{ marginBottom: 24 }}
@@ -223,13 +265,15 @@ export default class BasicProfile extends Component {
             rowKey="id"
           />
           <div className={styles.title}><span><Icon type="form" /> 日志信息</span></div>
-          <Table
-            style={{ marginBottom: 16 }}
-            pagination={false}
-            loading={basicLoading}
-            dataSource={basicProgress}
-            columns={progressColumns}
-          />
+          <div className={styles.myTable}>
+            <Table
+              style={{ marginBottom: 16 }}
+              pagination={false}
+              loading={basicLoading}
+              dataSource={basicProgress}
+              columns={progressColumns}
+            />
+          </div>
         </Card>
       </PageHeaderLayout>
     );

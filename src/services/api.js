@@ -103,20 +103,39 @@ export async function querySupplierList(params) {
   return request(`/api/suplierList?${stringify(params)}`);
 }
 export async function queryFlyList(params) {
-  return request(`/api/flyList?${stringify(params)}`);
+  return request('/crm/api/order/getOrderList', {
+    method: 'POST',
+    body: params,
+  });
 }
 //李斯奇 政策管理供应商资源
 //供应商列表资源列表
 export async function flightstockList(params) {
-  return request(`/api/flightstock?${stringify(params)}`);
+  return request('/crm/api/resource/getAirLines', {
+    method: 'POST',
+    body: params,
+  });
 }
 //上架
 export async function stateAirLine(params) {
-  return request(`/api/resource/stateAirLine?${stringify(params)}`);
+  return request('/crm/api/resource/stateAirLine', {
+    method: 'POST',
+    body: params,
+  });
 }
 //日志
 export async function getAirLineLogs(params) {
-  return request(`/api/resource/getAirLineLogs?${stringify(params)}`);
+  return request('/crm/api/resource/getAirLineLogs',{
+    method: 'POST',
+    body: params,
+  });
+}
+//非常准航线查询
+export async function getaddAirLine(params) {
+  return request('/crm/api/resource/searchAirLine',{
+    method: 'POST',
+    body: params,
+  });
 }
 
 export async function AccountLogin(params) {
@@ -148,6 +167,12 @@ export async function roleManageList(params) {
 }
 export async function getFlylist(params) {
   return request('/crm/api/order/getOrderList', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function getFlyDetail(params) {
+  return request('/crm/api/order/getOrderDetail', {
     method: 'POST',
     body: params,
   });

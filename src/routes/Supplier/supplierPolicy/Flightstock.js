@@ -4,19 +4,14 @@
 import React, {Component} from 'react';
 import css from './Flightstock.less';
 import {connect, Link} from 'dva';
-// import {routerRedux} from 'dva/router';
 import {
-  message,
   Table,
   Modal,
   Divider,
 } from 'antd';
 import moment from 'moment';
-
 const confirm = Modal.confirm;
 const {Column,} = Table;
-// import HttpTool from '../../../http/HttpTool.js';
-// import APILXF from '../../../http/APILXF.js';
 import Filter from '../../../components/screening/Filter.js';
 
 @connect(state => ({
@@ -29,64 +24,63 @@ class page extends Component {
       filter: {
         airlineStatus: 1,
       },
-      data: {},
-      tableDataSource: [],
+      visible:false,
     }
   }
 
   componentDidMount() {
     //加载第一页
-    const data = this.state.data;
     const val = this.state.filter;
     val.airlineStatus = 1
-    data.visible = false;
     const {dispatch} = this.props;
     dispatch({
       type: 'flightstock/fetch',
+      payload: {
+        p: 1,
+        pc: 10,
+      },
     });
   }
 
   companyname(ole, e, event) { //全局函数（根据ole作为标识可以快速查找各功能实现位置）
     switch (ole) {
       case 0: //新增政策跳转新增页面
-              // this.props.dispatch({
-              //   type: 'supplier/supplierPolicy/flightstockAdd',
-              // });
-        this.props.history.push('flightstockAdd');
+        this.props.history.push({pathname: 'flightstockAdd'});
         break;
       case 1: //弹窗确认按钮所调函数
-        let datas = this.state.data;
-        datas.visible = false;
-        this.setState({data: datas})
-
+        this.setState({visible: false})
     }
   }
 
   dataProcess(ole) {
-    ole.departureDateStart = (ole.departureTime && ole.departureTime.length > 0) ? moment(ole.departureTime[0]).format("YYYY-MM-DD") : undefined;
-    ole.departureDateEnd = (ole.departureTime && ole.departureTime.length > 0) ? moment(ole.departureTime[1]).format("YYYY-MM-DD") : undefined;
-    ole.departureTime = undefined;
-    ole.page = 1;
-    ole.size = this.state.pc;
+    ole.p = 1;
+    ole.pc = 10;
     let dates = {};
     for (let i in ole) {
-      if (ole[i] != undefined && i != 'flightDate' && ole[i] != '') {
+      if (ole[i] != undefined && ole[i] != '') {
         dates[i] = ole[i];
       }
     }
     this.setState({
       filter: dates,
     });
+    setTimeout(()=>{
+      console.log(this.state.filter)
+      this.props.dispatch({
+        type: 'flightstock/fetch',
+        payload: this.state.filter,
+      });
+    },10)
   }
 
   render() {
     const formData = {
       added: '新增政策',
       list: [
-        {name: '出发城市', id: 'departureCity', required: false, category: 0,},
-        {name: '到达城市', id: 'arriveCity', required: false, category: 0,},
-        {name: '去程航班号', id: 'departureFlightNo', required: false, category: 0,},
-        {name: '返程航班号', id: 'returnFlightNo', required: false, category: 0,},
+        {name: '出发城市', id: 'city_dep', required: false, category: 0,},
+        {name: '到达城市', id: 'city_arr', required: false, category: 0,},
+        {name: '去程航班号', id: 'airLineGo', required: false, category: 0,},
+        {name: '返程航班号', id: 'airLineBack', required: false, category: 0,},
         {name: '机票资源号', id: 'airlineNo', required: false, category: 0,},
         {
           name: '往返天数',
@@ -98,11 +92,11 @@ class page extends Component {
         {name: '资源负责人', id: 'charger', required: false, category: 0,},
         {
           name: '请选择有效性',
-          id: 'airlineStatus',
+          id: 'validity',
           required: false,
           category: 1,
           disabled: 2,
-          options: [{name: '全部', id: ''}, {name: '待上架', id: '0'}, {name: '上架', id: '1',}, {
+          options: [{name: '全部', id: '-1'}, {name: '待上架', id: '0'}, {name: '上架', id: '1',}, {
             name: '过期',
             id: '3'
           }]
@@ -131,15 +125,15 @@ class page extends Component {
         dataIndex: 'eventName',
         key: 'eventName',
       }];
-    const {flightstock: {loading: ruleLoading, data: {list, pagination: {current, pageSize, total}}}} = this.props;
+    const {flightstock: {loading, list: {data, option: {current, size, total}}, logs:{datalgo,optionlog}}} = this.props;
     return (
       <div className={css.table_container}>
         <Table
-          loading={ruleLoading}
-          dataSource={list}
+          loading={loading}
+          dataSource={data}
           rowKey={'id'}
           pagination={{
-            pageSize: pageSize ? pageSize : 10,
+            pageSize: size ? size : 10,
             total: total ? total : 0,
             current: current ? current : 1,
             showSizeChanger: true,
@@ -162,51 +156,73 @@ class page extends Component {
           />
           <Column
             title="供应商名称"
-            dataIndex="arrCity"
-            key="arrCity"
+            dataIndex="supplier_name"
+            key="supplier_name"
           />
           <Column
             title="出发/回程城市"
-            dataIndex="lianxi"
-            key="lianxi"
+            dataIndex="city_dep"
+            key="city_dep"
+            render={(text, record, index) => {
+              return <div>{record.city_dep + "/" + record.city_arr}</div>
+            }}
           />
           <Column
             title="出发/回程航班"
-            dataIndex="startCity"
-            key="startCity"
+            dataIndex="city_arr"
+            key="city_arr"
+            render={(text, record, index) => {
+              return <div>{record.city_dep + "/" + record.city_arr}</div>
+            }}
           />
           <Column
             title="航班周期"
-            dataIndex="registerTime"
-            key="registerTime"
+            dataIndex="departure_start"
+            key="departure_start"
+            render={(text, record, index) => {
+              return <div>{moment(record.departure_start).format('YYYY/MM/DD') + "至" + moment(record.departure_end).format('YYYY/MM/DD')}</div>
+            }}
           />
           <Column
             title="往返天数"
-            dataIndex="progress"
-            key="progress"
+            dataIndex="days"
+            key="days"
           />
           <Column
             title="航班负责人"
-            dataIndex="money"
-            key="money"
+            dataIndex="manager"
+            key="manager"
           />
           <Column
             title="状态"
-            dataIndex="tel"
-            key="tel"
+            dataIndex="airline_status"
+            key="airline_status"
+            render={(text, record, index) => {
+              switch (record.airline_status) {
+                case 0:
+                  return <div>待上架</div>
+                  break;
+                case 1:
+                  return <div>已上架</div>
+                  break;
+              }
+            }}
           />
           <Column
             title="创建时间"
             dataIndex="time"
             key="time"
+            render={(text, record, index) => {
+              return <div>{moment(record.create_time).format('YYYY/MM/DD')}</div>
+            }}
           />
           <Column
             title="操作"
             className={css.lastCol}
             key="action"
             render={(text, record, index) => {
-              switch (record.disabled) {
-                case true:
+              switch (record.airline_status) {
+                case 0:
                   return <div>
                     <a
                       style={{cursor: "pointer", margin: "6px"}}
@@ -222,7 +238,7 @@ class page extends Component {
                     </a>
                   </div>
                   break;
-                case false:
+                case 1:
                   return <div>
                     <a
                       style={{cursor: "pointer", margin: "6px"}}
@@ -245,11 +261,11 @@ class page extends Component {
         </Table>
         <Modal
           title="日志"
-          visible={this.state.data.visible}
+          visible={this.state.visible}
           onOk={this.companyname.bind(this, 1)}
           onCancel={this.companyname.bind(this, 1)}
         >
-          <Table pagination={false} dataSource={this.state.data.dataSource} columns={columns}/>
+          <Table pagination={false} dataSource={datalgo ? datalgo : []} columns={columns}/>
         </Modal>
       </div>
     )
@@ -271,18 +287,19 @@ class page extends Component {
       });
     }
     switch (ole) {
+      case 0:
+        this.props.history.push({pathname: 'flightstockAdd',});
+        break;
       case 1:
         confirms({
-          airlineStatus: 0,
+          airlineStatus: 1,
           id: data.id,
         }, "确定是否上架？");
         break;
       case 3:
-        let datas = this.state.data;
-        datas.visible = true;
-        this.setState({data: datas})
+        _this.setState({visible: true})
         _this.props.dispatch({
-          type: 'flightstock/log',
+          type: 'flightstock/loglist',
           payload: {
             p: 1,
             pc: 100,

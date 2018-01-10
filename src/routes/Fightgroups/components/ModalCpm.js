@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'dva';
-import {Modal, Table, Input, Button, message} from 'antd';
+import {Modal, Table, Input, Button, message, Upload, Icon} from 'antd';
 import less from './ModalCpm.less'
 
 const {TextArea} = Input;
@@ -145,7 +145,7 @@ class ExportPassengerModal extends Component {
 
   getColumns() {
     let columns = [];
-    if(this.props.passengerType === 0){//todo 点击【批量导出】按钮  页面应该传过来，【乘客类型】  0=>国内， 1=> 国际
+    if (this.props.passengerType === 0) {//todo 点击【批量导出】按钮  页面应该传过来，【乘客类型】  0=>国内， 1=> 国际
       columns = [
         {
           title: '订单号',
@@ -213,10 +213,44 @@ class ExportPassengerModal extends Component {
     return columns;
   }
 
+  /**
+   * 创建一个不可见的iframe，通过加载它的src指向，实现下载，这样即使地址有问题，也不会影响页面；
+   * @param url 一个可下载的url
+   */
+  downloadFile(url) {
+    const bodyNode = document.querySelector('body');
+    if (document.querySelector('iframe[name=forDownload]')){
+      bodyNode.removeChild( document.querySelector('iframe[name=forDownload]') );
+    }
+    const ifr = document.createElement('iframe');
+    ifr.setAttribute('src',url);
+    ifr.setAttribute('name',"forDownload");
+    ifr.setAttribute("style","display:none");
+    bodyNode.appendChild(ifr);
+  }
+
   render() {
     const {basicGoods, basicLoading, modalConfirmLoading} = this.props.checkFightGroups;
     const {dispatch} = this.props;
     console.log("this.props.checkFightGroups", this.props.checkFightGroups);
+
+    const uploadProps = {
+      name: 'file',
+      action: '//jsonplaceholder.typicode.com/posts/',
+      headers: {
+        authorization: 'authorization-text',
+      },
+      onChange(info) {
+        if (info.file.status !== 'uploading') {
+          console.log(info.file, info.fileList);
+        }
+        if (info.file.status === 'done') {
+          message.success(`${info.file.name} file uploaded successfully`);
+        } else if (info.file.status === 'error') {
+          message.error(`${info.file.name} file upload failed.`);
+        }
+      },
+    };
 
     const columns = this.getColumns();
 
@@ -238,20 +272,19 @@ class ExportPassengerModal extends Component {
         <div className={less.btnContainer}>
           <Button
             type='primary'
-            onClick={() => {
-
+            onClick={() => {//其实就是下载，很简单
+              const {dispatch} = this.props.checkFightGroups;
+              //获取url；
+              this.downloadFile("http://sw.bos.baidu.com/sw-search-sp/software/9e6bc213b9d0b/ChromeStandalone_63.0.3239.132_Setup.exe");//todo 这里地址要请求后更改
             }}
           >
-            导出乘机人信息
+            <Icon type="download"/>导出乘机人信息
           </Button>
-          <Button
-            type='primary'
-            onClick={() => {//todo 这里是难点
-
-            }}
-          >
-            导入票号信息
-          </Button>
+          <Upload {...uploadProps}>
+            <Button type='primary'>
+              <Icon type="upload"/>导入票号信息
+            </Button>
+          </Upload>
           <Button
             type='primary'
             loading={modalConfirmLoading}
@@ -275,7 +308,8 @@ class ExportPassengerModal extends Component {
           </Button>
         </div>
       </Modal>
-    );
+    )
+      ;
   }
 }
 

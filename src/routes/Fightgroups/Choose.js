@@ -6,6 +6,7 @@ import styles from './TableList.less';
 import { Link, routerRedux } from 'dva/router';
 import LogTable from './components/LogTable';
 import moment from 'moment';
+import { getPar, formatPar } from '../../utils/utils';
 const { RangePicker } = DatePicker;
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -29,13 +30,14 @@ const allValues = ['0', '1', '2', '3', '4', '5']
 }))
 @Form.create()
 export default class Choose extends PureComponent {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.page = {
       page: 1,
       pageSize: 10
     }
     this.searchValue = {}
+    this.par = getPar(this, 'data')
   }
   state = {
     modalVisible: false,
@@ -53,13 +55,14 @@ export default class Choose extends PureComponent {
   };
   componentWillMount() {
     const { dispatch } = this.props;
-    if (!this.props.location.state) {
+    if (!this.par.id) {
       dispatch(routerRedux.push('/fightgroups/demand/'));
     }
   }
   componentDidMount() {
     const { dispatch } = this.props;
-    const { id } = this.props.location.state ? this.props.location.state : {};
+    // continueFlag为继续添加的标志
+    const { id, continueFlag } = this.par;
     const params = {
       ...this.page,
       id: id
@@ -74,7 +77,7 @@ export default class Choose extends PureComponent {
   handleTableChange = (pagination) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
-    const { id } = this.props.location.state ? this.props.location.state : {};
+    const { id } = this.par;
     const params = {
       page: pagination.current,
       pageSize: pagination.pageSize,
@@ -89,7 +92,7 @@ export default class Choose extends PureComponent {
 
   handleSearch() {
     const { dispatch, form } = this.props;
-    const { id } = this.props.location.state ? this.props.location.state : {};
+    const { id } = this.par;
 
     form.validateFields((err, values) => {
       if (err) return;
@@ -121,12 +124,17 @@ export default class Choose extends PureComponent {
   }
   pushScheme = () => {
     const { dispatch } = this.props;
-    const { id } = this.props.location.state
+    const { id, continueFlag } = this.par;
     if (!this.state.selectedRowKeys.length) {
       message.warning('请先选择需要推送方案的订单')
       return
     }
-    this.props.history.push({ pathname: '/fightgroups/demand/push', state: { demandId: id, orderList: this.state.selectRows } });
+    // 推送当前方案直接到查看
+    if (continueFlag) {
+      this.props.history.push('/fightgroups/demand/checkFightGroups/' + id);
+    } else {
+      this.props.history.push({ pathname: '/fightgroups/demand/push', state: { demandId: id, orderList: this.state.selectRows } });
+    }
   }
 
   handleModalVisible = (flag) => {
@@ -179,7 +187,7 @@ export default class Choose extends PureComponent {
       labelCol: { span: 4 },
       wrapperCol: { span: 16 },
     };
-
+    const { continueFlag } = this.par;
     return (
       <Form>
         <Row gutter={20}>
@@ -233,7 +241,7 @@ export default class Choose extends PureComponent {
           <span style={{ float: 'right', marginBottom: 24 }} className={styles.btnBox}>
             <Button type="primary" htmlType="submit" onClick={this.handleSearch.bind(this)}>查询</Button>
             <Button type="default" onClick={this.resetSearch.bind(this)}>重置</Button>
-            <Button type="primary" onClick={this.pushScheme.bind(this)}>推送方案</Button>
+            <Button type="primary" onClick={this.pushScheme.bind(this)}>{continueFlag ? '推送当前方案' : '推送方案'}</Button>
           </span>
         </div>
       </Form>

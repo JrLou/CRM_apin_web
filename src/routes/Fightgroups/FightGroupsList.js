@@ -1,7 +1,7 @@
-import React, {PureComponent} from 'react';
-import {Card, List, Spin} from 'antd';
+import React, { PureComponent } from 'react';
+import { Card, List, Spin } from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
-import {Link} from 'dva/router';
+import { Link } from 'dva/router';
 import GroupSearchForm from './autoForm/GroupSearchForm';
 import request from '../../utils/request';
 import less from './FightGroupsList.less';
@@ -32,7 +32,7 @@ export default class TableList extends PureComponent {
       pageSize: this.pageSize,
     };
     this.doLoading(true, () => {
-      request("api/groupsList", {method: 'POST', body: param})//todo 这里看看是否有异常情况
+      request("api/groupsList", { method: 'POST', body: param })//todo 这里看看是否有异常情况
         .then(obj => {
           if (obj instanceof Error) {
             this.doLoading(false);
@@ -40,8 +40,8 @@ export default class TableList extends PureComponent {
           }
           this.total = obj.option.total;
           this.setState({
-              dataList: obj.data
-            }, () => this.doLoading(false)
+            dataList: obj.data
+          }, () => this.doLoading(false)
           );
         });
     });
@@ -65,16 +65,16 @@ export default class TableList extends PureComponent {
     let result = '';
     switch (groupState) {
       case 0:
-        result = <span><span style={{...styleProp, backgroundColor: '#df8600'}}></span>拼团中</span>;
+        result = <span><span style={{ ...styleProp, backgroundColor: '#df8600' }}></span>拼团中</span>;
         break;
       case 1:
-        result = <span><span style={{...styleProp, backgroundColor: '#33cc66'}}></span>拼团完成</span>;
+        result = <span><span style={{ ...styleProp, backgroundColor: '#33cc66' }}></span>拼团完成</span>;
         break;
       case 2:
-        result = <span><span style={{...styleProp, backgroundColor: '#33cc66'}}></span>拼团成功</span>;
+        result = <span><span style={{ ...styleProp, backgroundColor: '#33cc66' }}></span>拼团成功</span>;
         break;
       case 3:
-        result = <span><span style={{...styleProp, backgroundColor: '#999'}}></span>拼团关闭</span>;
+        result = <span><span style={{ ...styleProp, backgroundColor: '#999' }}></span>拼团关闭</span>;
         break;
     }
     return result;
@@ -83,8 +83,8 @@ export default class TableList extends PureComponent {
   getCardHeader(item) {
     return (
       <div>
-        <span style={{float: 'right'}}>{item.groupTotal}人</span>
-        <div style={{textAlign: 'center'}}>{this.getGroupState(item.groupState)}</div>
+        <span style={{ float: 'right' }}>{item.groupTotal}人</span>
+        <div style={{ textAlign: 'center' }}>{this.getGroupState(item.groupState)}</div>
       </div>
     );
   }
@@ -93,9 +93,9 @@ export default class TableList extends PureComponent {
     return (
       <div>
         <p className={less.groupCard_body_lineA}><span
-          style={{float: 'right'}}>{item.groupBeginTime.substring(0, 19)}</span>团号：{item.id}&nbsp;&nbsp;&nbsp;</p>
+          style={{ float: 'right' }}>{item.groupBeginTime.substring(0, 19)}</span>团号：{item.id}&nbsp;&nbsp;&nbsp;</p>
         <p className={less.groupCard_body_lineB}>
-          <span style={{float: 'right'}}>
+          <span style={{ float: 'right' }}>
             {item.groupBeginTime.substring(0, 10)}出发
           </span>
           <span className={less.groupCard_body_lineB_city}>
@@ -113,7 +113,7 @@ export default class TableList extends PureComponent {
 
   getCardFooter(item) {
     return <div>
-      <Link to='/fightgroups/demand/checkFightGroups'><span style={{float: 'right'}} href="#">查看</span></Link>
+      <Link to={'/fightgroups/demand/checkFightGroups/' + item.id}><span style={{ float: 'right' }} href="#">查看</span></Link>
       <span>处理客服：盼盼</span>
     </div>;
   }
@@ -136,7 +136,7 @@ export default class TableList extends PureComponent {
 
   //生成卡片内容
   renderGroupCard() {
-    const {dataList, loading} = this.state;
+    const { dataList, loading } = this.state;
     const paginationProps = {//配置分页器
       showSizeChanger: true,
       showQuickJumper: true,
@@ -159,7 +159,7 @@ export default class TableList extends PureComponent {
       <Spin spinning={loading}>
         <p>共搜索到{this.total}个拼团</p>
         <List
-          grid={{gutter: 24, lg: 4, md: 2, sm: 1, xs: 1}}
+          grid={{ gutter: 24, lg: 4, md: 2, sm: 1, xs: 1 }}
           dataSource={dataList}
           // loading={loading}
           pagination={paginationProps}
@@ -171,7 +171,7 @@ export default class TableList extends PureComponent {
 
             return (
               dataList.length === 0 ?
-                <h1 style={{textAlign: 'center'}}>无拼团数据</h1>
+                <h1 style={{ textAlign: 'center' }}>无拼团数据</h1>
                 :
                 <List.Item key={item.id}>
                   <div className={less.groupCard}>
