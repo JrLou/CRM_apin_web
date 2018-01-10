@@ -1,15 +1,16 @@
-import {flightstockList,stateAirLine,getAirLineLogs} from '../services/api';
-import { message } from 'antd';
+import {flightstockList, stateAirLine, getAirLineLogs, getaddAirLine} from '../services/api';
+import {message} from 'antd';
 
 export default {
   namespace: 'flightstock',
   state: {
-    data: {
-      list: [],
-      pagination: {},
+    list: {
+      data: [],
+      option: {},
     },
     loading: true,
-    log: [],
+    logs: {},
+    accurate: [],
   },
   effects: {
     * fetch({payload}, {call, put}) {
@@ -18,6 +19,7 @@ export default {
         payload: true,
       });
       const response = yield call(flightstockList, payload);
+      console.log(response)
       yield put({
         type: 'save',
         payload: response,
@@ -27,15 +29,17 @@ export default {
         payload: false,
       });
     },
-    * changeStatus({payload},{call,put}){
+    * changeStatus({payload}, {call, put}) {
       //列表页，改变上架下架状态
       yield put({
         type: 'changeLoading',
         payload: true,
       });
-      yield call(stateAirLine, payload);
-
-      const response =yield call(flightstockList)
+      const judgment = yield call(stateAirLine, payload);
+      if (judgment.payload.code >= 1) {
+        message.warning('上架成功');
+      }
+      const response = yield call(flightstockList, {p: 1, pc: 10})
       yield put({
         type: 'save',
         payload: response,
@@ -45,27 +49,43 @@ export default {
         payload: false,
       });
     },
-    * log({payload},{call,put}){
+    * loglist({payload}, {call, put}) {
       //日志
-      const response =yield call(flightstockList)
+      const response = yield call(getAirLineLogs, payload)
       yield put({
         type: 'log',
         payload: response,
       });
     },
+    //飞常准查询
+    * addAirLine({payload}, {call, put}) {
+      const response = yield call(getaddAirLine, payload)
+      console.log(response)
+      yield put({
+        type:''
+      })
+    },
   },
   reducers: {
     save(state, action) {
-      return {
-        ...state,
-        data: action.payload,
-      };
+      if (action.payload.option) {
+        return {
+          ...state,
+          list: action.payload,
+        };
+      }
     },
     log(state, action) {
       return {
         ...state,
-        log: action.payload,
+        logs: action.payload,
       };
+    },
+    accurate(state, action) {
+      return {
+        ...state,
+        accurate: action.payload,
+      }
     },
     changeLoading(state, action) {
       return {

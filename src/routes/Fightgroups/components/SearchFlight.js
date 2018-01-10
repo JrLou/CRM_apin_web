@@ -16,8 +16,11 @@ let demandId, orderList;
 }))
 @Form.create()
 export default class SearchFlight extends PureComponent {
-    state = {
-        modalVisible: false
+    constructor(props) {
+        super(props)
+        this.state = {
+            modalVisible: false
+        }
     }
     componentWillMount() {
         const { dispatch } = this.props;
@@ -42,7 +45,7 @@ export default class SearchFlight extends PureComponent {
                 }
                 this.props.dispatch({
                     type: 'push/fetch',
-                    payload: { ...values, depData, arrData, id: this.props.location.state.demandId },
+                    payload: { ...values, depData, arrData, id: demandId },
                 });
             }
         });

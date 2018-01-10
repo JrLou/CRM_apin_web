@@ -9,7 +9,7 @@ import moment from 'moment';
 const {RangePicker} = DatePicker;
 const FormItem = Form.Item;
 const {Option} = Select;
-const status = ['待付款', '委托中', '待付尾款', '选择方案中', '待出票', '已出票','委托取消', '出票失败', '委托过期'];
+const status = ['待付款', '委托中', '方案选择中', '待付尾款', '待出票', '已出票', '出票失败', '委托过期', '委托关闭', ];
 @connect(state => ({
   entrustList: state.entrustList,
 }))
@@ -66,16 +66,17 @@ export default class TableList extends PureComponent {
       if (!err) {
         const values = {
           ...fieldsValue,
-          'start_time': timeArr[0] ? timeArr[0] : '',
-          'end_time': timeArr[1] ? timeArr[1] : '',
+          'start_time': timeArr[0] || '',
+          'end_time': timeArr[1] || '',
         };
         values.group_type = Number(values.group_type);
-        values.order_status = Number(values.order_status);
         for (let item in values) {
           if (values[item] === undefined) {
             values[item] = '';
           }
         }
+        values.order_status = typeof values.order_status == 'string' ? '' : Number(values.order_status);
+
         this.setState({
           formValues: values,
         });
@@ -122,9 +123,9 @@ export default class TableList extends PureComponent {
                 initialValue: ''
               })(
                 <Select placeholder="请选择" style={{width: '100%'}}>
-                  <Option value="">全部</Option>
+                  <Option value=''>全部</Option>
                   {
-                    status.map((item, index) => <Option value={index} key={index}>{item+index}</Option>)
+                    status.map((item, index) => <Option value={index} key={index}>{item}</Option>)
                   }
                 </Select>
               )}
@@ -176,6 +177,9 @@ export default class TableList extends PureComponent {
     const columns = [{
         title: '订单号',
         dataIndex: 'id',
+        render: (text, record) => {
+          return <Link to={`/order/entrust/${record.id}`}>{text}</Link>
+        }
       }, {
         title: '订单状态',
         dataIndex: 'order_status',
@@ -194,9 +198,36 @@ export default class TableList extends PureComponent {
       }, {
         title: '到达城市',
         dataIndex: 'city_arr'
-      }, {
-        title: '出发日期',
+      },{
+        title: '出发日期(发布)',
         dataIndex: 'dep_yyyymm',
+        render: (text, record) => {
+          let date1 = String(text).substr(0, 4) || '', date2 = String(text).substr(4, 2) || '', day = '';
+          switch (record.dep_dd) {
+            case 0:
+              day = '(不限)';
+              break;
+            case -1:
+              day = '(上旬)';
+              break;
+            case -2:
+              day = '(中旬)';
+              break;
+            case -3:
+              day = '(下旬)';
+              break;
+            default:
+              day = '-' + record.dep_dd;
+          }
+          return date1 + '-' + date2 + day;
+        }
+      }, {
+        title: '出发航班号',
+        dataIndex: 'flight_no',
+        render: (text) => {
+          let flightArr = text.split('/');
+          return flightArr[0] || '';
+        }
       }, {
         title: '人数',
         dataIndex: 'adult_count',
