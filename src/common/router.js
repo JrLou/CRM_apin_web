@@ -59,9 +59,9 @@ export const getRouterData = (app) => {
     '/order/entrust': {
       component: dynamicWrapper(app, ['entrust'], () => import('../routes/Order/Entrust.js')),
     },
-    '/order/entrust/:id': {
+    '/order/entrust/detail': {
       name: "委托订单详情",
-      component: dynamicWrapper(app, ['profile'], () => import('../routes/Order/EntrustProfile.js')),
+      component: dynamicWrapper(app, ['flyingpigDetail'], () => import('../routes/Order/EntrustProfile.js')),
     },
     '/order/refund': {
       component: dynamicWrapper(app, ['refund'], () => import('../routes/Order/Refund.js')),
