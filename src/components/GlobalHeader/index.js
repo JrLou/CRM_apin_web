@@ -93,16 +93,16 @@ export default class GlobalHeader extends PureComponent {
           type={collapsed ? 'menu-unfold' : 'menu-fold'}
           onClick={this.toggle}
         />
-        {/*<div className={styles.right}>
-          {currentUser.name ? (
+        <div className={styles.right}>
+          {currentUser? (
             <Dropdown overlay={menu}>
               <span className={`${styles.action} ${styles.account}`}>
-                <Avatar size="small" className={styles.avatar} src={currentUser.avatar} />
-                {currentUser.name}
+                {/* <Avatar size="small" className={styles.avatar} src={currentUser.avatar} /> */}
+                {currentUser}
               </span>
             </Dropdown>
-          ) : <Spin size="small" style={{ marginLeft: 8 }} />}
-        </div>*/}
+          ) : "没有获取到用户名"}
+        </div>
       </Header>
     );
   }
