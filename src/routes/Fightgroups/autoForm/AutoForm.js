@@ -242,7 +242,6 @@ export default class AutoForm extends React.Component {
           />;
           break;
         case 2:
-          console.log("formItemSonProps", formItemSonProps);
           formItemEle = <Select {...formItemSonProps}>
             {itemData.options.map(option => <Option key={option.value} value={option.value}>{option.txt}</Option>)}
           </Select>;

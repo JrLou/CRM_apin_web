@@ -44,8 +44,9 @@ export const getRouterData = (app) => {
     '/finance/finance_verify': {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Finance/FinanceVerify')),
     },
+    // 拼团列表
     '/fightgroups/list': {
-      component: dynamicWrapper(app, ['rule'], () => import('../routes/Fightgroups/FightGroupsList.js')),
+      component: dynamicWrapper(app, ['fightGroupsList'], () => import('../routes/Fightgroups/FightGroupsList.js')),
     },
     //订单管理
     '/order/flyingpig': {

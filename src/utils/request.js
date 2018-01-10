@@ -94,16 +94,16 @@ export default function request(url, options) {
     credentials: 'include',
   };
   const newOptions = { ...defaultOptions, ...options };
-    let Authorization = '';
-    try {
-      Authorization = CookieHelp.getUserInfo().accessToken;
-      newOptions.headers = {
-        'Authorization': Authorization,
-        ...newOptions.headers,
-      };
-    } catch (e) {
-    }
-  if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
+  // let Authorization = '';
+  // try {
+  //   Authorization = CookieHelp.getUserInfo().accessToken;
+  //   newOptions.headers = {
+  //     'Authorization': Authorization,
+  //     ...newOptions.headers,
+  //   };
+  // } catch (e) {
+  // }
+    if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
     newOptions.headers = {
       Accept: 'application/json',
       'Content-Type': 'application/json; charset=utf-8',
