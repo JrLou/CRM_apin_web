@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'dva';
-import {Card, Table, Divider, Icon, Button, Input, Modal, Badge} from 'antd';
+import {routerRedux} from 'dva/router';
+import {Card, Table, Divider, Icon, Button, Input, Modal, Badge, message} from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import DescriptionList from '../../components/DescriptionList';
 import styles from './FlyingpigDetail.less';
@@ -13,23 +14,28 @@ const certType = ['身份证', '护照', '港澳通行证', '台胞证'],
   payType = ['线下支付', '支付宝', '微信', '银联'],
   source = ['飞猪', '供应商'],
   status = ['待付款', '订单关闭', '待出票', '已出票', '出票失败'];
+let id, order_status;
 @connect(state => ({
   flyingpigDetail: state.flyingpigDetail,
 }))
 export default class BasicProfile extends Component {
   state = {
-    id: this.props.location.state.id || '',
-    order_status: this.props.location.state.order_status || 0,
     inputPrice: this.price || 0,
     isEdit: false,
   };
 
-  componentDidMount() {
+  componentWillMount() {
     const {dispatch} = this.props;
-    dispatch({
-      type: 'flyingpigDetail/getDetail',
-      payload: {id: this.state.id}
-    });
+    if (!this.props.location.state) {
+      dispatch(routerRedux.push('/order/flyingpig'));
+    } else {
+      id = this.props.location.state.id;
+      order_status = this.props.location.state.order_status;
+      dispatch({
+        type: 'flyingpigDetail/getDetail',
+        payload: {id: id}
+      });
+    }
   }
 
   inputPrice(e) {
@@ -49,14 +55,32 @@ export default class BasicProfile extends Component {
   }
 
   ticketConfirm() {
+    let ticketInfo = [], {dispatch, flyingpigDetail: {ticketResponse}} = this.props;
+    for (let i = 0; i < this.passengerData.length; i++) {
+      let user = this.passengerData[i], ticket = user.ticketDep + ',' + user.ticketArr;
+      ticketInfo.push({id: user.id, ticket: ticket})
+    }
+    let params = {
+      group_id: this.orderData.group_id,
+      order_id: this.orderData.id,
+      ticketInfo: ticketInfo,
+    };
     confirm({
       title: '是否确认出票?',
       content: '出票后，将无法修改',
       onOk() {
-        console.log('OK');
+        dispatch({
+          type: 'flyingpigDetail/addTicket',
+          payload: {ticketObj: params}
+        });
+        if (ticketResponse.code > 0) {
+          message.success('出票成功');
+          dispatch(routerRedux.push('/order/flyingpig'));
+        } else {
+          message.error('出票失败');
+        }
       },
       onCancel() {
-        console.log('Cancel');
       },
     });
   }
@@ -66,10 +90,12 @@ export default class BasicProfile extends Component {
   }
 
   render() {
-    const {inputPrice, isEdit, order_status} = this.state;
-    let {flyingpigDetail: {log, order, voyage, passenger, payrecord, loading}} = this.props;
+    const {inputPrice, isEdit} = this.state;
+    let {flyingpigDetail: {log, order, passenger, payrecord, loading}} = this.props;
     this.adult_count = order.adult_count || 1;
     this.price = order.settlement_amount;
+    this.passengerData = passenger;
+    this.orderData = order;
     //订单信息数据
     const orderColumns = [
       {title: '航班号', dataIndex: 'flight_no', key: 'flight_no',},
@@ -117,15 +143,39 @@ export default class BasicProfile extends Component {
       {title: '联系电话', dataIndex: 'phone', key: 'phone'},
       {
         title: '票号', dataIndex: 'ticket', key: 'ticket',
-        render: (text, data) => {
+        render: (text, record) => {
+          if (text) {
+            let ticketArr = text.split(',');
+          }
           return (<span>
             {
               order_status == 2 ?
-                <span>去<Input className={styles.inputTicket}/>返<Input className={styles.inputTicket}/></span>
+                <span>
+                  去
+                  <Input className={styles.inputTicket} onChange={(e) => {
+                    record['ticketDep'] = e.target.value;
+                  }
+                  }/>
+                  返
+                  <Input className={styles.inputTicket} onChange={(e) => {
+                    record["ticketArr"] = e.target.value;
+                  }}/>
+                </span>
                 :
                 order_status == 3 ?
-                  <span>去 <span className={styles.showTicket}>lllllllll</span> 返 <span className={styles.showTicket}>333333333</span></span>
-                  : null
+                  <span>去 <span className={styles.showTicket}>{ticketArr[0] || ''}</span> 返 <span
+                    className={styles.showTicket}>{ticketArr[1] || ''}</span></span>
+                  : <span>
+                  去
+                  <Input className={styles.inputTicket} onChange={(e) => {
+                    record['ticketDep'] = e.target.value;
+                  }
+                  }/>
+                  返
+                  <Input className={styles.inputTicket} onChange={(e) => {
+                    record["ticketArr"] = e.target.value;
+                  }}/>
+                </span>
             }
         </span>
           )
@@ -137,13 +187,14 @@ export default class BasicProfile extends Component {
       {title: '支付单号', dataIndex: 'id', key: 'id'},
       {title: '付款金额(元)', dataIndex: 'pay_amount', key: 'pay_amount'},
       {
-        title: '支付方式', dataIndex: 'pay_type', key: 'pay_type', render: (text) => {
-        return payType[text];
+        title: '支付方式', dataIndex: 'pay_type', key: 'pay_type', render: (text, record) => {
+        return record.pay_amount < 0 ? '退款' : payType[text];
       }
       },
       {
-        title: '状态', dataIndex: 'payStatus', key: 'payStatus', render: (text) => {
-        return text == 1 ? <Badge status="success" text="成功"/> : <Badge status="processing" text="失败"/>
+        title: '状态', dataIndex: 'status', key: 'status', render: (text) => {
+        return <Badge status={text === 0 ? "error" : text === 1 ? "success" : ''}
+                      text={text === 0 ? "失败" : text === 1 ? "成功" : ''}/>
       }
       },
       {title: '支付时间', dataIndex: 'pay_time', key: 'pay_time'},
@@ -189,7 +240,7 @@ export default class BasicProfile extends Component {
               pagination={false}
               bordered={true}
               loading={loading}
-              dataSource={voyage}
+              dataSource={order.voyage || []}
               columns={orderColumns}
               rowKey="id"
             />
@@ -204,11 +255,12 @@ export default class BasicProfile extends Component {
             columns={passengerColumns}
             rowKey="id"
           />
-          {
-            order_status == 2 ?
-              <div className={styles.acticnBtn}><Button type='primary' onClick={::this.ticketConfirm}>出票</Button></div>
-              : null
-          }
+          {/*{*/}
+          {/*order_status == 2 ?*/}
+          {/*<div className={styles.acticnBtn}><Button type='primary' onClick={::this.ticketConfirm}>出票</Button></div>*/}
+          {/*: null*/}
+          {/*}*/}
+          <div className={styles.acticnBtn}><Button type='primary' onClick={::this.ticketConfirm}>出票</Button></div>
           <Divider style={{marginBottom: 32}}/>
           <div className={styles.title}><Icon type="red-envelope"/> 支付信息</div>
           {
@@ -258,7 +310,7 @@ export default class BasicProfile extends Component {
             bordered={true}
             dataSource={log}
             columns={logColumns}
-            rowKey="id"
+            rowKey="create_time"
           />
         </Card>
       </PageHeaderLayout>

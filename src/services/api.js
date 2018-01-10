@@ -191,6 +191,12 @@ export async function getFlyDetail(params) {
     body: params,
   });
 }
+export async function flyDetailAddTicket(params) {
+  return request('/crm/api/order/addTicket', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function postGroupData(params) {
   return request('/api/group/postGroupData', { method: 'POST', body: params });
 }
