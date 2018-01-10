@@ -137,6 +137,13 @@ export async function getaddAirLine(params) {
     body: params,
   });
 }
+//编辑回显
+export async function getdetailAirLine(params) {
+  return request('/crm/api/resource/detailAirLine',{
+    method: 'POST',
+    body: params,
+  });
+}
 
 export async function AccountLogin(params) {
   const newparams = Object.assign({}, { account: params.account, appid: '2ef8d902c12f454f9acdbb0484f8c05a' })
