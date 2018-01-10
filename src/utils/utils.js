@@ -1,5 +1,5 @@
 import moment from 'moment';
-
+import { message } from 'antd';
 export function fixedZero(val) {
   return val * 1 < 10 ? `0${val}` : val;
 }
@@ -132,4 +132,27 @@ export function getRoutes(path, routerData) {
     };
   });
   return renderRoutes;
+}
+export function formatPar(obj = {}) {
+  return encodeURIComponent(JSON.stringify(obj))
+}
+// route4 url传值的公用方法 ylb
+/**
+ * 
+ * @param {*react组件} obj 
+* @param {*:参数名} name (只支持url传参/:name 这种)
+ */
+export function getPar(obj, name) {
+  if (!obj || !obj.props || !obj.props.match) { return {}; }
+  let { params } = obj.props.match;
+  if (!params || !params[name]) { return {} }
+  if (params[name].indexOf("{") < 0) {//JSON对像结构,必有
+    return decodeURIComponent(params[name]);
+  } else {
+    try {
+      return JSON.parse(decodeURIComponent(params[name]))
+    } catch (error) {
+      message.error('参数有误')
+    }
+  }
 }

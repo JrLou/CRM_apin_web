@@ -65,19 +65,33 @@ export async function demandList(params) {
 export async function queryUserList(params) {
   return request(`/api/userList?${stringify(params)}`);
 }
+//客户列表
+export async function queryCustomerList(params) {// /api/member/getMemberList
+  return request('/crm/api/member/getMemberList', {
+    method: 'POST',
+    body: params,
+  });
+}
+
 export async function entrust(params) {
-  return request(`/api/entrust?${stringify(params)}`);
+  return request('/crm/api/order/getOrderList', {
+    method: 'POST',
+    body: params,
+  });
 }
 export async function queryBanner(params) {
-  return request(`/api/bannerList?${stringify(params)}`);
+  return request('/crm/api/banner/getBannerList', {
+    method: 'POST',
+    body: params,
+  });
 }
 
 //base64 banner图上传
 export async function baseImg(params) {
-  return request('/api/common/uploadImage', {
-    method: 'POST',
-    body: params,
-  });
+    return request('/crm/api/common/uploadImage', {
+      method: 'POST',
+      body: params,
+    });
 }
 export async function deleteBanner(params) {
   return request(`/api/deleteBanner?${stringify(params)}`);
@@ -89,7 +103,10 @@ export async function querySupplierList(params) {
   return request(`/api/suplierList?${stringify(params)}`);
 }
 export async function queryFlyList(params) {
-  return request(`/api/flyList?${stringify(params)}`);
+  return request('/crm/api/order/getOrderList', {
+    method: 'POST',
+    body: params,
+  });
 }
 //李斯奇 政策管理供应商资源
 //供应商列表资源列表
@@ -143,6 +160,18 @@ export async function financePaymentList(params) {
 export async function roleManageList(params) {
   return request(`/crm/cr/v2/accounts/role/list?${stringify(params)}`);
 }
+export async function getFlylist(params) {
+  return request('/crm/api/order/getOrderList', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function getFlyDetail(params) {
+  return request('/crm/api/order/getOrderDetail', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function postGroupData(params) {
   return request('/api/group/postGroupData', { method: 'POST', body: params });
 }
@@ -151,4 +180,13 @@ export async function searchFlights(params) {
 }
 export async function addFlights(params) {
   return request('/api/group/addFlights', { method: 'POST', body: params });
+}
+export async function viewList(params) {
+  return request('/api/group/viewList', { method: 'POST', body: params });
+}
+export async function orderList(params) {
+  return request('/api/group/orderList', { method: 'POST', body: params });
+}
+export async function logList(params) {
+  return request(`/api/group/logs?${stringify(params)}`);
 }

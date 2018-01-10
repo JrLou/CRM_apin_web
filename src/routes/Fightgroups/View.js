@@ -1,64 +1,54 @@
 //查看需求池
-import React, {PureComponent} from 'react';
-import {connect} from 'dva';
-import {Link} from 'dva/router';
-import {Card, Table} from 'antd';
+import React, { PureComponent } from 'react';
+import { connect } from 'dva';
+import { Link, routerRedux } from 'dva/router';
+import { Card, Table, Spin } from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './TableList.less';
+import { getPar, formatPar } from '../../utils/utils';
 
-
-// @connect(state => ({
-//   rule: state.refund,
-// }))
+@connect(state => ({
+  view: state.view,
+}))
 export default class View extends PureComponent {
-  state = {
-    modalVisible: false,
-    formValues: {},
-    record: {},
-  };
-
-  componentDidMount() {
-    // const { dispatch } = this.props;
-    // dispatch({
-    //   type: 'refund/fetch',
-    // });
+  constructor(props) {
+    super(props)
+    this.params = {
+      page: 1,
+      pageSize: 10,
+    };
+    this.par = getPar(this, 'data')
   }
 
-  handleTableChange = (pagination) => {
-    const {dispatch} = this.props;
-    const {formValues} = this.state;
+  componentWillMount() {
+    const { dispatch } = this.props;
+    if (!this.par.id) {
+      // this.props.history.replace('/fightgroups/demand/');
+      dispatch(routerRedux.push('/fightgroups/demand/'));
+    }
+  }
 
-    const params = {
-      currentPage: pagination.current,
-      pageSize: pagination.pageSize,
-      ...formValues,
-    };
-    // dispatch({
-    //   type: 'refund/fetch',
-    //   payload: params,
-    // });
-  };
-
-  handleSearch = (e) => {
-    e.preventDefault();
-
-    const {dispatch, form} = this.props;
-
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      const values = {
-        ...fieldsValue,
-      };
-      this.setState({
-        formValues: values,
-      });
-      // dispatch({
-      //   type: 'refund/fetch',
-      //   payload: values,
-      // });
+  componentDidMount() {
+    const { dispatch } = this.props;
+    const { id } = this.par;
+    dispatch({
+      type: 'view/fetch',
+      payload: { ...this.params, id: id },
     });
   }
 
+  handleTableChange = (pagination) => {
+    const { dispatch } = this.props;
+    const params = {
+      ...this.params,
+      page: pagination.current,
+      pageSize: pagination.pageSize,
+    };
+    dispatch({
+      type: 'view/fetch',
+      payload: params,
+    });
+  };
   render() {
     // const { rule: { loading, list, total } } = this.props;
     // const { modalVisible, record } = this.state;
@@ -67,59 +57,66 @@ export default class View extends PureComponent {
       title: '拼团编号',
       dataIndex: 'id',
     }, {
-      title: '推送时间',
+      title: '状态',
       dataIndex: 'status',
       render: (text) => {
-        const status = ['已退款', '退款失败'];
+        const status = ['拼团中', '拼团成功', '拼团完成', '拼团关闭'];
         return status[text];
       },
     }, {
+      title: '推送时间',
+      dataIndex: 'createTime',
+    }, {
       title: '出发机场',
-      dataIndex: 'money',
+      dataIndex: 'depAirport',
     }, {
       title: '到达机场',
-      dataIndex: 'orderId',
+      dataIndex: 'arrAirport',
     }, {
       title: '航班号',
-      dataIndex: 'time',
+      dataIndex: 'flightNo',
     }, {
       title: '成交人数',
-      dataIndex: 'num',
+      dataIndex: 'groupCount',
     }, {
       title: '销售价格',
       dataIndex: 'price',
     }, {
       title: '是否成团',
       dataIndex: 'is',
+      render: (text, record) => text ? '是' : '否',
     }, {
       title: '操作',
-      render: (text, record) => <Link to={'/fightgroups/demand/checkFightGroups'}>查看</Link>,
+      render: (text, record) => <Link to={'/fightgroups/demand/result/' + record.id}>查看</Link>,
     }];
     let data = [
-      {id: 1, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0},
-      {id: 2, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0},
-      {id: 3, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0},
-      {id: 4, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0},
-      {id: 5, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0},
-      {id: 6, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0},
+      { id: 1, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0 },
+      { id: 2, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0 },
+      { id: 3, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0 },
+      { id: 4, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0 },
+      { id: 5, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0 },
+      { id: 6, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0 },
     ];
+    const { line } = this.par;
+    const { view: { tableData, loading } } = this.props;
     return (
       <PageHeaderLayout>
-        <Card bordered={false}>
-          <div className={styles.tableList}>
-            <p style={{fontSize: 18}}>杭州 - 北京</p>
-            <p>推荐方案历史:</p>
-            <Table
-              // dataSource={list}
-              dataSource={data}
-              columns={columns}
-              pagination={{showSizeChanger: true, showQuickJumper: true,}}
-              // loading={loading}
-              onChange={this.handleTableChange}
-              rowKey="id"
-            />
-          </div>
-        </Card>
+        <Spin spinning={loading}>
+          <Card bordered={false}>
+            <div className={styles.tableList}>
+              <p style={{ fontSize: 18 }}>{line}</p>
+              <p>推荐方案历史:</p>
+              <Table
+                // dataSource={list}
+                dataSource={tableData.data}
+                columns={columns}
+                pagination={{ showSizeChanger: true, showQuickJumper: true, total: tableData.option && tableData.option.total }}
+                onChange={this.handleTableChange}
+                rowKey="id"
+              />
+            </div>
+          </Card>
+        </Spin>
       </PageHeaderLayout>
     );
   }

@@ -1,19 +1,19 @@
-import { getRefundList } from '../services/refund';
+import { getFlylist } from '../services/api';
 
 export default {
-  namespace: 'refund',
+  namespace: "refund",
   state: {
     loading: true,
     list: [],
     total: 0,
   },
   effects: {
-    *fetch({ payload }, { call, put }) {
+    *getList({ payload }, { call, put }) {
       yield put({
         type: 'changeLoading',
         payload: true,
       });
-      const response = yield call(getRefundList, payload);
+      const response = yield call(getFlylist, payload);
       yield put({
         type: 'save',
         payload: response,
@@ -28,8 +28,8 @@ export default {
     save(state, { payload }) {
       return {
         ...state,
-        list: payload.list,
-        total: payload.total,
+        list: payload.data||[],
+        total: payload.option.total||0,
       };
     },
     changeLoading(state, { payload }) {

@@ -1,11 +1,10 @@
-import { queryFlyList } from '../services/api';
+import { viewList } from '../services/api';
 
 export default {
-  namespace: 'flyPiglist',
+  namespace: 'view',
   state: {
-    loading: true,
-    list: [],
-    total: 0,
+    tableData: {},
+    loading: false,
   },
   effects: {
     *fetch({ payload }, { call, put }) {
@@ -13,9 +12,9 @@ export default {
         type: 'changeLoading',
         payload: true,
       });
-      const response = yield call(queryFlyList, payload);
+      const response = yield call(viewList, payload);
       yield put({
-        type: 'save',
+        type: 'queryList',
         payload: response,
       });
       yield put({
@@ -24,18 +23,18 @@ export default {
       });
     },
   },
+
   reducers: {
-    save(state, { payload }) {
+    queryList(state, action) {
       return {
         ...state,
-        list: payload.data,
-        total: payload.option.total,
+        tableData: action.payload,
       };
     },
-    changeLoading(state, { payload }) {
+    changeLoading(state, action) {
       return {
         ...state,
-        loading: payload,
+        loading: action.payload,
       };
     },
   },

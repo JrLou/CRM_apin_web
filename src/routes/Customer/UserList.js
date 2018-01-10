@@ -23,10 +23,6 @@ export default class TableList extends PureComponent {
   state = {
     selectedRows: [],
     formValues: {},
-    page: {
-      pageNo: 1,
-      pageSize: 10
-    }
   };
 
   componentDidMount() {
@@ -53,6 +49,7 @@ export default class TableList extends PureComponent {
   //   });
   // }
   handleStandardTableChange = (pagination, filtersArg, sorter) => {//分页、排序、筛选变化时触发
+    console.log("pagination", pagination);
     const {dispatch} = this.props;
     const {formValues} = this.state;
 
@@ -61,9 +58,10 @@ export default class TableList extends PureComponent {
       newObj[key] = getValue(filtersArg[key]);
       return newObj;
     }, {});
+
     const params = {
-      currentPage: pagination.current,
-      pageSize: pagination.pageSize,
+      p: pagination.current,
+      pc: pagination.pageSize,
       ...formValues,
       ...filters,
     };
@@ -75,6 +73,7 @@ export default class TableList extends PureComponent {
       type: 'userList/fetch',
       payload: params,
     });
+
   };
   handleFormReset = () => {
     const {form, dispatch} = this.props;
@@ -124,7 +123,7 @@ export default class TableList extends PureComponent {
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <FormItem label="微信昵称:" style={formItemStyle}>
-          {getFieldDecorator('weChatNickname', {
+          {getFieldDecorator('name', {
             initialValue: "",
             rules: [{max: 30, message: '长度不能超过30'}],
           })
@@ -132,7 +131,7 @@ export default class TableList extends PureComponent {
           }
         </FormItem>
         <FormItem label="手机号:" style={formItemStyle}>
-          {getFieldDecorator('phoneNo', {
+          {getFieldDecorator('mobile', {
             initialValue: "",
             rules: [{
               pattern: /^\d{0,11}$/,
@@ -151,7 +150,7 @@ export default class TableList extends PureComponent {
   }
 
   render() {
-    const {userList: {loading: ruleLoading, data}} = this.props;
+    const {userList: {loading: ruleLoading, data,}} = this.props;
     const {selectedRows} = this.state;
     // const breadcrumbList = [{
     //   title: '一级菜单',
@@ -166,7 +165,10 @@ export default class TableList extends PureComponent {
       <PageHeaderLayout
         // breadcrumbList={breadcrumbList}
       >
-        <Card bordered={false}>
+        <Card
+          bordered={false}
+          style={{minWidth: '780px'}}
+        >
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>
               {this.renderForm()}
