@@ -42,7 +42,7 @@ export default class SearchFlight extends PureComponent {
                 }
                 this.props.dispatch({
                     type: 'push/fetch',
-                    payload: { ...values, depData, arrData, id: 111 },
+                    payload: { ...values, depData, arrData, id: this.props.location.state.demandId },
                 });
             }
         });
@@ -116,7 +116,7 @@ export default class SearchFlight extends PureComponent {
         };
         const { getFieldDecorator, getFieldValue } = this.props.form;
         const { data: { depData, arrData, flightsArr, flightsTableShow, showWhat, isLeft, modalTitle, loading } } = this.props;
-        const { logTableList: { logData } } = this.props;
+        const { logData } = this.props.logTableList ? this.props.logTableList : {};
         const showDepCard = JSON.stringify(depData) !== "{}";
         const showArrCard = JSON.stringify(arrData) !== "{}";
         let component;

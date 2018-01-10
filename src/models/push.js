@@ -23,7 +23,7 @@ export default {
             if (response.code >= 1) {
                 message.success('推送成功，将进入拼团查看页面');
 
-                yield put(routerRedux.push('/DSADA/1213'));
+                yield put(routerRedux.push('/fightgroups/demand/checkFightGroups/' + payload.id));
             }
             // 路由跳转
             yield put({
@@ -94,7 +94,7 @@ export default {
         },
         getFlights(state, action) {
             // 判断是不是查到了航班，如果是空数组则跳出手动添加按钮。
-            let data = action.payload.data.length < 0 ?
+            let data = action.payload.data.length > 0 ?
                 {
                     ...state,
                     flightsArr: action.payload.data,
