@@ -1,61 +1,54 @@
-import { queryBasicProfile, queryAdvancedProfile } from '../services/api';
+import {getFlyDetail} from '../services/api';
 
 export default {
   namespace: 'flyingpigDetail',
 
   state: {
-    basicGoods: [],
-    basicLoading: true,
-    advancedOperation1: [],
-    advancedOperation2: [],
-    advancedOperation3: [],
-    advancedLoading: true,
+    groupVoyage: {},//订单委托信息
+    log: [],//日志信息
+    order: {},//订单信息
+    voyage: [],//订单航班信息
+    orderGroup: [],//方案推送记录
+    passenger: [],//乘机人信息
+    payrecord: [],//支付信息
+    loading: true,
   },
 
   effects: {
-    *fetchBasic(_, { call, put }) {
+    * getDetail({payload}, {call, put}) {
       yield put({
         type: 'changeLoading',
-        payload: { basicLoading: true },
+        payload: true,
       });
-      const response = yield call(queryBasicProfile);
+      const response = yield call(getFlyDetail, payload);
       yield put({
         type: 'show',
         payload: response,
       });
       yield put({
         type: 'changeLoading',
-        payload: { basicLoading: false },
-      });
-    },
-    *fetchAdvanced(_, { call, put }) {
-      yield put({
-        type: 'changeLoading',
-        payload: { advancedLoading: true },
-      });
-      const response = yield call(queryAdvancedProfile);
-      yield put({
-        type: 'show',
-        payload: response,
-      });
-      yield put({
-        type: 'changeLoading',
-        payload: { advancedLoading: false },
+        payload: false,
       });
     },
   },
 
   reducers: {
-    show(state, { payload }) {
+    show(state, {payload}) {
       return {
         ...state,
-        ...payload,
+        groupVoyage: payload.data.groupVoyage || {},//订单委托信息
+        log: payload.data.log || [],//日志信息
+        order: payload.data.order || {},//订单信息
+        voyage: payload.data.voyage || [],//订单航班信息
+        orderGroup: payload.data.orderGroup || [],//方案推送记录
+        passenger: payload.data.passenger || [],//乘机人信息
+        payrecord: payload.data.payrecord || [],//支付信息
       };
     },
-    changeLoading(state, { payload }) {
+    changeLoading(state, {payload}) {
       return {
         ...state,
-        ...payload,
+        loading: payload,
       };
     },
   },

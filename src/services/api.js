@@ -147,6 +147,12 @@ export async function getFlylist(params) {
     body: params,
   });
 }
+export async function getFlyDetail(params) {
+  return request('/crm/api/order/getOrderDetail', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function postGroupData(params) {
   return request('/api/group/postGroupData', { method: 'POST', body: params });
 }

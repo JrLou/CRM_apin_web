@@ -100,9 +100,10 @@ export default class TableList extends PureComponent {
 
   renderForm() {
     const {getFieldDecorator} = this.props.form;
+    const layoutForm = {md: 8, lg: 24, xl: 48};
     return (
       <Form layout="inline">
-        <Row gutter={{md: 8, lg: 24, xl: 48}}>
+        <Row gutter={layoutForm}>
           <Col md={8} sm={24}>
             <FormItem label="订单号">
               {getFieldDecorator('id')(
@@ -125,7 +126,7 @@ export default class TableList extends PureComponent {
             </FormItem>
           </Col>
         </Row>
-        <Row gutter={{md: 8, lg: 24, xl: 48}}>
+        <Row gutter={layoutForm}>
           <Col md={8} sm={24}>
             <FormItem label="订单状态">
               {getFieldDecorator('order_status', {
@@ -186,12 +187,18 @@ export default class TableList extends PureComponent {
     );
   }
 
+  pushUrl(data) {
+    this.props.history.push({pathname: '/order/flyingpig/detail', state: {id: data.id, order_status: data.order_status}})
+  }
+
   render() {
     const {flyingpigList: {loading, list, total}} = this.props;
     const columns = [
       {
         title: '订单号', dataIndex: 'id', render: (text, record) => {
-        return <Link to={`/order/flyingpigDetail/${record.id}`}>{text}</Link>
+        return <a onClick={() => {
+          this.pushUrl(record)
+        }}>{text}</a>
       }
       },
       {
@@ -249,10 +256,11 @@ export default class TableList extends PureComponent {
       {
         title: '操作', render: (text, record) => {
         const title = record.order_status == 2 ? '出票' : '查看';
-        return <Link to={`/order/flyingpigDetail/${record.id}`}>{title}</Link>
+        return <a onClick={() => {
+          this.pushUrl(record)
+        }}>{title}</a>
       }
       }];
-
     return (
       <PageHeaderLayout>
         <Card bordered={false}>
