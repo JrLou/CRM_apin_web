@@ -1,6 +1,7 @@
 import { routerRedux } from 'dva/router';
 import { AccountLogin } from '../services/api';
 import CookieHelp from './../utils/cookies';
+import {Base64} from 'js-base64'
 export default {
   namespace: 'login',
   state: {
@@ -14,14 +15,17 @@ export default {
         payload: true,
       });
       const response = yield call(AccountLogin, payload);
-      yield put({
-        type: 'changeLoginStatus',
-        payload: response,
-      });
-      // Login successfully
-      if (response.status === 'ok') {
+      if (response && response.code >=1) {
+        CookieHelp.saveUserInfo(null,response.data.token,true);
+        // 保存用户名
+        const userName = Base64.encodeURI(response.data.user.account)
+        CookieHelp.saveUserInfo('_u',userName,true);
         yield put(routerRedux.push('/'));
       }
+      yield put({
+        type: 'changeSubmitting',
+        payload: false,
+      });
     },
     *logout(_, { put }) {
       yield put({
@@ -37,15 +41,12 @@ export default {
 
   reducers: {
     changeLoginStatus(state, { payload }) {
-      if (payload && payload.code === 200 && payload.success) {
-        payload.data.Authorization = payload.data.accessToken;
-        CookieHelp.saveUserInfo(payload.data,true);
         return {
           ...state,
           status: 'ok',
           submitting: false,
         };
-      }
+
     },
     changeSubmitting(state, { payload }) {
       return {

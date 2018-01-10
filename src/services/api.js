@@ -65,9 +65,16 @@ export async function demandList(params) {
 export async function queryUserList(params) {
   return request(`/api/userList?${stringify(params)}`);
 }
-//客户列表
+//客户列表 华志林
 export async function queryCustomerList(params) {// /api/member/getMemberList
   return request('/crm/api/member/getMemberList', {
+    method: 'POST',
+    body: params,
+  });
+}
+//拼团列表 暂时未使用，need reWrite
+export async function queryFightGroupsList(params) {// /api/member/getMemberList
+  return request('/crm/api/demandPool/getGroupList', {
     method: 'POST',
     body: params,
   });
@@ -146,14 +153,19 @@ export async function getdetailAirLine(params) {
 }
 
 export async function AccountLogin(params) {
-  const newparams = Object.assign({}, { account: params.account, appid: '2ef8d902c12f454f9acdbb0484f8c05a' })
-  const response = await request(`/crm/uc/authapi/v1.1/tokens/codes?${stringify(newparams)}`);
-  if (response && response.data) {
+  const newparams = Object.assign({}, { account: params.account, type:0 })
+  const response = await request('/crm/api/user/getLogicCode',{
+    method:"POST",
+    body:newparams,
+  });
+  if (response && response.data && response.code>=1) {
     const newparams2 = Object.assign({}, { account: params.account, signature: md5(md5(params.account + md5(params.password)) + response.data) })
-    return request(`/crm/uc/authapi/v1.1/tokens?${stringify(newparams2)}`);
+    return request('/crm/api/user/loginByAccount',{
+      method:'POST',
+      body:newparams2,
+    });
   }
 }
-
 export async function queryMenus() {
   return request('/crm/uc/authapi/v1.1/modules');
 }

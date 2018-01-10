@@ -89,12 +89,12 @@ export default class Login extends Component {
                 {getFieldDecorator('account', {
                   rules: [{
                     required: type === 'account', message: '请输入账户名！',
-                  }],initialValue:"admin"
+                  }],initialValue:"appadmin"
                 })(
                   <Input
                     size="large"
                     prefix={<Icon type="user" className={styles.prefixIcon} />}
-                    placeholder="admin"
+                    placeholder="appadmin"
                   />
                 )}
               </FormItem>
@@ -102,67 +102,17 @@ export default class Login extends Component {
                 {getFieldDecorator('password', {
                   rules: [{
                     required: type === 'account', message: '请输入密码！',
-                  }],initialValue:"Apin123456"
+                  }],initialValue:"123456"
                 })(
                   <Input
                     size="large"
                     prefix={<Icon type="lock" className={styles.prefixIcon} />}
                     type="password"
-                    placeholder="Apin123456"
+                    placeholder="123456"
                   />
                 )}
               </FormItem>
             </TabPane>
-            {/*<TabPane tab="手机号登录" key="mobile">*/}
-              {/*{*/}
-                {/*login.status === 'error' &&*/}
-                {/*login.type === 'mobile' &&*/}
-                {/*login.submitting === false &&*/}
-                {/*this.renderMessage('验证码错误')*/}
-              {/*}*/}
-              {/*<FormItem>*/}
-                {/*{getFieldDecorator('mobile', {*/}
-                  {/*rules: [{*/}
-                    {/*required: type === 'mobile', message: '请输入手机号！',*/}
-                  {/*}, {*/}
-                    {/*pattern: /^1\d{10}$/, message: '手机号格式错误！',*/}
-                  {/*}],*/}
-                {/*})(*/}
-                  {/*<Input*/}
-                    {/*size="large"*/}
-                    {/*prefix={<Icon type="mobile" className={styles.prefixIcon} />}*/}
-                    {/*placeholder="手机号"*/}
-                  {/*/>*/}
-                {/*)}*/}
-              {/*</FormItem>*/}
-              {/*<FormItem>*/}
-                {/*<Row gutter={8}>*/}
-                  {/*<Col span={16}>*/}
-                    {/*{getFieldDecorator('captcha', {*/}
-                      {/*rules: [{*/}
-                        {/*required: type === 'mobile', message: '请输入验证码！',*/}
-                      {/*}],*/}
-                    {/*})(*/}
-                      {/*<Input*/}
-                        {/*size="large"*/}
-                        {/*prefix={<Icon type="mail" className={styles.prefixIcon} />}*/}
-                        {/*placeholder="验证码"*/}
-                      {/*/>*/}
-                    {/*)}*/}
-                  {/*</Col>*/}
-                  {/*<Col span={8}>*/}
-                    {/*<Button*/}
-                      {/*disabled={count}*/}
-                      {/*className={styles.getCaptcha}*/}
-                      {/*size="large"*/}
-                      {/*onClick={this.onGetCaptcha}*/}
-                    {/*>*/}
-                      {/*{count ? `${count} s` : '获取验证码'}*/}
-                    {/*</Button>*/}
-                  {/*</Col>*/}
-                {/*</Row>*/}
-              {/*</FormItem>*/}
-            {/*</TabPane>*/}
           </Tabs>
           <FormItem className={styles.additional}>
             {/*{getFieldDecorator('remember', {*/}
@@ -178,12 +128,6 @@ export default class Login extends Component {
           </FormItem>
         </Form>
         <div className={styles.other}>
-          {/*其他登录方式*/}
-          {/*/!* 需要加到 Icon 中 *!/*/}
-          {/*<span className={styles.iconAlipay} />*/}
-          {/*<span className={styles.iconTaobao} />*/}
-          {/*<span className={styles.iconWeibo} />*/}
-          {/*<Link className={styles.register} to="/user/register">注册账户</Link>*/}
         </div>
       </div>
     );
