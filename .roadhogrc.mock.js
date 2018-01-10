@@ -79,7 +79,7 @@ const proxy = {
   'GET /api/changeStatus':bannerList,
   'GET /api/suplierList' :getSuplierList,
   'GET /api/flyList' :getFlylist,
-  'GET /api/flightstock' :getFlightstock,
+  'GET /api/resource/getAirLines' :getFlightstock,
   'GET /api/entrust' :entrust,
   'GET /api/fake_chart_data': getFakeChartData,
   'GET /api/profile/basic': getProfileBasicData,
