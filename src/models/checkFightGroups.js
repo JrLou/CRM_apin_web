@@ -15,6 +15,7 @@ export default {
     //   xx: {},
     // },`
     // loading: true,
+    showModal: false,
     modalConfirmLoading: false,
     closeReason: '',//关闭的原因
   },
@@ -58,16 +59,15 @@ export default {
       console.log("payload", payload);
       const response = yield call(changeStatus, payload);
       yield put({
-        type: 'show',
+        type: 'save',
         payload: response,
       });
       yield put({
         type: 'changeLoading',
-        payload: {modalConfirmLoading: false},
-      });//todo 这里如果请求异常了，不应该再走下一步，记得处理
-      yield put({
-        type: 'changeModalLoading',
-        payload: {showModal: false},
+        payload: {
+          modalConfirmLoading: false,
+          showModal: false,
+        },
       });
     },
     * fetchConfirmExport({payload, callback}, {call, put}) {
@@ -76,20 +76,24 @@ export default {
         payload: {modalConfirmLoading: true},
       });
       const response = yield call(changeStatus, payload);
-      if(callback){
-        callback(response);
+
+      if (response && response.code >= 1) {
+        callback && callback(response);
+        yield put({
+          type: 'save',
+          payload: response,
+        });
+        yield put({
+          type: 'save',
+          payload: response.data,
+        });
       }
       yield put({
-        type: 'save',
-        payload: response.data,
-      });
-      yield put({
         type: 'changeLoading',
-        payload: {modalConfirmLoading: false},
-      });//todo 这里如果请求异常了，不应该再走下一步，记得处理
-      yield put({
-        type: 'changeModalLoading',
-        payload: {showModal: false},
+        payload: {
+          modalConfirmLoading: false,
+          showModal: false
+        },
       });
     },
   },
@@ -113,7 +117,7 @@ export default {
         ...payload,
       };
     },
-    saveCloseReason(state, {payload}) {
+    saveCloseReason(state, {payload}) {//todo 这几个函数都重复了，提取
       return {
         ...state,
         ...payload,

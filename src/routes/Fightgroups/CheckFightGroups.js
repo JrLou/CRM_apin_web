@@ -222,8 +222,10 @@ export default class CheckFightGroups extends Component {
         title="请确认是否关闭拼团，关闭请输入原因："
         visible={showModal}
         onOk={this.handleOk.bind(this)}
+        okText={'保存'}
         onCancel={this.handleCancel.bind(this)}
         confirmLoading={modalConfirmLoading}
+        maskClosable={false}
       />
       // <Modal
       //   title="请确认是否关闭拼团，关闭请输入原因："
@@ -317,23 +319,26 @@ export default class CheckFightGroups extends Component {
     const {checkFightGroups} = this.props;
     const {basicGoods, basicProgress, basicLoading} = checkFightGroups;
     const goodsColumns = this.getGoodsColumns();
-    const {modalConfirmLoading, showModal} = this.props.checkFightGroups;
 
     return (
       <PageHeaderLayout>
         <Card bordered={false}>
+          {/*拼团信息*/}
           {this.getFightGroupsInfoView()}
           <Divider style={{marginBottom: 32}}/>
 
+          {/*订单信息*/}
           {this.getOrderInfoView(basicLoading, basicGoods, goodsColumns)}
           <Divider style={{marginBottom: 32}}/>
 
+          {/*方案明细*/}
           {this.getProjectDetailView()}
           <Divider style={{marginBottom: 32}}/>
 
+          {/*日志信息*/}
           {this.getLogInfoView(basicProgress)}
 
-
+          {/*所有Modal*/}
           {this.switchModalView()}
         </Card>
       </PageHeaderLayout>
