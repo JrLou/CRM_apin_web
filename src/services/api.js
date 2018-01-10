@@ -65,9 +65,16 @@ export async function demandList(params) {
 export async function queryUserList(params) {
   return request(`/api/userList?${stringify(params)}`);
 }
-//客户列表
+//客户列表 华志林
 export async function queryCustomerList(params) {// /api/member/getMemberList
   return request('/crm/api/member/getMemberList', {
+    method: 'POST',
+    body: params,
+  });
+}
+//拼团列表 暂时未使用，need reWrite
+export async function queryFightGroupsList(params) {// /api/member/getMemberList
+  return request('/crm/api/demandPool/getGroupList', {
     method: 'POST',
     body: params,
   });
