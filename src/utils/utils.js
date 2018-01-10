@@ -140,7 +140,7 @@ export function formatPar(obj = {}) {
 /**
  * 
  * @param {*react组件} obj 
-* @param {*:参数名} name 
+* @param {*:参数名} name (只支持url传参/:name 这种)
  */
 export function getPar(obj, name) {
   if (!obj || !obj.props || !obj.props.match) { return {}; }
