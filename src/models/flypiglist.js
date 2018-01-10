@@ -1,13 +1,11 @@
 import { queryFlyList } from '../services/api';
 
 export default {
-  namespace: 'flypiglist',
+  namespace: 'flyPiglist',
   state: {
-    data: {
-      list: [],
-      pagination: {},
-    },
     loading: true,
+    list: [],
+    total: 0,
   },
   effects: {
     *fetch({ payload }, { call, put }) {
@@ -27,16 +25,17 @@ export default {
     },
   },
   reducers: {
-    save(state, action) {
+    save(state, { payload }) {
       return {
         ...state,
-        data:action.payload,
+        list: payload.data,
+        total: payload.option.total,
       };
     },
-    changeLoading(state, action) {
+    changeLoading(state, { payload }) {
       return {
         ...state,
-        loading: action.payload,
+        loading: payload,
       };
     },
   },

@@ -103,7 +103,10 @@ export async function querySupplierList(params) {
   return request(`/api/suplierList?${stringify(params)}`);
 }
 export async function queryFlyList(params) {
-  return request(`/api/flyList?${stringify(params)}`);
+  return request('/crm/api/order/getOrderList', {
+    method: 'POST',
+    body: params,
+  });
 }
 //李斯奇 政策管理供应商资源
 //供应商列表资源列表
