@@ -14,8 +14,8 @@ function getBreadcrumb(breadcrumbNameMap, url) {
   if (breadcrumbNameMap[urlWithoutSplash]) {
     return breadcrumbNameMap[urlWithoutSplash];
   }
-  let breadcrumb = {};
-  debugger
+  let breadcrumb = {}; 
+  
   Object.keys(breadcrumbNameMap).forEach((item) => {
     const itemRegExpStr = `^${item.replace(/:[\w-%]+/g, '[\\w-%]+')}$`;
     const itemRegExp = new RegExp(itemRegExpStr);
