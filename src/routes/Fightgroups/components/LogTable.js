@@ -4,6 +4,7 @@
 import React, { Component } from 'react'
 import { Table } from 'antd';
 import { Link } from 'dva/router';
+import moment from 'moment';
 class LogTable extends Component {
     constructor(props) {
         super(props);
@@ -11,33 +12,45 @@ class LogTable extends Component {
     render() {
         const loColumns = [{
             title: '推送时间',
-            dataIndex: 'id',
-            render: (text, record) => <Link to={'/fightgroups/demand/checkFightGroups'}>{text}</Link>,
+            dataIndex: 'create_time',
+            render: (text, record) => moment(text).format('YYYY-MM-DD'),
         },
 
         {
             title: '航班号',
-            dataIndex: 'depAirport',
+            render: (text, record) => {
+                return record.flightInfo[0].flight_no + '/' + record.flightInfo[1].flight_no;
+            },
         },
         {
             title: '起飞日期',
-            dataIndex: 'arrAirport',
+            render: (text, record) => {
+                return record.flightInfo[0].time_dep;
+            },
         },
         {
             title: '返回日期',
-            dataIndex: 'createTime',
+            render: (text, record) => {
+                return record.flightInfo[1].time_dep;
+            },
         },
         {
             title: '销售价',
-            dataIndex: 'createTimePeriod',
+            render: (text, record) => {
+                return record.flightInfo[1].sell_price;
+            },
         },
         {
             title: '用户反馈',
             dataIndex: 'status',
+            render: (text, record) => {
+                let innerText = ['取消', '推送', '介绍', '支付超时'];
+                return innerText[text];
+            },
         },
         {
             title: '原因',
-            dataIndex: 'isAllowChange',
+            dataIndex: 'remark',
         }];
         return (
             <Table

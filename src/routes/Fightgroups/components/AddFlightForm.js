@@ -16,8 +16,9 @@ class AddFlightForm extends Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                values.flightDeptimePlanDate = moment(values.flightDeptimePlanDate).format('HH:mm');
-                values.flightArrtimePlanDate = moment(values.flightArrtimePlanDate).format('HH:mm');
+                values.FlightDeptimePlanDate = moment(values.FlightDeptimePlanDate).format('YYYY-MM-DD HH:mm:ss');
+                values.FlightArrtimePlanDate = moment(values.FlightArrtimePlanDate).format('YYYY-MM-DD HH:mm:ss');
+
                 this.props.sumit(values);
             }
         });
@@ -32,7 +33,7 @@ class AddFlightForm extends Component {
                 <div className={css.myFormItem}>
                     <FormItem>
                         <label htmlFor="" className={css.required}>航班号：</label>
-                        {getFieldDecorator("flightNo", {
+                        {getFieldDecorator("FlightNo", {
                             rules: [{ required: true, message: "必填" }, { max: 6, message: "航班号最大6位" }],
                             initialValue: this.props.inputFlightNo
                         })(
@@ -45,7 +46,7 @@ class AddFlightForm extends Component {
                 <div className={css.myFormItem}>
                     <FormItem>
                         <label htmlFor="" className={css.required}>航空公司：</label>
-                        {getFieldDecorator("flightCompany", {
+                        {getFieldDecorator("FlightCompany", {
                             rules: [{ required: true, message: "必填" }, { max: 20, message: "最大输入20位" }],
                         })(
                             <Input placeholder="请输入航空公司全名"
@@ -57,7 +58,7 @@ class AddFlightForm extends Component {
                 <div className={css.myFormItem}>
                     <FormItem className={css.inlineFormItem} style={{ marginRight: '30px' }}>
                         <label htmlFor="" className={css.required}>起飞机场：</label>
-                        {getFieldDecorator("flightDepAirport", {
+                        {getFieldDecorator("FlightDepAirport", {
                             rules: [{ required: true, message: "必填" }, { max: 20, message: "最大输入20位" }],
                         })(
                             <Input placeholder="请输入起飞机场名"
@@ -66,7 +67,7 @@ class AddFlightForm extends Component {
                     </FormItem>
                     <FormItem className={css.inlineFormItem}>
                         <label htmlFor="" className={css.required}>到达机场：</label>
-                        {getFieldDecorator("flightArrAirport", {
+                        {getFieldDecorator("FlightArrAirport", {
                             rules: [{ required: true, message: "必填" }, { max: 20, message: "最大输入20位" }],
                         })(
                             <Input placeholder="请输入到达机场名"
@@ -78,7 +79,7 @@ class AddFlightForm extends Component {
                 <div className={css.myFormItem}>
                     <FormItem className={css.inlineFormItem} style={{ marginRight: '30px' }}>
                         <label htmlFor="" className={css.required}>起飞时间：</label>
-                        {getFieldDecorator("flightDeptimePlanDate", {
+                        {getFieldDecorator("FlightDeptimePlanDate", {
                             rules: [{ required: true, message: "必填" }],
                         })(
                             <TimePicker
@@ -91,7 +92,7 @@ class AddFlightForm extends Component {
                     </FormItem>
                     <FormItem className={css.inlineFormItem}>
                         <label htmlFor="" className={css.required}>到达时间：</label>
-                        {getFieldDecorator("flightArrtimePlanDate", {
+                        {getFieldDecorator("FlightArrtimePlanDate", {
                             rules: [{ required: true, message: "必填" }],
                         })(
                             <TimePicker
@@ -107,7 +108,7 @@ class AddFlightForm extends Component {
                 <div className={css.myFormItem}>
                     <FormItem className={css.inlineFormItem} style={{ marginRight: '30px' }}>
                         <label htmlFor="" className={css.required}>起飞城市：</label>
-                        {getFieldDecorator("flightDep", {
+                        {getFieldDecorator("FlightDep", {
                             rules: [{ required: true, message: "必填" }, { max: 20, message: "最大输入20位" }],
                         })(
                             <Input placeholder="请输入出发城市"
@@ -116,7 +117,7 @@ class AddFlightForm extends Component {
                     </FormItem>
                     <FormItem className={css.inlineFormItem}>
                         <label htmlFor="" className={css.required}>到达城市：</label>
-                        {getFieldDecorator("flightArr", {
+                        {getFieldDecorator("FlightArr", {
                             rules: [{ required: true, message: "必填" }, { max: 20, message: "最大输入20位" }],
                         })(
                             <Input placeholder="请输入到达城市"
@@ -128,7 +129,7 @@ class AddFlightForm extends Component {
                 <div className={css.myFormItem}>
                     <FormItem className={css.inlineFormItem} style={{ marginRight: '30px' }}>
                         <label htmlFor="" className={css.required}>机场三字码：</label>
-                        {getFieldDecorator("flightDepcode", {
+                        {getFieldDecorator("FlightDepcode", {
                             rules: [{ required: true, message: "必填" }, { max: 3, message: "最大输入3位" }],
                         })(
                             <Input placeholder="请输入出发机场三字码"
@@ -137,7 +138,7 @@ class AddFlightForm extends Component {
                     </FormItem>
                     <FormItem className={css.inlineFormItem}>
                         <label htmlFor="" className={css.required}>机场三字码：</label>
-                        {getFieldDecorator("flightArrcode", {
+                        {getFieldDecorator("FlightArrcode", {
                             rules: [{ required: true, message: "必填" }, { max: 3, message: "最大输入3位" }],
                         })(
                             <Input placeholder="请输入到达机场三字码"

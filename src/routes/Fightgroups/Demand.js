@@ -67,14 +67,14 @@ export default class Demand extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="出发城市">
-              {getFieldDecorator('city_dep')(
+              {getFieldDecorator('cityDep')(
                 <Input placeholder="请输入" />
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="到达城市">
-              {getFieldDecorator('city_arr')(
+              {getFieldDecorator('cityArr')(
                 <Input placeholder="请输入" />
               )}
             </FormItem>
@@ -82,7 +82,7 @@ export default class Demand extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem label="需求池类型">
               {getFieldDecorator('poolType', {
-                initialValue: '0',
+                initialValue: '-1',
               })(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
                   <Option value="-1">全部</Option>
