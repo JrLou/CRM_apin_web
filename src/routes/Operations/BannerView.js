@@ -5,5 +5,4 @@ export default class BannerEdit extends PureComponent {
     render(){
       return <Banner {...this.props} edit={true} />
     }
-
 }
