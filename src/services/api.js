@@ -141,37 +141,37 @@ export async function stateAirLine(params) {
 }
 //日志
 export async function getAirLineLogs(params) {
-  return request('/api/resource/getAirLineLogs',{
+  return request('/api/resource/getAirLineLogs', {
     method: 'POST',
     body: params,
   });
 }
 //非常准航线查询
 export async function getaddAirLine(params) {
-  return request('/api/resource/searchAirLine',{
+  return request('/api/resource/searchAirLine', {
     method: 'POST',
     body: params,
   });
 }
 //编辑回显
 export async function getdetailAirLine(params) {
-  return request('/api/resource/detailAirLine',{
+  return request('/api/resource/detailAirLine', {
     method: 'POST',
     body: params,
   });
 }
 
 export async function AccountLogin(params) {
-  const newparams = Object.assign({}, { account: params.account, type:0 })
-  const response = await request('/api/user/getLogicCode',{
-    method:"POST",
-    body:newparams,
+  const newparams = Object.assign({}, { account: params.account, type: 0 })
+  const response = await request('/api/user/getLogicCode', {
+    method: "POST",
+    body: newparams,
   });
-  if (response && response.data && response.code>=1) {
+  if (response && response.data && response.code >= 1) {
     const newparams2 = Object.assign({}, { account: params.account, signature: md5(md5(params.account + md5(params.password)) + response.data) })
-    return request('/api/user/loginByAccount',{
-      method:'POST',
-      body:newparams2,
+    return request('/api/user/loginByAccount', {
+      method: 'POST',
+      body: newparams2,
     });
   }
 }
@@ -208,10 +208,10 @@ export async function flyDetailAddTicket(params) {
   });
 }
 export async function postGroupData(params) {
-  return request('/api/group/postGroupData', { method: 'POST', body: params });
+  return request('/api/demandPool/pushPlan', { method: 'POST', body: params });
 }
 export async function searchFlights(params) {
-  return request('/api/group/searchFlights', { method: 'POST', body: params });
+  return request('/api/resource/searchAirLine', { method: 'POST', body: params });
 }
 export async function addFlights(params) {
   return request('/api/group/addFlights', { method: 'POST', body: params });
@@ -224,5 +224,8 @@ export async function orderList(params) {
   return request('/api/demandPool/getPoolOrderList', { method: 'POST', body: params });
 }
 export async function logList(params) {
-  return request(`/api/group/logs?${stringify(params)}`);
+  return request('/api/demandPool/publishLogs', { method: 'POST', body: params });
+}
+export async function continueAdd(params) {
+  return request('/api/demandPool/pushPlanMore', { method: 'POST', body: params });
 }
