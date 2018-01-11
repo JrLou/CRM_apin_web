@@ -70,11 +70,7 @@ class page extends Component {
   }
 
   render() {
-<<<<<<< HEAD
-
-=======
     const {flightstockAdd: {accurate, details}} = this.props;
->>>>>>> e58ae937d149511d8ebd7f976dca376fe9600ecb
     return (
       <div className={css.formWapper}>
         <Spin className={css.Spin} spinning={this.state.loading}>
