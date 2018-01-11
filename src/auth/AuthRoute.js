@@ -18,11 +18,11 @@ export default ({ component: Component, ...rest }) => {
     // }
     render() {
       const Auth = this.props.menus.some(item => item && item.path && item.path == rest.path)
-      return <Route {...rest} render={props => (
-        !null ? (
+      return <Route path={rest.path}  key={rest.key} exact={rest.exact} render={props => {
+        return (!null ? (
           <Component {...props} />
         ) : <NotAuth />
-      )} />
+        )} }/>
     }
   }
   const A = connect(state => ({

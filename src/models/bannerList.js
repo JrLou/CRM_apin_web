@@ -1,18 +1,19 @@
-import {queryBanner,deleteBanner,changeStatus} from '../services/api';
+import {queryBanner,deleteBanner,changeStatus,baseImg,addBannerImg} from '../services/api';
 import {routerRedux} from 'dva/router';
 
 export default {
   namespace: 'bannerList',
 
   state: {
-    data: {
-      list: [],
-      pagination: {},
+    data  : {
+        data:[],
+        option:{}
     },
     editData:{
 
     },
     loading: true,
+    banner_url:'',
   },
 
   effects:
@@ -24,10 +25,12 @@ export default {
           payload: true,
         });
         const response = yield call(queryBanner, payload);
-        yield put({
-          type: 'save',
-          payload: response.data,
-        });
+        if(response && response.code >=1){
+          yield put({
+            type: 'save',
+            payload: response,
+          });
+        }
         yield put({
           type: 'changeLoading',
           payload: false,
@@ -98,6 +101,25 @@ export default {
           payload:{},
         });
         yield put(routerRedux.push('/operations/banner'))
+      },
+      * addBanner({payload,callback},{call,put}){
+        //确定编辑，成功以后跳转到列表页
+        const response = yield call(addBannerImg, payload);
+        if(response && response.code >=1){
+          yield put({
+            type: 'changeEditData',
+            payload:{},
+          });
+          yield put(routerRedux.push('/operations/banner'))
+        }
+      },
+      * baseImg({payload,callback},{call,put}){
+        //base64传给后台 后台返一个 图片url
+        const response = yield call(baseImg, payload);
+        yield put({
+          type: 'changeBaseImg',
+          payload:response.data,
+        });
       }
     },
   reducers: {
@@ -117,6 +139,12 @@ export default {
       return {
         ...state,
         loading: action.payload,
+      };
+    },
+    changeBaseImg(state, action) {
+      return {
+        ...state,
+        banner_url: action.payload,
       };
     },
   },

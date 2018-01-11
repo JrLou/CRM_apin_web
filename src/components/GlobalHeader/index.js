@@ -10,11 +10,11 @@ import styles from './index.less';
 const { Header } = Layout;
 
 export default class GlobalHeader extends PureComponent {
-  componentDidMount() {
-    this.props.dispatch({
-      type: 'user/fetchCurrent',
-    });
-  }
+  // componentDidMount() {
+  //   this.props.dispatch({
+  //     type: 'user/fetchCurrent',
+  //   });
+  // }
   componentWillUnmount() {
     this.triggerResizeEvent.cancel();
   }
@@ -79,9 +79,6 @@ export default class GlobalHeader extends PureComponent {
     } = this.props;
     const menu = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={this.handleMenuClick}>
-        <Menu.Item disabled><Icon type="user" />个人中心</Menu.Item>
-        <Menu.Item disabled><Icon type="setting" />设置</Menu.Item>
-        <Menu.Divider />
         <Menu.Item key="logout"><Icon type="logout" />退出登录</Menu.Item>
       </Menu>
     );
@@ -93,16 +90,13 @@ export default class GlobalHeader extends PureComponent {
           type={collapsed ? 'menu-unfold' : 'menu-fold'}
           onClick={this.toggle}
         />
-        {/*<div className={styles.right}>
-          {currentUser.name ? (
+        <div className={styles.right}>
             <Dropdown overlay={menu}>
               <span className={`${styles.action} ${styles.account}`}>
-                <Avatar size="small" className={styles.avatar} src={currentUser.avatar} />
-                {currentUser.name}
+                {currentUser?currentUser:"菜单"}
               </span>
             </Dropdown>
-          ) : <Spin size="small" style={{ marginLeft: 8 }} />}
-        </div>*/}
+        </div>
       </Header>
     );
   }

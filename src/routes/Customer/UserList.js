@@ -1,15 +1,10 @@
-import React, { PureComponent } from 'react';
-import { connect } from 'dva';
+import React, {PureComponent} from 'react';
+import {connect} from 'dva';
 import {
-  Row,
-  Col,
   Card,
   Form,
   Input,
-  Select,
   Button,
-  Modal,
-  DatePicker,
   message
 } from 'antd';
 import StandardTable from './TableList';
@@ -18,8 +13,6 @@ import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './UserList.less';
 
 const FormItem = Form.Item;
-const { Option } = Select;
-const RangePicker = DatePicker.RangePicker;
 const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
 
 @connect(state => ({
@@ -30,16 +23,14 @@ export default class TableList extends PureComponent {
   state = {
     selectedRows: [],
     formValues: {},
-    page: {
-      pageNo: 1,
-      pageSize: 10
-    }
   };
+
   componentDidMount() {
     this.props.dispatch({
       type: 'userList/fetch'
     });
   }
+
   // getList(){
   //   const values = this.props.form.getFieldsValue();
   //   for (let item in values) {
@@ -57,18 +48,20 @@ export default class TableList extends PureComponent {
   //     payload: params,
   //   });
   // }
-  handleStandardTableChange = (pagination, filtersArg, sorter) => {
-    const { dispatch } = this.props;
-    const { formValues } = this.state;
+  handleStandardTableChange = (pagination, filtersArg, sorter) => {//分页、排序、筛选变化时触发
+    console.log("pagination", pagination);
+    const {dispatch} = this.props;
+    const {formValues} = this.state;
 
     const filters = Object.keys(filtersArg).reduce((obj, key) => {
-      const newObj = { ...obj };
+      const newObj = {...obj};
       newObj[key] = getValue(filtersArg[key]);
       return newObj;
     }, {});
+
     const params = {
-      currentPage: pagination.current,
-      pageSize: pagination.pageSize,
+      p: pagination.current,
+      pc: pagination.pageSize,
       ...formValues,
       ...filters,
     };
@@ -80,9 +73,10 @@ export default class TableList extends PureComponent {
       type: 'userList/fetch',
       payload: params,
     });
+
   };
   handleFormReset = () => {
-    const { form, dispatch } = this.props;
+    const {form, dispatch} = this.props;
     form.resetFields();
     dispatch({
       type: 'userList/fetch',
@@ -94,12 +88,12 @@ export default class TableList extends PureComponent {
     this.setState({
       selectedRows: rows,
     });
-  }
+  };
 
   handleSearch = (e) => {
     e.preventDefault();
 
-    const { dispatch, form } = this.props;
+    const {dispatch, form} = this.props;
 
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -115,49 +109,71 @@ export default class TableList extends PureComponent {
         payload: values,
       });
     });
-  }
+  };
 
-  renderSimpleForm() {
-    const { getFieldDecorator } = this.props.form;
+  renderForm() {
+    const {getFieldDecorator} = this.props.form;
+    const formItemStyle = {
+      width: "350px",
+      display: "inline-block"
+    };
+    const inputStyle = {
+      width: "220px",
+    };
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem label="微信昵称:">
-              {getFieldDecorator('no', { initialValue:"", rules: [{ max: 30, message: '长度不能超过30' }], })
-                (<Input placeholder="请输入…" />)
-              }
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="手机号:">
-              {getFieldDecorator('iphone', { initialValue: "", rules: [{ max: 30, message: '长度不能超过30' }], })
-                (<Input placeholder="请输入…" />)
-              }
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <span className={styles.submitButtons}>
-              <Button type="primary" htmlType="submit">查询</Button>
-              <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>重置</Button>
-            </span>
-          </Col>
-        </Row>
+        <FormItem label="微信昵称:" style={formItemStyle}>
+          {getFieldDecorator('name', {
+            initialValue: "",
+            rules: [{max: 30, message: '长度不能超过30'}],
+          })
+          (<Input placeholder="请输入" style={inputStyle}/>)
+          }
+        </FormItem>
+        <FormItem label="手机号:" style={formItemStyle}>
+          {getFieldDecorator('mobile', {
+            initialValue: "",
+            rules: [{
+              pattern: /^\d{0,11}$/,
+              message: '请输入正确的手机号'
+            }],
+          })
+          (<Input placeholder="请输入" style={inputStyle}/>)
+          }
+        </FormItem>
+        <FormItem style={formItemStyle}>
+          <Button type="primary" htmlType="submit">查询</Button>
+          <Button style={{marginLeft: 8}} onClick={this.handleFormReset}>重置</Button>
+        </FormItem>
       </Form>
     );
   }
 
   render() {
-    const { userList: { loading: ruleLoading, data } } = this.props;
-    const { selectedRows } = this.state;
-
+    const {userList: {loading: ruleLoading, data,}} = this.props;
+    const {selectedRows} = this.state;
+    // const breadcrumbList = [{
+    //   title: '一级菜单',
+    //   href: '/',
+    // }, {
+    //   title: '二级菜单',
+    //   href: '/',
+    // }, {
+    //   title: '三级菜单',
+    // }];
     return (
-      <PageHeaderLayout>
-        <Card bordered={false}>
+      <PageHeaderLayout
+        // breadcrumbList={breadcrumbList}
+      >
+        <Card
+          bordered={false}
+          style={{minWidth: '780px'}}
+        >
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>
-              {this.renderSimpleForm()}
+              {this.renderForm()}
             </div>
+            <p>共搜索到{data.option.total}条数据</p>
             <StandardTable
               selectedRows={selectedRows}
               loading={ruleLoading}

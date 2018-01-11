@@ -1,306 +1,222 @@
-// import React, { Component } from 'react';
-// import { Link } from 'dva/router';
-// import { connect } from 'dva';
-// import PageHeaderLayout from '../../layouts/PageHeaderLayout';
-// import {
-//   Row,
-//   Col,
-//   Card,
-//   Form,
-//   Input,
-//   Select,
-//   Button,
-//   Modal,
-//   DatePicker,
-//   message
-// } from 'antd';
-// export default class Analysis extends Component {
-//   render() {
-//     return (
-//       <PageHeaderLayout>
-//         供应商资源
-
-//       </PageHeaderLayout>
-//     );
-//   }
-// }
-
-
-import React, { PureComponent } from 'react';
-import { connect, Link} from 'dva';
-import { Row, Col, Card, Form, Input, Select, Icon, Button, Dropdown, Menu, InputNumber, DatePicker, Modal, message } from 'antd';
-import SupplierListTable from './SupplierListTable';
+import React, {PureComponent} from 'react';
+import {connect} from 'dva';
+import {Link} from 'dva/router';
+import { Row, Col, Card, Form, Input, Select, Icon, Button, Dropdown, Menu, InputNumber, DatePicker, Modal, message, Table} from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
-
 import styles from './TableList.less';
+import moment from 'moment';
 
+const {RangePicker} = DatePicker;
 const FormItem = Form.Item;
-const { Option } = Select;
-const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
-
+const {Option} = Select;
+const status = ['有效', '无效' ];
 @connect(state => ({
-  flypiglist: state.flypiglist,
+  flyPiglist: state.flyPiglist,
 }))
 @Form.create()
 export default class TableList extends PureComponent {
   state = {
-    addInputValue: '',
-    modalVisible: false,
-    expandForm: false,
-    selectedRows: [],
     formValues: {},
+    pagination: {
+      p: 1,
+      pc: 10,
+    },
+    id: '',
+    timeArr: [],
   };
 
   componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'flypiglist/fetch',
-    });
+    this.handleSearch();
   }
 
-  handleStandardTableChange = (pagination, filtersArg, sorter) => {
-    const { dispatch } = this.props;
-    const { formValues } = this.state;
-
-    const filters = Object.keys(filtersArg).reduce((obj, key) => {
-      const newObj = { ...obj };
-      newObj[key] = getValue(filtersArg[key]);
-      return newObj;
-    }, {});
-
-    const params = {
-      currentPage: pagination.current,
-      pageSize: pagination.pageSize,
-      ...formValues,
-      ...filters,
-    };
-    if (sorter.field) {
-      params.sorter = `${sorter.field}_${sorter.order}`;
-    }
-    dispatch({
-      type: 'flypiglist/fetch',
-      payload: params,
-    });
-  }
-
-  handleFormReset = () => {
-    const { form, dispatch } = this.props;
-    form.resetFields();
+  handleTableChange(pagination) {
     this.setState({
-      formValues: {},
-    });
-    dispatch({
-      type: 'flypiglist/fetch',
-      payload: {},
+      pagination: {
+        p: pagination.current,
+        pc: pagination.pageSize,
+      }
+    }, () => {
+      this.handleSearch();
     });
   }
 
-  toggleForm = () => {
+  handleFormReset() {
+    this.props.form.resetFields();
+    const param = this.props.form.getFieldsValue();
     this.setState({
-      expandForm: !this.state.expandForm,
+      formValues: param,
+      pagination: {
+        p: 1,
+        pc: 10,
+      }
+    }, () => {
+      this.handleSearch();
     });
-  }
+  };
 
-  handleMenuClick = (e) => {
-    const { dispatch } = this.props;
-    const { selectedRows } = this.state;
-
-    if (!selectedRows) return;
-
-    switch (e.key) {
-      case 'remove':
-        dispatch({
-          type: 'flypiglist/remove',
-          payload: {
-            no: selectedRows.map(row => row.no).join(','),
-          },
-          callback: () => {
-            this.setState({
-              selectedRows: [],
-            });
-          },
-        });
-        break;
-      default:
-        break;
-    }
-  }
-
-  handleSelectRows = (rows) => {
+  selectTime(date, dateString) {
     this.setState({
-      selectedRows: rows,
+      timeArr: dateString,
     });
   }
 
-  handleSearch = (e) => {
-    e.preventDefault();
-
-    const { dispatch, form } = this.props;
-
+  handleSearch() {
+    const {dispatch, form} = this.props, {pagination, timeArr} = this.state;
     form.validateFields((err, fieldsValue) => {
-      if (err) return;
+      if (!err) {
+        const values = {
+          ...fieldsValue,
+        };
+        values.group_type = Number(values.group_type);
+        for (let item in values) {
+          if (values[item] === undefined) {
+            values[item] = '';
+          }
+        }
+        values.order_status = typeof values.order_status == 'string' ? '' : Number(values.order_status);
 
-      const values = {
-        ...fieldsValue,
-        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
-      };
-
-      this.setState({
-        formValues: values,
-      });
-
-      dispatch({
-        type: 'flypiglist/fetch',
-        payload: values,
-      });
+        this.setState({
+          formValues: values,
+        });
+        let params = Object.assign(pagination, values);
+        dispatch({
+          type: 'flyPiglist/fetch',
+          payload: params,
+        });
+      }
     });
   }
 
-  handleModalVisible = (flag) => {
-    this.setState({
-      modalVisible: !!flag,
-    });
-  }
-
-  handleAddInput = (e) => {
-    this.setState({
-      addInputValue: e.target.value,
-    });
-  }
-
-  handleAdd = () => {
-    this.props.dispatch({
-      type: 'flypiglist/add',
-      payload: {
-        description: this.state.addInputValue,
-      },
-    });
-    message.success('添加成功');
-    this.setState({
-      modalVisible: false,
-    });
-  }
-  renderAdvancedForm() {
-    const { getFieldDecorator } = this.props.form;
+  renderForm() {
+    const {getFieldDecorator} = this.props.form;
     return (
-      <Form onSubmit={this.handleSearch} layout="inline">
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem label="规则编号">
-              {getFieldDecorator('no')(
-                <Input placeholder="请输入" />
+      <Form layout="inline">
+        <Row gutter={{md: 6, lg: 24, xl: 48}}>
+          <Col md={6} sm={24}>
+            <FormItem label="出发城市">
+              {getFieldDecorator('cityDep')(
+                <Input placeholder="请输入"/>
               )}
             </FormItem>
           </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="使用状态">
-              {getFieldDecorator('status')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">关闭</Option>
-                  <Option value="1">运行中</Option>
+          <Col md={6} sm={24}>
+            <FormItem label="到达城市">
+              {getFieldDecorator('cityArr')(
+                <Input placeholder="请输入"/>
+              )}
+            </FormItem>
+          </Col>
+          <Col md={6} sm={24}>
+            <FormItem label="去程航班号">
+              {getFieldDecorator('airLineGo')(
+                <Input placeholder="请输入"/>
+              )}
+            </FormItem>
+          </Col>
+          <Col md={6} sm={24}>
+            <FormItem label="返程航班号">
+              {getFieldDecorator('airLineBack')(
+                <Input placeholder="请输入" type="tel"/>
+              )}
+            </FormItem>
+          </Col>
+          <Col md={6} sm={24}>
+            <FormItem label="资源状态">
+              {getFieldDecorator('state', {
+                initialValue: ''
+              })(
+                <Select placeholder="请选择" style={{width: '100%'}}>
+                  <Option value='-1'>全部</Option>
+                  {
+                    status.map((item, index) => <Option value={index} key={index}>{item}</Option>)
+                  }
                 </Select>
               )}
             </FormItem>
           </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="调用次数">
-              {getFieldDecorator('number')(
-                <InputNumber style={{ width: '100%' }} />
+          <Col md={6} sm={24}>
+            <FormItem label="资源ID">
+              {getFieldDecorator('id')(
+                <Input placeholder="请输入"/>
               )}
             </FormItem>
+          </Col>
+          <Col md={6} sm={24}>
+            <div style={{ float: 'right', marginBottom: 24 }}>
+            <Button type="primary" onClick={::this.handleSearch}>查询</Button>
+            <Button style={{marginLeft: 8}} onClick={::this.handleFormReset}>重置</Button>
+            </div>
           </Col>
         </Row>
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={8} sm={24}>
-            <FormItem label="更新日期">
-              {getFieldDecorator('date')(
-                <DatePicker style={{ width: '100%' }} placeholder="请输入更新日期" />
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="使用状态">
-              {getFieldDecorator('status3')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">关闭</Option>
-                  <Option value="1">运行中</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="使用状态">
-              {getFieldDecorator('status4')(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="0">关闭</Option>
-                  <Option value="1">运行中</Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-        </Row>
-        <div style={{ overflow: 'hidden' }}>
-          <span style={{ float: 'right', marginBottom: 24 }}>
-            <Button type="primary" htmlType="submit">查询</Button>
-            <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>重置</Button>
-            <a style={{ marginLeft: 8 }} onClick={this.toggleForm}>
-              收起 <Icon type="up" />
-            </a>
-          </span>
-        </div>
       </Form>
     );
   }
 
   render() {
-    const { flypiglist: { loading: ruleLoading, data } } = this.props;
-    const { selectedRows, modalVisible, addInputValue } = this.state;
-    const menu = (
-      <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="remove">删除</Menu.Item>
-        <Menu.Item key="approval">批量审批</Menu.Item>
-      </Menu>
-    );
+    const {flyPiglist: {loading, list, total}} = this.props;
+    const {id} = this.state;
+
+    const columns = [{
+        title: '资源ID',
+        dataIndex: 'id',
+      }, {
+        title: '出发/回程城市',
+        dataIndex: 'city_dep',
+      }, {
+        title: '航空公司',
+        dataIndex: 'city_arr'
+      }, {
+        title: '出发/回程航班号',
+        dataIndex: 'city_arr'
+      }, {
+        title: '出发日期',
+        dataIndex: 'dep_yyyymm',
+      }, {
+        title: '出发时刻',
+        dataIndex: 'dep_yyyymm',
+      }, {
+        title: '回程日期',
+        dataIndex: 'dep_yyyymm',
+      }, {
+        title: '回程时刻',
+        dataIndex: 'dep_yyyymm',
+      }, {
+        title: '含税价',
+        dataIndex: 'adult_count',
+        render: val => `￥${val}`,
+      }, {
+        title: '折扣',
+        dataIndex: 'adult_count',
+        render: val => `${val}`,
+      }, {
+        title: '状态',
+        dataIndex: 'order_status',
+        render: (text) => {
+          return status[text];
+        },
+      }, {
+        title: '更新时间',
+        dataIndex: 'create_time',
+        render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
+      }];
 
     return (
-      <PageHeaderLayout title="查询表格">
+      <PageHeaderLayout>
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>
-              {this.renderAdvancedForm()}
+              {this.renderForm()}
             </div>
-            {/* <Link to={'/supplier/supplierList/typeIn'}>
-              <Button>录入资源</Button>
-            </Link>
-            <Link to={'/supplier/supplierList/edit'}>
-              <Button>编辑资源</Button>
-            </Link>
-            <Link to={'/supplier/supplierList/price'}>
-              <Button>航班库存价格</Button>
-            </Link> */}
-            <SupplierListTable
-              selectedRows={selectedRows}
-              loading={ruleLoading}
-              data={data}
-              onSelectRow={this.handleSelectRows}
-              onChange={this.handleStandardTableChange}
+            <Table
+              dataSource={list}
+              columns={columns}
+              pagination={{showSizeChanger: true, showQuickJumper: true, total}}
+              loading={loading}
+              onChange={::this.handleTableChange}
+              rowKey="id"
             />
           </div>
         </Card>
-        <Modal
-          title="新建规则"
-          visible={modalVisible}
-          onOk={this.handleAdd}
-          onCancel={() => this.handleModalVisible()}
-        >
-          <FormItem
-            labelCol={{ span: 5 }}
-            wrapperCol={{ span: 15 }}
-            label="描述"
-          >
-            <Input placeholder="请输入" onChange={this.handleAddInput} value={addInputValue} />
-          </FormItem>
-        </Modal>
       </PageHeaderLayout>
     );
   }

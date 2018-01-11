@@ -1,0 +1,157 @@
+//@import '../../../theme.less';
+
+.noNumber {
+  color: #f07e32;
+
+}
+
+:global {
+  .showMyCalendar {
+    .datePicked {
+      text-align: center;
+      line-height: 50px;
+      cursor: pointer;
+      height: 50px;
+      color: #000;
+      margin: 0;
+    }
+
+    .main {
+      transition: height .6s;
+      overflow: hidden;
+      height: auto;
+
+      .calendarHeader {
+        height: 50px;
+        text-align: center;
+
+        span {
+          position: relative;
+          display: inline-block;
+          height: 50px;
+          line-height: 50px;
+          color: #060305;
+        }
+
+        span.prev {
+          font-size: 20px;
+          left: 20px;
+          float: left;
+          cursor: pointer;
+        }
+
+        span.next {
+          font-size: 20px;
+          right: 20px;
+          float: right;
+          cursor: pointer;
+        }
+
+        span.dateInfo {
+          cursor: default;
+          font-size: 16px;
+        }
+      }
+
+      table.calendarMain {
+        border-spacing: 20px;
+        border-collapse: separate;
+        margin: 0 auto;
+
+        tbody tr {
+          td {
+            display: inline-block;
+            padding-top: 5px;
+            box-sizing: border-box;
+            font-size: 10px;
+            text-align: center;
+            color: #7f7f7f;
+            // border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: not-allowed;
+
+            &.pointer {
+              cursor: pointer;
+              color: #000;
+            }
+
+            &.beforeNow {
+              cursor: default;
+              color: #aaa;
+            }
+
+            &:not(:last-child) {
+              margin-right: 12px;
+            }
+          }
+
+          td.nextMonth,
+          td.prevMonth {
+            color: #7f7f7f;
+            cursor: default;
+          }
+
+          td.canPick {
+            cursor: pointer;
+
+            span {
+              color: #2DB7F5;
+              font-weight: bold;
+            }
+
+            div {
+              color: green;
+            }
+          }
+
+          td.picked {
+            padding: 2px 0;
+            background: #2db7f5;
+            border-radius: 50%;
+            color: #fff;
+
+            span {
+              color: #fff;
+            }
+
+            div {
+              color: #e8e7f0;
+              padding: 0 2px;
+            }
+          }
+        }
+
+      }
+
+      .dayCheckGroup {
+        text-align: center;
+        margin-top: 15px;
+      }
+
+      .calendarFooter {
+        height: 50px;
+        text-align: right;
+        padding-right: 20px;
+      }
+    }
+
+    .ant-checkbox-wrapper {
+      width: 48px;
+
+      span:last-child {
+        display: block;
+        text-align: center;
+        font-size: 12px;
+        color: #797979;
+        border-color: #797979;
+        margin-top: 5px;
+      }
+    }
+
+    //.ant-checkbox-wrapper:not(:last-child) {
+    //  margin-right: 0;
+    //}
+  }
+
+}

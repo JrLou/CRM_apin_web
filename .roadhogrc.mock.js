@@ -1,12 +1,13 @@
 import mockjs from 'mockjs';
-import { getRule, postRule} from './mock/rule';
-import { getUserList} from './mock/userlist';
+import { getRule, postRule } from './mock/rule';
+import { getUserList } from './mock/userlist';
 import { entrust } from './mock/entrust';
-import {groupsList} from './mock/groupsList'
+import { groupsList, demandList,viewList,orderList } from './mock/groupsList'
 import { getActivities, getNotice, getFakeList } from './mock/api';
 import { bannerList } from './mock/bannerList.js';
 import {getSuplierList} from './mock/supplierlist';
 import {getFlylist} from './mock/flylist';
+import {getFlightstock} from './mock/getFlightstock';
 import { getFakeChartData } from './mock/chart';
 import { imgMap } from './mock/utils';
 import { getProfileBasicData } from './mock/profile';
@@ -73,11 +74,12 @@ const proxy = {
   }),
   'GET /api/userList':getUserList,
   'GET /api/bannerList':bannerList,
-  'GET /api/groupsList':groupsList,
+  'POST /api/groupsList':groupsList,
   'GET /api/deleteBanner':bannerList,
   'GET /api/changeStatus':bannerList,
   'GET /api/suplierList' :getSuplierList,
   'GET /api/flyList' :getFlylist,
+  'GET /api/flightstock' :getFlightstock,
   'GET /api/entrust' :entrust,
   'GET /api/fake_chart_data': getFakeChartData,
   'GET /api/profile/basic': getProfileBasicData,
@@ -175,6 +177,10 @@ const proxy = {
       message: 'success',
     });
   },
+  'POST /api/group/demandList': demandList,
+  'POST /api/group/viewList': viewList,
+  'POST /api/group/orderList': orderList,
+
 };
 
 export default noProxy ? {} : delay(proxy, 1000);

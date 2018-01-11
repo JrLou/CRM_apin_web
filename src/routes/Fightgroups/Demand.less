@@ -5,6 +5,8 @@
   margin-bottom: -24px;
 
   .card {
+    cursor: default;
+
     :global {
       .ant-card-meta-title {
         margin-bottom: 12px;
@@ -113,70 +115,48 @@
   }
 }
 
-.formItem {
-  margin-bottom: 10px;
-}
+.tableListForm {
+  :global {
+    .ant-form-item {
+      margin-bottom: 24px;
+      margin-right: 0;
+      display: flex;
 
-.btn {
-  float: right;
-  margin-top: 3px;
-  width: 28%;
-  padding: 0;
-  text-align: center;
-}
+      > .ant-form-item-label {
+        width: auto;
+        line-height: 32px;
+        padding-right: 8px;
+      }
+    }
 
-.noFlight {
-  text-align: center;
-  margin: 15px 0;
+    .ant-form-item-control-wrapper {
+      flex: 1;
+    }
+  }
+
+  .submitButtons {
+    white-space: nowrap;
+    margin-bottom: 24px;
+  }
+}
+//card
+.cardTitle {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: rgba(182, 88, 8, 0.73);
+  border-radius: 50%;
+  margin-right: 10px;
+
+  &.success {
+    background: #17ff27;
+  }
 }
 
 :global {
-  .searchForm {
-    .ant-calendar-picker,
-    .ant-time-picker {
-      width: 100%;
-    }
-
-    .notFull .ant-input {
-      width: 70%;
-    }
-  }
-
-  .tableListForm {
-    :global {
-      .ant-form-item {
-        margin-bottom: 24px;
-        margin-right: 0;
-        display: flex;
-
-        > .ant-form-item-label {
-          width: auto;
-          line-height: 32px;
-          padding-right: 8px;
-        }
-      }
-
-      .ant-form-item-control-wrapper {
-        flex: 1;
-      }
-    }
-
-    .submitButtons {
-      white-space: nowrap;
-      margin-bottom: 24px;
-    }
-  }
-  //card
-  .cardTitle {
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    background: rgba(182, 88, 8, 0.73);
-    border-radius: 50%;
-    margin-right: 10px;
-
-    &.success {
-      background: #17ff27;
+  .poolListBox {
+    .ant-list-pagination {
+      margin-bottom: 25px;
     }
   }
 }

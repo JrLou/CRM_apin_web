@@ -1,182 +1,475 @@
-import React, { Component } from 'react';
-import { connect } from 'dva';
-import { Card, Badge, Table, Divider,Icon } from 'antd';
+import React, {Component} from 'react';
+import {connect} from 'dva';
+import {Card, Table, Divider, Icon, Button, Input, Modal, Badge} from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import DescriptionList from '../../components/DescriptionList';
-import ImageWrapper from '../../components/ImageWrapper';
-import styles from './EntrustProfile.less';
+import styles from './FlyingpigDetail.less';
+import timeHelp from '../../utils/TimeHelp.js';
 
-const { Description } = DescriptionList;
-
-const progressColumns = [{
-  title: '时间',
-  dataIndex: 'time',
-  key: 'time',
-}, {
-  title: '当前进度',
-  dataIndex: 'rate',
-  key: 'rate',
-}, {
-  title: '状态',
-  dataIndex: 'status',
-  key: 'status',
-  render: text => (
-    text === 'success' ? <Badge status="success" text="成功" /> : <Badge status="processing" text="进行中" />
-  ),
-}, {
-  title: '操作员ID',
-  dataIndex: 'operator',
-  key: 'operator',
-}, {
-  title: '耗时',
-  dataIndex: 'cost',
-  key: 'cost',
-}, {
-  title:"城市图片",
-  key:"img_url",
-  render:(text, record, index) => {
-      // 生成复杂数据的渲染函数，参数分别为当前行的值，当前行数据，行索引，@return里面可以设置表格行/列合并
-      if (!record.img_url) {
-          return <ImageWrapper className={styles.picTable} src="https://os.alipayobjects.com/rmsportal/mgesTPFxodmIwpi.png" desc="示意图"/>
-      } else {
-          return <span>无</span>
-      }}
-
-}];
-
+const {TextArea} = Input;
+const confirm = Modal.confirm;
+const {Description} = DescriptionList;
+const certType = ['身份证', '护照', '港澳通行证', '台胞证'],
+      payType = ['线下支付', '支付宝', '微信', '银联'],
+      status = ['待付款','委托中', '方案选择中', '待付款', '待出票', '已出票', '出票失败', '委托过期', '委托关闭'];
 @connect(state => ({
-  profile: state.profile,
+  flyingpigDetail: state.flyingpigDetail,
 }))
 export default class BasicProfile extends Component {
+  state = {
+    id: this.props.location.state.id || '',
+    order_status: this.props.location.state.order_status || 0,
+    inputPrice: this.price || 0,
+    isEdit: false,
+  };
+
   componentDidMount() {
-    const { dispatch } = this.props;
+    const {dispatch} = this.props;
     dispatch({
-      type: 'profile/fetchBasic',
+      type: 'flyingpigDetail/getDetail',
+      payload: {id: this.state.id}
     });
   }
 
-  render() {
-    const { profile } = this.props;
-    const { basicGoods, basicProgress, basicLoading } = profile;
-    let goodsData = [];
-    if (basicGoods.length) {
-      let num = 0;
-      let amount = 0;
-      basicGoods.forEach((item) => {
-        num += Number(item.num);
-        amount += Number(item.amount);
-      });
-      goodsData = basicGoods.concat({
-        id: '总计',
-        num,
-        amount,
-      });
+  inputPrice(e) {
+    this.setState({
+      inputPrice: e.target.value
+    })
+  }
+
+  isEdit() {
+    let {isEdit} = this.state;
+    this.setState({
+      isEdit: !isEdit
+    });
+    if (isEdit) {
+      alert(1);
     }
-    const renderContent = (value, row, index) => {
-      const obj = {
-        children: value,
-        props: {},
-      };
-      if (index === basicGoods.length) {
-        obj.props.colSpan = 0;
-      }
-      return obj;
+  }
+
+  ticketConfirm() {
+    let ticketInfo = [], {dispatch, flyingpigDetail: {ticketResponse}} = this.props;
+    for (let i = 0; i < this.passengerData.length; i++) {
+      let user = this.passengerData[i], ticket = user.ticketDep + ',' + user.ticketArr;
+      ticketInfo.push({id: user.id, ticket: ticket})
+    }
+    let params = {
+      group_id: this.orderData.group_id,
+      order_id: this.orderData.id,
+      ticketInfo: ticketInfo,
     };
-    const goodsColumns = [{
-      title: '商品编号',
+    confirm({
+      title: '是否确认出票?',
+      content: '出票后，将无法修改',
+      onOk() {
+        dispatch({
+          type: 'flyingpigDetail/addTicket',
+          payload: {ticketObj: params}
+        });
+        if (ticketResponse.code > 0) {
+          message.success('出票成功');
+          dispatch(routerRedux.push('/order/flyingpig'));
+        } else {
+          message.error('出票失败');
+        }
+      },
+      onCancel() {
+      },
+    });
+  }
+
+  failReason(reason) {
+    console.log("提交成功了", reason);
+  }
+
+  render() {
+    const {inputPrice, isEdit, order_status} = this.state;
+    let {flyingpigDetail: {groupVoyage, log, order, voyage, orderGroup, passenger, payrecord, loading}} = this.props;
+    this.adult_count = order.adult_count || 1;
+    this.price = order.settlement_amount;
+    //订单信息数据
+    const orderColumns = [{
+      title: '航班号',
+      dataIndex: 'flight_no',
+      key: 'flight_no',
+    }, {
+      title: '出发机场',
+      dataIndex: 'airport_dep_name',
+      key: 'airport_dep_name',
+    }, {
+      title: '到达机场',
+      dataIndex: 'airport_arr_name',
+      key: 'airport_arr_name',
+    }, {
+      title: '出发时间',
+      dataIndex: 'time_dep',
+      key: 'time_dep',
+      render: (text) => {
+        return timeHelp.getYMDHMS(text);
+      }
+    }, {
+      title: '到达时间',
+      dataIndex: 'time_arr',
+      key: 'time_arr',
+      render: (text) => {
+        return timeHelp.getYMDHMS(text);
+      }
+    }, {
+      title: '人数',
+      dataIndex: '6',
+      key: '6',
+      render: () => {
+        return this.adult_count
+      }
+    }];
+
+    //乘机人信息
+    const passengerColumns = [{
+      title: '姓名',
+      dataIndex: 'cname',
+      key: 'cname'
+    }, {
+      title: '性别',
+      dataIndex: 'gender',
+      key: 'gender',
+      render: (text) => {
+        return text == 1 ? '男' : text == 2 ? '女' : '';
+      }
+    }, {
+      title: '证件类型',
+      dataIndex: 'cert_type',
+      key: 'cert_type',
+      render: (text) => {
+        return certType[text - 1];
+      }
+    }, {
+      title: '证件号',
+      dataIndex: 'cert_no',
+      key: 'cert_no',
+    }, {
+      title: '国籍',
+      dataIndex: 'nation',
+      key: 'nation',
+    }, {
+      title: '出生日期',
+      dataIndex: 'birthday',
+      key: 'birthday',
+      render: (text) => {
+        let date1 = String(text).substr(0, 4) || '', date2 = String(text).substr(4, 2) || '',
+          date3 = String(text).substr(6, 2) || '';
+        return date1 + '-' + date2 + '-' + date3
+      }
+    }, {
+      title: '证件有效期',
+      dataIndex: 'expire_time',
+      key: 'expire_time',
+    }, {
+      title: '联系电话',
+      dataIndex: 'phone',
+      key: 'phone',
+    }, {
+      title: '票号',
+      dataIndex: 'ticket',
+      key: 'ticket',
+      render: (text, data) => {
+        return (<span>
+          {order_status == 4 ?
+            <span>去<Input className={styles.inputTicket} />返<Input className={styles.inputTicket} /></span>
+            :
+            order_status == 5 ?
+            <span>去 <span className={styles.showTicket}>lllllllll</span> 返 <span className={styles.showTicket}>333333333</span></span>
+            : null
+          }
+        </span>
+        )
+      }
+    }];
+
+    //支付信息
+    const payColumns = [{
+      title: '支付单号',
       dataIndex: 'id',
       key: 'id',
-      render: (text, row, index) => {
-        if (index < basicGoods.length) {
-          return <a href="">{text}</a>;
-        }
-        return {
-          children: <span style={{ fontWeight: 600 }}>总计</span>,
-          props: {
-            colSpan: 4,
-          },
-        };
-      },
     }, {
-      title: '商品名称',
-      dataIndex: 'name',
-      key: 'name',
-      render: renderContent,
+      title: '付款金额(元)',
+      dataIndex: 'pay_amount',
+      key: 'pay_amount',
     }, {
-      title: '商品条码',
-      dataIndex: 'barcode',
-      key: 'barcode',
-      render: renderContent,
+      title: '支付方式',
+      dataIndex: 'pay_type',
+      key: 'pay_type',
+      render: (text) => {
+          return payType[text];
+      }
     }, {
-      title: '单价',
-      dataIndex: 'price',
-      key: 'price',
-      align: 'right',
-      render: renderContent,
+      title: '状态',
+      dataIndex: 'payStatus',
+      key: 'payStatus',
+      render: (text) => {
+        return text == 1 ? <Badge status="success" text="成功" /> : <Badge status="processing" text="失败" />
+      }
     }, {
-      title: '数量（件）',
-      dataIndex: 'num',
-      key: 'num',
-      align: 'right',
-      render: (text, row, index) => {
-        if (index < basicGoods.length) {
-          return text;
-        }
-        return <span style={{ fontWeight: 600 }}>{text}</span>;
-      },
-    }, {
-      title: '金额',
-      dataIndex: 'amount',
-      key: 'amount',
-      align: 'right',
-      render: (text, row, index) => {
-        if (index < basicGoods.length) {
-          return text;
-        }
-        return <span style={{ fontWeight: 600 }}>{text}</span>;
-      },
+      title: '支付时间',
+      dataIndex: 'pay_time',
+      key: 'pay_time',
     }];
+
+    //日志信息
+    const logColumns = [{
+      title: '操作人',
+      dataIndex: 'operator_name',
+      key: 'operator_name',
+    }, {
+      title: '操作时间',
+      dataIndex: 'create_time',
+      key: 'create_time',
+      defaultSortOrder: 'descend',
+      sorter: (a, b) => a.create_time - b.create_time,
+      render: (text) => {
+        return timeHelp.getYMDHMS(text)
+      }
+    }, {
+      title: '操作内容',
+      dataIndex: 'message',
+      key: 'message',
+    }];
+
+    // //委托信息
+    // const entrustColumns = [{
+    //   title:'出发地目的地',
+    //   dataIndex:'city_dep',
+    //   key:'city_dep',
+    // }, {
+    //   title:'出行时间',
+    //   dataIndex:'dep_yyyymm',
+    //   key:'dep_yyyymm',
+    // }, {
+    //   title:'起飞时间',
+    //   dataIndex:'date_dep',
+    //   key:'date_dep',
+    // }, {
+    //   title:'出行天数',
+    //   dataIndex:'date_ret',
+    //   key:'date_ret',
+    // }, {
+    //   title:'乘机人数',
+    //   dataIndex:'adult_count',
+    //   key:'adult_count',
+    //   render: (text) => {
+    //     return this.adult_count
+    //   }
+    // }, {
+    //   title:'是否接受微调',
+    //   dataIndex:'is_adjust',
+    //   key:'is_adjust',
+    // }, {
+    //   title:'提交时间',
+    //   dataIndex:'create_time',
+    //   key:'create_time',
+    // }];
+
+    //方案推送记录
+    const pushColumns = [{
+      title:'推送时间',
+      dataIndex:'create_time',
+      key:'create_time',
+    }, {
+      title:'航班号',
+      dataIndex:'flight_no',
+      key:'flight_no',
+    }, {
+      title:'起飞日期',
+      dataIndex:'date_dep',
+      key:'date_dep',
+    }, {
+      title:'返回日期',
+      dataIndex:'date_ret',
+      key:'date_ret',
+    }, {
+      title:'销售价',
+      dataIndex:'sell_price',
+      key:'sell_price',
+    }, {
+      title:'用户反馈',
+      dataIndex:'status',
+      key:'status',
+      render: (text) => {
+        return text == 0 ? '不接受' : text == 2 ? '接受' : text == 3 ? '支付超时' : '';
+    }
+    }, {
+      title:'原因',
+      dataIndex:'remark',
+      key:'remark',
+    }];
+
+
     return (
-      <PageHeaderLayout title="委托订单详情页">
+      <PageHeaderLayout>
         <Card bordered={false}>
-          {/* <div className={styles.title}>图片查看</div>
-          <ImageWrapper className={styles.picWrapper} src="https://os.alipayobjects.com/rmsportal/mgesTPFxodmIwpi.png" desc="示意图"/> */}
-          <div className={styles.title}><Icon type="profile" /> 订单信息</div>
-          <DescriptionList size="large" style={{ marginBottom: 32 }} col={4}>
-            <Description term="取货单号">1000000000</Description>
-            <Description term="状态">已取货</Description>
-            <Description term="销售单号">1234123421</Description>
-            <Description term="子订单">3214321432</Description>
+          <div className={styles.statusTitle}>
+            {status[order_status]}
+            {
+              order_status == 4 ?
+                <FailModal failReason={::this.failReason}/>
+                : null
+            }
+          </div>
+
+          <div className={styles.remarkText}>{order_status == 6 ? '这里是出票失败备注，这里是出票失败备注。' : null}</div>
+          <div className={styles.title}><Icon type="profile"/> 订单信息</div>
+          <DescriptionList size="large" style={{marginBottom: 32}} col={4}>
+            <Description term="订单号">{order.id || ''}</Description>
+            <Description term="联系人">{order.contact || ''}</Description>
+            <Description term="联系电话">{order.mobile || ''}</Description>
+            <Description term="微信昵称">{order.member_name || ''}</Description>
           </DescriptionList>
-          <Divider style={{ marginBottom: 32 }} />
-          <div className={styles.title}><Icon type="red-envelope" /> 支付信息</div>
-          <DescriptionList size="large" style={{ marginBottom: 32 }}>
-            <Description term="用户姓名">付小小</Description>
-            <Description term="联系电话">18100000000</Description>
-            <Description term="常用快递">菜鸟仓储</Description>
-            <Description term="取货地址">浙江省杭州市西湖区万塘路18号</Description>
-            <Description term="备注">无</Description>
-          </DescriptionList>
-          <Divider style={{ marginBottom: 32 }} />
-          <div className={styles.title}><Icon type="schedule" /> 委托信息</div>
+          {order_status == 4 || order_status == 5 || order_status == 6 ?
+            <div className={styles.myTable}>
+              <Table
+                pagination={false}
+                bordered={true}
+                loading={loading}
+                dataSource={voyage}
+                columns={orderColumns}
+                rowKey="id"
+              />
+            </div>
+          : null}
+          <Divider style={{marginBottom: 32}}/>
+          <div className={styles.title}><Icon type="team"/> 乘客信息</div>
           <Table
-            style={{ marginBottom: 24 }}
             pagination={false}
-            loading={basicLoading}
-            dataSource={goodsData}
-            columns={goodsColumns}
+            bordered={true}
+            loading={loading}
+            dataSource={passenger}
+            columns={passengerColumns}
             rowKey="id"
           />
-          <div className={styles.title}><Icon type="form" /> 日志信息</div>
+          { order_status == 4 ?
+              <div className={styles.acticnBtn}><Button type='primary' onClick={::this.ticketConfirm}>出票</Button></div>
+              : null
+          }
+          <Divider style={{marginBottom: 32}}/>
+          <div className={styles.title}><Icon type="red-envelope"/> 支付信息</div>
+          {
+            order_status == 0 || order_status == 2 ?
+              <p style={{margin: '15px 0', height: 100}}>暂无用户支付信息...</p>
+              :
+              <div>
+                <ul className={styles.infoList}>
+                  <li>
+                    <span className={styles.titleDesc}>机票销售价</span>
+                    <span
+                      className={styles.priceDesc}>{order.sell_price * this.adult_count}={order.sell_price}(成人价)*{this.adult_count}</span>
+                  </li>
+                  <li>
+                    <span className={styles.titleDesc}>实际结算价</span>
+                    <span className={styles.priceDesc}>
+                {
+                  isEdit ?
+                    <Input value={inputPrice} className={styles.inputPrice} min={0} type="number"
+                           onChange={::this.inputPrice}/>
+                    :
+                    <span className={styles.inputPrice}>{inputPrice}</span>
+                }
+                      <Button type='primary' onClick={::this.isEdit}>{isEdit ? '保存' : '修改'}</Button></span>
+                  </li>
+                  <li>
+                    <span className={styles.titleDesc}>差额</span>
+                    <span className={styles.priceDesc}
+                          style={{color: (order.sell_price * this.adult_count - inputPrice) > 0 ? '#f00' : ''}}>{order.sell_price * this.adult_count - inputPrice}</span>
+                  </li>
+                </ul>
+                <div className={styles.myTable} style={{marginBottom: '25px'}}>
+                  <Table
+                    pagination={false}
+                    bordered={true}
+                    dataSource={payrecord}
+                    columns={payColumns}
+                    rowKey="id"
+                  />
+                </div>
+              </div>
+          }
+          <div className={styles.title}><Icon type="schedule" /> 委托信息</div>
+          <div></div>
+          <div className={styles.title}><Icon type="pushpin-o" /> 方案推送记录</div>
+          <div className={styles.myTable}>
+            <Table
+              style={{marginBottom: 24}}
+              pagination={false}
+              bordered={true}
+              dataSource={orderGroup}
+              columns={pushColumns}
+              rowKey="id"
+            />
+          </div>
+          <Divider style={{marginBottom: 32}}/>
+          <div className={styles.title}><Icon type="form"/> 日志信息</div>
           <Table
-            style={{ marginBottom: 16 }}
+            style={{width: '60%'}}
             pagination={false}
-            loading={basicLoading}
-            dataSource={basicProgress}
-            columns={progressColumns}
+            bordered={true}
+            dataSource={log}
+            columns={logColumns}
+            rowKey="id"
           />
         </Card>
       </PageHeaderLayout>
     );
   }
 }
+
+class FailModal extends React.Component {
+  state = {
+    visible: false,
+    textAreaValue: '',
+  };
+
+  showModal() {
+    this.setState({
+      visible: true,
+      textAreaValue: '',
+    });
+  };
+
+  hideModal() {
+    this.setState({
+      visible: false,
+    });
+  };
+
+  textAreaChange(e) {
+    this.setState({
+      textAreaValue: e.target.value,
+    })
+  }
+
+  handleOk() {
+    this.props.failReason(this.state.textAreaValue);
+    this.hideModal();
+  }
+
+  render() {
+    let {textAreaValue, visible} = this.state;
+    return (
+      <div style={{float: 'right'}}>
+        <Button type="danger" onClick={::this.showModal}>出票失败</Button>
+        <Modal
+          title="原因"
+          visible={visible}
+          onCancel={::this.hideModal}
+          footer={[
+            <span key="tip" style={{marginRight: 10}}>提交后,将直接退款</span>,
+            <Button key="submit" type="primary" onClick={::this.handleOk}>
+              提交
+            </Button>,
+          ]}
+        >
+          <TextArea rows={4} placeholder="请输入出票失败的原因(非必填)" onChange={::this.textAreaChange} value={textAreaValue}/>
+        </Modal>
+      </div>
+    );
+  }
+}
+
