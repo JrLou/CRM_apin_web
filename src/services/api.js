@@ -1,6 +1,15 @@
 import { stringify } from 'qs';
 import request from '../utils/request';
 import md5 from 'md5'
+
+/*一级菜单url*/
+
+
+
+
+
+/*二级菜单url*/
+
 export async function queryProjectNotice() {
   return request('/api/project/notice');
 }
@@ -123,7 +132,7 @@ export async function flightstockList(params) {
     body: params,
   });
 }
-//上架
+//上架 ()
 export async function stateAirLine(params) {
   return request('/crm/api/resource/stateAirLine', {
     method: 'POST',
