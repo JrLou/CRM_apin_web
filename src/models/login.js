@@ -31,26 +31,12 @@ export default {
       });
     },
     *logout(_, { put }) {
-      yield put({
-        type: 'changeLoginStatus',
-        payload: {
-          status: false,
-        },
-      });
       CookieHelp.clearCookie()
       yield put(routerRedux.push('/user/login'));
     },
   },
 
   reducers: {
-    changeLoginStatus(state, { payload }) {
-        return {
-          ...state,
-          status: 'ok',
-          submitting: false,
-        };
-
-    },
     changeSubmitting(state, { payload }) {
       return {
         ...state,
