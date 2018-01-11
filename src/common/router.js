@@ -44,22 +44,24 @@ export const getRouterData = (app) => {
     '/finance/finance_verify': {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Finance/FinanceVerify')),
     },
+    // 拼团列表
     '/fightgroups/list': {
-      component: dynamicWrapper(app, ['rule'], () => import('../routes/Fightgroups/FightGroupsList.js')),
+      component: dynamicWrapper(app, ['fightGroupsList'], () => import('../routes/Fightgroups/FightGroupsList.js')),
     },
     //订单管理
     '/order/flyingpig': {
       component: dynamicWrapper(app, ['flyingpig'], () => import('../routes/Order/Flyingpig.js')),
     },
-    '/order/flyingpigDetail/:id': {
+    '/order/flyingpig/detail': {
+      name: "飞猪&供应商订单详情",
       component: dynamicWrapper(app, ['flyingpigDetail'], () => import('../routes/Order/FlyingpigDetail.js')),
     },
     '/order/entrust': {
       component: dynamicWrapper(app, ['entrust'], () => import('../routes/Order/Entrust.js')),
     },
-    '/order/entrust/:id':{
-      name:"委托订单详情",
-      component: dynamicWrapper(app, ['profile'], () => import('../routes/Order/EntrustProfile.js')),
+    '/order/entrust/detail': {
+      name: "委托订单详情",
+      component: dynamicWrapper(app, ['flyingpigDetail'], () => import('../routes/Order/EntrustProfile.js')),
     },
     '/order/refund': {
       component: dynamicWrapper(app, ['refund'], () => import('../routes/Order/Refund.js')),
@@ -98,20 +100,23 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, ['demand'], () => import('../routes/Fightgroups/Demand.js')),
     },
     // 查看需求池
-    '/fightgroups/demand/viewDemand': {
-      name:'查看需求池',
+    '/fightgroups/demand/viewDemand/:data': {
+      name: '查看需求池',
       component: dynamicWrapper(app, ['view'], () => import('../routes/Fightgroups/View.js')),
     },
     //推送方案-选择订单
-    '/fightgroups/demand/choose': {
+    '/fightgroups/demand/choose/:data': {
+      name: "方案推送",
       component: dynamicWrapper(app, ['choose'], () => import('../routes/Fightgroups/Choose.js')),
     },
     //方案推送  杨利波
     '/fightgroups/demand/push': {
+      name: "方案推送",
       component: dynamicWrapper(app, ['push'], () => import('../routes/Fightgroups/Push.js')),
     },
     // 查看拼团
-    '/fightgroups/demand/checkFightGroups': {
+    '/fightgroups/demand/checkFightGroups/:id': {
+      name: "方案推送",
       component: dynamicWrapper(app, ['checkFightGroups'], () => import('../routes/Fightgroups/CheckFightGroups.js')),
     },
     //客户管理

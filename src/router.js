@@ -14,7 +14,7 @@ dynamic.setDefaultLoadingComponent(() => {
 });
 
 const fakeAuth = () => {
-  return CookieHelp.getUserInfo();
+  return CookieHelp.getCookieInfo('token');
 };
 //请求菜单数据
 // const Loadmenu = ()=>{
@@ -24,8 +24,8 @@ const fakeAuth = () => {
 const PrivateRoute = ({ component: Component, ...rest }) => {
   return (
     <Route path={rest.path} render={(props) => {
-      if (true) {
-        return Loadmenu(<Component {...props} />)
+      if (fakeAuth()) {
+        return <Component {...props} />
       } else {
         return <Redirect to={{ pathname: '/user/login', state: {from: rest.location}}} />;
         }

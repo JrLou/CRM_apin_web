@@ -27,7 +27,7 @@ function checkStatus(response) {
   const errortext = codeMessage[response.status] || response.statusText;
   notification.error({
     message: `请求错误 ${response.status}: ${response.url}`,
-    description: response.statusText,
+    description: errortext,
   });
   const error = new Error(errortext);
   error.name = response.status;
@@ -54,38 +54,52 @@ function checkCode(json) {
     2: '未登录',
     3: '没有权限访问',
     4: '用户被禁用',
-    5: '列表无数据',
     6: '接口不存在',
     7: '非法请求',
   };
   if(json.code&&json.code*1<1&&json.code*1>-7){
     const errortext = codeMessage[json.code*-1];
     notification.error({
-      message: `错误码${json.code}`,
+      message: `提示`,
       description: errortext,
     });
-  }else if(json.code&&json.code<-7){
+    if(json.code==-2&&json.code==-8){
+      location.reload()
+    }
+  }else if(json.code>=-100&&json.code<-7){
     notification.error({
-      message: `错误码${json.code}`,
+      message: `提示`,
+      description: json.msg||"",
+    });
+  }else if(json.code*1<=-100&&json.code*1>=-199){
+    notification.error({
+      message: "用户输入信息校验错误",
+      description: json.msg||"",
+    });
+  }else if(json.code*1<=-200&&json.code*1>=-299){
+    notification.error({
+      message: "后端业务提交错误",
       description: json.msg||"",
     });
   }
   return json
   }
 
-/**
- * Requests a URL, returning a promise.
- *
- * @param  {string} url       The URL we want to request
- * @param  {object} [options] The options we want to pass to "fetch"
- * @return {object}           An object containing either "data" or "err"
- */
 export default function request(url, options) {
   const defaultOptions = {
     credentials: 'include',
   };
   const newOptions = { ...defaultOptions, ...options };
-  if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
+  // let Authorization = '';
+  // try {
+  //   Authorization = CookieHelp.getUserInfo().accessToken;
+  //   newOptions.headers = {
+  //     'Authorization': Authorization,
+  //     ...newOptions.headers,
+  //   };
+  // } catch (e) {
+  // }
+    if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
     newOptions.headers = {
       Accept: 'application/json',
       'Content-Type': 'application/json; charset=utf-8',

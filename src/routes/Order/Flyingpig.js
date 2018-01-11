@@ -1,6 +1,7 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'dva';
 import {Link} from 'dva/router';
+import timeHelp from '../../utils/TimeHelp.js';
 import {
   Row,
   Col,
@@ -8,14 +9,8 @@ import {
   Form,
   Input,
   Select,
-  Icon,
   Button,
-  Dropdown,
-  Menu,
-  InputNumber,
   DatePicker,
-  Modal,
-  message,
   Table
 } from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
@@ -37,7 +32,6 @@ export default class TableList extends PureComponent {
       p: 1,
       pc: 10,
     },
-    id: '',
     timeArr: [],
   };
 
@@ -82,16 +76,16 @@ export default class TableList extends PureComponent {
       if (!err) {
         const values = {
           ...fieldsValue,
-          'start_time': timeArr[0] ? timeArr[0] : '',
-          'end_time': timeArr[1] ? timeArr[1] : '',
+          'start_time': timeArr[0] || '',
+          'end_time': timeArr[1] || '',
         };
         values.group_type = Number(values.group_type);
-        values.order_status = Number(values.order_status);
         for (let item in values) {
           if (values[item] === undefined) {
             values[item] = '';
           }
         }
+        values.order_status = typeof values.order_status == 'string' ? '' : Number(values.order_status);
         this.setState({
           formValues: values,
         });
@@ -106,9 +100,10 @@ export default class TableList extends PureComponent {
 
   renderForm() {
     const {getFieldDecorator} = this.props.form;
+    const layoutForm = {md: 8, lg: 24, xl: 48};
     return (
       <Form layout="inline">
-        <Row gutter={{md: 8, lg: 24, xl: 48}}>
+        <Row gutter={layoutForm}>
           <Col md={8} sm={24}>
             <FormItem label="订单号">
               {getFieldDecorator('id')(
@@ -131,16 +126,16 @@ export default class TableList extends PureComponent {
             </FormItem>
           </Col>
         </Row>
-        <Row gutter={{md: 8, lg: 24, xl: 48}}>
+        <Row gutter={layoutForm}>
           <Col md={8} sm={24}>
             <FormItem label="订单状态">
               {getFieldDecorator('order_status', {
                 initialValue: ''
               })(
                 <Select placeholder="请选择" style={{width: '100%'}}>
-                  <Option value="">全部</Option>
+                  <Option value=''>全部</Option>
                   {
-                    status.map((item, index) => <Option value={index} key={index}>{item+index}</Option>)
+                    status.map((item, index) => <Option value={index} key={index}>{item}</Option>)
                   }
                 </Select>
               )}
@@ -192,12 +187,20 @@ export default class TableList extends PureComponent {
     );
   }
 
+  pushUrl(data) {
+    this.props.history.push({pathname: '/order/flyingpig/detail', state: {id: data.id, order_status: data.order_status}})
+  }
+
   render() {
     const {flyingpigList: {loading, list, total}} = this.props;
-    const {id} = this.state;
-
     const columns = [
-      {title: '订单号', dataIndex: 'id',},
+      {
+        title: '订单号', dataIndex: 'id', render: (text, record) => {
+        return <a onClick={() => {
+          this.pushUrl(record)
+        }}>{text}</a>
+      }
+      },
       {
         title: '订单状态', dataIndex: 'order_status', render: (text) => {
         return status[text];
@@ -207,22 +210,57 @@ export default class TableList extends PureComponent {
       {title: '联系电话', dataIndex: 'mobile',},
       {title: '出发城市', dataIndex: 'city_dep',},
       {title: '到达城市', dataIndex: 'city_arr'},
-      {title: '出发日期', dataIndex: 'dep_yyyymm',},
-      {title: '出发航班号', dataIndex: 'flight_no',},
+      {
+        title: '出发日期', dataIndex: 'dep_yyyymm', render: (text, record) => {
+        let date1 = String(text).substr(0, 4) || '', date2 = String(text).substr(4, 2) || '', day = '';
+        switch (record.dep_dd) {
+          case 0:
+            day = '(不限)';
+            break;
+          case -1:
+            day = '(上旬)';
+            break;
+          case -2:
+            day = '(中旬)';
+            break;
+          case -3:
+            day = '(下旬)';
+            break;
+          default:
+            day = '-' + record.dep_dd;
+        }
+        return date1 + '-' + date2 + day;
+      }
+      },
+      {
+        title: '出发航班号', dataIndex: 'flight_no', render: (text) => {
+        let flightArr = text.split('/');
+        return flightArr[0] || '';
+      }
+      },
       {title: '人数', dataIndex: 'adult_count',},
-      {title: '已付金额', dataIndex: 'payAmount',},
+      {
+        title: '已付金额', dataIndex: 'payAmount', render: (text) => {
+        return '￥' + text;
+      }
+      },
       {
         title: '订单来源', dataIndex: 'group_type', render: (text) => {
         return source[text - 1];
       },
-      }, {title: '下单时间', dataIndex: 'create_time',},
+      }, {
+        title: '下单时间', dataIndex: 'create_time', render: (text) => {
+          return timeHelp.getYMDHMS(text)
+        }
+      },
       {
         title: '操作', render: (text, record) => {
-        const title = record.status == 0 ? '出票' : '查看';
-        return <Link to={`/order/flyingpigDetail/${record.id}`}>{title}</Link>
+        const title = record.order_status == 2 ? '出票' : '查看';
+        return <a onClick={() => {
+          this.pushUrl(record)
+        }}>{title}</a>
       }
       }];
-
     return (
       <PageHeaderLayout>
         <Card bordered={false}>

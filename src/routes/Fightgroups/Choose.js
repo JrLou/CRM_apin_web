@@ -1,18 +1,20 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Card, Form, Input, Select, Button, DatePicker, Modal, Table, Checkbox, message } from 'antd';
+import { Row, Col, Card, Form, Input, Select, Button, DatePicker, Modal, Table, Checkbox, message, Spin } from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './TableList.less';
 import { Link, routerRedux } from 'dva/router';
+import LogTable from './components/LogTable';
 import moment from 'moment';
+import { getPar, formatPar } from '../../utils/utils';
 const { RangePicker } = DatePicker;
 const FormItem = Form.Item;
 const { Option } = Select;
 const CheckboxGroup = Checkbox.Group;
 const period = [
-  { label: '上午航班（06:00-12:00）', value: '0' },
-  { label: '下午航班（12:00-19:00）', value: '1' },
-  { label: '晚上航班（19:00-06:00）', value: '2' },
+  { label: '上午航班（06:00-12:00）', value: '1' },
+  { label: '下午航班（12:00-19:00）', value: '2' },
+  { label: '晚上航班（19:00-06:00）', value: '3' },
 ];
 const daysArr = [
   { label: '2天', value: '0' },
@@ -20,27 +22,22 @@ const daysArr = [
   { label: '4天', value: '2' },
   { label: '5天', value: '3' },
   { label: '6天', value: '4' },
-  { label: '7天', value: '5' },
-  { label: '8天', value: '6' },
-  { label: '9天', value: '7' },
-  { label: '10天', value: '8' },
-  { label: '11天', value: '9' },
-  { label: '12天', value: '10' },
-  { label: '13-20天', value: '11' },
+  { label: '7天及以上', value: '5' }
 ]
-const allValues = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']
+const allValues = ['0', '1', '2', '3', '4', '5']
 @connect(state => ({
   chooseData: state.choose,
 }))
 @Form.create()
 export default class Choose extends PureComponent {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.page = {
-      page: 1,
-      pageSize: 10
+      p: 1,
+      pc: 10
     }
     this.searchValue = {}
+    this.par = getPar(this, 'data')
   }
   state = {
     modalVisible: false,
@@ -58,16 +55,17 @@ export default class Choose extends PureComponent {
   };
   componentWillMount() {
     const { dispatch } = this.props;
-    if (!this.props.location.state) {
+    if (!this.par.cityArr) {
       dispatch(routerRedux.push('/fightgroups/demand/'));
     }
   }
   componentDidMount() {
     const { dispatch } = this.props;
-    const { id } = this.props.location.state ? this.props.location.state : {};
+    // continueFlag为继续添加的标志
+    const { id, continueFlag } = this.par;
     const params = {
       ...this.page,
-      id: id
+      ...this.par
     }
     dispatch({
       type: 'choose/fetch',
@@ -79,11 +77,11 @@ export default class Choose extends PureComponent {
   handleTableChange = (pagination) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
-    const { id } = this.props.location.state ? this.props.location.state : {};
+    const { id } = this.par;
     const params = {
-      page: pagination.current,
-      pageSize: pagination.pageSize,
-      id: id,
+      p: pagination.current,
+      pc: pagination.pageSize,
+      ...this.par,
       ...this.searchValue,
     };
     dispatch({
@@ -94,19 +92,20 @@ export default class Choose extends PureComponent {
 
   handleSearch() {
     const { dispatch, form } = this.props;
-    const { id } = this.props.location.state ? this.props.location.state : {};
+    const { cityArr, cityDep } = this.par;
 
     form.validateFields((err, values) => {
       if (err) return;
       console.log('参数');
-      values.flightStartTime = values.flightTime ? moment(values.flightTime[0]).format('YYYY-MM-DD') : '';
-      values.flightEndTime = values.flightTime ? moment(values.flightTime[1]).format('YYYY-MM-DD') : '';
+      values.startDate = values.flightTime ? moment(values.flightTime[0]).format('YYYY-MM-DD') : '';
+      values.endDate = values.flightTime ? moment(values.flightTime[1]).format('YYYY-MM-DD') : '';
+      delete values.flightTime;
 
       console.log(values);
       this.searchValue = values;
       dispatch({
         type: 'choose/fetch',
-        payload: { ...values, id: id },
+        payload: { ...values, ...this.par, ...this.page },
       });
     });
   }
@@ -126,20 +125,23 @@ export default class Choose extends PureComponent {
   }
   pushScheme = () => {
     const { dispatch } = this.props;
-    const { id } = this.props.location.state
+    const { id, continueFlag } = this.par;
     if (!this.state.selectedRowKeys.length) {
       message.warning('请先选择需要推送方案的订单')
       return
     }
-    dispatch(routerRedux.push({ pathname: '/fightgroups/demand/push', state: { demandId: id, orderList: this.state.selectRows } }));
+    // 推送当前方案直接到查看
+    if (continueFlag) {
+      this.props.history.push('/fightgroups/demand/checkFightGroups/' + id);
+    } else {
+      this.props.history.push({ pathname: '/fightgroups/demand/push', state: { demandId: id, orderList: this.state.selectRows } });
+    }
   }
 
-  handleModalVisible = (flag, record) => {
+  handleModalVisible = (flag) => {
     this.setState({
-      modalVisible: !!flag,
-      record
+      modalVisible: !!flag
     });
-
   }
 
   selectChange(selectedRowKeys, selectedRows) {
@@ -159,7 +161,7 @@ export default class Choose extends PureComponent {
   onCheckAllChange = (e) => {
     console.log(e.target.checked)
     this.setState({
-      checkedList: e.target.checked ? ['0', '1', '2'] : [],
+      checkedList: e.target.checked ? ['1', '2', '3'] : [],
       indeterminate: false,
       checkAll: e.target.checked,
     });
@@ -186,7 +188,7 @@ export default class Choose extends PureComponent {
       labelCol: { span: 4 },
       wrapperCol: { span: 16 },
     };
-
+    const { continueFlag } = this.par;
     return (
       <Form>
         <Row gutter={20}>
@@ -199,7 +201,7 @@ export default class Choose extends PureComponent {
           </Col>
           <Col span={8}>
             <FormItem label="订单号" {...formItemLayout}>
-              {getFieldDecorator('orderId')(
+              {getFieldDecorator('id')(
                 <Input placeholder="请输入" />
               )}
             </FormItem>
@@ -213,7 +215,7 @@ export default class Choose extends PureComponent {
           >
             不限
           </Checkbox>
-          {getFieldDecorator('dayPeriod', {
+          {getFieldDecorator('timeSlot', {
             initialValue: this.state.checkedList,
             valuePropName: 'checked',
           })(
@@ -228,7 +230,7 @@ export default class Choose extends PureComponent {
           >
             全选
           </Checkbox>
-          {getFieldDecorator('days', {
+          {getFieldDecorator('tripDays', {
             initialValue: this.state.daysCheckedList,
             valuePropName: 'checked',
           })(
@@ -240,114 +242,101 @@ export default class Choose extends PureComponent {
           <span style={{ float: 'right', marginBottom: 24 }} className={styles.btnBox}>
             <Button type="primary" htmlType="submit" onClick={this.handleSearch.bind(this)}>查询</Button>
             <Button type="default" onClick={this.resetSearch.bind(this)}>重置</Button>
-            <Button type="primary" onClick={this.pushScheme.bind(this)}>推送方案</Button>
+            <Button type="primary" onClick={this.pushScheme.bind(this)}>{continueFlag ? '推送当前方案' : '推送方案'}</Button>
           </span>
         </div>
       </Form>
     );
   }
-
+  getLogs = (id) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'choose/getLogs',
+      payload: id,
+    });
+    this.handleModalVisible(true)
+  }
   render() {
-    // const { rule: { loading, list, total } } = this.props;
     const { modalVisible, record } = this.state;
+    const columns = [
+      {
+        title: '订单号',
+        dataIndex: 'id',
+        render: (text, record) => <Link to={'/fightgroups/demand/checkFightGroups'}>{text}</Link>,
+      },
 
-    const columns = [{
-      title: '拼团编号',
-      dataIndex: 'id',
-      render: (text, record) => <Link to={'/fightgroups/demand/checkFightGroups'}>{text}</Link>,
-    }, {
-      title: '推送时间',
-      dataIndex: 'createTime',
-
-    }, {
-      title: '出发机场',
-      dataIndex: 'depAirport',
-    }, {
-      title: '到达机场',
-      dataIndex: 'arrAirport',
-    }, {
-      title: '航班号',
-      dataIndex: 'flightNo',
-    }, {
-      title: '成交人数',
-      dataIndex: 'peopleCount',
-    }, {
-      title: '销售价格',
-      dataIndex: 'price',
-    }, {
-      title: '是否成团',
-      dataIndex: 'isGroup',
-    }, {
-      title: '操作',
-      render: (text, record) => <Link to={'/fightgroups/demand/checkFightGroups'}>查看</Link>,
-    }];
+      {
+        title: '出发城市',
+        dataIndex: 'depAirport',
+      },
+      {
+        title: '到达城市',
+        dataIndex: 'arrAirport',
+      },
+      {
+        title: '下单时间',
+        dataIndex: 'createTime',
+      },
+      {
+        title: '起飞时间',
+        dataIndex: 'createTimePeriod',
+      },
+      {
+        title: '订单状态',
+        dataIndex: 'status',
+      },
+      {
+        title: '是否接受微调',
+        dataIndex: 'isAllowChange',
+      },
+      {
+        title: '订单人数',
+        dataIndex: 'orderCount',
+      },
+      {
+        title: '出行天数',
+        dataIndex: 'days',
+      },
+      {
+        title: '推送记录',
+        render: (text, record) => <a href="javascript:;" onClick={this.getLogs.bind(this, record.id)}>推送日志</a>,
+      }];
     const rowSelection = {
       selectedRowKeys: this.state.selectedRowKeys,
       onChange: this.selectChange.bind(this)
     };
-    const { chooseData: { tableData, loading } } = this.props;
+    const { chooseData: { tableData, loading, logData } } = this.props;
     return (
       <PageHeaderLayout>
-        <Card bordered={false}>
-          <div className={styles.tableList}>
-            <div className={styles.tableListForm}>
-              {this.renderForm()}
-            </div>
+        <Spin spinning={loading}>
+          <Card bordered={false}>
+            <div className={styles.tableList}>
+              <div className={styles.tableListForm}>
+                {this.renderForm()}
+              </div>
 
-            <Table
-              // dataSource={list}
-              dataSource={tableData && tableData.data}
-              columns={columns}
-              pagination={{ showSizeChanger: true, showQuickJumper: true, total: tableData.option && tableData.option.total }}
-              // loading={loading}
-              onChange={this.handleTableChange}
-              rowKey="id"
-              rowSelection={rowSelection}
-            />
-          </div>
-        </Card>
-        <Modal
-          title="退款申请"
-          visible={modalVisible}
-          onCancel={() => this.handleModalVisible()}
-          footer={null}
-        >
-          {record && <Form layout="inline">
-            <Row>
-              <Col span={12}>
-                <FormItem label="订单号">
-                  {record.orderId}
-                </FormItem>
-              </Col>
-              <Col span={12}>
-                <FormItem label="退款单号">
-                  {record.id}
-                </FormItem>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <FormItem label="退款金额">
-                  {record.money}
-                </FormItem>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <FormItem label="处理客服">
-                  {record.kefu}
-                </FormItem>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <FormItem label="备注">
-                  {record.beizhu}
-                </FormItem>
-              </Col>
-            </Row>
-          </Form>}
-        </Modal>
+              <Table
+                // dataSource={list}
+                dataSource={tableData && tableData.data}
+                columns={columns}
+                pagination={{ showSizeChanger: true, showQuickJumper: true, total: tableData.option && tableData.option.total }}
+                // loading={loading}
+                onChange={this.handleTableChange}
+                rowKey="id"
+                rowSelection={rowSelection}
+              />
+            </div>
+          </Card>
+          <Modal
+            title="日志"
+            visible={modalVisible}
+            onCancel={() => this.handleModalVisible(false)}
+            footer={null}
+            width={800}
+          >
+            <LogTable logData={logData}> </LogTable>
+          </Modal>
+        </Spin>
       </PageHeaderLayout>
     );
   }

@@ -1,17 +1,36 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Form, Button, DatePicker, Row, Col, Input, message, Modal, Spin } from 'antd';
+import { Form, Button, DatePicker, Row, Col, Input, message, Modal, Spin, Table } from 'antd';
 import styles from './SearchFlight.less';
+import { Link, routerRedux } from 'dva/router';
 const FormItem = Form.Item;
 import FlightCard from './FlightCard';
+import LogTable from './LogTable';
 import moment from 'moment';
 import SearchFlightTable from './SearchFlightTable';
 import AddFlightForm from './AddFlightForm';
+let demandId, orderList;
 @connect(state => ({
     data: state.push,
+    logTableList: state.choose
 }))
 @Form.create()
 export default class SearchFlight extends PureComponent {
+    constructor(props) {
+        super(props)
+        this.state = {
+            modalVisible: false
+        }
+    }
+    componentWillMount() {
+        const { dispatch } = this.props;
+        if (!this.props.location.state) {
+            dispatch(routerRedux.push('/fightgroups/demand/'));
+        } else {
+            demandId = this.props.location.state.demandId;
+            orderList = this.props.location.state.orderList;
+        }
+    }
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
@@ -26,7 +45,7 @@ export default class SearchFlight extends PureComponent {
                 }
                 this.props.dispatch({
                     type: 'push/fetch',
-                    payload: { ...values, depData, arrData, id: 111 },
+                    payload: { ...values, depData, arrData, id: demandId },
                 });
             }
         });
@@ -73,6 +92,19 @@ export default class SearchFlight extends PureComponent {
             payload: values,
         });
     }
+    getLogs = (id) => {
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'choose/getLogs',
+            payload: id,
+        });
+        this.handleModalVisible(true)
+    }
+    handleModalVisible = (flag) => {
+        this.setState({
+            modalVisible: !!flag
+        });
+    }
     render() {
         // const { data: { list, loading } } = this.props; 
         const formItemLayout = {
@@ -87,6 +119,7 @@ export default class SearchFlight extends PureComponent {
         };
         const { getFieldDecorator, getFieldValue } = this.props.form;
         const { data: { depData, arrData, flightsArr, flightsTableShow, showWhat, isLeft, modalTitle, loading } } = this.props;
+        const { logData } = this.props.logTableList ? this.props.logTableList : {};
         const showDepCard = JSON.stringify(depData) !== "{}";
         const showArrCard = JSON.stringify(arrData) !== "{}";
         let component;
@@ -107,6 +140,48 @@ export default class SearchFlight extends PureComponent {
                 component = null
                 break;
         }
+        const columns = [{
+            title: '订单号',
+            dataIndex: 'id',
+            render: (text, record) => <Link to={'/fightgroups/demand/checkFightGroups'}>{text}</Link>,
+        },
+
+        {
+            title: '出发城市',
+            dataIndex: 'depAirport',
+        },
+        {
+            title: '到达城市',
+            dataIndex: 'arrAirport',
+        },
+        {
+            title: '下单时间',
+            dataIndex: 'createTime',
+        },
+        {
+            title: '起飞时间',
+            dataIndex: 'createTimePeriod',
+        },
+        {
+            title: '订单状态',
+            dataIndex: 'status',
+        },
+        {
+            title: '是否接受微调',
+            dataIndex: 'isAllowChange',
+        },
+        {
+            title: '订单人数',
+            dataIndex: 'orderCount',
+        },
+        {
+            title: '出行天数',
+            dataIndex: 'days',
+        },
+        {
+            title: '推送记录',
+            render: (text, record) => <a href="javascript:;" onClick={this.getLogs.bind(this, record.id)}>推送日志</a>,
+        }];
         return (
             <div style={{ 'minWidth': '900px' }}>
                 <Form className='searchForm' onSubmit={this.handleSubmit} >
@@ -233,6 +308,16 @@ export default class SearchFlight extends PureComponent {
                         </Col>
                     </Row>
                 </Form>
+                <div className={styles.orderBox}>
+                    <h3>推送订单</h3>
+                    <Table
+                        dataSource={orderList}
+                        columns={columns}
+                        pagination={false}
+                        rowKey="id"
+                        bordered={true}
+                    />
+                </div>
                 <Modal
                     title={modalTitle}
                     visible={flightsTableShow}
@@ -241,6 +326,15 @@ export default class SearchFlight extends PureComponent {
                     onCancel={this.showModal.bind(null, false)}
                 >
                     {flightsTableShow ? component : null}
+                </Modal>
+                <Modal
+                    title="日志"
+                    visible={this.state.modalVisible}
+                    onCancel={() => this.handleModalVisible(false)}
+                    footer={null}
+                    width={800}
+                >
+                    <LogTable logData={logData} bordered={true}> </LogTable>
                 </Modal>
             </div>
         );

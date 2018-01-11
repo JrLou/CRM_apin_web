@@ -5,43 +5,43 @@ import { Link, routerRedux } from 'dva/router';
 import { Card, Table, Spin } from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './TableList.less';
-
+import { getPar, formatPar } from '../../utils/utils';
 
 @connect(state => ({
   view: state.view,
 }))
 export default class View extends PureComponent {
-  constructor() {
-    super()
-    this.params = {
-      page: 1,
-      pageSize: 10,
-    }; 
+  constructor(props) {
+    super(props)
+    this.page = {
+      p: 1,
+      pc: 10,
+    };
+    this.par = getPar(this, 'data')
   }
 
-  componentWillMount() { 
+  componentWillMount() {
     const { dispatch } = this.props;
-    if (!this.props.location.state) {
-      // this.props.history.replace('/fightgroups/demand/');
+    if (!this.par.cityArr) {
       dispatch(routerRedux.push('/fightgroups/demand/'));
     }
   }
 
-  componentDidMount() { 
+  componentDidMount() {
     const { dispatch } = this.props;
-    const { id } = this.props.location.state ? this.props.location.state : {};
+    const { cityArr, cityDep } = this.par;
     dispatch({
       type: 'view/fetch',
-      payload: { ...this.params, id: id },
+      payload: { ...this.page, cityDep: cityDep, cityArr: cityArr },
     });
   }
 
   handleTableChange = (pagination) => {
     const { dispatch } = this.props;
     const params = {
-      ...this.params,
-      page: pagination.current,
-      pageSize: pagination.pageSize,
+      ...this.page,
+      p: pagination.current,
+      pc: pagination.pageSize,
     };
     dispatch({
       type: 'view/fetch',
@@ -88,15 +88,7 @@ export default class View extends PureComponent {
       title: '操作',
       render: (text, record) => <Link to={'/fightgroups/demand/result/' + record.id}>查看</Link>,
     }];
-    let data = [
-      { id: 1, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0 },
-      { id: 2, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0 },
-      { id: 3, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0 },
-      { id: 4, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0 },
-      { id: 5, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0 },
-      { id: 6, status: 0, money: 100, orderId: '11111111', time: '2017-1-1', num: 10, price: 200, is: 0 },
-    ];
-    const { line } = this.props.location.state ? this.props.location.state : {};
+    const { line } = this.par;
     const { view: { tableData, loading } } = this.props;
     return (
       <PageHeaderLayout>

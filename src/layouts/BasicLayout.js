@@ -13,7 +13,10 @@ import NotFound from '../routes/Exception/404';
 import { getRoutes } from '../utils/utils';
 import { getMenuData } from '../common/menu';
 import AuthRoute from '../auth/AuthRoute'
-
+import CookieHelp from './../utils/cookies';
+import {Base64} from 'js-base64'
+import {GetItem} from './../utils/localStorage';
+import fetch from 'dva/fetch';
 /**
  * 根据菜单取得重定向地址.
  */
@@ -55,7 +58,7 @@ const query = {
 };
 
 // 假装有请求过来的数据
-
+const currentUser = Base64.decode(CookieHelp.getCookieInfo('_u'))
 class BasicLayout extends React.PureComponent {
   static childContextTypes = {
     location: PropTypes.object,
@@ -68,11 +71,31 @@ class BasicLayout extends React.PureComponent {
       breadcrumbNameMap: routerData,
     };
   }
-  componentDidMount(){
-    this.props.dispatch({
-      type: 'user/fetchCurrent',
-    });
-  }
+  // componentDidMount(){
+  //   // const refreshToken =GetItem('refreshToken')
+  //   // if({refreshToken}){
+  //   //   this.interval = setInterval(()=>this.fetchInterval(refreshToken), 10*60*1000);
+  //   // }
+  // }
+  // componentWillUnmount() {
+  //   clearInterval(this.interval);
+  // }
+  // fetchInterval(value){
+  //   request('/crm/api/user/refreshToken', {
+  //     method: 'POST',
+  //     body: {refreshToken:value},
+  //   })
+  //   // fetch('/crm/api/user/refreshToken',{
+  //   //   Accept: 'application/json',
+  //   //   'Content-Type': 'application/json; charset=utf-8',
+  //   //   method:'POST',
+  //   //   body: JSON.stringify({refreshToken:value})
+  //   // }).then((response)=>response.json()).then((json)=>{
+  //   //     console.log(json)
+  //   // }).catch((err)=>{
+  //   //   console.log(err)
+  //   // })
+  // }
   getPageTitle() {
     const { routerData, location } = this.props;
     const { pathname } = location;
@@ -84,7 +107,7 @@ class BasicLayout extends React.PureComponent {
   }
   render() {
     const {
-      currentUser, collapsed, fetchingNotices, notices, routerData, match, location, dispatch,
+        collapsed, fetchingNotices, notices, routerData, match, location, dispatch,
     } = this.props;
     const redirectData = [];
     const getRedirect = (item) => {
@@ -123,7 +146,6 @@ class BasicLayout extends React.PureComponent {
                     <Redirect key={item.from} exact from={item.from} to={item.to} />
                   )
                 }
-                  <Route exact path="/order/entrust/:id" component={routerData['/order/entrust/:id'].component} />
                   <Route exact path="/fightgroups/demand/push" component={routerData['/fightgroups/demand/push'].component} />
                 {
                   getRoutes(match.path, routerData).map(item => (
@@ -142,7 +164,7 @@ class BasicLayout extends React.PureComponent {
             <GlobalFooter
               copyright={
                 <div>
-                  Copyright <Icon type="copyright" /> 2018 爱拼机
+                  Copyright <Icon type="copyright" /> 爱拼机版权所有 浙ICP备 15024358号-1
                 </div>
               }
             />
@@ -162,7 +184,6 @@ class BasicLayout extends React.PureComponent {
 }
 
 export default connect(state => ({
-  currentUser: state.user.currentUser,
   collapsed: state.global.collapsed,
   menus:state.global.menus
 }))(BasicLayout);

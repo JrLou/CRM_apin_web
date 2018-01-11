@@ -5,6 +5,7 @@ import { Card, Button, List, Form, Input, Select, Row, Col } from 'antd';
 import { Link } from 'dva/router';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './Demand.less';
+import { getPar, formatPar } from '../../utils/utils';
 const FormItem = Form.Item;
 const { Option } = Select;
 @connect(state => ({
@@ -46,7 +47,7 @@ export default class Demand extends PureComponent {
   };
   getData(values = this.searchValues) {
     const { dispatch } = this.props;
-    let params = { ...values, page: this.page.page, pageSize: this.page.pageSize };
+    let params = { ...values, p: this.page.page, pc: this.page.pageSize };
     console.log(params)
     dispatch({
       type: 'demand/fetch',
@@ -66,27 +67,27 @@ export default class Demand extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="出发城市">
-              {getFieldDecorator('id')(
+              {getFieldDecorator('city_dep')(
                 <Input placeholder="请输入" />
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="到达城市">
-              {getFieldDecorator('orderId')(
+              {getFieldDecorator('city_arr')(
                 <Input placeholder="请输入" />
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="需求池类型">
-              {getFieldDecorator('status', {
-                initialValue: '',
+              {getFieldDecorator('poolType', {
+                initialValue: '0',
               })(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
-                  <Option value="">全部</Option>
-                  <Option value="1">国内</Option>
-                  <Option value="2">国际</Option>
+                  <Option value="-1">全部</Option>
+                  <Option value="0">国内</Option>
+                  <Option value="1">国际</Option>
                 </Select>
                 )}
             </FormItem>
@@ -120,57 +121,62 @@ export default class Demand extends PureComponent {
     };
     return (
       <PageHeaderLayout>
-        {/*跳转三级页面*/}
-        {/*<Link to={'/fightgroups/demand/id'}>*/}
-        {/*<Button>查看需求池</Button>*/}
-        {/*</Link>*/}
-        {/*<Link to={'/fightgroups/demand/choose'}>*/}
-        {/*<Button>推送方案-选择订单</Button>*/}
-        {/*</Link>*/}
-        {/*<Link to={'/fightgroups/demand/push'}>*/}
-        {/*< Button>方案推送</Button>*/}
-        {/*</Link>*/}
-        <Link to={'/fightgroups/demand/checkFightGroups'}>
-          < Button>查看拼团</Button>
-        </Link>
-        <Card bordered={false}>
-          <div className={styles.tableListForm}>
-            {this.renderForm()}
+        <Card bordered={false} className="poolListBox">
+          {/*跳转三级页面*/}
+          {/*<Link to={'/fightgroups/demand/id'}>*/}
+          {/*<Button>查看需求池</Button>*/}
+          {/*</Link>*/}
+          {/*<Link to={'/fightgroups/demand/choose'}>*/}
+          {/*<Button>推送方案-选择订单</Button>*/}
+          {/*</Link>*/}
+          {/*<Link to={'/fightgroups/demand/push'}>*/}
+          {/*< Button>方案推送</Button>*/}
+          {/*</Link>*/}
+          <Link to={'/fightgroups/demand/checkFightGroups'}>
+            < Button>查看拼团</Button>
+          </Link>
+          <Card bordered={false}>
+            <div className={styles.tableListForm}>
+              {this.renderForm()}
+            </div>
+          </Card>
+          <p style={{ padding: '10px 0 0' }}>共有{list.option && list.option.total}个需求池</p>
+          <div className={styles.cardList}>
+            <List
+              rowKey="id"
+              loading={loading}
+              pagination={pagination}
+              grid={{ gutter: 24, lg: 4, md: 2, sm: 1, xs: 1 }}
+              dataSource={list.data}
+              renderItem={item => (
+                <List.Item key={item.id}>
+                  <Card hoverable className={styles.card}
+                    actions={[
+                      <Link
+                        to={'/fightgroups/demand/viewDemand/' + formatPar({ cityArr: item.city_arr, cityDep: item.city_dep })}>
+                        查看历史拼团</Link>,
+                      <Link to={'/fightgroups/demand/choose/' + formatPar({ cityArr: item.city_arr, cityDep: item.city_dep })} >
+                        <Button type="primary">方案推送</Button>
+                      </Link>
+                    ]}
+                    title={<span><b className={styles.cardTitle}></b>{item.city_dep + '-' + item.city_arr}</span>}
+                    extra={item.total + '人'}>
+                    <Card.Meta
+                      description={(
+                        <div>
+                          <p>3天内需要处理的订单数：<span style={{ color: '#f00' }}>{item.emergency}</span></p>
+                          <p>待推方案订单数：{item.wait}</p>
+                          <p>待推方案总人数：{item.wait_people}</p>
+                          <p>已成团订单数：{item.finish}</p>
+                        </div>
+                      )}
+                    />
+                  </Card>
+                </List.Item>
+              )}
+            />
           </div>
         </Card>
-        <p style={{ padding: '10px 0 0' }}>共有{list.option && list.option.total}个需求池</p>
-        <div className={styles.cardList}>
-          <List
-            rowKey="id"
-            loading={loading}
-            pagination={pagination}
-            grid={{ gutter: 24, lg: 4, md: 2, sm: 1, xs: 1 }}
-            dataSource={list.data}
-            renderItem={item => (
-              <List.Item key={item.id}>
-                <Card hoverable className={styles.card}
-                  actions={[
-                    <Link
-                      to={{ pathname: '/fightgroups/demand/viewDemand', state: { id: item.id, line: item.fromAddr + '-' + item.toAddr } }}>
-                      查看历史拼团</Link>,
-                    <Link to={{ pathname: '/fightgroups/demand/choose', state: { id: item.id }}}><Button type="primary">方案推送</Button></Link>]}
-                  title={<span><b className={styles.cardTitle}></b>{item.fromAddr + '-' + item.toAddr}</span>}
-                extra={item.peopleCounts + '人'}>
-                  <Card.Meta
-                  description={(
-                    <div>
-                      <p>3天内需要处理的订单数：<span style={{ color: '#f00' }}>{item.threeOrders}</span></p>
-                      <p>待推方案订单数：{item.waitOrders}</p>
-                      <p>待推方案总人数：{item.waitPeopleCounts}</p>
-                      <p>已成团订单数：{item.alreadyOrders}</p>
-                    </div>
-                  )}
-                />
-                </Card>
-              </List.Item>
-            )}
-          />
-        </div>
       </PageHeaderLayout>
     );
   }
