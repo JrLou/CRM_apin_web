@@ -15,7 +15,7 @@ import { getMenuData } from '../common/menu';
 import AuthRoute from '../auth/AuthRoute'
 import CookieHelp from './../utils/cookies';
 import {Base64} from 'js-base64'
-import {GetItem} from './../utils/localStorage';
+// import {GetItem} from './../utils/localStorage';
 import fetch from 'dva/fetch';
 /**
  * 根据菜单取得重定向地址.
