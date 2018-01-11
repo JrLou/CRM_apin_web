@@ -193,7 +193,9 @@ export default class CheckFightGroups extends Component {
   }
 
   getOrderInfoView(basicLoading, basicGoods, goodsColumns) {
-    const data = {id: this.id, continueFlag: true};
+    const {groupsInfoData: {data: groupsInfoDataData}} = this.props.checkFightGroups;
+    const data = {id: this.id, continueFlag: true,  cityArr: groupsInfoDataData.city_arr, cityDep: groupsInfoDataData.city_dep };
+    console.log("data~~~~~~~~~~~~~",data);
     let params = formatPar(data);
     return (
       <div>
