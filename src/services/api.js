@@ -207,6 +207,24 @@ export async function flyDetailAddTicket(params) {
     body: params,
   });
 }
+export async function updateSettleAmount(params) {
+  return request('/api/order/updateSettleAmount', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function addTicketFail(params) {
+  return request('/api/order/addTicketFail', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function getRefundList(params) {
+  return request('/api/order/getRefundList', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function postGroupData(params) {
   return request('/api/group/postGroupData', { method: 'POST', body: params });
 }
