@@ -163,13 +163,13 @@ export async function getdetailAirLine(params) {
 
 export async function AccountLogin(params) {
   const newparams = Object.assign({}, { account: params.account, type:0 })
-  const response = await request('/crm/api/user/getLogicCode',{
+  const response = await request('/api/user/getLogicCode',{
     method:"POST",
     body:newparams,
   });
   if (response && response.data && response.code>=1) {
     const newparams2 = Object.assign({}, { account: params.account, signature: md5(md5(params.account + md5(params.password)) + response.data) })
-    return request('/crm/api/user/loginByAccount',{
+    return request('/api/user/loginByAccount',{
       method:'POST',
       body:newparams2,
     });
@@ -219,6 +219,7 @@ export async function viewList(params) {
   return request('/api/demandPool/getPoolHistory', { method: 'POST', body: params });
 }
 export async function orderList(params) {
+  // return request('http://localhost:3333/api/demandPool/getPoolOrderList', { method: 'POST', body: params });
   return request('/api/demandPool/getPoolOrderList', { method: 'POST', body: params });
 }
 export async function logList(params) {
