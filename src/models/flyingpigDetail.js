@@ -1,61 +1,81 @@
-import { queryBasicProfile, queryAdvancedProfile } from '../services/api';
+import {getFlyDetail,flyDetailAddTicket} from '../services/api';
 
 export default {
   namespace: 'flyingpigDetail',
 
   state: {
-    basicGoods: [],
-    basicLoading: true,
-    advancedOperation1: [],
-    advancedOperation2: [],
-    advancedOperation3: [],
-    advancedLoading: true,
+    groupVoyage: {},//订单委托信息
+    log: [],//日志信息
+    order: {},//订单信息
+    orderGroup: [],//方案推送记录
+    passenger: [],//乘机人信息
+    payrecord: [],//支付信息
+    loading: true,
+    ticketLoading:true,
+    ticketResponse:{},
   },
 
   effects: {
-    *fetchBasic(_, { call, put }) {
+    * getDetail({payload}, {call, put}) {
       yield put({
         type: 'changeLoading',
-        payload: { basicLoading: true },
+        payload: true,
       });
-      const response = yield call(queryBasicProfile);
+      const response = yield call(getFlyDetail, payload);
       yield put({
         type: 'show',
         payload: response,
       });
       yield put({
         type: 'changeLoading',
-        payload: { basicLoading: false },
+        payload: false,
       });
     },
-    *fetchAdvanced(_, { call, put }) {
+    *addTicket({payload}, {call, put}){
       yield put({
-        type: 'changeLoading',
-        payload: { advancedLoading: true },
+        type: 'ticketLoading',
+        payload: true,
       });
-      const response = yield call(queryAdvancedProfile);
+      const response = yield call(flyDetailAddTicket, payload);
       yield put({
-        type: 'show',
+        type: 'ticket',
         payload: response,
       });
       yield put({
-        type: 'changeLoading',
-        payload: { advancedLoading: false },
+        type: 'ticketLoading',
+        payload: false,
       });
-    },
+    }
   },
 
   reducers: {
-    show(state, { payload }) {
+    show(state, {payload}) {
       return {
         ...state,
-        ...payload,
+        groupVoyage: payload.data.groupVoyage || {},//订单委托信息
+        log: payload.data.log || [],//日志信息
+        order: payload.data.order || {},//订单信息
+        orderGroup: payload.data.orderGroup || [],//方案推送记录
+        passenger: payload.data.passenger || [],//乘机人信息
+        payrecord: payload.data.payrecord || [],//支付信息
       };
     },
-    changeLoading(state, { payload }) {
+    ticket(state, {payload}) {
       return {
         ...state,
-        ...payload,
+        ticketResponse:payload
+      };
+    },
+    changeLoading(state, {payload}) {
+      return {
+        ...state,
+        loading: payload,
+      };
+    },
+    ticketLoading(state, {payload}) {
+      return {
+        ...state,
+        ticketLoading: payload,
       };
     },
   },

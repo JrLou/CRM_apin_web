@@ -1,43 +1,45 @@
-import { queryFlyList } from '../services/api';
+import {getaddAirLine, getdetailAirLine} from '../services/api';
 
 export default {
   namespace: 'flightstockAdd',
   state: {
-    data: {
-      list: [],
-      pagination: {},
-    },
-    loading: true,
+    accurate: {},//飞常准数据
+    details: {}//编辑回显数据
   },
   effects: {
-    *fetch({ payload }, { call, put }) {
+    //飞常准查询
+    * addAirLine({payload}, {call, put}) {
+      const response = yield call(getaddAirLine, payload)
       yield put({
-        type: 'changeLoading',
-        payload: true,
-      });
-      const response = yield call(queryFlyList, payload);
-      yield put({
-        type: 'save',
+        type: 'accurates',
         payload: response,
-      });
-      yield put({
-        type: 'changeLoading',
-        payload: false,
-      });
+      })
+    },
+    //编辑回显数据
+    * addtailAirLine({payload}, {call, put}) {
+      const response = yield call(getdetailAirLine, payload)
+      console.log('wo jiushi  su')
+      console.log(response)
+      if (response.code >= 1) {
+        yield put({
+          type: 'detail',
+          payload: response.data,
+        })
+      }
     },
   },
   reducers: {
-    save(state, action) {
+    accurates(state, action) {
       return {
         ...state,
-        data:action.payload,
-      };
+        accurate: action.payload,
+      }
     },
-    changeLoading(state, action) {
+    detail(state, action) {
       return {
         ...state,
-        loading: action.payload,
-      };
+        details: action.payload,
+      }
     },
   },
 };

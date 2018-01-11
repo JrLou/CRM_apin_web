@@ -44,22 +44,24 @@ export const getRouterData = (app) => {
     '/finance/finance_verify': {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Finance/FinanceVerify')),
     },
+    // 拼团列表
     '/fightgroups/list': {
-      component: dynamicWrapper(app, ['rule'], () => import('../routes/Fightgroups/FightGroupsList.js')),
+      component: dynamicWrapper(app, ['fightGroupsList'], () => import('../routes/Fightgroups/FightGroupsList.js')),
     },
     //订单管理
     '/order/flyingpig': {
       component: dynamicWrapper(app, ['flyingpig'], () => import('../routes/Order/Flyingpig.js')),
     },
-    '/order/flyingpigDetail/:id': {
+    '/order/flyingpig/detail': {
+      name: "飞猪&供应商订单详情",
       component: dynamicWrapper(app, ['flyingpigDetail'], () => import('../routes/Order/FlyingpigDetail.js')),
     },
     '/order/entrust': {
       component: dynamicWrapper(app, ['entrust'], () => import('../routes/Order/Entrust.js')),
     },
-    '/order/entrust/:id': {
+    '/order/entrust/detail': {
       name: "委托订单详情",
-      component: dynamicWrapper(app, ['profile'], () => import('../routes/Order/EntrustProfile.js')),
+      component: dynamicWrapper(app, ['flyingpigDetail'], () => import('../routes/Order/EntrustProfile.js')),
     },
     '/order/refund': {
       component: dynamicWrapper(app, ['refund'], () => import('../routes/Order/Refund.js')),

@@ -1,5 +1,8 @@
 @border: 1px solid #d9d9d9;
 .page {
+  .groupCardContainer {
+
+  }
   .groupCard {
     background: #fff;
     border: @border;
@@ -19,6 +22,9 @@
       padding: 24px 32px;
       &_lineA {
         color: #aaa;
+        & > p:first-child {
+          margin-bottom: 2px;
+        }
       }
       &_lineB {
         &_city {
@@ -27,6 +33,12 @@
         }
       }
       &_lineC {
+        & > p {
+          margin-bottom: 5px;
+        }
+        & > p:last-child {
+          margin-bottom: 0;
+        }
       }
     }
     &_footer {
@@ -41,8 +53,16 @@
     }
   }
   :global {
-    .ant-list-something-after-last-item .ant-list-item:last-child {
+    .ant-list-something-after-last-item .ant-list-item:last-child,
+    .ant-list-split .ant-list-item {
       border-bottom: none;
+      display: inline-block;
+      width: 390px;
+    }
+  }
+  .listParCon {
+    :global(.ant-row) > div {
+      display: inline-block;
     }
   }
 }

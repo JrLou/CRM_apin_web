@@ -80,7 +80,7 @@ export default class MyForm extends Component {
       data: [                                                       //*object[]                                                      生成所有表单控件的JSON格式数据
         {
           type: 1,					                                        //*number		                          1				                  表单控件的type;1=>Input  2=>Select  3=>DatePicker  3.1=>RangePicker   5=>Button
-          fieldDecorator: "name",				                            //*string		                    				                        与后台数据传输的“键名”
+          fieldDecorator: "cityDep",				                            //*string		                    				                        与后台数据传输的“键名”
           initialValue: "",				                                  //按需			                            ""				                仅当需要回显的时候才需要出入值
           label: "出发城市",				                                  //string|ReactNode						                                  label标签的文本
           rules: [                                                  //object[]                                                      具体参数详见：https://ant.design/components/form-cn/#校验规则
@@ -92,13 +92,13 @@ export default class MyForm extends Component {
           placeholder: "请输入出发城市",                                //string			                        "请输入"			            同html中的placeholder
           htmlType: "text",			                                    //string		                          "text"			            同input中的type,有"text"/"password"等
           style: {},            //object                                                      传入给Input/Select的css行内样式,默认宽度为220px
-          prefix: <Icon type="team"/>,                              //string|ReactNode                                            带有前缀图标的 input/select
+          // prefix: <Icon type="team"/>,                              //string|ReactNode                                            带有前缀图标的 input/select
           suffix: "",                                               //string|ReactNode                                            带有后缀图标的 input
           colon: true,                                              //boolean                             true                    是否有冒号
           fieldsProps: {size: "default"},                            //object	                                                    直接传递表单控件的属性，即:<Input/Select/DatePicker/等 {...setFieldsProps}>  如和上面传递的属性相同：以此为准;具体可用参数详见antd各组件的支持属性
         }, {
           type: 1,
-          fieldDecorator: "contactName",
+          fieldDecorator: "cityArr",
           initialValue: "",
           label: "目的城市",
           rules: [
@@ -111,8 +111,8 @@ export default class MyForm extends Component {
           style: {},
         }, {
           type: 2,
-          fieldDecorator: "checker",
-          initialValue: "A",
+          fieldDecorator: "state",
+          initialValue: "-1",
           // placeholder: "拼团状态",                              //按需			                    "请选择" 			         仅当需要回显的时候才需要出入值
 
           label: "拼团状态",
@@ -124,25 +124,25 @@ export default class MyForm extends Component {
           style: {minWidth: "100px"},
           options: [                                              //*object[]                                                      select下的option
             {
-              txt: "A",                                           //*string                                                         option显示的文字
-              value: "A",                                         //*按需                                                            select的value
+              txt: "全部",                                           //*string                                                         option显示的文字
+              value: "-1",                                         //*按需                                                            select的value
             }, {
-              txt: "B",
-              value: "B"
+              txt: "拼团中",
+              value: "1"
             }, {
-              txt: "C",
-              value: "C"
+              txt: "拼团完成",
+              value: "2"
             }, {
-              txt: "D",
-              value: "D"
+              txt: "拼团成功",
+              value: "3"
             }, {
-              txt: "E",
-              value: "E"
+              txt: "拼团关闭",
+              value: "0"
             }
           ],
         }, {
           type: 1,
-          fieldDecorator: "asfd1",
+          fieldDecorator: "id",
           initialValue: "",
           label: "拼团单号",
           rules: [
@@ -155,8 +155,8 @@ export default class MyForm extends Component {
           style: {},
         }, {
           type: 2,
-          fieldDecorator: "asfd",
-          initialValue: "",
+          fieldDecorator: "type",
+          initialValue: "-1",
           placeholder: "请选择拼团类型",
           label: "拼团类型",
           rules: [{
@@ -166,21 +166,15 @@ export default class MyForm extends Component {
           style: {minWidth: "100px"},
           options: [                                            //object[]                                                      select下的option
             {
-              txt: "A",                                         //string                                                         option显示的文字
-              value: "A",                                       //按需                                                            select的value
+              txt: "全部",                                         //string                                                         option显示的文字
+              value: "-1",                                       //按需                                                            select的value
             }, {
-              txt: "B",
-              value: "B"
+              txt: "国内",
+              value: "0"
             }, {
-              txt: "C",
-              value: "C"
-            }, {
-              txt: "D",
-              value: "D"
-            }, {
-              txt: "E",
-              value: "E"
-            }
+              txt: "国际",
+              value: "1"
+            },
           ],
         },
       ]
