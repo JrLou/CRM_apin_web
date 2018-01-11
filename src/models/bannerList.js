@@ -65,17 +65,25 @@ export default {
         if(callback){
           callback(response);
         }
-        yield put({
-          type: 'save',
-          payload: response.data,
-        });
+        // yield put({
+        //   type: 'save',
+        //   payload: response.data,
+        // });
         yield put({
           type: 'changeLoading',
           payload: false,
         });
       },
       * toAdd({payload},{call,put}){
-        //列表页，跳转到添加/编辑页面
+        // 列表页，跳转到添加页面
+        yield put({
+          type: 'changeEditData',
+          payload:payload,
+        });
+        yield put(routerRedux.push('/operations/banner/bannerAdd'))
+      },
+      * toEdit({payload},{call,put}){
+        //列表页，跳转到编辑页面
         yield put({
           type: 'changeEditData',
           payload:payload,

@@ -57,7 +57,7 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, ['flyingpigDetail'], () => import('../routes/Order/FlyingpigDetail.js')),
     },
     '/order/entrust': {
-      component: dynamicWrapper(app, ['entrust'], () => import('../routes/Order/Entrust.js')),
+      component: dynamicWrapper(app, ['flyingpig'], () => import('../routes/Order/Entrust.js')),
     },
     '/order/entrust/detail': {
       name: "委托订单详情",
@@ -162,7 +162,7 @@ export const getRouterData = (app) => {
     },
     '/operations/banner/bannerEdit': {
       name:'编辑banner',
-      component: dynamicWrapper(app, ['bannerList'], () => import('../routes/Operations/BannerEdit.js')),
+      component: dynamicWrapper(app, ['bannerList'], () => import('../routes/Operations/BannerView.js')),
     },
     // '/user/:id': {
     //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),
