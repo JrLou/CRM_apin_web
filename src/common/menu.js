@@ -35,7 +35,7 @@ const menuData = [{
     //   path: 'fightgroups/demand/push',
     // }, {
     //   name: '查看拼团',
-    //   path: 'fightgroups/demand/result',
+    //   path: 'fightgroups/demand/checkFightGroups/:id',
     // }],
   }, {
     name: '拼团列表',
