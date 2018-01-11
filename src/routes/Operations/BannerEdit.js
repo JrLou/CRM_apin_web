@@ -22,7 +22,7 @@ class BannerEdit extends PureComponent {
     if(this.props.type){
       if(!this.props.bannerList.id){
         dispatch({
-          type: 'bannerList/cancelEdit',
+          type: 'bannerList/addBanner',
         })
       }
     }

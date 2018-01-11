@@ -1,4 +1,4 @@
-import {queryBanner,deleteBanner,changeStatus,baseImg,addBannerImg} from '../services/api';
+import {queryBanner,deleteBanner,changeStatus,baseImg,addBannerImg,editBannerImg} from '../services/api';
 import {routerRedux} from 'dva/router';
 
 export default {
@@ -100,7 +100,7 @@ export default {
       },
       * checkEdit({payload,callback},{call,put}){
         //确定编辑，成功以后跳转到列表页
-        const response = yield call(queryBanner, payload);
+        const response = yield call(editBannerImg, payload);
         if(callback){
           callback(response);
         }

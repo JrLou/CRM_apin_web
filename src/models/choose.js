@@ -1,5 +1,6 @@
-import { orderList, logList } from '../services/api';
-
+import { orderList, logList, continueAdd } from '../services/api';
+import { message } from 'antd';
+import { routerRedux } from 'dva/router';
 export default {
   namespace: 'choose',
   state: {
@@ -35,6 +36,23 @@ export default {
         type: 'showLog',
         payload: response,
       });
+      yield put({
+        type: 'changeLoading',
+        payload: false,
+      });
+    },
+    *continueAdd({ payload }, { call, put }) {
+      yield put({
+        type: 'changeLoading',
+        payload: true,
+      });
+      const response = yield call(continueAdd, payload);
+      if (response.code == 1) {
+        // 继续添加成功回到详情页
+        yield put(routerRedux.push('/fightgroups/demand/checkFightGroups/' + payload.groupId));
+      } else {
+        message.error(response.msg);
+      }
       yield put({
         type: 'changeLoading',
         payload: false,
