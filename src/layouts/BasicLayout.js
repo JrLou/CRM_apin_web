@@ -58,7 +58,7 @@ const query = {
 };
 
 // 假装有请求过来的数据
-const currentUser = Base64.decode(CookieHelp.getCookieInfo('_u'))
+const currentUser = CookieHelp.getCookieInfo('_u')?Base64.decode(CookieHelp.getCookieInfo('_u')):'设置'
 class BasicLayout extends React.PureComponent {
   static childContextTypes = {
     location: PropTypes.object,
