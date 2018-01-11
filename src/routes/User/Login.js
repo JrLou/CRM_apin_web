@@ -90,7 +90,7 @@ export default class Login extends Component {
                   <Input
                     size="large"
                     prefix={<Icon type="user" className={styles.prefixIcon} />}
-                    placeholder="请输入账户名！"
+                    placeholder="请输入账户名"
                   />
                 )}
               </FormItem>
@@ -104,7 +104,7 @@ export default class Login extends Component {
                     size="large"
                     prefix={<Icon type="lock" className={styles.prefixIcon} />}
                     type="password"
-                    placeholder="请输入密码！"
+                    placeholder="请输入密码"
                   />
                 )}
               </FormItem>
