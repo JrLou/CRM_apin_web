@@ -68,6 +68,12 @@ export async function queryUserList(params) {
 export async function entrust(params) {
   return request(`/api/entrust?${stringify(params)}`);
 }
+export async function addBannerImg(params) {
+  return request('/crm/api/banner/addBanner', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function queryBanner(params) {
   return request('/crm/api/banner/getBannerList', {
     method: 'POST',
@@ -83,7 +89,10 @@ export async function baseImg(params) {
     });
 }
 export async function deleteBanner(params) {
-  return request(`/api/deleteBanner?${stringify(params)}`);
+  return request('/crm/api/banner/delBanner', {
+    method: 'POST',
+    body: params,
+  });
 }
 export async function changeStatus(params) {
   return request(`/api/changeStatus?${stringify(params)}`);

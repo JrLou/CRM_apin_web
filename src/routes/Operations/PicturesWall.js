@@ -10,6 +10,7 @@ class PicturesWall extends React.Component {
     loading: false,
   };
 
+
   getBase64 = (img, callback) => {
     const reader = new FileReader();
     reader.addEventListener('load', () => callback(reader.result));
@@ -21,8 +22,7 @@ class PicturesWall extends React.Component {
     if (!isJPG) {
       message.error('格式只支持jpg、jpeg和png!');
     }
-    // const isLt2M = file.size / 1024  < 2;
-    const isLt2M = file.size / 1024  < 20;
+    const isLt2M = file.size / 1024 / 1024 < 2;
     if (!isLt2M) {
       message.error('不超过1M!');
     }
@@ -45,7 +45,14 @@ class PicturesWall extends React.Component {
         const { dispatch } = this.props;
         dispatch({
           type: 'bannerList/baseImg',
-          payload: {image}
+          payload: {image},
+          callback:(response)=>{
+            if(response.code==1){
+              console.log(11111,response.data)
+            }else{
+              console.log('error')
+            }
+          }
         });
       }));
     }
