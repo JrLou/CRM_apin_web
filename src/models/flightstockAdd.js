@@ -18,12 +18,10 @@ export default {
     //编辑回显数据
     * addtailAirLine({payload}, {call, put}) {
       const response = yield call(getdetailAirLine, payload)
-      console.log('wo jiushi  su')
-      console.log(response)
       if (response.code >= 1) {
         yield put({
           type: 'detail',
-          payload: response.data,
+          payload: response,
         })
       }
     },
