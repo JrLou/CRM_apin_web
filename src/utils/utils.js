@@ -139,8 +139,8 @@ export function formatPar(obj = {}) {
 }
 // route4 url传值的公用方法 ylb
 /**
- * 
- * @param {*react组件} obj 
+ *
+ * @param {*react组件} obj
 * @param {*:参数名} name (只支持url传参/:name 这种)
  */
 export function getPar(obj, name) {
@@ -157,4 +157,16 @@ export function getPar(obj, name) {
       message.error('参数有误')
     }
   }
+}
+
+/**
+ * 传入毫秒数，传出格式化的字符串日期
+ * @param milliSecond
+ * @returns {string}
+ */
+export function formatDate(milliSecond, format) {
+  if (typeof milliSecond !== "number") {
+    return '意外的时间格式';
+  }
+  return moment(milliSecond).format(format);
 }

@@ -24,12 +24,12 @@ const fakeAuth = () => {
 const PrivateRoute = ({ component: Component, ...rest }) => {
   return (
     <Route path={rest.path} render={(props) => {
-      if (!fakeAuth()) {
+      if (true) {
         return <Component {...props} />
       } else {
         return <Redirect to={{ pathname: '/user/login', state: {from: rest.location}}} />;
-        }
       }
+    }
     }
     />
   );
