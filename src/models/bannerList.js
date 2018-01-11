@@ -25,7 +25,11 @@ export default {
           payload: true,
         });
         const response = yield call(queryBanner, payload);
+<<<<<<< HEAD
+        if(!response && response.data.length > 0){
+=======
         if(response && response.code >=1){
+>>>>>>> 7e1ce5b9960284e27c7c3cba36801167fd92726a
           yield put({
             type: 'save',
             payload: response,
