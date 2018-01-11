@@ -101,8 +101,15 @@ export async function entrust(params) {
     body: params,
   });
 }
+//运营管理
 export async function addBannerImg(params) {
   return request('/api/banner/addBanner', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function editBannerImg(params) {
+  return request('/api/banner/editBanner', {
     method: 'POST',
     body: params,
   });
