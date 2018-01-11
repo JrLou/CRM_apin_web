@@ -34,13 +34,7 @@ const menuData = [{
     // children: [{
     //   name: '查看需求池',
     //   path: 'fightgroups/demand/:view',
-    // }, {
-    //   name: '推送方案-选择订单',
-    //   path: 'fightgroups/demand/choose',
-    // }, {
-    //   name: '方案推送',
-    //   path: 'fightgroups/demand/push',
-    // }, {
+    // }{
     //   name: '查看拼团',
     //   path: 'fightgroups/demand/checkFightGroups/:id',
     // }],

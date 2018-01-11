@@ -21,11 +21,11 @@ export default class Login extends Component {
   // componentWillUnmount() {
   //   clearInterval(this.interval);
   // }
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.login.status === 'ok') {
-      this.props.dispatch(routerRedux.push('/'));
-    }
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   if (nextProps.login.status === 'ok') {
+  //     this.props.dispatch(routerRedux.push('/'));
+  //   }
+  // }
   onSwitch = (type) => {
     this.setState({ type });
   }
