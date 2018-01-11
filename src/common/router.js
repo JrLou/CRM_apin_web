@@ -48,7 +48,7 @@ export const getRouterData = (app) => {
     '/fightgroups/list': {
       component: dynamicWrapper(app, ['fightGroupsList'], () => import('../routes/Fightgroups/FightGroupsList.js')),
     },
-    //订单管理
+    //刘园园 订单管理
     '/order/flyingpig': {
       component: dynamicWrapper(app, ['flyingpig'], () => import('../routes/Order/Flyingpig.js')),
     },
