@@ -7,7 +7,7 @@ import styles from './UserLayout.less';
 import logo from '../assets/logo.png';
 import { getRoutes } from '../utils/utils';
 
-const copyright = <div>Copyright <Icon type="copyright" />爱拼机</div>;
+const copyright = <div style={{color:"white",fontSize:'12px'}}>Copyright <Icon type="copyright" />爱拼机版权所有 浙ICP备 15024358号-1<br /> <p>联系电话：123 2345 5678</p></div>;
 
 class UserLayout extends React.PureComponent {
   getPageTitle() {
@@ -26,12 +26,12 @@ class UserLayout extends React.PureComponent {
         <div className={styles.container}>
           <div className={styles.top}>
             <div className={styles.header}>
-              <Link to="/">
-                <img alt="logo" className={styles.logo} src={logo} />
-                <span className={styles.title}>爱拼机</span>
-              </Link>
+              {/* <Link to="/"> */}
+                {/* <img alt="logo" className={styles.logo} src={logo} /> */}
+                <span className={styles.title}>动态库存管理系统</span>
+              {/* </Link> */}
             </div>
-            <div className={styles.desc}>爱拼后台运营管理系统登录页面</div>
+            {/* <div className={styles.desc}>爱拼后台运营管理系统登录页面</div> */}
           </div>
           <Switch>
             {
