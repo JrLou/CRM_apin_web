@@ -5,7 +5,8 @@
   margin-bottom: -24px;
 
   .card {
-    cursor:default;
+    cursor: default;
+
     :global {
       .ant-card-meta-title {
         margin-bottom: 12px;
@@ -88,7 +89,6 @@
     }
   }
 }
-
 @media screen and (max-width: @screen-md) {
   .extraImg {
     display: none;
@@ -121,16 +121,19 @@
       margin-bottom: 24px;
       margin-right: 0;
       display: flex;
+
       > .ant-form-item-label {
         width: auto;
         line-height: 32px;
         padding-right: 8px;
       }
     }
+
     .ant-form-item-control-wrapper {
       flex: 1;
     }
   }
+
   .submitButtons {
     white-space: nowrap;
     margin-bottom: 24px;
@@ -143,8 +146,17 @@
   height: 6px;
   background: rgba(182, 88, 8, 0.73);
   border-radius: 50%;
-  margin-right:10px;
-  &.success{
+  margin-right: 10px;
+
+  &.success {
     background: #17ff27;
+  }
+}
+
+:global {
+  .poolListBox {
+    .ant-list-pagination {
+      margin-bottom: 25px;
+    }
   }
 }

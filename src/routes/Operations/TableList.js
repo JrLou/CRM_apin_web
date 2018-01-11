@@ -41,10 +41,10 @@ class StandardTable extends PureComponent {
       type: 'bannerList/delete',
       payload: params,
       callback:(response)=>{
-        if(response.code==200){
-          message.success(response.message);
+        if(response && response.code >= 1){
+          console.log(response)
         }else{
-          message.error(response.message);
+          console.log(response.msg)
         }
       }
     });
@@ -92,11 +92,11 @@ class StandardTable extends PureComponent {
       },
       {
         title: '图片名称',
-        dataIndex: 'imgName',
+        dataIndex: 'title',
       },
       {
         title: '图片',
-        dataIndex:'imgUrl',
+        dataIndex:'banner_url',
         render:(text, record, index) => {
           // 生成复杂数据的渲染函数，参数分别为当前行的值，当前行数据，行索引，@return里面可以设置表格行/列合并
           if (!record.img_url) {
@@ -108,27 +108,27 @@ class StandardTable extends PureComponent {
       },
       {
         title: '跳转链接',
-        dataIndex: 'goLink',
+        dataIndex: 'link_url',
       },
       {
         title: '有效期',
-        dataIndex: 'validityStart',
+        dataIndex: 'start_time',
         render:(text,record,index)=>{
-          return <span>{TimeHelp.getYMDHM(record.validityStart)+' - '+TimeHelp.getYMDHM(record.validityEnd)}</span>
+          return <span>{TimeHelp.getYMDHM(record.start_time)+' - '+TimeHelp.getYMDHM(record.end_time)}</span>
         }
       },
       {
         title: '状态',
-        dataIndex: 'status',
+        dataIndex: 'state',
         render:(text, record, index)=>{
           return <span>{text==1?'上架':'下架'}</span>
         }
       },
       {
         title: '更新时间',
-        dataIndex: 'updataTime',
+        dataIndex: 'update_time',
         render:(text,record,index)=>{
-          return <span>{TimeHelp.getYMDHM(text)}</span>
+          return <span>{TimeHelp.getYMDHM(record.update_time)}</span>
         }
       },
       {
@@ -183,7 +183,7 @@ class StandardTable extends PureComponent {
         <Button
           type={'primary'}
           className={styles.btn}
-          disabled={record.status==1}
+          disabled={record.state===1?true:false}
           onClick={()=>{this.handleDelete(record.id);}}
         >
           删除

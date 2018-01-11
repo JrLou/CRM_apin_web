@@ -15,6 +15,8 @@ import { getMenuData } from '../common/menu';
 import AuthRoute from '../auth/AuthRoute'
 import CookieHelp from './../utils/cookies';
 import {Base64} from 'js-base64'
+import {GetItem} from './../utils/localStorage';
+import fetch from 'dva/fetch';
 /**
  * 根据菜单取得重定向地址.
  */
@@ -69,11 +71,31 @@ class BasicLayout extends React.PureComponent {
       breadcrumbNameMap: routerData,
     };
   }
-  componentDidMount(){
-    this.props.dispatch({
-      type: 'user/fetchCurrent',
-    });
-  }
+  // componentDidMount(){
+  //   // const refreshToken =GetItem('refreshToken')
+  //   // if({refreshToken}){
+  //   //   this.interval = setInterval(()=>this.fetchInterval(refreshToken), 10*60*1000);
+  //   // }
+  // }
+  // componentWillUnmount() {
+  //   clearInterval(this.interval);
+  // }
+  // fetchInterval(value){
+  //   request('/crm/api/user/refreshToken', {
+  //     method: 'POST',
+  //     body: {refreshToken:value},
+  //   })
+  //   // fetch('/crm/api/user/refreshToken',{
+  //   //   Accept: 'application/json',
+  //   //   'Content-Type': 'application/json; charset=utf-8',
+  //   //   method:'POST',
+  //   //   body: JSON.stringify({refreshToken:value})
+  //   // }).then((response)=>response.json()).then((json)=>{
+  //   //     console.log(json)
+  //   // }).catch((err)=>{
+  //   //   console.log(err)
+  //   // })
+  // }
   getPageTitle() {
     const { routerData, location } = this.props;
     const { pathname } = location;
@@ -142,7 +164,7 @@ class BasicLayout extends React.PureComponent {
             <GlobalFooter
               copyright={
                 <div>
-                  Copyright <Icon type="copyright" /> 2018 爱拼机
+                  Copyright <Icon type="copyright" /> 爱拼机版权所有 浙ICP备 15024358号-1
                 </div>
               }
             />

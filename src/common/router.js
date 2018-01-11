@@ -111,10 +111,12 @@ export const getRouterData = (app) => {
     },
     //方案推送  杨利波
     '/fightgroups/demand/push': {
+      name: "方案推送",
       component: dynamicWrapper(app, ['push'], () => import('../routes/Fightgroups/Push.js')),
     },
     // 查看拼团
     '/fightgroups/demand/checkFightGroups/:id': {
+      name: "方案推送",
       component: dynamicWrapper(app, ['checkFightGroups'], () => import('../routes/Fightgroups/CheckFightGroups.js')),
     },
     //客户管理
