@@ -1,15 +1,16 @@
-import React, { Component } from 'react';
-import { connect } from 'dva';
-import { Link } from 'dva/router';
-import { Card, Modal, Table, Divider, Icon, Row, Col, Button } from 'antd';
-import { CloseReasonModal, SendLogModal, ExportPassengerModal } from './components/ModalCpm';
+import React, {Component} from 'react';
+import {connect} from 'dva';
+import {Link} from 'dva/router';
+import {Card, Modal, Table, Divider, Icon, Row, Col, Button} from 'antd';
+import {CloseReasonModal, SendLogModal, ExportPassengerModal} from './components/ModalCpm';
 
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import DescriptionList from '../../components/DescriptionList';
 import ImageWrapper from '../../components/ImageWrapper';
 import styles from './CheckFightGroups.less';
-import { getPar, formatPar } from '../../utils/utils';
-const { Description } = DescriptionList;
+import {getPar, formatPar} from '../../utils/utils';
+
+const {Description} = DescriptionList;
 
 //TODO a. 点击关闭拼团按钮弹出页面，录入需要备注的内容，  点击【保存】 下方日志信息  *****应该刷新*****
 
@@ -27,6 +28,7 @@ const progressColumns = [{
   key: "rate",
 }];
 
+
 @connect(state => ({
   checkFightGroups: state.checkFightGroups,
 }))
@@ -35,32 +37,33 @@ export default class CheckFightGroups extends Component {
     super(props);
     this.state = {
       modalType: 0,//控制哪个模态框弹出：0 => 关闭拼团， 1 => 查看日志， 2=> 导出乘机人
+      closeReason: '',//关闭原因，保存在本页，不存在redux中
     };
-    this.par = getPar(this, 'id')
+    this.id = getPar(this, 'id');
   }
 
-  //TODO 上一页如果传递数据过来， I need use params then send request;
   componentDidMount() {
-    const { dispatch } = this.props;
-    const id = this.par;
+    const {dispatch} = this.props;
     dispatch({
       type: 'checkFightGroups/fetchBasic',
-      payload: id
+      payload: this.id,
     });
   }
 
   getFightGroupsInfoView() {
+    const {groupsInfoData} = this.props.checkFightGroups;
+
     return (
       <div>
         <div className={styles.title}>
-          <Icon type="profile" />
+          <Icon type="profile"/>
           <span>拼团信息</span>
           <Button
             type="primary"
             className={styles.btn}
             disabled={false}
             onClick={() => {
-              this.setState({ modalType: 0 }, () => {
+              this.setState({modalType: 0}, () => {
                 this.handleshowModal()
               });
             }}
@@ -68,8 +71,8 @@ export default class CheckFightGroups extends Component {
             关闭拼团
           </Button>
         </div>
-        <DescriptionList size="large" style={{ marginBottom: 32 }} col={4}>
-          <Description term="拼团单号">1000000000</Description>
+        <DescriptionList size="large" style={{marginBottom: 32}} col={4}>
+          <Description term="拼团单号">{this.id}</Description>
           <Description term="拼团状态">拼团中</Description>
           <Description term="出发城市">杭州</Description>
           <Description term="到达城市">北京</Description>
@@ -121,7 +124,7 @@ export default class CheckFightGroups extends Component {
           return (
             <a
               onClick={() => {
-                this.setState({ modalType: 1 }, () => {
+                this.setState({modalType: 1}, () => {
                   this.handleshowModal()
                 });
               }}
@@ -135,29 +138,29 @@ export default class CheckFightGroups extends Component {
   }
 
   getOrderInfoView(basicLoading, basicGoods, goodsColumns) {
-    const data = { id: this.par, continueFlag: true };
-    let params = formatPar(data)
+    const data = {id: this.id, continueFlag: true};
+    let params = formatPar(data);
     return (
       <div>
-        <div className={styles.title}><Icon type="schedule" />
+        <div className={styles.title}><Icon type="schedule"/>
           订单信息
           <Button
             type="primary"
             className={styles.btn}
             onClick={() => {
-              this.setState({ modalType: 2 }, () => {
+              this.setState({modalType: 2}, () => {
                 this.handleshowModal()
               });
             }}
           >
             批量导出乘机人 / 出票
           </Button>
-          <Link to={'/fightgroups/demand/choose/' + params} >
+          <Link to={'/fightgroups/demand/choose/' + params}>
             <Button type="primary" className={styles.btn}>继续添加订单</Button>
           </Link>
         </div>
         <Table
-          style={{ marginBottom: 24, position: 'relative' }}
+          style={{marginBottom: 24, position: 'relative'}}
           pagination={false}
           loading={basicLoading}
           dataSource={basicGoods}
@@ -171,9 +174,9 @@ export default class CheckFightGroups extends Component {
   getProjectDetailView() {
     return (
       <div>
-        <div className={styles.title}><Icon type="schedule" /> 方案明细</div>
+        <div className={styles.title}><Icon type="schedule"/> 方案明细</div>
         <div className={styles.schemeInfo}>
-          <DescriptionList size="large" style={{ marginBottom: 32 }} col={2}>
+          <DescriptionList size="large" style={{marginBottom: 32}} col={2}>
             <Description term="起飞日期">2018-01-01</Description>
             <Description term="返回日期">2018-01-03</Description>
           </DescriptionList>
@@ -187,7 +190,7 @@ export default class CheckFightGroups extends Component {
               <Col span={12} className={styles.item}>中国东方航空</Col>
             </Row>
           </div>
-          <div className={styles.descAir} style={{ marginLeft: '40px' }}>
+          <div className={styles.descAir} style={{marginLeft: '40px'}}>
             <p>MU9885</p>
             <Row>
               <Col span={12} className={styles.item}>杭州萧山</Col>
@@ -197,7 +200,7 @@ export default class CheckFightGroups extends Component {
               <Col span={12} className={styles.item}>中国东方航空</Col>
             </Row>
           </div>
-          <DescriptionList size="large" style={{ marginTop: 32 }} col={2}>
+          <DescriptionList size="large" style={{marginTop: 32}} col={2}>
             <Description term="销售价格">1222</Description>
             <Description term="方案有效时间">24小时</Description>
             <Description term="折扣">2.7折</Description>
@@ -210,9 +213,9 @@ export default class CheckFightGroups extends Component {
   getLogInfoView(basicProgress) {
     return (
       <div>
-        <div className={styles.title}><Icon type="form" /> 日志信息</div>
+        <div className={styles.title}><Icon type="form"/> 日志信息</div>
         <Table
-          style={{ marginBottom: 16 }}
+          style={{marginBottom: 16}}
           pagination={false}
           dataSource={basicProgress}
           columns={progressColumns}
@@ -231,6 +234,12 @@ export default class CheckFightGroups extends Component {
         onCancel={this.handleCancel.bind(this)}
         confirmLoading={modalConfirmLoading}
         maskClosable={false}
+        closeReason={this.state.closeReason}
+        onChange={(value) => {
+          if (value.length <= 100) {
+            this.setState({closeReason: value});
+          }
+        }}
       />
       // <Modal
       //   title="请确认是否关闭拼团，关闭请输入原因："
@@ -277,7 +286,7 @@ export default class CheckFightGroups extends Component {
   }
 
   switchModalView() {
-    const { showModal, modalConfirmLoading } = this.props.checkFightGroups;
+    const {showModal, modalConfirmLoading} = this.props.checkFightGroups;
     let ModalView = null;
     switch (this.state.modalType) {
       case 0:
@@ -297,32 +306,32 @@ export default class CheckFightGroups extends Component {
   }
 
   handleshowModal() {
-    const { dispatch } = this.props;
+    const {dispatch} = this.props;
     dispatch({
-      type: 'checkFightGroups/changeModalLoading',//modalConfirmLoading
-      payload: { showModal: true },//传过去的参数
+      type: 'checkFightGroups/extendAll',//modalConfirmLoading
+      payload: {showModal: true},//传过去的参数
     });
   }
 
   handleOk(e) {
-    const { dispatch } = this.props;
+    const {dispatch} = this.props;
     dispatch({
       type: 'checkFightGroups/fetchSaveCloseFightGroups',
-      payload: { text: this.state.closeReason },//传过去的参数
+      payload: {text: this.state.closeReason},//传过去的参数
     });
   }
 
   handleCancel(e) {
-    const { dispatch } = this.props;
+    const {dispatch} = this.props;
     dispatch({
-      type: 'checkFightGroups/changeModalLoading',
-      payload: { showModal: false },//传过去的参数
+      type: 'checkFightGroups/extendAll',
+      payload: {showModal: false},//传过去的参数
     });
   }
 
   render() {
-    const { checkFightGroups } = this.props;
-    const { basicGoods, basicProgress, basicLoading } = checkFightGroups;
+    const {checkFightGroups} = this.props;
+    const {basicGoods, basicProgress, basicLoading} = checkFightGroups;
     const goodsColumns = this.getGoodsColumns();
 
     return (
@@ -330,15 +339,15 @@ export default class CheckFightGroups extends Component {
         <Card bordered={false}>
           {/*拼团信息*/}
           {this.getFightGroupsInfoView()}
-          <Divider style={{ marginBottom: 32 }} />
+          <Divider style={{marginBottom: 32}}/>
 
           {/*订单信息*/}
           {this.getOrderInfoView(basicLoading, basicGoods, goodsColumns)}
-          <Divider style={{ marginBottom: 32 }} />
+          <Divider style={{marginBottom: 32}}/>
 
           {/*方案明细*/}
           {this.getProjectDetailView()}
-          <Divider style={{ marginBottom: 32 }} />
+          <Divider style={{marginBottom: 32}}/>
 
           {/*日志信息*/}
           {this.getLogInfoView(basicProgress)}
@@ -350,4 +359,5 @@ export default class CheckFightGroups extends Component {
     );
   }
 }
+
 
