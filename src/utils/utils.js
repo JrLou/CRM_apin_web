@@ -134,7 +134,8 @@ export function getRoutes(path, routerData) {
   return renderRoutes;
 }
 export function formatPar(obj = {}) {
-  return encodeURIComponent(JSON.stringify(obj))
+  return encodeURIComponent(encodeURIComponent(JSON.stringify(obj)))
+  // return encodeURIComponent(JSON.stringify(obj))
 }
 // route4 url传值的公用方法 ylb
 /**
@@ -146,7 +147,8 @@ export function getPar(obj, name) {
   if (!obj || !obj.props || !obj.props.match) { return {}; }
   let { params } = obj.props.match;
   if (!params || !params[name]) { return {} }
-  if (params[name].indexOf("{") < 0) {//JSON对像结构,必有
+  console.log('获取参数decode：' + decodeURIComponent(params[name]));
+  if (decodeURIComponent(params[name]).indexOf("{") < 0) {//JSON对像结构,必有
     return decodeURIComponent(params[name]);
   } else {
     try {

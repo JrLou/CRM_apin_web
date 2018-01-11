@@ -60,7 +60,7 @@ export async function queryFakeList(params) {
   return request(`/api/fake_list?${stringify(params)}`);
 }
 export async function demandList(params) {
-  return request(`/api/group/demandList`, { method: 'POST', body: params });
+  return request(`/api/demandPool/cheekPoolList`, { method: 'POST', body: params });
 }
 export async function queryUserList(params) {
   return request(`/api/userList?${stringify(params)}`);
@@ -88,10 +88,10 @@ export async function queryBanner(params) {
 
 //base64 banner图上传
 export async function baseImg(params) {
-    return request('/crm/api/common/uploadImage', {
-      method: 'POST',
-      body: params,
-    });
+  return request('/crm/api/common/uploadImage', {
+    method: 'POST',
+    body: params,
+  });
 }
 export async function deleteBanner(params) {
   return request(`/api/deleteBanner?${stringify(params)}`);
@@ -157,10 +157,10 @@ export async function addFlights(params) {
   return request('/api/group/addFlights', { method: 'POST', body: params });
 }
 export async function viewList(params) {
-  return request('/api/group/viewList', { method: 'POST', body: params });
+  return request('/api/demandPool/getPoolHistory', { method: 'POST', body: params });
 }
 export async function orderList(params) {
-  return request('/api/group/orderList', { method: 'POST', body: params });
+  return request('/api/demandPool/getPoolOrderList', { method: 'POST', body: params });
 }
 export async function logList(params) {
   return request(`/api/group/logs?${stringify(params)}`);

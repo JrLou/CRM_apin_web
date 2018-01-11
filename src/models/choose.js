@@ -1,11 +1,11 @@
-import { orderList,logList } from '../services/api';
+import { orderList, logList } from '../services/api';
 
 export default {
   namespace: 'choose',
   state: {
     loading: true,
     tableData: {},
-    logData:[]
+    logData: []
   },
   effects: {
     *fetch({ payload }, { call, put }) {
@@ -13,7 +13,9 @@ export default {
         type: 'changeLoading',
         payload: true,
       });
+
       const response = yield call(orderList, payload);
+
       yield put({
         type: 'getTable',
         payload: response,
