@@ -188,7 +188,10 @@ export default class TableList extends PureComponent {
   }
 
   pushUrl(data) {
-    this.props.history.push({pathname: '/order/flyingpig/detail', state: {id: data.id, order_status: data.order_status}})
+    this.props.history.push({
+      pathname: '/order/flyingpig/detail',
+      state: {id: data.id, order_status: data.order_status}
+    })
   }
 
   render() {
@@ -234,7 +237,7 @@ export default class TableList extends PureComponent {
       },
       {
         title: '出发航班号', dataIndex: 'flight_no', render: (text) => {
-        let flightArr = text.split('/');
+        let flightArr = text ? text.split('/') : [];
         return flightArr[0] || '';
       }
       },

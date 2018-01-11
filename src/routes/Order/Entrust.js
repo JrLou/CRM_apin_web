@@ -1,7 +1,23 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'dva';
 import {Link} from 'dva/router';
-import { Row, Col, Card, Form, Input, Select, Icon, Button, Dropdown, Menu, InputNumber, DatePicker, Modal, message, Table} from 'antd';
+import {
+  Row,
+  Col,
+  Card,
+  Form,
+  Input,
+  Select,
+  Icon,
+  Button,
+  Dropdown,
+  Menu,
+  InputNumber,
+  DatePicker,
+  Modal,
+  message,
+  Table
+} from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './TableList.less';
 import moment from 'moment';
@@ -9,9 +25,9 @@ import moment from 'moment';
 const {RangePicker} = DatePicker;
 const FormItem = Form.Item;
 const {Option} = Select;
-const status = ['待付款', '委托中', '方案选择中', '待付尾款', '待出票', '已出票', '出票失败', '委托过期', '委托关闭', ];
+const status = ['待付款', '委托中', '方案选择中', '待付尾款', '待出票', '已出票', '出票失败', '委托过期', '委托关闭',];
 @connect(state => ({
-  entrustList: state.entrustList,
+  flyingpigList: state.flyingpigList,
 }))
 @Form.create()
 export default class TableList extends PureComponent {
@@ -67,7 +83,7 @@ export default class TableList extends PureComponent {
           ...fieldsValue,
           'start_time': timeArr[0] || '',
           'end_time': timeArr[1] || '',
-          'group_type':0,
+          'group_type': 0,
         };
         values.group_type = Number(values.group_type);
         for (let item in values) {
@@ -82,7 +98,7 @@ export default class TableList extends PureComponent {
         });
         let params = Object.assign(pagination, values);
         dispatch({
-          type: 'entrustList/getList',
+          type: 'flyingpigList/getList',
           payload: params,
         });
       }
@@ -153,9 +169,9 @@ export default class TableList extends PureComponent {
             </FormItem>
           </Col>
           <Col md={16} sm={24}>
-            <div style={{ float: 'right', marginBottom: 24 }}>
-            <Button type="primary" onClick={::this.handleSearch}>查询</Button>
-            <Button style={{marginLeft: 8}} onClick={::this.handleFormReset}>重置</Button>
+            <div style={{float: 'right', marginBottom: 24}}>
+              <Button type="primary" onClick={::this.handleSearch}>查询</Button>
+              <Button style={{marginLeft: 8}} onClick={::this.handleFormReset}>重置</Button>
             </div>
           </Col>
         </Row>
@@ -168,38 +184,37 @@ export default class TableList extends PureComponent {
   }
 
   render() {
-    const {entrustList: {loading, list, total}} = this.props;
+    const {flyingpigList: {loading, list, total}} = this.props;
 
     const columns = [{
-        title: '订单号',
-        dataIndex: 'id',
-        render: (text, record) => {
-          // return <Link to={`/order/entrust/${record.id}`}>{text}</Link>
-          return <a onClick={() => {
-            this.pushUrl(record)
-          }}>{text}</a>
-        }
-      }, {
-        title: '订单状态',
-        dataIndex: 'order_status',
-        render: (text) => {
-          return status[text];
-        },
-      }, {
-        title: '联系人',
-        dataIndex: 'contact',
-      }, {
-        title: '联系电话',
-        dataIndex: 'mobile',
-      }, {
-        title: '出发城市',
-        dataIndex: 'city_dep',
-      }, {
-        title: '到达城市',
-        dataIndex: 'city_arr'
-      }, {
-        title: '出发日期', dataIndex: 'dep_yyyymm',
-        render: (text, record) => {
+      title: '订单号',
+      dataIndex: 'id',
+      render: (text, record) => {
+        return <a onClick={() => {
+          this.pushUrl(record)
+        }}>{text}</a>
+      }
+    }, {
+      title: '订单状态',
+      dataIndex: 'order_status',
+      render: (text) => {
+        return status[text];
+      },
+    }, {
+      title: '联系人',
+      dataIndex: 'contact',
+    }, {
+      title: '联系电话',
+      dataIndex: 'mobile',
+    }, {
+      title: '出发城市',
+      dataIndex: 'city_dep',
+    }, {
+      title: '到达城市',
+      dataIndex: 'city_arr'
+    }, {
+      title: '出发日期', dataIndex: 'dep_yyyymm',
+      render: (text, record) => {
         let date1 = String(text).substr(0, 4) || '', date2 = String(text).substr(4, 2) || '', day = '';
         switch (record.dep_dd) {
           case 0:
@@ -219,27 +234,26 @@ export default class TableList extends PureComponent {
         }
         return `${date1}年${date2}月${day}`;
       }
-      }, {
-        title: '人数',
-        dataIndex: 'adult_count',
-      }, {
-        title: '已付金额',
-        dataIndex: 'payAmount',
-        render: val => `￥${val}`,
-      }, {
-        title: '下单时间',
-        dataIndex: 'create_time',
-        render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
-      }, {
-        title: '操作',
-        render: (text, record) => {
-          const title = record.status == 4 ? '出票' : '查看';
-          // return <Link to={`/order/entrust/${record.id}`}>{title}</Link>
-          return <a onClick={() => {
-            this.pushUrl(record)
-          }}>{title}</a>
-        }
-      }];
+    }, {
+      title: '人数',
+      dataIndex: 'adult_count',
+    }, {
+      title: '已付金额',
+      dataIndex: 'payAmount',
+      render: val => `￥${val}`,
+    }, {
+      title: '下单时间',
+      dataIndex: 'create_time',
+      render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
+    }, {
+      title: '操作',
+      render: (text, record) => {
+        const title = record.status == 4 ? '出票' : '查看';
+        return <a onClick={() => {
+          this.pushUrl(record)
+        }}>{title}</a>
+      }
+    }];
 
     return (
       <PageHeaderLayout>
