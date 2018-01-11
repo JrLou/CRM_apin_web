@@ -57,7 +57,6 @@ export default class Login extends Component {
       }
     );
   }
-
   renderMessage = (message) => {
     return (
       <Alert
@@ -68,17 +67,14 @@ export default class Login extends Component {
       />
     );
   }
-
   render() {
     const { form, login } = this.props;
     const { getFieldDecorator } = form;
     const { count, type } = this.state;
     return (
       <div className={styles.main}>
+      <div className={styles.text}>• 登陆 •</div>
         <Form onSubmit={this.handleSubmit}>
-          <Tabs animated={false} className={styles.tabs} activeKey={type} onChange={this.onSwitch}>
-            {/*tab=账户密码登录*/}
-            <TabPane tab="" key="account">
               {
                 login.status === 'error' &&
                 login.type === 'account' &&
@@ -89,12 +85,12 @@ export default class Login extends Component {
                 {getFieldDecorator('account', {
                   rules: [{
                     required: type === 'account', message: '请输入账户名！',
-                  }],initialValue:"appadmin"
+                  }],initialValue:""
                 })(
                   <Input
                     size="large"
                     prefix={<Icon type="user" className={styles.prefixIcon} />}
-                    placeholder="appadmin"
+                    placeholder="请输入账户名！"
                   />
                 )}
               </FormItem>
@@ -102,33 +98,28 @@ export default class Login extends Component {
                 {getFieldDecorator('password', {
                   rules: [{
                     required: type === 'account', message: '请输入密码！',
-                  }],initialValue:"123456"
+                  }],initialValue:""
                 })(
                   <Input
                     size="large"
                     prefix={<Icon type="lock" className={styles.prefixIcon} />}
                     type="password"
-                    placeholder="123456"
+                    placeholder="请输入密码！"
                   />
                 )}
               </FormItem>
-            </TabPane>
-          </Tabs>
           <FormItem className={styles.additional}>
-            {/*{getFieldDecorator('remember', {*/}
-              {/*valuePropName: 'checked',*/}
-              {/*initialValue: true,*/}
-            {/*})(*/}
+           {/* {getFieldDecorator('remember',{
+              valuePropName: 'checked',
+              initialValue: true,
+              })(
               <Checkbox className={styles.autoLogin}>自动登录</Checkbox>
-            {/*)}*/}
-            {/* <a className={styles.forgot} href="">忘记密码</a> */}
+            )} */}
             <Button size="large" loading={login.submitting} className={styles.submit} type="primary" htmlType="submit">
               登录
             </Button>
           </FormItem>
         </Form>
-        <div className={styles.other}>
-        </div>
       </div>
     );
   }

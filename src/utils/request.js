@@ -63,6 +63,9 @@ function checkCode(json) {
       message: `提示`,
       description: errortext,
     });
+    if(json.code==-2&&json.code==-8){
+      location.reload()
+    }
   }else if(json.code>=-100&&json.code<-7){
     notification.error({
       message: `提示`,
@@ -82,13 +85,6 @@ function checkCode(json) {
   return json
   }
 
-/**
- * Requests a URL, returning a promise.
- *
- * @param  {string} url       The URL we want to request
- * @param  {object} [options] The options we want to pass to "fetch"
- * @return {object}           An object containing either "data" or "err"
- */
 export default function request(url, options) {
   const defaultOptions = {
     credentials: 'include',

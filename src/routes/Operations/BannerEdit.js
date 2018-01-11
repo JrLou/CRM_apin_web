@@ -46,12 +46,11 @@ class BannerEdit extends PureComponent {
       delete(values["validityTime"]);
       delete(values["actionType"]);
       dispatch({
-        type: 'bannerList/checkEdit',
+        type: 'bannerList/addBanner',
         payload: values,
         callback:(response)=>{
           if(response.code==1){
             console.log(response);
-
           }else{
             console.log(response.msg);
           }
