@@ -267,35 +267,42 @@ export default class Choose extends PureComponent {
 
       {
         title: '出发城市',
-        dataIndex: 'depAirport',
+        dataIndex: 'city_dep',
       },
       {
         title: '到达城市',
-        dataIndex: 'arrAirport',
+        dataIndex: 'city_arr',
       },
       {
         title: '下单时间',
-        dataIndex: 'createTime',
+        dataIndex: 'create_time',
       },
       {
         title: '起飞时间',
-        dataIndex: 'createTimePeriod',
+        dataIndex: 'dep_yyyymm',
+        render: (text, record) => {
+          return text.toString().substring(0, 4) + "-" + text.toString().substring(4);
+        }
       },
       {
         title: '订单状态',
-        dataIndex: 'status',
+        dataIndex: 'order_status',
       },
       {
         title: '是否接受微调',
-        dataIndex: 'isAllowChange',
+        dataIndex: 'is_adjust',
+        render: (text, record) => {
+          let innerText = ['否', ' 是']
+          return innerText[text]
+        },
       },
       {
         title: '订单人数',
-        dataIndex: 'orderCount',
+        dataIndex: 'adult_count',
       },
       {
         title: '出行天数',
-        dataIndex: 'days',
+        dataIndex: 'trip_days',
       },
       {
         title: '推送记录',

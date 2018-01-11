@@ -42,19 +42,15 @@ class page extends Component {
     super(props);
     this.state = {
       loading: false,
-      id: '',
-      details: null,
+      data: {},
     };
   }
 
   componentDidMount() {
     if (this.props.location.state) {
-      console.log('看看么没有出来')
-      console.log(this.props.flightstockAdd)
-      this.addPost('flightstockAdd/addtailAirLine',{id:this.props.location.state.id});
+      this.addPost('flightstockAdd/addtailAirLine', {id: this.props.location.state.data.id});
       this.setState({
-        id: this.props.location.state.id,
-        // details: this.props.details,
+        data: this.props.location.state.data,
       });
     }
   }
@@ -74,15 +70,20 @@ class page extends Component {
   }
 
   render() {
+<<<<<<< HEAD
 
+=======
+    const {flightstockAdd: {accurate, details}} = this.props;
+>>>>>>> e58ae937d149511d8ebd7f976dca376fe9600ecb
     return (
       <div className={css.formWapper}>
         <Spin className={css.Spin} spinning={this.state.loading}>
           <WrappedAddForm
             showLoad={this.showLoad.bind(this)}
             addPost={this.addPost.bind(this)}
-            id={this.state.id}
-            details={this.state.details}
+            id={this.state.data.id}
+            information={this.state.data}
+            details={details}
           />
         </Spin>
       </div>
@@ -677,6 +678,7 @@ class AddForm extends Component {
       }
     }
     getFieldDecorator('keys', {initialValue: []});
+    let {details} = this.props;
     const keys = getFieldValue('keys');
     const formItems = keys.map((k, index) => {
       return (
@@ -746,17 +748,16 @@ class AddForm extends Component {
       <div className={css.AgenciesView_box}>
         <Tabs type="card">
           <TabPane tab="航班政策信息" key="1">
-            {/*{this.props.post.id &&*/}
-            {/*<div className={css.AgenciesView_box_column}>*/}
-            {/*<p>机票资源编号：<span>{this.props.post.airlineNo}</span></p>*/}
-            {/*<p onClick={this.props.tiaozhuans.bind(this, this.state.flightdata.flightstockData.line.managerId)}*/}
-            {/*style={{cursor: "pointer"}}>*/}
-            {/*供应商名称：<span>{this.props.post.supplierName == "undefined" ? "未知" : this.props.post.supplierName}</span>*/}
-            {/*</p>*/}
-            {/*<p>航班号：<span>{this.props.post.flightNumber}</span></p>*/}
-            {/*<p>当前状态：<span>{this.airlineStatus()}</span></p>*/}
-            {/*</div>*/}
-            {/*}*/}
+            {this.props.id &&
+            <div className={css.AgenciesView_box_column}>
+            <p>机票资源编号：<span>{this.props.id}</span></p>
+            <p style={{cursor: "pointer"}}>
+            供应商名称：<span>{this.props.information.supplier_name}</span>
+            </p>
+            <p>航班号：<span>{this.props.information.flight_no}</span></p>
+            <p>当前状态：<span>{this.props.information.flight_no}</span></p>
+            </div>
+            }
             <Form layout={'horizontal'} onSubmit={this.handleSubmit.bind(this)}>
               <div className={css.AgenciesView_box_list}>
                 <Row>
@@ -804,7 +805,7 @@ class AddForm extends Component {
                     >
                       {getFieldDecorator('manager', {
                         rules: [{required: true, message: requiredText,}],
-                        initialValue: flightstockData.line ? flightstockData.line.manager : '',
+                        initialValue: details ? details[0].manager : '',
                       })
                       (< Input placeholder="请填写航线负责人"
                                disabled={(this.state.flightdata.competence && this.state.flightdata.competenceEdit)}
@@ -840,7 +841,7 @@ class AddForm extends Component {
                             required: true,
                             message: requiredText,
                           }, {pattern: /^[1-9]\d{0,4}$/, message: "请输入小于6位的正整数"}],
-                          initialValue: flightstockData.airline ? flightstockData.airline.days + 1 : '',
+                          initialValue: details ? details[0].days : '',
                         })
                         (< Input placeholder="请输入出行天数"
                                  onChange={this.valHeadquarters.bind(this, 0)}

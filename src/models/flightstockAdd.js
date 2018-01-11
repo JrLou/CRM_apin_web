@@ -4,7 +4,7 @@ export default {
   namespace: 'flightstockAdd',
   state: {
     accurate: {},//飞常准数据
-    details: {}//编辑回显数据
+    details: null//编辑回显数据
   },
   effects: {
     //飞常准查询
@@ -36,7 +36,7 @@ export default {
     detail(state, action) {
       return {
         ...state,
-        details: action.payload,
+        details: action.payload.data,
       }
     },
   },

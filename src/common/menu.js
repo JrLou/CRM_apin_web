@@ -13,6 +13,13 @@ const menuData = [{
   children: [{
     name: '供应商资源',
     path: 'supplier/supplierPolicy/flightstock',
+    // children: [{
+    //   name: '供应商列表',
+    //   path: 'supplier/supplierPolicy/flightstock',
+    // }, {
+    //   name: '编辑，新增，查看供应商',
+    //   path: 'supplier/supplierPolicy/flightstockAdd',
+    // }],
   }, {
     name: '飞猪资源',
     path: 'supplier/flyPigList',
@@ -37,6 +44,18 @@ const menuData = [{
     //   name: '查看拼团',
     //   path: 'fightgroups/demand/checkFightGroups/:id',
     // }],
+    // children: [
+    //   {
+    //     name: '推送方案-选择订单',
+    //     path: 'fightgroups/demand/choose/:data',
+    //   }, {
+    //     name: '方案推送',
+    //     path: 'fightgroups/demand/push',
+    //   }, {
+    //     name: '查看历史拼团',
+    //     path: 'fightgroups/demand/viewDemand/:data',
+    //   }
+    // ],
   }, {
     name: '拼团列表',
     path: 'fightgroups/list',
@@ -46,11 +65,19 @@ const menuData = [{
   icon: 'profile',
   path: 'order',
   children: [{
-    name: '飞猪&代销订单',
+    name: '飞猪&供应商订单',
     path: 'order/flyingpig',
+    // children:[{
+    //   name:'飞猪&供应商订单详情',
+    //   path:'/order/flyingpig/detail',
+    // }]
   }, {
     name: '委托订单',
     path: 'order/entrust',
+    // children:[{
+    //   name:'委托订单详情',
+    //   path:'/order/entrust/detail',
+    // }]
   }, {
     name: '退款列表',
     path: 'order/refund',
@@ -62,42 +89,46 @@ const menuData = [{
   children: [{
     name: 'banner图片管理',
     path: 'operations/banner',
+    // children:[{
+    //   name:'新增banner',
+    //   path:'/Operations/BannerEdit',
+    // }]
   }],
 },
-// {
-//   name: '财务管理',
-//   icon: 'table',
-//   path: 'finance',
-//   children: [{
-//     name: '支付明细',
-//     path: 'finance/finance_payment',
-//   }, {
-//     name: '财务转账审核',
-//     path: 'finance/finance_verify',
-//   }],
-// }, {
-//   name: '详情页',
-//   icon: 'profile',
-//   path: 'profile',
-//   children: [{
-//     name: '基础详情页',
-//     path: 'profile/basic',
-//   }, {
-//     name: '高级详情页',
-//     path: 'profile/advanced',
-//   }],
-// }, {
-//   name: '权限管理',
-//   icon: 'setting',
-//   path: 'rightsManagement',
-//   children: [{
-//     name: '用户管理',
-//     path: 'rightsManagement/RoleManage',
-//   },{
-//     name: '编辑角色',
-//     path: 'rightsManagement/EditRole',
-//   }],
-// },
+  // {
+  //   name: '财务管理',
+  //   icon: 'table',
+  //   path: 'finance',
+  //   children: [{
+  //     name: '支付明细',
+  //     path: 'finance/finance_payment',
+  //   }, {
+  //     name: '财务转账审核',
+  //     path: 'finance/finance_verify',
+  //   }],
+  // }, {
+  //   name: '详情页',
+  //   icon: 'profile',
+  //   path: 'profile',
+  //   children: [{
+  //     name: '基础详情页',
+  //     path: 'profile/basic',
+  //   }, {
+  //     name: '高级详情页',
+  //     path: 'profile/advanced',
+  //   }],
+  // }, {
+  //   name: '权限管理',
+  //   icon: 'setting',
+  //   path: 'rightsManagement',
+  //   children: [{
+  //     name: '用户管理',
+  //     path: 'rightsManagement/RoleManage',
+  //   },{
+  //     name: '编辑角色',
+  //     path: 'rightsManagement/EditRole',
+  //   }],
+  // },
 ];
 
 // function formatter(data, parentPath = '') {

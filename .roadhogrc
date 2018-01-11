@@ -24,7 +24,6 @@
     "changeOrigin": true,
     "pathRewrite": { "^/api" : "/api" }
     }
-
   },
   "ignoreMomentLocale": true,
   "theme": "./src/theme.js",
