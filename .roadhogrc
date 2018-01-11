@@ -19,10 +19,14 @@
     "g2-plugin-slider": "G2.Plugin.slider"
   },
   "proxy": {
+<<<<<<< HEAD
     "/crm": {
     "target": "http://192.168.0.180:6040",
+=======
+    "/": {
+    "target": "http://192.168.0.32:9712",
+>>>>>>> e3224c3c1b4dc3adf1fe02737ca8476771c08b18
     "changeOrigin": true,
-    "pathRewrite": { "^/crm" : "" }
     }
   },
   "ignoreMomentLocale": true,

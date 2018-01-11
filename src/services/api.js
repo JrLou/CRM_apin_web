@@ -76,21 +76,21 @@ export async function queryUserList(params) {
 }
 //客户列表 华志林
 export async function queryCustomerList(params) {// /api/member/getMemberList
-  return request('/crm/api/member/getMemberList', {
+  return request('/api/member/getMemberList', {
     method: 'POST',
     body: params,
   });
 }
 //拼团列表 暂时未使用，need reWrite
 export async function queryFightGroupsList(params) {// /api/member/getMemberList
-  return request('/crm/api/demandPool/getGroupList', {
+  return request('/api/demandPool/getGroupList', {
     method: 'POST',
     body: params,
   });
 }
 
 export async function entrust(params) {
-  return request('/crm/api/order/getOrderList', {
+  return request('/api/order/getOrderList', {
     method: 'POST',
     body: params,
   });
@@ -102,7 +102,7 @@ export async function addBannerImg(params) {
   });
 }
 export async function queryBanner(params) {
-  return request('/crm/api/banner/getBannerList', {
+  return request('/api/banner/getBannerList', {
     method: 'POST',
     body: params,
   });
@@ -110,7 +110,7 @@ export async function queryBanner(params) {
 
 //base64 banner图上传
 export async function baseImg(params) {
-  return request('/crm/api/common/uploadImage', {
+  return request('/api/common/uploadImage', {
     method: 'POST',
     body: params,
   });
@@ -128,7 +128,7 @@ export async function querySupplierList(params) {
   return request(`/api/suplierList?${stringify(params)}`);
 }
 export async function queryFlyList(params) {
-  return request('/crm/api/order/getOrderList', {
+  return request('/api/order/getOrderList', {
     method: 'POST',
     body: params,
   });
@@ -136,35 +136,35 @@ export async function queryFlyList(params) {
 //李斯奇 政策管理供应商资源
 //供应商列表资源列表
 export async function flightstockList(params) {
-  return request('/crm/api/resource/getAirLines', {
+  return request('/api/resource/getAirLines', {
     method: 'POST',
     body: params,
   });
 }
 //上架 ()
 export async function stateAirLine(params) {
-  return request('/crm/api/resource/stateAirLine', {
+  return request('/api/resource/stateAirLine', {
     method: 'POST',
     body: params,
   });
 }
 //日志
 export async function getAirLineLogs(params) {
-  return request('/crm/api/resource/getAirLineLogs',{
+  return request('/api/resource/getAirLineLogs',{
     method: 'POST',
     body: params,
   });
 }
 //非常准航线查询
 export async function getaddAirLine(params) {
-  return request('/crm/api/resource/searchAirLine',{
+  return request('/api/resource/searchAirLine',{
     method: 'POST',
     body: params,
   });
 }
 //编辑回显
 export async function getdetailAirLine(params) {
-  return request('/crm/api/resource/detailAirLine',{
+  return request('/api/resource/detailAirLine',{
     method: 'POST',
     body: params,
   });
@@ -172,45 +172,45 @@ export async function getdetailAirLine(params) {
 
 export async function AccountLogin(params) {
   const newparams = Object.assign({}, { account: params.account, type:0 })
-  const response = await request('/crm/api/user/getLogicCode',{
+  const response = await request('/api/user/getLogicCode',{
     method:"POST",
     body:newparams,
   });
   if (response && response.data && response.code>=1) {
     const newparams2 = Object.assign({}, { account: params.account, signature: md5(md5(params.account + md5(params.password)) + response.data) })
-    return request('/crm/api/user/loginByAccount',{
+    return request('/api/user/loginByAccount',{
       method:'POST',
       body:newparams2,
     });
   }
 }
 export async function queryMenus() {
-  return request('/crm/uc/authapi/v1.1/modules');
+  return request('/uc/authapi/v1.1/modules');
 }
 export async function financePaymentList(params) {
-  return request('/crm/bo/orderapi/v1.0/orders/recordList', {
+  return request('/bo/orderapi/v1.0/orders/recordList', {
     method: 'POST',
     body: params,
   });
 }
 //刘园园权限管理
 export async function roleManageList(params) {
-  return request(`/crm/cr/v2/accounts/role/list?${stringify(params)}`);
+  return request(`/cr/v2/accounts/role/list?${stringify(params)}`);
 }
 export async function getFlylist(params) {
-  return request('/crm/api/order/getOrderList', {
+  return request('/api/order/getOrderList', {
     method: 'POST',
     body: params,
   });
 }
 export async function getFlyDetail(params) {
-  return request('/crm/api/order/getOrderDetail', {
+  return request('/api/order/getOrderDetail', {
     method: 'POST',
     body: params,
   });
 }
 export async function flyDetailAddTicket(params) {
-  return request('/crm/api/order/addTicket', {
+  return request('/api/order/addTicket', {
     method: 'POST',
     body: params,
   });
