@@ -77,7 +77,7 @@ class StandardTable extends PureComponent {
   //编辑
   handleEdit = (data)=>{
     this.props.dispatch({
-      type: 'bannerList/toAdd',
+      type: 'bannerList/toEdit',
       payload:data,
     });
   };

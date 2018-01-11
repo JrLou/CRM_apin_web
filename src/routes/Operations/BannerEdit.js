@@ -17,8 +17,16 @@ const {RangePicker} = DatePicker;
   bannerList: state.bannerList,
 }))
 @Form.create()
-
 class BannerEdit extends PureComponent {
+  componentWillMount(){
+    if(this.props.type){
+      if(!this.props.bannerList.id){
+        dispatch({
+          type: 'bannerList/cancelEdit',
+        })
+      }
+    }
+  }
   onChange = (date, dateString) => {
     this.setState({
       start_time: dateString[0],
@@ -27,15 +35,12 @@ class BannerEdit extends PureComponent {
   }
   handleSubmit = (e) => {
     e.preventDefault();
-
     const {dispatch, form} = this.props;
-
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       const values = {
         ...fieldsValue,
       };
-
       if(!values.validityTime[0]||!values.validityTime[1]){
         message.warning('请输入图片有效期');
         return;
@@ -67,7 +72,6 @@ class BannerEdit extends PureComponent {
   render() {
     const { bannerList:{editData:data} } = this.props;
     const {getFieldDecorator} = this.props.form;
-
     let validityStart = data.validityStart?moment(data.validityStart):undefined;
     let validityEnd = data.validityEnd?moment(data.validityEnd):undefined;
     let validityTime = [validityStart,validityEnd];

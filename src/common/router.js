@@ -162,7 +162,7 @@ export const getRouterData = (app) => {
     },
     '/operations/banner/bannerEdit': {
       name:'编辑banner',
-      component: dynamicWrapper(app, ['bannerList'], () => import('../routes/Operations/BannerEdit.js')),
+      component: dynamicWrapper(app, ['bannerList'], () => import('../routes/Operations/BannerView.js')),
     },
     // '/user/:id': {
     //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),
