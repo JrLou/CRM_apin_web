@@ -343,7 +343,7 @@ export default class CheckFightGroups extends Component {
     return ModalView;
   }
 
-  handleshowModal() {
+  handleshowModal() { 
     const {dispatch} = this.props;
     dispatch({
       type: 'checkFightGroups/extendAll',//modalConfirmLoading
