@@ -1,5 +1,5 @@
 import {queryAdvancedProfile, changeStatus} from '../services/api';//这个要删除的
-import {queryOrderInfo, planClose} from '../services/api';
+import {queryOrderInfo, queryDetailGroupVoyage, planClose} from '../services/api';
 import {message} from 'antd';
 //TODO 这个文件刚刚copy下来，都需修改
 export default {
@@ -14,7 +14,7 @@ export default {
     // advancedLoading: true,
     groupsInfoData: {//拼团信息
       code: '',
-      data: [],
+      data: {},
       msg: '',
     },
     groupsInfoLoading: true,
@@ -26,19 +26,19 @@ export default {
     },
     orderInfoLoading: true,
 
+    detailGroupVoyage: {//方案明细
+      code: '',
+      data: [{},{}],
+      msg: '',
+    },
+    detailGroupVoyageLoading: true,
+
     logInfoData: {//日志信息
       code: '',
       data: [],
       msg: '',
     },
     logInfoLoading: true,
-
-    projectDetailData: {//方案明细
-      code: '',
-      data: [],
-      msg: '',
-    },
-    projectDetailLoading: true,
 
     modalData: {//保存着当前modal需要的列表信息
       code: '',
@@ -50,13 +50,12 @@ export default {
   },
 
   effects: {
-    * fetchGroupsInfo({payload}, {call, put}) {
+    * fetchGroupsInfo({payload}, {call, put}) {// 获取拼团信息
       yield put({
         type: 'extendAll',
         payload: {groupsInfoLoading: true},
       });
       const response = yield call(queryOrderInfo, payload);
-      console.log("queryOrderInfo的res!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", response);
       yield put({
         type: 'save',
         payload: response,
@@ -67,6 +66,26 @@ export default {
         payload: {groupsInfoLoading: false},
       });
     },
+    * fetchDetailGroupVoyage({payload}, {call, put}) {// 获取方案明细
+      yield put({
+        type: 'extendAll',
+        payload: {detailGroupVoyageLoading: true},
+      });
+      const response = yield call(queryDetailGroupVoyage, payload);
+      yield put({
+        type: 'save',
+        payload: response,
+        key: "detailGroupVoyage",
+      });
+      yield put({
+        type: 'extendAll',
+        payload: {detailGroupVoyageLoading: false},
+      });
+    },
+
+
+
+
     * fetchBasic({payload}, {call, put}) {
       yield put({
         type: 'extendAll',
@@ -115,7 +134,6 @@ export default {
       } else {
         message.error("保存失败");
       }
-
     },
     * fetchConfirmExport({payload, callback}, {call, put}) {
       yield put({

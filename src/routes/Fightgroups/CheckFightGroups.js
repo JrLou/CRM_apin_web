@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'dva';
 import {Link} from 'dva/router';
 import {Card, Spin, Table, Divider, Icon, Row, Col, Button, message} from 'antd';
@@ -44,12 +45,16 @@ export default class CheckFightGroups extends Component {
 
   componentDidMount() {
     const {dispatch} = this.props;
-    dispatch({
+    dispatch({//todo 这个最后记得删除
       type: 'checkFightGroups/fetchBasic',
       payload: this.id,
     });
-    dispatch({
+    dispatch({// 获取拼团信息
       type: 'checkFightGroups/fetchGroupsInfo',
+      payload: {id: this.id},
+    });
+    dispatch({// 获取方案明细
+      type: 'checkFightGroups/fetchDetailGroupVoyage',
       payload: {id: this.id},
     });
   }
@@ -79,13 +84,17 @@ export default class CheckFightGroups extends Component {
   getFightGroupsInfoView() {
     const {groupsInfoData: {data, code, msg}, groupsInfoLoading} = this.props.checkFightGroups;
 
+    const create_time = formatDate(data.create_time, 'YYYY-MM-DD');
+    // todo 方案有效时间，通过这个字段，计算出过期时间；
+    const expired_time = formatDate(data.expired_time, 'YYYY-MM-DD');
+
     const group_status = this.mapGroupStateToTxt(data.group_status);
     const city_dep = data.city_dep;
     const city_arr = data.city_arr;
     const date_dep = formatDate(data.date_dep, 'YYYY-MM-DD');
     const date_ret = formatDate(data.date_ret, 'YYYY-MM-DD');
-    const create_time = formatDate(data.create_time, 'YYYY-MM-DD');
-    const expired_time = formatDate(data.expired_time, 'YYYY-MM-DD');
+
+
     const paidMan = +data.paidMan;
     const creator_name = data.creator_name;
 
@@ -209,41 +218,43 @@ export default class CheckFightGroups extends Component {
     );
   }
 
-  getProjectDetailView() {
+  getDetailGroupVoyage() {
+    const {
+      detailGroupVoyage: {data, code, msg},
+      detailGroupVoyageLoading,
+      groupsInfoData: {data: groupsInfoDataData},
+    } = this.props.checkFightGroups;
+
+    let expired_hour = (groupsInfoDataData.expired_time - groupsInfoDataData.create_time) % (1000 * 60 * 60);
+    expired_hour = expired_hour || (expired_hour === 0 ? 0 : "");
+
+    const goFlightInfo = data.filter(currV => currV.trip_index === 0)[0] || {};
+    const backFlightInfo = data.filter(currV => currV.trip_index === 1)[0] || {};
+    const time_dep = formatDate(goFlightInfo.time_dep, 'YYYY-MM-DD');
+    const time_arr = formatDate(backFlightInfo.time_dep, 'YYYY-MM-DD');
+
     return (
       <div>
         <div className={styles.title}><Icon type="schedule"/> 方案明细</div>
-        <div className={styles.schemeInfo}>
-          <DescriptionList size="large" style={{marginBottom: 32}} col={2}>
-            <Description term="起飞日期">2018-01-01</Description>
-            <Description term="返回日期">2018-01-03</Description>
-          </DescriptionList>
-          <div className={styles.descAir}>
-            <p>MU9885</p>
-            <Row>
-              <Col span={12} className={styles.item}>杭州萧山</Col>
-              <Col span={12} className={styles.item}>杭州萧山</Col>
-              <Col span={12} className={styles.item}>12:00</Col>
-              <Col span={12} className={styles.item}>18:00</Col>
-              <Col span={12} className={styles.item}>中国东方航空</Col>
-            </Row>
+        <Spin spinning={detailGroupVoyageLoading}>
+          <div className={styles.schemeInfo}>
+            <DescriptionList size="large" style={{marginBottom: 32}} col={2}>
+              <Description term="起飞日期">{time_dep}</Description>
+              <Description term="返回日期">{time_arr}</Description>
+            </DescriptionList>
+            <div className={styles.descAir}>
+              <SingleFightView data={goFlightInfo}/>
+            </div>
+            <div className={styles.descAir} style={{marginLeft: '40px'}}>
+              <SingleFightView data={backFlightInfo}/>
+            </div>
+            <DescriptionList size="large" style={{marginTop: 32}} col={2}>
+              <Description term="销售价格">{groupsInfoDataData.sell_price || "未知价格"} 元 / 人</Description>
+              <Description term="方案有效时间">{expired_hour} 小时</Description>
+              <Description term="折扣">{groupsInfoDataData.discount}折</Description>
+            </DescriptionList>
           </div>
-          <div className={styles.descAir} style={{marginLeft: '40px'}}>
-            <p>MU9885</p>
-            <Row>
-              <Col span={12} className={styles.item}>杭州萧山</Col>
-              <Col span={12} className={styles.item}>杭州萧山</Col>
-              <Col span={12} className={styles.item}>12:00</Col>
-              <Col span={12} className={styles.item}>18:00</Col>
-              <Col span={12} className={styles.item}>中国东方航空</Col>
-            </Row>
-          </div>
-          <DescriptionList size="large" style={{marginTop: 32}} col={2}>
-            <Description term="销售价格">1222</Description>
-            <Description term="方案有效时间">24小时</Description>
-            <Description term="折扣">2.7折</Description>
-          </DescriptionList>
-        </div>
+        </Spin>
       </div>
     );
   }
@@ -343,7 +354,7 @@ export default class CheckFightGroups extends Component {
     return ModalView;
   }
 
-  handleshowModal() { 
+  handleshowModal() {
     const {dispatch} = this.props;
     dispatch({
       type: 'checkFightGroups/extendAll',//modalConfirmLoading
@@ -391,7 +402,7 @@ export default class CheckFightGroups extends Component {
           <Divider style={{marginBottom: 32}}/>
 
           {/*方案明细*/}
-          {this.getProjectDetailView()}
+          {this.getDetailGroupVoyage()}
           <Divider style={{marginBottom: 32}}/>
 
           {/*日志信息*/}
@@ -404,5 +415,26 @@ export default class CheckFightGroups extends Component {
     );
   }
 }
+
+const SingleFightView = (props) => {
+  const time_dep = formatDate(props.data.time_dep, 'HH : mm') || "未知时间";
+  const time_arr = formatDate(props.data.time_arr, 'HH : mm') || "未知时间";
+
+  return (//todo 往返航班的各自的  出发时间  到达时间
+    <div>
+      <p>{props.data.flight_no}</p>
+      <Row>
+        <Col span={12} className={styles.item}>{props.data.city_dep_name || "未知城市"}</Col>
+        <Col span={12} className={styles.item}>{props.data.city_arr_name || "未知城市"}</Col>
+        <Col span={12} className={styles.item}>{time_dep}</Col>
+        <Col span={12} className={styles.item}>{time_arr}</Col>
+        <Col span={12} className={styles.item}>{props.data.flight_company || "未知航空公司"}</Col>
+      </Row>
+    </div>
+  );
+};
+SingleFightView.propTypes = {
+  data: PropTypes.object
+};
 
 
