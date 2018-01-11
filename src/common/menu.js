@@ -85,10 +85,10 @@ const menuData = [{
     path: 'operations/banner',
     // children:[{
     //   name:'新增banner',
-    //   path:'/Operations/BannerAdd',
+    //   path:'/operations/banner/bannerAdd',
     // },{
     // name:'编辑banner',
-    // path:'/Operations/BannerEdit',
+    // path:'/operations/banner/bannerEdit',
     // }]
   }],
 },
