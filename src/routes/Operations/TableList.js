@@ -51,23 +51,21 @@ class StandardTable extends PureComponent {
   };
 
   //上架/下架
-  changeStatus = (id,status)=>{
+  changeStatus = (id,state)=>{
     if(!id){
       return;
     }
     let params = {
       id:id,
-      status:status?1:0
+      state
     };
-
+    let message=['0','1']
     this.props.dispatch({
       type: 'bannerList/changeStatus',
       payload: params,
       callback:(response)=>{
-        if(response.code==200){
-          message.success(response.message);
-        }else{
-          message.error(response.message);
+        if(response.code>=1){
+          message.success(message[state]);
         }
       }
     });
@@ -76,7 +74,7 @@ class StandardTable extends PureComponent {
   //编辑
   handleEdit = (data)=>{
     this.props.dispatch({
-      type: 'bannerList/toAdd',
+      type: 'bannerList/toEdit',
       payload:data,
     });
   };
@@ -98,7 +96,6 @@ class StandardTable extends PureComponent {
         title: '图片',
         dataIndex:'banner_url',
         render:(text, record, index) => {
-          // 生成复杂数据的渲染函数，参数分别为当前行的值，当前行数据，行索引，@return里面可以设置表格行/列合并
           if (!record.img_url) {
               return <ImageWrapper className={styles.picTable} src={text} desc="示意图"/>
           } else {
@@ -148,7 +145,7 @@ class StandardTable extends PureComponent {
       <div className={styles.standardTable}>
         <Table
           loading={loading}
-          rowKey={record => record.key}
+          rowKey={record => record.id}
           dataSource={data}
           columns={columns}
           pagination={paginationProps}
@@ -165,11 +162,11 @@ class StandardTable extends PureComponent {
           type={'primary'}
           className={styles.btn}
           onClick={()=>{
-            let status = record.status==1?0:1;
+            let status = record.state==1?0:1;
             this.changeStatus(record.id,status);
           }}
         >
-          {record.status==1?'下架':'上架'}
+          {record.state==1?'下架':'上架'}
         </Button>
         <Button
           type={'primary'}

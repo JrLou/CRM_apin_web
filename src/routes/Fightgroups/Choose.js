@@ -112,15 +112,15 @@ export default class Choose extends PureComponent {
   resetSearch = () => {
     this.props.form.resetFields();
     // 全选的特殊处理
-    this.setState({
-      checkedList: [],
-      indeterminate: false,
-      checkAll: false,
+    // this.setState({
+    //   checkedList: [],
+    //   indeterminate: false,
+    //   checkAll: false,
 
-      daysCheckedList: [],
-      daysIndeterminate: false,
-      daysCheckAll: false,
-    }, this.handleSearch)
+    //   daysCheckedList: [],
+    //   daysIndeterminate: false,
+    //   daysCheckAll: false,
+    // }, this.handleSearch)
 
   }
   pushScheme = () => {
@@ -139,16 +139,16 @@ export default class Choose extends PureComponent {
   }
 
   handleModalVisible = (flag) => {
-    this.setState({
-      modalVisible: !!flag
-    });
+    // this.setState({
+    //   modalVisible: !!flag
+    // });
   }
 
   selectChange(selectedRowKeys, selectedRows) {
-    this.setState({
-      selectRows: selectedRows,
-      selectedRowKeys: selectedRowKeys
-    })
+    // this.setState({
+    //   selectRows: selectedRows,
+    //   selectedRowKeys: selectedRowKeys
+    // })
   }
 
   peroidChange = (checkedList) => {
@@ -160,11 +160,11 @@ export default class Choose extends PureComponent {
   }
   onCheckAllChange = (e) => {
     console.log(e.target.checked)
-    this.setState({
-      checkedList: e.target.checked ? ['1', '2', '3'] : [],
-      indeterminate: false,
-      checkAll: e.target.checked,
-    });
+    // this.setState({
+    //   checkedList: e.target.checked ? ['1', '2', '3'] : [],
+    //   indeterminate: false,
+    //   checkAll: e.target.checked,
+    // });
   }
   daysPeroidChange = (daysCheckedList) => {
     this.setState({
@@ -175,11 +175,11 @@ export default class Choose extends PureComponent {
   }
   daysOnCheckAllChange = (e) => {
     console.log(e.target.checked)
-    this.setState({
-      daysCheckedList: e.target.checked ? allValues : [],
-      daysIndeterminate: false,
-      daysCheckAll: e.target.checked,
-    });
+    // this.setState({
+    //   daysCheckedList: e.target.checked ? allValues : [],
+    //   daysIndeterminate: false,
+    //   daysCheckAll: e.target.checked,
+    // });
   }
 
   renderForm() {

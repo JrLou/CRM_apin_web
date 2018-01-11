@@ -67,15 +67,29 @@ export async function queryUserList(params) {
   return request(`/api/userList?${stringify(params)}`);
 }
 //客户列表 华志林
-export async function queryCustomerList(params) {// /api/member/getMemberList
+export async function queryCustomerList(params) {
   return request('/api/member/getMemberList', {
     method: 'POST',
     body: params,
   });
 }
 //拼团列表 暂时未使用，need reWrite
-export async function queryFightGroupsList(params) {// /api/member/getMemberList
+export async function queryFightGroupsList(params) {
   return request('/api/demandPool/getGroupList', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+//查看拼团页面
+export async function queryOrderInfo(params) {//拼团信息
+  return request('/api/demandPool/detailGroup', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function planClose(params) {//关闭拼团
+  return request('/api/demandPool/planClose', {
     method: 'POST',
     body: params,
   });
@@ -114,7 +128,10 @@ export async function deleteBanner(params) {
   });
 }
 export async function changeStatus(params) {
-  return request(`/api/changeStatus?${stringify(params)}`);
+  return request('/api/banner/useBanner', {
+    method: 'POST',
+    body: params,
+  });
 }
 export async function querySupplierList(params) {
   return request(`/api/suplierList?${stringify(params)}`);

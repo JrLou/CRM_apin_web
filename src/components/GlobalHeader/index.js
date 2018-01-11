@@ -83,6 +83,7 @@ export default class GlobalHeader extends PureComponent {
       </Menu>
     );
     // const noticeData = this.getNoticeData();
+    console.log(currentUser)
     return (
       <Header className={styles.header}>
         <Icon
@@ -93,7 +94,7 @@ export default class GlobalHeader extends PureComponent {
         <div className={styles.right}>
             <Dropdown overlay={menu}>
               <span className={`${styles.action} ${styles.account}`}>
-                {currentUser?currentUser:"菜单"}
+                {currentUser?currentUser:'设置'}
               </span>
             </Dropdown>
         </div>
