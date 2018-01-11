@@ -17,16 +17,16 @@ const {Description} = DescriptionList;
 
 const progressColumns = [{
   title: '操作时间',
-  dataIndex: 'time',
-  key: 'time',
+  dataIndex: 'create_time',
+  key: 'create_time',
 }, {
   title: '操作员',
-  dataIndex: 'operator',
-  key: 'operator',
+  dataIndex: 'user_name',
+  key: 'user_name',
 }, {
   title: "操作内容",
-  dataIndex: 'rate',
-  key: "rate",
+  dataIndex: 'create_content',
+  key: 'create_content',
 }];
 
 
@@ -56,6 +56,14 @@ export default class CheckFightGroups extends Component {
     dispatch({// 获取方案明细
       type: 'checkFightGroups/fetchDetailGroupVoyage',
       payload: {id: this.id},
+    });
+    dispatch({// 获取日志信息
+      type: 'checkFightGroups/fetchGroupLogs',
+      payload: {
+        uuid: this.id,
+        p: 1,
+        pc: 1000,//目前不分页，但是后台是按这种形式写的接口
+      },
     });
   }
 
@@ -106,7 +114,7 @@ export default class CheckFightGroups extends Component {
           <Button
             type="primary"
             className={styles.btn}
-            disabled={groupsInfoLoading || false}//todo {data.group_status !== 2 && groupsInfoLoading}
+            disabled={data.group_status !== 2 || groupsInfoLoading}
             onClick={() => {
               this.setState({modalType: 0}, () => {
                 this.handleshowModal()
@@ -259,14 +267,22 @@ export default class CheckFightGroups extends Component {
     );
   }
 
-  getLogInfoView(basicProgress) {
+  getLogInfoView() {
+    const {groupLogs: {code, data, msg}, groupLogsLoading} = this.props.checkFightGroups;
+    const dataSource = data.map(currV => ({
+      ...currV,
+      create_time: formatDate(currV.create_time, 'YYYY-MM-DD HH:mm:ss'),
+      key: currV.id,
+    }));
+
     return (
       <div>
         <div className={styles.title}><Icon type="form"/> 日志信息</div>
         <Table
+          loading={groupLogsLoading}
           style={{marginBottom: 16}}
           pagination={false}
-          dataSource={basicProgress}
+          dataSource={dataSource}
           columns={progressColumns}
         />
       </div>
@@ -387,7 +403,7 @@ export default class CheckFightGroups extends Component {
 
   render() {
     const {checkFightGroups} = this.props;
-    const {basicGoods, basicProgress, basicLoading} = checkFightGroups;
+    const {basicGoods, basicLoading} = checkFightGroups;
     const goodsColumns = this.getGoodsColumns();
 
     return (
@@ -406,7 +422,7 @@ export default class CheckFightGroups extends Component {
           <Divider style={{marginBottom: 32}}/>
 
           {/*日志信息*/}
-          {this.getLogInfoView(basicProgress)}
+          {this.getLogInfoView()}
 
           {/*所有Modal*/}
           {this.switchModalView()}

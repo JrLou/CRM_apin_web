@@ -88,18 +88,27 @@ export async function queryOrderInfo(params) {//拼团信息
     body: params,
   });
 }
-export async function queryDetailGroupVoyage(params) {// 获取方案明细
-  return request('/api/demandPool/detailGroupVoyage', {
-    method: 'POST',
-    body: params,
-  });
-}
 export async function planClose(params) {//关闭拼团
   return request('/api/demandPool/planClose', {
     method: 'POST',
     body: params,
   });
 }
+
+export async function queryDetailGroupVoyage(params) {// 方案明细
+  return request('/api/demandPool/detailGroupVoyage', {
+    method: 'POST',
+    body: params,
+  });
+}
+
+export async function queryGroupLogs(params) {// 日志信息
+  return request('/api/demandPool/getGroupLogs', {
+    method: 'POST',
+    body: params,
+  });
+}
+
 
 export async function entrust(params) {
   return request('/api/order/getOrderList', {

@@ -1,5 +1,5 @@
 import {queryAdvancedProfile, changeStatus} from '../services/api';//这个要删除的
-import {queryOrderInfo, queryDetailGroupVoyage, planClose} from '../services/api';
+import {queryOrderInfo,  planClose, queryDetailGroupVoyage, queryGroupLogs,} from '../services/api';
 import {message} from 'antd';
 //TODO 这个文件刚刚copy下来，都需修改
 export default {
@@ -33,12 +33,12 @@ export default {
     },
     detailGroupVoyageLoading: true,
 
-    logInfoData: {//日志信息
+    groupLogs: {//日志信息
       code: '',
       data: [],
       msg: '',
     },
-    logInfoLoading: true,
+    groupLogsLoading: true,
 
     modalData: {//保存着当前modal需要的列表信息
       code: '',
@@ -82,7 +82,22 @@ export default {
         payload: {detailGroupVoyageLoading: false},
       });
     },
-
+    * fetchGroupLogs({payload}, {call, put}) {// 获取日志信息
+      yield put({
+        type: 'extendAll',
+        payload: {groupLogsLoading: true},
+      });
+      const response = yield call(queryGroupLogs, payload);
+      yield put({
+        type: 'save',
+        payload: response,
+        key: "groupLogs",
+      });
+      yield put({
+        type: 'extendAll',
+        payload: {groupLogsLoading: false},
+      });
+    },
 
 
 
@@ -123,13 +138,17 @@ export default {
       });
       const response = yield call(planClose, payload);
       if (response.code >= 1) {
-        message.success("保存成功");
+        message.success("拼团已关闭");
         yield put({
           type: 'extendAll',
           payload: {
             modalConfirmLoading: false,
             showModal: false,
           },
+        });
+        yield put({
+          type: 'fetchGroupsInfo',
+          payload: payload
         });
       } else {
         message.error("保存失败");
