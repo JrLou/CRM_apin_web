@@ -160,6 +160,13 @@ export async function getdetailAirLine(params) {
     body: params,
   });
 }
+//日历数据
+export async function getpriceAirline(params) {
+  return request('/api/resource/priceAirline',{
+    method: 'POST',
+    body: params,
+  });
+}
 
 export async function AccountLogin(params) {
   const newparams = Object.assign({}, { account: params.account, type:0 })

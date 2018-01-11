@@ -1,19 +1,17 @@
-import {queryBanner,deleteBanner,changeStatus,baseImg,addBannerImg} from '../services/api';
+import {queryBanner, deleteBanner, changeStatus, baseImg, addBannerImg} from '../services/api';
 import {routerRedux} from 'dva/router';
 
 export default {
   namespace: 'bannerList',
 
   state: {
-    data  : {
-        data:[],
-        option:{}
+    data: {
+      data: [],
+      option: {}
     },
-    editData:{
-
-    },
+    editData: {},
     loading: true,
-    banner_url:'',
+    banner_url: '',
   },
 
   effects:
@@ -25,11 +23,7 @@ export default {
           payload: true,
         });
         const response = yield call(queryBanner, payload);
-<<<<<<< HEAD
-        if(!response && response.data.length > 0){
-=======
-        if(response && response.code >=1){
->>>>>>> 7e1ce5b9960284e27c7c3cba36801167fd92726a
+        if (response && response.code >= 1) {
           yield put({
             type: 'save',
             payload: response,
@@ -40,14 +34,14 @@ export default {
           payload: false,
         });
       },
-      * delete({payload,callback},{call,put}){
+      * delete({payload, callback}, {call, put}) {
         //列表页，删除一个banner
         yield put({
           type: 'changeLoading',
           payload: true,
         });
         const response = yield call(deleteBanner, payload);
-        if(callback){
+        if (callback) {
           callback(response);
         }
         yield put({
@@ -59,14 +53,14 @@ export default {
           payload: false,
         });
       },
-      * changeStatus({payload,callback},{call,put}){
+      * changeStatus({payload, callback}, {call, put}) {
         //列表页，改变上架下架状态
         yield put({
           type: 'changeLoading',
           payload: true,
         });
         const response = yield call(changeStatus, payload);
-        if(callback){
+        if (callback) {
           callback(response);
         }
         yield put({
@@ -78,51 +72,51 @@ export default {
           payload: false,
         });
       },
-      * toAdd({payload},{call,put}){
+      * toAdd({payload}, {call, put}) {
         //列表页，跳转到添加/编辑页面
         yield put({
           type: 'changeEditData',
-          payload:payload,
+          payload: payload,
         });
         yield put(routerRedux.push('/operations/bannerEdit'))
       },
-      * cancelEdit({payload},{call,put}){
+      * cancelEdit({payload}, {call, put}) {
         //取消编辑，跳转到列表页
         yield put({
           type: 'changeEditData',
-          payload:{},
+          payload: {},
         });
         yield put(routerRedux.push('/operations/banner'))
       },
-      * checkEdit({payload,callback},{call,put}){
+      * checkEdit({payload, callback}, {call, put}) {
         //确定编辑，成功以后跳转到列表页
         const response = yield call(queryBanner, payload);
-        if(callback){
+        if (callback) {
           callback(response);
         }
         yield put({
           type: 'changeEditData',
-          payload:{},
+          payload: {},
         });
         yield put(routerRedux.push('/operations/banner'))
       },
-      * addBanner({payload,callback},{call,put}){
+      * addBanner({payload, callback}, {call, put}) {
         //确定编辑，成功以后跳转到列表页
         const response = yield call(addBannerImg, payload);
-        if(response && response.code >=1){
+        if (response && response.code >= 1) {
           yield put({
             type: 'changeEditData',
-            payload:{},
+            payload: {},
           });
           yield put(routerRedux.push('/operations/banner'))
         }
       },
-      * baseImg({payload,callback},{call,put}){
+      * baseImg({payload, callback}, {call, put}) {
         //base64传给后台 后台返一个 图片url
         const response = yield call(baseImg, payload);
         yield put({
           type: 'changeBaseImg',
-          payload:response.data,
+          payload: response.data,
         });
       }
     },
@@ -133,7 +127,7 @@ export default {
         data: action.payload,
       };
     },
-    changeEditData(state, action){
+    changeEditData(state, action) {
       return {
         ...state,
         editData: action.payload,
