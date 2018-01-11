@@ -2,14 +2,6 @@ import { stringify } from 'qs';
 import request from '../utils/request';
 import md5 from 'md5'
 
-/*一级菜单url*/
-
-
-
-
-
-/*二级菜单url*/
-
 export async function queryProjectNotice() {
   return request('/api/project/notice');
 }
@@ -125,7 +117,6 @@ export async function queryFlyList(params) {
   });
 }
 //李斯奇 政策管理供应商资源
-//供应商列表资源列表
 export async function flightstockList(params) {
   return request('/crm/api/resource/getAirLines', {
     method: 'POST',
