@@ -70,6 +70,10 @@ const menuData = [{
   children: [{
     name: 'banner图片管理',
     path: 'operations/banner',
+    // children:[{
+    //   name:'新增banner',
+    //   path:'/Operations/BannerEdit',
+    // }]
   }],
 },
 // {
