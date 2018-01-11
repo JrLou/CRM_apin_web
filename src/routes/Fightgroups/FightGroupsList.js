@@ -19,12 +19,9 @@ export default class TableList extends PureComponent {
       loading: true,
       dataList: [],
     };
-    this.formValues = {//todo 这里耦合太高，记得重构
-      state: -1,
-      type: -1,
-    };//form的数据
+    this.reset();//todo 这里耦合太高，记得重构
     this.current = 1;
-    this.pageSize = 8;
+    this.pageSize = 10;
     this.total = 0;
   }
 
@@ -32,6 +29,14 @@ export default class TableList extends PureComponent {
     //请求数据
     this.loadTableData();
   }
+
+  reset() {//重置
+    this.formValues = {
+      state: -1,
+      type: -1,
+    };
+  }
+
 
   loadTableData() {
 
@@ -41,7 +46,7 @@ export default class TableList extends PureComponent {
       pc: this.pageSize,
     };
     this.doLoading(true, () => {
-      request("/crm/api/demandPool/getGroupList", {method: 'POST', body: param})//todo 这里看看是否有异常情况
+      request("/api/demandPool/getGroupList", {method: 'POST', body: param})//todo 这里看看是否有异常情况
         .then(response => {
           if (response instanceof Error) {
             this.doLoading(false);
@@ -62,6 +67,43 @@ export default class TableList extends PureComponent {
     }, cb);
   }
 
+  mapGroupStateToTxt(group_status) {
+    let result = {};
+    switch (group_status) {
+      case 0:
+        result = {
+          txt: "拼团关闭",
+          backgroundColor: '#999'
+        };
+        break;
+      case 1:
+        result = {
+          txt: "拼团中",
+          backgroundColor: '#df8600'
+        };
+        break;
+      case 2:
+        result = {
+          txt: "拼团完成",
+          backgroundColor: '#33cc66'
+        };
+        break;
+      case 3:
+        result = {
+          txt: "拼团成功",
+          backgroundColor: '#33cc66'
+        };
+        break;
+      default:
+        result = {
+          txt: "未知的拼团状态",
+          backgroundColor: '#ff0300'
+        };
+        break;
+    }
+    return result;
+  };
+
   getGroupState(group_status) {
     const styleProp = {
       display: 'inline-block',
@@ -71,25 +113,13 @@ export default class TableList extends PureComponent {
       borderRadius: '50%',
       marginBottom: "1px",
     };
-    let result = '';
-    switch (group_status) {
-      case 0:
-        result = <span><span style={{...styleProp, backgroundColor: '#999'}}></span>拼团关闭</span>;
-        break;
-      case 1:
-        result = <span><span style={{...styleProp, backgroundColor: '#df8600'}}></span>拼团中</span>;
-        break;
-      case 2:
-        result = <span><span style={{...styleProp, backgroundColor: '#33cc66'}}></span>拼团完成</span>;
-        break;
-      case 3:
-        result = <span><span style={{...styleProp, backgroundColor: '#33cc66'}}></span>拼团成功</span>;
-        break;
-      default:
-        result = <span><span style={{...styleProp, backgroundColor: '#ff0300'}}></span>未知的拼团状态</span>;
-        break;
-    }
-    return result;
+    const obj = this.mapGroupStateToTxt(group_status);
+    return (
+      <span>
+        <span style={{...styleProp, backgroundColor: obj.backgroundColor}}></span>
+        <span>{obj.txt}</span>
+      </span>
+    );
   }
 
   /**
@@ -157,8 +187,9 @@ export default class TableList extends PureComponent {
           this.formValues = data;
           this.loadTableData();
         }}
-        onCancelAfter={data => {//todo 有点小问题 这里会重置为initialValue,而不是清空
-          this.loadTableData(data);
+        onCancelAfter={data => {
+          this.reset();
+          this.loadTableData(this.formValues);
         }}
       />
     );
@@ -173,7 +204,7 @@ export default class TableList extends PureComponent {
       current: this.current,
       pageSize: this.pageSize,
       total: this.total,
-      pageSizeOptions: ['8', '16', '20', '40'],
+      // pageSizeOptions: ['8', '16', '20', '40'],
       onChange: (page, pageSize) => {//页码改变的回调，参数是改变后的页码及每页条数
         this.pageSize = pageSize;
         this.current = page;
@@ -228,3 +259,5 @@ export default class TableList extends PureComponent {
     );
   }
 }
+
+
