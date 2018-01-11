@@ -304,7 +304,6 @@ class Masking extends Component {
                 break;
             case 2:
                 timing.a += 1;
-                debugger
                 data.stockNumber = timing.a;
                 this.setState({
                     inputdata: data,

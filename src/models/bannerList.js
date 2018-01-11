@@ -24,7 +24,6 @@ export default {
           payload: true,
         });
         const response = yield call(queryBanner, payload);
-        debugger;
         if(!response && response.data.length > 0){
           yield put({
             type: 'save',
