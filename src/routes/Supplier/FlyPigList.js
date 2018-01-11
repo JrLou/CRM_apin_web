@@ -94,39 +94,39 @@ export default class TableList extends PureComponent {
         <Row gutter={{md: 6, lg: 24, xl: 48}}>
           <Col md={6} sm={24}>
             <FormItem label="出发城市">
-              {getFieldDecorator('city_dep')(
+              {getFieldDecorator('cityDep')(
                 <Input placeholder="请输入"/>
               )}
             </FormItem>
           </Col>
           <Col md={6} sm={24}>
             <FormItem label="到达城市">
-              {getFieldDecorator('city_arr')(
+              {getFieldDecorator('cityArr')(
                 <Input placeholder="请输入"/>
               )}
             </FormItem>
           </Col>
           <Col md={6} sm={24}>
             <FormItem label="去程航班号">
-              {getFieldDecorator('contact')(
+              {getFieldDecorator('airLineGo')(
                 <Input placeholder="请输入"/>
               )}
             </FormItem>
           </Col>
           <Col md={6} sm={24}>
             <FormItem label="返程航班号">
-              {getFieldDecorator('mobile')(
+              {getFieldDecorator('airLineBack')(
                 <Input placeholder="请输入" type="tel"/>
               )}
             </FormItem>
           </Col>
           <Col md={6} sm={24}>
             <FormItem label="资源状态">
-              {getFieldDecorator('order_status', {
+              {getFieldDecorator('state', {
                 initialValue: ''
               })(
                 <Select placeholder="请选择" style={{width: '100%'}}>
-                  <Option value=''>全部</Option>
+                  <Option value='-1'>全部</Option>
                   {
                     status.map((item, index) => <Option value={index} key={index}>{item}</Option>)
                   }
@@ -139,13 +139,6 @@ export default class TableList extends PureComponent {
               {getFieldDecorator('id')(
                 <Input placeholder="请输入"/>
               )}
-            </FormItem>
-          </Col>
-          <Col md={6} sm={24}>
-            <FormItem>
-              {getFieldDecorator('group_type', {
-                initialValue: '0'
-              })}
             </FormItem>
           </Col>
           <Col md={6} sm={24}>
