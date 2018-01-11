@@ -1,4 +1,4 @@
-import {queryBanner,deleteBanner,changeStatus,baseImg} from '../services/api';
+import {queryBanner,deleteBanner,changeStatus,baseImg,addBannerImg} from '../services/api';
 import {routerRedux} from 'dva/router';
 
 export default {
@@ -6,7 +6,8 @@ export default {
 
   state: {
     data  : {
-
+        data:[],
+        option:{}
     },
     editData:{
 
@@ -24,10 +25,14 @@ export default {
           payload: true,
         });
         const response = yield call(queryBanner, payload);
+<<<<<<< HEAD
         if(!response && response.data.length > 0){
+=======
+        if(response && response.code >=1){
+>>>>>>> 7e1ce5b9960284e27c7c3cba36801167fd92726a
           yield put({
             type: 'save',
-            payload: response.data,
+            payload: response,
           });
         }
         yield put({
@@ -100,6 +105,17 @@ export default {
           payload:{},
         });
         yield put(routerRedux.push('/operations/banner'))
+      },
+      * addBanner({payload,callback},{call,put}){
+        //确定编辑，成功以后跳转到列表页
+        const response = yield call(addBannerImg, payload);
+        if(response && response.code >=1){
+          yield put({
+            type: 'changeEditData',
+            payload:{},
+          });
+          yield put(routerRedux.push('/operations/banner'))
+        }
       },
       * baseImg({payload,callback},{call,put}){
         //base64传给后台 后台返一个 图片url

@@ -46,11 +46,19 @@ const menuData = [{
   icon: 'profile',
   path: 'order',
   children: [{
-    name: '飞猪&代销订单',
+    name: '飞猪&供应商订单',
     path: 'order/flyingpig',
+    // children:[{
+    //   name:'飞猪&供应商订单详情',
+    //   path:'/order/flyingpig/detail',
+    // }]
   }, {
     name: '委托订单',
     path: 'order/entrust',
+    // children:[{
+    //   name:'委托订单详情',
+    //   path:'/order/entrust/detail',
+    // }]
   }, {
     name: '退款列表',
     path: 'order/refund',
@@ -62,6 +70,10 @@ const menuData = [{
   children: [{
     name: 'banner图片管理',
     path: 'operations/banner',
+    // children:[{
+    //   name:'新增banner',
+    //   path:'/Operations/BannerEdit',
+    // }]
   }],
 },
 // {

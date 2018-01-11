@@ -2,14 +2,6 @@ import { stringify } from 'qs';
 import request from '../utils/request';
 import md5 from 'md5'
 
-/*一级菜单url*/
-
-
-
-
-
-/*二级菜单url*/
-
 export async function queryProjectNotice() {
   return request('/api/project/notice');
 }
@@ -95,6 +87,12 @@ export async function entrust(params) {
     body: params,
   });
 }
+export async function addBannerImg(params) {
+  return request('/crm/api/banner/addBanner', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function queryBanner(params) {
   return request('/api/banner/getBannerList', {
     method: 'POST',
@@ -110,7 +108,10 @@ export async function baseImg(params) {
   });
 }
 export async function deleteBanner(params) {
-  return request(`/api/deleteBanner?${stringify(params)}`);
+  return request('/crm/api/banner/delBanner', {
+    method: 'POST',
+    body: params,
+  });
 }
 export async function changeStatus(params) {
   return request(`/api/changeStatus?${stringify(params)}`);
@@ -125,7 +126,6 @@ export async function queryFlyList(params) {
   });
 }
 //李斯奇 政策管理供应商资源
-//供应商列表资源列表
 export async function flightstockList(params) {
   return request('/api/resource/getAirLines', {
     method: 'POST',
@@ -184,10 +184,11 @@ export async function financePaymentList(params) {
     body: params,
   });
 }
-//刘园园权限管理
+
 export async function roleManageList(params) {
   return request(`/cr/v2/accounts/role/list?${stringify(params)}`);
 }
+//刘园园 订单管理
 export async function getFlylist(params) {
   return request('/api/order/getOrderList', {
     method: 'POST',
@@ -219,6 +220,7 @@ export async function viewList(params) {
   return request('/api/demandPool/getPoolHistory', { method: 'POST', body: params });
 }
 export async function orderList(params) {
+  // return request('http://localhost:3333/api/demandPool/getPoolOrderList', { method: 'POST', body: params });
   return request('/api/demandPool/getPoolOrderList', { method: 'POST', body: params });
 }
 export async function logList(params) {

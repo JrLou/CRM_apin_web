@@ -20,10 +20,15 @@
   },
   "proxy": {
     "/api": {
+<<<<<<< HEAD
     "target": "http://192.168.0.180:6040",
     "changeOrigin": true,
     "pathRewrite": { "^/api" : "/api" }
     }
+=======
+    "target": "http://192.168.0.32:9712/",
+    "changeOrigin": true
+>>>>>>> 7e1ce5b9960284e27c7c3cba36801167fd92726a
   },
   "ignoreMomentLocale": true,
   "theme": "./src/theme.js",
