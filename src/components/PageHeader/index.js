@@ -17,7 +17,7 @@ function getBreadcrumb(breadcrumbNameMap, url) {
   let breadcrumb = {};
   debugger
   Object.keys(breadcrumbNameMap).forEach((item) => {
-    const itemRegExpStr = `^${item.replace(/:[\w-]+/g, '[\\w-]+')}$`;
+    const itemRegExpStr = `^${item.replace(/:[\w-%]+/g, '[\\w-%]+')}$`;
     const itemRegExp = new RegExp(itemRegExpStr);
     if (itemRegExp.test(url)) {
       breadcrumb = breadcrumbNameMap[item];

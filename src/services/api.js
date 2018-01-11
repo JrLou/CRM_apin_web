@@ -1,6 +1,15 @@
 import { stringify } from 'qs';
 import request from '../utils/request';
 import md5 from 'md5'
+
+/*一级菜单url*/
+
+
+
+
+
+/*二级菜单url*/
+
 export async function queryProjectNotice() {
   return request('/api/project/notice');
 }
@@ -60,14 +69,21 @@ export async function queryFakeList(params) {
   return request(`/api/fake_list?${stringify(params)}`);
 }
 export async function demandList(params) {
-  return request(`/api/group/demandList`, { method: 'POST', body: params });
+  return request(`/api/demandPool/cheekPoolList`, { method: 'POST', body: params });
 }
 export async function queryUserList(params) {
   return request(`/api/userList?${stringify(params)}`);
 }
-//客户列表
+//客户列表 华志林
 export async function queryCustomerList(params) {// /api/member/getMemberList
   return request('/crm/api/member/getMemberList', {
+    method: 'POST',
+    body: params,
+  });
+}
+//拼团列表 暂时未使用，need reWrite
+export async function queryFightGroupsList(params) {// /api/member/getMemberList
+  return request('/crm/api/demandPool/getGroupList', {
     method: 'POST',
     body: params,
   });
@@ -88,10 +104,10 @@ export async function queryBanner(params) {
 
 //base64 banner图上传
 export async function baseImg(params) {
-    return request('/crm/api/common/uploadImage', {
-      method: 'POST',
-      body: params,
-    });
+  return request('/crm/api/common/uploadImage', {
+    method: 'POST',
+    body: params,
+  });
 }
 export async function deleteBanner(params) {
   return request(`/api/deleteBanner?${stringify(params)}`);
@@ -116,7 +132,7 @@ export async function flightstockList(params) {
     body: params,
   });
 }
-//上架
+//上架 ()
 export async function stateAirLine(params) {
   return request('/crm/api/resource/stateAirLine', {
     method: 'POST',
@@ -133,6 +149,13 @@ export async function getAirLineLogs(params) {
 //非常准航线查询
 export async function getaddAirLine(params) {
   return request('/crm/api/resource/searchAirLine',{
+    method: 'POST',
+    body: params,
+  });
+}
+//编辑回显
+export async function getdetailAirLine(params) {
+  return request('/crm/api/resource/detailAirLine',{
     method: 'POST',
     body: params,
   });
@@ -177,6 +200,12 @@ export async function getFlyDetail(params) {
     body: params,
   });
 }
+export async function flyDetailAddTicket(params) {
+  return request('/crm/api/order/addTicket', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function postGroupData(params) {
   return request('/api/group/postGroupData', { method: 'POST', body: params });
 }
@@ -187,10 +216,10 @@ export async function addFlights(params) {
   return request('/api/group/addFlights', { method: 'POST', body: params });
 }
 export async function viewList(params) {
-  return request('/api/group/viewList', { method: 'POST', body: params });
+  return request('/api/demandPool/getPoolHistory', { method: 'POST', body: params });
 }
 export async function orderList(params) {
-  return request('/api/group/orderList', { method: 'POST', body: params });
+  return request('/api/demandPool/getPoolOrderList', { method: 'POST', body: params });
 }
 export async function logList(params) {
   return request(`/api/group/logs?${stringify(params)}`);

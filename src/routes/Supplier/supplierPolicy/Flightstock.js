@@ -288,7 +288,7 @@ class page extends Component {
     }
     switch (ole) {
       case 0:
-        this.props.history.push({pathname: 'flightstockAdd',});
+        this.props.history.push({ pathname: 'flightstockAdd', state: { id: data.id, } });
         break;
       case 1:
         confirms({

@@ -12,9 +12,9 @@ const FormItem = Form.Item;
 const { Option } = Select;
 const CheckboxGroup = Checkbox.Group;
 const period = [
-  { label: '上午航班（06:00-12:00）', value: '0' },
-  { label: '下午航班（12:00-19:00）', value: '1' },
-  { label: '晚上航班（19:00-06:00）', value: '2' },
+  { label: '上午航班（06:00-12:00）', value: '1' },
+  { label: '下午航班（12:00-19:00）', value: '2' },
+  { label: '晚上航班（19:00-06:00）', value: '3' },
 ];
 const daysArr = [
   { label: '2天', value: '0' },
@@ -33,8 +33,8 @@ export default class Choose extends PureComponent {
   constructor(props) {
     super(props)
     this.page = {
-      page: 1,
-      pageSize: 10
+      p: 1,
+      pc: 10
     }
     this.searchValue = {}
     this.par = getPar(this, 'data')
@@ -55,7 +55,7 @@ export default class Choose extends PureComponent {
   };
   componentWillMount() {
     const { dispatch } = this.props;
-    if (!this.par.id) {
+    if (!this.par.cityArr) {
       dispatch(routerRedux.push('/fightgroups/demand/'));
     }
   }
@@ -65,7 +65,7 @@ export default class Choose extends PureComponent {
     const { id, continueFlag } = this.par;
     const params = {
       ...this.page,
-      id: id
+      ...this.par
     }
     dispatch({
       type: 'choose/fetch',
@@ -79,9 +79,9 @@ export default class Choose extends PureComponent {
     const { formValues } = this.state;
     const { id } = this.par;
     const params = {
-      page: pagination.current,
-      pageSize: pagination.pageSize,
-      id: id,
+      p: pagination.current,
+      pc: pagination.pageSize,
+      ...this.par,
       ...this.searchValue,
     };
     dispatch({
@@ -92,19 +92,20 @@ export default class Choose extends PureComponent {
 
   handleSearch() {
     const { dispatch, form } = this.props;
-    const { id } = this.par;
+    const { cityArr, cityDep } = this.par;
 
     form.validateFields((err, values) => {
       if (err) return;
       console.log('参数');
-      values.flightStartTime = values.flightTime ? moment(values.flightTime[0]).format('YYYY-MM-DD') : '';
-      values.flightEndTime = values.flightTime ? moment(values.flightTime[1]).format('YYYY-MM-DD') : '';
+      values.startDate = values.flightTime ? moment(values.flightTime[0]).format('YYYY-MM-DD') : '';
+      values.endDate = values.flightTime ? moment(values.flightTime[1]).format('YYYY-MM-DD') : '';
+      delete values.flightTime;
 
       console.log(values);
       this.searchValue = values;
       dispatch({
         type: 'choose/fetch',
-        payload: { ...values, id: id },
+        payload: { ...values, ...this.par, ...this.page },
       });
     });
   }
@@ -160,7 +161,7 @@ export default class Choose extends PureComponent {
   onCheckAllChange = (e) => {
     console.log(e.target.checked)
     this.setState({
-      checkedList: e.target.checked ? ['0', '1', '2'] : [],
+      checkedList: e.target.checked ? ['1', '2', '3'] : [],
       indeterminate: false,
       checkAll: e.target.checked,
     });
@@ -200,7 +201,7 @@ export default class Choose extends PureComponent {
           </Col>
           <Col span={8}>
             <FormItem label="订单号" {...formItemLayout}>
-              {getFieldDecorator('orderId')(
+              {getFieldDecorator('id')(
                 <Input placeholder="请输入" />
               )}
             </FormItem>
@@ -214,7 +215,7 @@ export default class Choose extends PureComponent {
           >
             不限
           </Checkbox>
-          {getFieldDecorator('dayPeriod', {
+          {getFieldDecorator('timeSlot', {
             initialValue: this.state.checkedList,
             valuePropName: 'checked',
           })(
@@ -229,7 +230,7 @@ export default class Choose extends PureComponent {
           >
             全选
           </Checkbox>
-          {getFieldDecorator('days', {
+          {getFieldDecorator('tripDays', {
             initialValue: this.state.daysCheckedList,
             valuePropName: 'checked',
           })(

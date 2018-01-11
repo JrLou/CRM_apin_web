@@ -1,4 +1,4 @@
-import {getFlyDetail} from '../services/api';
+import {getFlyDetail,flyDetailAddTicket} from '../services/api';
 
 export default {
   namespace: 'flyingpigDetail',
@@ -7,11 +7,12 @@ export default {
     groupVoyage: {},//订单委托信息
     log: [],//日志信息
     order: {},//订单信息
-    voyage: [],//订单航班信息
     orderGroup: [],//方案推送记录
     passenger: [],//乘机人信息
     payrecord: [],//支付信息
     loading: true,
+    ticketLoading:true,
+    ticketResponse:{},
   },
 
   effects: {
@@ -30,6 +31,21 @@ export default {
         payload: false,
       });
     },
+    *addTicket({payload}, {call, put}){
+      yield put({
+        type: 'ticketLoading',
+        payload: true,
+      });
+      const response = yield call(flyDetailAddTicket, payload);
+      yield put({
+        type: 'ticket',
+        payload: response,
+      });
+      yield put({
+        type: 'ticketLoading',
+        payload: false,
+      });
+    }
   },
 
   reducers: {
@@ -39,16 +55,27 @@ export default {
         groupVoyage: payload.data.groupVoyage || {},//订单委托信息
         log: payload.data.log || [],//日志信息
         order: payload.data.order || {},//订单信息
-        voyage: payload.data.voyage || [],//订单航班信息
         orderGroup: payload.data.orderGroup || [],//方案推送记录
         passenger: payload.data.passenger || [],//乘机人信息
         payrecord: payload.data.payrecord || [],//支付信息
+      };
+    },
+    ticket(state, {payload}) {
+      return {
+        ...state,
+        ticketResponse:payload
       };
     },
     changeLoading(state, {payload}) {
       return {
         ...state,
         loading: payload,
+      };
+    },
+    ticketLoading(state, {payload}) {
+      return {
+        ...state,
+        ticketLoading: payload,
       };
     },
   },

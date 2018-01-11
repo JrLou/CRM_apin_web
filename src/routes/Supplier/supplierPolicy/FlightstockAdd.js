@@ -34,21 +34,26 @@ const Search = Input.Search;
 const {RangePicker} = DatePicker;
 
 @connect(state => ({
-  flightstock: state.flightstock,
+  flightstockAdd: state.flightstockAdd,
 }))
 class page extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
-      id: null,
+      id: '',
+      details: null,
     };
   }
 
   componentDidMount() {
     if (this.props.location.state) {
+      console.log(this.props.location.state.id)
+      console.log(this.props.location.state.details)
+      this.addPost('flightstockAdd/addtailAirLine',{id:this.props.location.state.id});
       this.setState({
         id: this.props.location.state.id,
+        details: this.props.location.state.details,
       });
     }
   }
@@ -59,22 +64,12 @@ class page extends Component {
     });
   }
 
-  addPost(ole, data) {
-    console.log(ole)
-    console.log(data)
-    switch (ole) {
-      case 0:
-        this.props.dispatch({
-          type: 'flightstock/addAirLine',
-          payload: {
-            endDate: '2018-01-09',
-            fnum: 'CA111',
-            startDate: '2018-01-08',
-          },
-        });
-        break;
-    }
-
+  addPost(url, data) {
+    console.log(this.props)
+    this.props.dispatch({
+      type: url,
+      payload: data,
+    });
   }
 
   render() {
@@ -85,6 +80,7 @@ class page extends Component {
             showLoad={this.showLoad.bind(this)}
             addPost={this.addPost.bind(this)}
             id={this.state.id}
+            details={this.state.details}
           />
         </Spin>
       </div>
@@ -350,19 +346,15 @@ class AddForm extends Component {
     // } else {
     //   message.warning('请先选择出发航班日期');
     // }
-    this.props.addPost(0, value);
+    this.props.addPost('flightstockAdd/addAirLine', {
+      endDate: '2018-01-09',
+      fnum: 'CA111',
+      startDate: '2018-01-08',
+    },);
   }
 
   obtainData(api, isput, ole) {
     let data = this.state.flightdata;
-    this.props.dispatch({
-      type: 'flightstock/addAirLine',
-      payload: {
-        endDate: '2018-01-09',
-        fnum: 'CA111',
-        startDate: '2018-01-08',
-      },
-    });
     // HttpTool.post(api,
     //   (code, msg, json, option) => {
     //     if (code == 200) {

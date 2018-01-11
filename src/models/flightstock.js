@@ -1,4 +1,4 @@
-import {flightstockList, stateAirLine, getAirLineLogs, getaddAirLine} from '../services/api';
+import {flightstockList, stateAirLine, getAirLineLogs, getaddAirLine,getdetailAirLine} from '../services/api';
 import {message} from 'antd';
 
 export default {
@@ -10,7 +10,6 @@ export default {
     },
     loading: true,
     logs: {},
-    accurate: [],
   },
   effects: {
     * fetch({payload}, {call, put}) {
@@ -57,14 +56,7 @@ export default {
         payload: response,
       });
     },
-    //飞常准查询
-    * addAirLine({payload}, {call, put}) {
-      const response = yield call(getaddAirLine, payload)
-      console.log(response)
-      yield put({
-        type:''
-      })
-    },
+
   },
   reducers: {
     save(state, action) {
@@ -81,12 +73,7 @@ export default {
         logs: action.payload,
       };
     },
-    accurate(state, action) {
-      return {
-        ...state,
-        accurate: action.payload,
-      }
-    },
+
     changeLoading(state, action) {
       return {
         ...state,
