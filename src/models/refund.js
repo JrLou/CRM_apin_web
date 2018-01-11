@@ -1,4 +1,4 @@
-import { getFlylist } from '../services/api';
+import { getRefundList } from '../services/api';
 
 export default {
   namespace: "refund",
@@ -13,7 +13,7 @@ export default {
         type: 'changeLoading',
         payload: true,
       });
-      const response = yield call(getFlylist, payload);
+      const response = yield call(getRefundList, payload);
       yield put({
         type: 'save',
         payload: response,

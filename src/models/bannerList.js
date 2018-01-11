@@ -1,4 +1,4 @@
-import {queryBanner,deleteBanner,changeStatus,baseImg,addBannerImg} from '../services/api';
+import {queryBanner,deleteBanner,changeStatus,baseImg,addBannerImg,editBannerImg} from '../services/api';
 import {routerRedux} from 'dva/router';
 
 export default {
@@ -25,11 +25,7 @@ export default {
           payload: true,
         });
         const response = yield call(queryBanner, payload);
-<<<<<<< HEAD
-        if(!response && response.data.length > 0){
-=======
         if(response && response.code >=1){
->>>>>>> 7e1ce5b9960284e27c7c3cba36801167fd92726a
           yield put({
             type: 'save',
             payload: response,
@@ -69,22 +65,30 @@ export default {
         if(callback){
           callback(response);
         }
-        yield put({
-          type: 'save',
-          payload: response.data,
-        });
+        // yield put({
+        //   type: 'save',
+        //   payload: response.data,
+        // });
         yield put({
           type: 'changeLoading',
           payload: false,
         });
       },
       * toAdd({payload},{call,put}){
-        //列表页，跳转到添加/编辑页面
+        // 列表页，跳转到添加页面
         yield put({
           type: 'changeEditData',
           payload:payload,
         });
-        yield put(routerRedux.push('/operations/bannerEdit'))
+        yield put(routerRedux.push('/operations/banner/bannerAdd'))
+      },
+      * toEdit({payload},{call,put}){
+        //列表页，跳转到编辑页面
+        yield put({
+          type: 'changeEditData',
+          payload:payload,
+        });
+        yield put(routerRedux.push('/operations/banner/bannerEdit'))
       },
       * cancelEdit({payload},{call,put}){
         //取消编辑，跳转到列表页
@@ -96,7 +100,7 @@ export default {
       },
       * checkEdit({payload,callback},{call,put}){
         //确定编辑，成功以后跳转到列表页
-        const response = yield call(queryBanner, payload);
+        const response = yield call(editBannerImg, payload);
         if(callback){
           callback(response);
         }

@@ -57,7 +57,7 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, ['flyingpigDetail'], () => import('../routes/Order/FlyingpigDetail.js')),
     },
     '/order/entrust': {
-      component: dynamicWrapper(app, ['entrust'], () => import('../routes/Order/Entrust.js')),
+      component: dynamicWrapper(app, ['flyingpig'], () => import('../routes/Order/Entrust.js')),
     },
     '/order/entrust/detail': {
       name: "委托订单详情",
@@ -152,12 +152,17 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Supplier/Price')),
     },
     //运营管理
-    '/Operations/Banner': {
+    '/operations/banner': {
       component: dynamicWrapper(app, ['bannerList'], () => import('../routes/Operations/Banner.js')),
     },
     //banner添加/编辑
-    '/Operations/BannerEdit': {
-      component: dynamicWrapper(app, ['bannerList'], () => import('../routes/Operations/BannerEdit.js')),
+    '/operations/banner/bannerAdd': {
+      name:'新增banner',
+      component: dynamicWrapper(app, ['bannerList'], () => import('../routes/Operations/BannerAdd.js')),
+    },
+    '/operations/banner/bannerEdit': {
+      name:'编辑banner',
+      component: dynamicWrapper(app, ['bannerList'], () => import('../routes/Operations/BannerView.js')),
     },
     // '/user/:id': {
     //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),

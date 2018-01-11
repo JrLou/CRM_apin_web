@@ -13,6 +13,13 @@ const menuData = [{
   children: [{
     name: '供应商资源',
     path: 'supplier/supplierPolicy/flightstock',
+    // children: [{
+    //   name: '供应商列表',
+    //   path: 'supplier/supplierPolicy/flightstock',
+    // }, {
+    //   name: '编辑，新增，查看供应商',
+    //   path: 'supplier/supplierPolicy/flightstockAdd',
+    // }],
   }, {
     name: '飞猪资源',
     path: 'supplier/flyPigList',
@@ -24,6 +31,13 @@ const menuData = [{
   children: [{
     name: '需求池',
     path: 'fightgroups/demand',
+    // children: [{
+    //   name: '查看需求池',
+    //   path: 'fightgroups/demand/:view',
+    // }{
+    //   name: '查看拼团',
+    //   path: 'fightgroups/demand/checkFightGroups/:id',
+    // }],
     // children: [
     //   {
     //     name: '推送方案-选择订单',
@@ -71,7 +85,10 @@ const menuData = [{
     path: 'operations/banner',
     // children:[{
     //   name:'新增banner',
-    //   path:'/Operations/BannerEdit',
+    //   path:'/operations/banner/bannerAdd',
+    // },{
+    // name:'编辑banner',
+    // path:'/operations/banner/bannerEdit',
     // }]
   }],
 },

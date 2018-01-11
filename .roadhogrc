@@ -21,7 +21,8 @@
   "proxy": {
     "/api": {
     "target": "http://192.168.0.32:9712/",
-    "changeOrigin": true
+    "changeOrigin": true,
+    "pathRewrite": { "^/api" : "/api" }
     }
   },
   "ignoreMomentLocale": true,

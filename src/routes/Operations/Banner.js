@@ -120,7 +120,6 @@ export default class BannerList extends PureComponent {
         }
       })
     const { selectedRows } = this.state;
-
     return (
       <PageHeaderLayout>
         <Card bordered={false}>
