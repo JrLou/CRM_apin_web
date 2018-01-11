@@ -48,14 +48,32 @@ export default class BasicProfile extends Component {
   }
 
   ticketConfirm() {
+    let ticketInfo = [], {dispatch, flyingpigDetail: {ticketResponse}} = this.props;
+    for (let i = 0; i < this.passengerData.length; i++) {
+      let user = this.passengerData[i], ticket = user.ticketDep + ',' + user.ticketArr;
+      ticketInfo.push({id: user.id, ticket: ticket})
+    }
+    let params = {
+      group_id: this.orderData.group_id,
+      order_id: this.orderData.id,
+      ticketInfo: ticketInfo,
+    };
     confirm({
       title: '是否确认出票?',
       content: '出票后，将无法修改',
       onOk() {
-        console.log('OK');
+        dispatch({
+          type: 'flyingpigDetail/addTicket',
+          payload: {ticketObj: params}
+        });
+        if (ticketResponse.code > 0) {
+          message.success('出票成功');
+          dispatch(routerRedux.push('/order/flyingpig'));
+        } else {
+          message.error('出票失败');
+        }
       },
       onCancel() {
-        console.log('Cancel');
       },
     });
   }
@@ -235,8 +253,11 @@ export default class BasicProfile extends Component {
     //   key:'date_ret',
     // }, {
     //   title:'乘机人数',
-    //   dataIndex:'sell_price',
-    //   key:'sell_price',
+    //   dataIndex:'adult_count',
+    //   key:'adult_count',
+    //   render: (text) => {
+    //     return this.adult_count
+    //   }
     // }, {
     //   title:'是否接受微调',
     //   dataIndex:'is_adjust',
@@ -370,14 +391,8 @@ export default class BasicProfile extends Component {
                 </div>
               </div>
           }
-          {/* <div className={styles.title}><Icon type="schedule" /> 委托信息</div>
-          <Table
-            pagination={false}
-            bordered={true}
-            dataSource={groupVoyage}
-            columns={entrustColumns}
-            rowKey="id"
-          /> */}
+          <div className={styles.title}><Icon type="schedule" /> 委托信息</div>
+          <div></div>
           <div className={styles.title}><Icon type="pushpin-o" /> 方案推送记录</div>
           <div className={styles.myTable}>
             <Table
