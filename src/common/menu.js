@@ -13,6 +13,13 @@ const menuData = [{
   children: [{
     name: '供应商资源',
     path: 'supplier/supplierPolicy/flightstock',
+    // children: [{
+    //   name: '供应商列表',
+    //   path: 'supplier/supplierPolicy/flightstock',
+    // }, {
+    //   name: '编辑，新增，查看供应商',
+    //   path: 'supplier/supplierPolicy/flightstockAdd',
+    // }],
   }, {
     name: '飞猪资源',
     path: 'supplier/flyPigList',

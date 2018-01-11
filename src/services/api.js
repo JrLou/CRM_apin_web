@@ -88,7 +88,7 @@ export async function entrust(params) {
   });
 }
 export async function addBannerImg(params) {
-  return request('/crm/api/banner/addBanner', {
+  return request('/api/banner/addBanner', {
     method: 'POST',
     body: params,
   });
@@ -108,7 +108,7 @@ export async function baseImg(params) {
   });
 }
 export async function deleteBanner(params) {
-  return request('/crm/api/banner/delBanner', {
+  return request('/api/banner/delBanner', {
     method: 'POST',
     body: params,
   });

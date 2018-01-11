@@ -10,6 +10,7 @@ import {
   Divider,
 } from 'antd';
 import moment from 'moment';
+
 const confirm = Modal.confirm;
 const {Column,} = Table;
 import Filter from '../../../components/screening/Filter.js';
@@ -24,7 +25,7 @@ class page extends Component {
       filter: {
         airlineStatus: 1,
       },
-      visible:false,
+      visible: false,
     }
   }
 
@@ -64,13 +65,13 @@ class page extends Component {
     this.setState({
       filter: dates,
     });
-    setTimeout(()=>{
+    setTimeout(() => {
       console.log(this.state.filter)
       this.props.dispatch({
         type: 'flightstock/fetch',
         payload: this.state.filter,
       });
-    },10)
+    }, 10)
   }
 
   render() {
@@ -125,7 +126,7 @@ class page extends Component {
         dataIndex: 'eventName',
         key: 'eventName',
       }];
-    const {flightstock: {loading, list: {data, option: {current, size, total}}, logs:{datalgo,optionlog}}} = this.props;
+    const {flightstock: {loading, list: {data, option: {current, size, total}}, logs: {datalgo, optionlog}}} = this.props;
     return (
       <div className={css.table_container}>
         <Table
@@ -169,11 +170,8 @@ class page extends Component {
           />
           <Column
             title="出发/回程航班"
-            dataIndex="city_arr"
-            key="city_arr"
-            render={(text, record, index) => {
-              return <div>{record.city_dep + "/" + record.city_arr}</div>
-            }}
+            dataIndex="flight_no"
+            key="flight_no"
           />
           <Column
             title="航班周期"
@@ -288,7 +286,11 @@ class page extends Component {
     }
     switch (ole) {
       case 0:
-        this.props.history.push({ pathname: 'flightstockAdd', state: { id: data.id, } });
+        this.props.history.push({pathname: 'flightstockAdd',
+          state: {
+            data: data,
+          }
+        });
         break;
       case 1:
         confirms({
