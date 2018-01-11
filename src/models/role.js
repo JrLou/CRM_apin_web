@@ -134,7 +134,6 @@ export default {
     },
     *edit({ param }, { call, put }) {
       const res = yield call(modifyRole,param)
-      debugger
     },
     *add({ param }, { call, put }) {
       const res = yield call(addRole,param)

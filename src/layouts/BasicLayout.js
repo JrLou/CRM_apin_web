@@ -164,7 +164,7 @@ class BasicLayout extends React.PureComponent {
             <GlobalFooter
               copyright={
                 <div>
-                  Copyright <Icon type="copyright" /> 爱拼机版权所有 浙ICP备 15024358号-1
+                  Copyright <Icon type="copyright" /> 爱拼机版权所有
                 </div>
               }
             />

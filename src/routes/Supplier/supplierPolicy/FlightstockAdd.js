@@ -37,6 +37,7 @@ const {RangePicker} = DatePicker;
   flightstockAdd: state.flightstockAdd,
 }))
 class page extends Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -48,12 +49,12 @@ class page extends Component {
 
   componentDidMount() {
     if (this.props.location.state) {
-      console.log(this.props.location.state.id)
-      console.log(this.props.location.state.details)
+      console.log('看看么没有出来')
+      console.log(this.props.flightstockAdd)
       this.addPost('flightstockAdd/addtailAirLine',{id:this.props.location.state.id});
       this.setState({
         id: this.props.location.state.id,
-        details: this.props.location.state.details,
+        // details: this.props.details,
       });
     }
   }
@@ -73,6 +74,7 @@ class page extends Component {
   }
 
   render() {
+
     return (
       <div className={css.formWapper}>
         <Spin className={css.Spin} spinning={this.state.loading}>

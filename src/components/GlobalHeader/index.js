@@ -79,9 +79,6 @@ export default class GlobalHeader extends PureComponent {
     } = this.props;
     const menu = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={this.handleMenuClick}>
-        <Menu.Item disabled><Icon type="user" />个人中心</Menu.Item>
-        <Menu.Item disabled><Icon type="setting" />设置</Menu.Item>
-        <Menu.Divider />
         <Menu.Item key="logout"><Icon type="logout" />退出登录</Menu.Item>
       </Menu>
     );
@@ -94,14 +91,11 @@ export default class GlobalHeader extends PureComponent {
           onClick={this.toggle}
         />
         <div className={styles.right}>
-          {currentUser? (
             <Dropdown overlay={menu}>
               <span className={`${styles.action} ${styles.account}`}>
-                {/* <Avatar size="small" className={styles.avatar} src={currentUser.avatar} /> */}
-                {currentUser}
+                {currentUser?currentUser:"菜单"}
               </span>
             </Dropdown>
-          ) : "没有获取到用户名"}
         </div>
       </Header>
     );

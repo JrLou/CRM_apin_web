@@ -19,10 +19,12 @@
     "g2-plugin-slider": "G2.Plugin.slider"
   },
   "proxy": {
-    "/": {
-    "target": "http://192.168.0.180:6040",
+    "/api": {
+    "target": "http://192.168.0.32:9712/",
     "changeOrigin": true,
+    "pathRewrite": { "^/api" : "/api" }
     }
+
   },
   "ignoreMomentLocale": true,
   "theme": "./src/theme.js",
