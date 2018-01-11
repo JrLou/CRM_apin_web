@@ -59,15 +59,21 @@ class StandardTable extends PureComponent {
       id:id,
       state
     };
-    let message=['banner下架成功','banner上架成功']
+    let messageStatus=['banner下架成功','banner上架成功']
     this.props.dispatch({
       type: 'bannerList/changeStatus',
       payload: params,
       callback:(response)=>{
         if(response.code>=1){
-          message.success(message[state]);
+          message.success(messageStatus[state]);
+          this.props.dispatch({
+            type: 'bannerList/fetch',
+            payload: {
+              p:1,
+              pc:10
+            },
+          });
         }
-        console.log("qqqqqqqqq",message[state])
       }
     });
   };
