@@ -91,7 +91,10 @@ const menuData = [{
     path: 'operations/banner',
     // children:[{
     //   name:'新增banner',
-    //   path:'/Operations/BannerEdit',
+    //   path:'/Operations/BannerAdd',
+    // },{
+    // name:'编辑banner',
+    // path:'/Operations/BannerEdit',
     // }]
   }],
 },

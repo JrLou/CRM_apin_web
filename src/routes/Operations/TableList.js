@@ -51,14 +51,15 @@ class StandardTable extends PureComponent {
   };
 
   //上架/下架
-  changeStatus = (id,status)=>{
+  changeStatus = (id,state)=>{
     if(!id){
       return;
     }
     let params = {
       id:id,
-      status:status?1:0
+      state:state?1:0
     };
+    console.log("qqqqqq",state)
 
     this.props.dispatch({
       type: 'bannerList/changeStatus',
@@ -165,11 +166,11 @@ class StandardTable extends PureComponent {
           type={'primary'}
           className={styles.btn}
           onClick={()=>{
-            let status = record.status==1?0:1;
+            let status = record.state==1?0:1;
             this.changeStatus(record.id,status);
           }}
         >
-          {record.status==1?'下架':'上架'}
+          {record.state==1?'下架':'上架'}
         </Button>
         <Button
           type={'primary'}

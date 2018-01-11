@@ -114,7 +114,10 @@ export async function deleteBanner(params) {
   });
 }
 export async function changeStatus(params) {
-  return request(`/api/changeStatus?${stringify(params)}`);
+  return request('/api/banner/useBanner', {
+    method: 'POST',
+    body: params,
+  });
 }
 export async function querySupplierList(params) {
   return request(`/api/suplierList?${stringify(params)}`);
