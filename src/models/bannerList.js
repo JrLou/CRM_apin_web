@@ -80,7 +80,7 @@ export default {
           type: 'changeEditData',
           payload:payload,
         });
-        yield put(routerRedux.push('/operations/bannerEdit'))
+        yield put(routerRedux.push('/operations/banner/bannerEdit'))
       },
       * cancelEdit({payload},{call,put}){
         //取消编辑，跳转到列表页
