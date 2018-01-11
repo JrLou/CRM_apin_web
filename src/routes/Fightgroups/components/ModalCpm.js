@@ -33,14 +33,11 @@ class CloseReasonModal extends Component {
     this.props.changeVisible && this.props.changeVisible();
   };
 
-  render() {
-    const {closeReason} = this.props.checkFightGroups;
-    const {dispatch} = this.props;
-
+  render() {//closeReason通过上级传过来，不通过redux！，antd pro 的查询表格就是这样的书写逻辑
+    const {closeReason, checkFightGroups} = this.props;
+    const {modalData: {data}} = checkFightGroups;
     return (
-      <Modal
-        {...this.props}
-      >
+      <Modal {...this.props} >
         {
           //TODO 这里的placeholder需要产品确认
         }
@@ -50,12 +47,7 @@ class CloseReasonModal extends Component {
           value={closeReason}
           onChange={(e) => {
             const value = e.target.value;
-            if (value.length <= 100) {
-              dispatch({
-                type: 'checkFightGroups/saveCloseReason',
-                payload: {closeReason: value},//传过去的参数
-              });
-            }
+            this.props.onChange(value);
           }}
         />
       </Modal>
@@ -109,6 +101,9 @@ class SendLogModal extends Component {
         dataIndex: 'action',
         key: 'action',
       }];
+
+    const {closeReason, checkFightGroups} = this.props;//每个modal的table都是用这两行，取同一个地方的数据，因为他们不可能同时出现
+    const {modalData: {data}} = checkFightGroups;
 
     return (
       <Modal
@@ -219,13 +214,13 @@ class ExportPassengerModal extends Component {
    */
   downloadFile(url) {
     const bodyNode = document.querySelector('body');
-    if (document.querySelector('iframe[name=forDownload]')){
-      bodyNode.removeChild( document.querySelector('iframe[name=forDownload]') );
+    if (document.querySelector('iframe[name=forDownload]')) {
+      bodyNode.removeChild(document.querySelector('iframe[name=forDownload]'));
     }
     const ifr = document.createElement('iframe');
-    ifr.setAttribute('src',url);
-    ifr.setAttribute('name',"forDownload");
-    ifr.setAttribute("style","display:none");
+    ifr.setAttribute('src', url);
+    ifr.setAttribute('name', "forDownload");
+    ifr.setAttribute("style", "display:none");
     bodyNode.appendChild(ifr);
   }
 
@@ -253,6 +248,9 @@ class ExportPassengerModal extends Component {
     };
 
     const columns = this.getColumns();
+
+    const {closeReason, checkFightGroups} = this.props;
+    const {modalData: {data}} = checkFightGroups;
 
     return (
       <Modal

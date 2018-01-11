@@ -5,6 +5,7 @@ import {Card, List, Spin} from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import {Link} from 'dva/router';
 import GroupSearchForm from './autoForm/GroupSearchForm';
+import {formatDate} from '../../utils/utils';
 import request from '../../utils/request';
 import less from './FightGroupsList.less';
 
@@ -122,18 +123,6 @@ export default class TableList extends PureComponent {
     );
   }
 
-  /**
-   * 传入毫秒数，传出格式化的字符串日期
-   * @param milliSecond
-   * @returns {string}
-   */
-  formatDate(milliSecond, format) {
-    if (typeof milliSecond !== "number") {
-      return '意外的时间格式';
-    }
-    return moment(milliSecond).format(format);
-  }
-
   getCardHeader(item) {
     const totalPeople = item.paidPeople + item.waitPeople;
     return (
@@ -145,8 +134,8 @@ export default class TableList extends PureComponent {
   }
 
   getCardBody(item) {
-    const create_time = this.formatDate(item.create_time, 'YY-MM-DD HH:mm');//17-12-13  18:22
-    const date_dep = this.formatDate(item.date_dep, 'YYYY年M月D日');//2018年3月22号
+    const create_time = formatDate(item.create_time, 'YY-MM-DD HH:mm');//17-12-13  18:22
+    const date_dep = formatDate(item.date_dep, 'YYYY年M月D日');//2018年3月22号
     return (
       <div>
         <div className={less.groupCard_body_lineA}>
@@ -259,5 +248,4 @@ export default class TableList extends PureComponent {
     );
   }
 }
-
 

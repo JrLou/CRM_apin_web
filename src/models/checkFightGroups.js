@@ -1,5 +1,5 @@
-import {queryBasicProfile, queryAdvancedProfile, changeStatus} from '../services/api';
-import {queryOrderInfo,} from '../services/api';
+import {queryAdvancedProfile, changeStatus} from '../services/api';//这个要删除的
+import {queryOrderInfo, planClose} from '../services/api';
 import {message} from 'antd';
 //TODO 这个文件刚刚copy下来，都需修改
 export default {
@@ -12,26 +12,38 @@ export default {
     // advancedOperation2: [],
     // advancedOperation3: [],
     // advancedLoading: true,
-    groupsInfoData: {},//拼团信息
+    groupsInfoData: {//拼团信息
+      code: '',
+      data: [],
+      msg: '',
+    },
     groupsInfoLoading: true,
 
     orderInfoData: {//订单信息
+      code: '',
       data: [],
+      msg: '',
     },
     orderInfoLoading: true,
 
     logInfoData: {//日志信息
+      code: '',
       data: [],
+      msg: '',
     },
     logInfoLoading: true,
 
     projectDetailData: {//方案明细
+      code: '',
       data: [],
+      msg: '',
     },
     projectDetailLoading: true,
 
     modalData: {//保存着当前modal需要的列表信息
+      code: '',
       data: [],
+      msg: '',
     },
     showModal: false,
     modalConfirmLoading: false,
@@ -41,16 +53,18 @@ export default {
     * fetchGroupsInfo({payload}, {call, put}) {
       yield put({
         type: 'extendAll',
-        payload: {basicLoading: true},
+        payload: {groupsInfoLoading: true},
       });
-      const response = yield call(queryOrderInfo,payload);
+      const response = yield call(queryOrderInfo, payload);
+      console.log("queryOrderInfo的res!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", response);
       yield put({
         type: 'save',
         payload: response,
+        key: "groupsInfoData",
       });
       yield put({
         type: 'extendAll',
-        payload: {basicLoading: false},
+        payload: {groupsInfoLoading: false},
       });
     },
     * fetchBasic({payload}, {call, put}) {
@@ -58,7 +72,7 @@ export default {
         type: 'extendAll',
         payload: {basicLoading: true},
       });
-      const response = yield call(queryBasicProfile);
+      const response = {};//yield call(queryBasicProfile);
       yield put({
         type: 'show',
         payload: response,
@@ -83,26 +97,25 @@ export default {
         payload: {advancedLoading: false},
       });
     },
-    * fetchSaveCloseFightGroups({payload}, {call, put}) {
+    * fetchPlanClose({payload}, {call, put}) {
       yield put({
         type: 'extendAll',
         payload: {modalConfirmLoading: true},
       });
-      const response = yield call(changeStatus, payload);
+      const response = yield call(planClose, payload);
       if (response.code >= 1) {
         message.success("保存成功");
+        yield put({
+          type: 'extendAll',
+          payload: {
+            modalConfirmLoading: false,
+            showModal: false,
+          },
+        });
+      } else {
+        message.error("保存失败");
       }
-      yield put({
-        type: 'save',
-        payload: response,
-      });
-      yield put({
-        type: 'extendAll',
-        payload: {
-          modalConfirmLoading: false,
-          showModal: false,
-        },
-      });
+
     },
     * fetchConfirmExport({payload, callback}, {call, put}) {
       yield put({
@@ -133,8 +146,8 @@ export default {
   },
 
   reducers: {
-    save(state, action, key) {
-      const keyProp = key || 'data';
+    save(state, action) {
+      const keyProp = action.key || 'data';
       return {
         ...state,
         [keyProp]: action.payload,

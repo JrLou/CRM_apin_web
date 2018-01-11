@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
 import {connect} from 'dva';
 import {Link} from 'dva/router';
-import {Card, Modal, Table, Divider, Icon, Row, Col, Button} from 'antd';
+import {Card, Spin, Table, Divider, Icon, Row, Col, Button, message} from 'antd';
 import {CloseReasonModal, SendLogModal, ExportPassengerModal} from './components/ModalCpm';
 
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import DescriptionList from '../../components/DescriptionList';
 import ImageWrapper from '../../components/ImageWrapper';
 import styles from './CheckFightGroups.less';
-import {getPar, formatPar} from '../../utils/utils';
+import {getPar, formatPar, formatDate} from '../../utils/utils';
 
 const {Description} = DescriptionList;
 
@@ -48,10 +48,46 @@ export default class CheckFightGroups extends Component {
       type: 'checkFightGroups/fetchBasic',
       payload: this.id,
     });
+    dispatch({
+      type: 'checkFightGroups/fetchGroupsInfo',
+      payload: {id: this.id},
+    });
   }
 
+  mapGroupStateToTxt(group_status) {
+    let txt = "";
+    switch (group_status) {
+      case 0:
+        txt = "拼团关闭";
+        break;
+      case 1:
+        txt = "拼团中";
+        break;
+      case 2:
+        txt = "拼团完成";
+        break;
+      case 3:
+        txt = "拼团成功";
+        break;
+      default:
+        txt = "未知的拼团状态";
+        break;
+    }
+    return txt;
+  };
+
   getFightGroupsInfoView() {
-    const {groupsInfoData} = this.props.checkFightGroups;
+    const {groupsInfoData: {data, code, msg}, groupsInfoLoading} = this.props.checkFightGroups;
+
+    const group_status = this.mapGroupStateToTxt(data.group_status);
+    const city_dep = data.city_dep;
+    const city_arr = data.city_arr;
+    const date_dep = formatDate(data.date_dep, 'YYYY-MM-DD');
+    const date_ret = formatDate(data.date_ret, 'YYYY-MM-DD');
+    const create_time = formatDate(data.create_time, 'YYYY-MM-DD');
+    const expired_time = formatDate(data.expired_time, 'YYYY-MM-DD');
+    const paidMan = +data.paidMan;
+    const creator_name = data.creator_name;
 
     return (
       <div>
@@ -61,7 +97,7 @@ export default class CheckFightGroups extends Component {
           <Button
             type="primary"
             className={styles.btn}
-            disabled={false}
+            disabled={groupsInfoLoading || false}//todo {data.group_status !== 2 && groupsInfoLoading}
             onClick={() => {
               this.setState({modalType: 0}, () => {
                 this.handleshowModal()
@@ -71,18 +107,20 @@ export default class CheckFightGroups extends Component {
             关闭拼团
           </Button>
         </div>
-        <DescriptionList size="large" style={{marginBottom: 32}} col={4}>
-          <Description term="拼团单号">{this.id}</Description>
-          <Description term="拼团状态">拼团中</Description>
-          <Description term="出发城市">杭州</Description>
-          <Description term="到达城市">北京</Description>
-          <Description term="起飞日期">2018-01-01</Description>
-          <Description term="返回日期">2018-01-03</Description>
-          <Description term="方案提交时间">2018-01-01 12:08</Description>
-          <Description term="方案过期时间">2018-01-03 12:08</Description>
-          <Description term="支付人数">10人</Description>
-          <Description term="处理客服">园园</Description>
-        </DescriptionList>
+        <Spin spinning={groupsInfoLoading}>
+          <DescriptionList size="large" style={{marginBottom: 32}} col={4}>
+            <Description term="拼团单号">{this.id}</Description>
+            <Description term="拼团状态">{group_status}</Description>
+            <Description term="出发城市">{city_dep}</Description>
+            <Description term="到达城市">{city_arr}</Description>
+            <Description term="起飞日期">{date_dep}</Description>
+            <Description term="返回日期">{date_ret}</Description>
+            <Description term="方案提交时间">{create_time}</Description>
+            <Description term="方案过期时间">{expired_time}</Description>
+            <Description term="支付人数">{paidMan}人</Description>
+            <Description term="处理客服">{creator_name}</Description>
+          </DescriptionList>
+        </Spin>
       </div>
     );
   }
@@ -314,10 +352,17 @@ export default class CheckFightGroups extends Component {
   }
 
   handleOk(e) {
+    if (!this.state.closeReason.trim()) {
+      message.warning("请输入关闭拼团原因");
+      return;
+    }
     const {dispatch} = this.props;
     dispatch({
-      type: 'checkFightGroups/fetchSaveCloseFightGroups',
-      payload: {text: this.state.closeReason},//传过去的参数
+      type: 'checkFightGroups/fetchPlanClose',
+      payload: {//传过去的参数
+        reason: this.state.closeReason,
+        id: this.id,
+      },
     });
   }
 
