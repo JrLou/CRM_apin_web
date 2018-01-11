@@ -90,8 +90,6 @@ class BannerEdit extends PureComponent {
       defaultFileList: fileList,
     };
 
-
-
     return (
       <PageHeaderLayout>
         <Card>
@@ -99,8 +97,7 @@ class BannerEdit extends PureComponent {
             <Row>
               <Col md={16} sm={24}>
                 <FormItem label="图片名称:" {...formItemLayout}>
-                  {getFieldDecorator('title', {
-                    initialValue: data.imgName?data.imgName:undefined,
+                  {getFieldDecorator('title', { initialValue: data.title?data.title:undefined,
                     rules: [{max: 32, message: '长度不能超过32'}, {required: true, message: '请填写图片名称'}],
                   })
                   (<Input placeholder="请输入…"/>)
@@ -108,6 +105,7 @@ class BannerEdit extends PureComponent {
                 </FormItem>
               </Col>
             </Row>
+
             <Row>
               <Col md={16} sm={24}>
                 <FormItem label="显示顺序:" {...formItemLayout}>

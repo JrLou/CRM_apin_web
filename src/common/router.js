@@ -156,7 +156,12 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, ['bannerList'], () => import('../routes/Operations/Banner.js')),
     },
     //banner添加/编辑
-    '/operations/bannerEdit': {
+    '/operations/banner/bannerAdd': {
+      name:'新增banner',
+      component: dynamicWrapper(app, ['bannerList'], () => import('../routes/Operations/BannerAdd.js')),
+    },
+    '/operations/banner/bannerEdit': {
+      name:'编辑banner',
       component: dynamicWrapper(app, ['bannerList'], () => import('../routes/Operations/BannerEdit.js')),
     },
     // '/user/:id': {
