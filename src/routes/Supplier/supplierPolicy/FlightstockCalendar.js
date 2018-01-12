@@ -19,7 +19,7 @@ const RadioGroup = Radio.Group;
 const InputGroup = Input.Group;
 
 @connect(state => ({
-  flightstockAdd: state.flightstockAdd,
+  flightstockEdit: state.flightstockEdit,
 }))
 class page extends Component {
   constructor(props) {
@@ -54,7 +54,7 @@ class page extends Component {
     let a = moment(this.props.listdata.departure_start, "YYYY-MM").format('x');
     let c = moment(this.props.listdata.departure_end, "YYYY-MM").format('x');
     if (b > a && b < c) {
-      this.loadData('flightstockAdd/getpriceAirline', {
+      this.loadData('flightstockEdit/getpriceAirline', {
         date: moment(this.props.listdata.departure_start).format('YYYY-MM'),
         id: this.props.listdata.id,
       },);
@@ -63,7 +63,7 @@ class page extends Component {
       })
 
     } else {
-      this.loadData('flightstockAdd/getpriceAirline', {
+      this.loadData('flightstockEdit/getpriceAirline', {
         date: dates,
         id: this.props.listdata.id,
       },);
@@ -83,7 +83,7 @@ class page extends Component {
   }
 
   getListData(value) {
-    const {flightstockAdd: {airline}} = this.props;
+    const {flightstockEdit: {airline}} = this.props;
     let listData;
     if (airline.length > 0) {
       for (let i = 0; i < airline.length; i++) {
@@ -198,7 +198,7 @@ class page extends Component {
     this.setState({
       dateSelect: value,
     });
-    this.loadData('flightstockAdd/getpriceAirline', {
+    this.loadData('flightstockEdit/getpriceAirline', {
       date: moment(value).format('YYYY-MM'),
       id: this.props.listdata.id,
     },);
@@ -373,7 +373,7 @@ class page extends Component {
 
   render() {
     // 库存
-    const {flightstockAdd: {airline}} = this.props;
+    const {flightstockEdit: {airline}} = this.props;
     let [year, month, day] = [
       +moment(this.props.listdata.flightDate, "YYYY-MM-DD").format('YYYY'),
       +moment(this.props.listdata.flightDate, "YYYY-MM-DD").format('MM') - 1,
