@@ -48,10 +48,10 @@ export default (WrappedComponent, exacpath) => {
       }
     }
     componentWillMount() {
-      if(!this.state.load){
+      if (!this.state.load) {
         this.props.dispatch({
           type: 'global/authroute',
-          payload:exacpath,
+          payload: exacpath,
         });
       }
     }
