@@ -121,6 +121,7 @@ export default {
         payload: {modalTableLoading: true},
       });
       const response = yield call(queryPaidMember, payload);
+      console.log("queryPaidMember__response", response);
       yield put({
         type: 'save',
         payload: response,
@@ -131,23 +132,14 @@ export default {
         payload: {modalTableLoading: false},
       });
     },
-    * fetchExportPassenger({payload,callBack}, {call}) {// 导出乘机人信息（已付款的）
-      // const response = yield call(loadExportPassenger, payload);
-      //
-      // if (typeof response.code === object && response < 1) {
-      //   message.error(response.msg);
-      // } else {
-      //   message.success("下载成功");
-      // }
+    * fetchExportPassenger({payload, cb}, {call}) {// 导出乘机人信息（已付款的）
 
       const response = yield call(loadExportPassenger, payload);
-      if (response.code === 200) {
-        callBack && callBack();
-        message.success("下载成功");
-      } else {
-        message.error("暂无可下载资源");
+      if (response.code) {
+        message.error("资源下载失败");
+        return;
       }
-
+      cb && cb(response);
     },
 
     * fetchPublishLogs({payload}, {call, put}) {// 获取订单推送日志

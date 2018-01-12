@@ -288,21 +288,25 @@ class ExportPassengerModal extends Component {
           <Button
             type='primary'
             onClick={() => {//其实就是下载，很简单
-              debugger;
               const {checkFightGroups: {groupsInfoData: {data}}, id, dispatch} = this.props;
               const fsName = formatDate(data.date_dep, 'MM月DD日') + id + '团乘机人.xlsx';
               const params = {//todo 目前这里都写死了
                 uuid: "10cd0ef740dc452db5114b2bf28e5148",
                 fsName,
+                download: true,
               };
               dispatch({
                 type: 'checkFightGroups/fetchExportPassenger',
                 payload: params,
-                callBack: () => {
-                  window.location.href = `http://192.168.0.32:9712/api/demandPool/exportPassenger?${stringify(params)}&download=true`;
+                cb: response => {
+                  const url = URL.createObjectURL(response);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = fsName;
+                  a.click();
+                  window.URL.revokeObjectURL(url);//销毁霸占着的内存
                 }
               });
-              // window.open(`http://192.168.0.32:9712/api/demandPool/exportPassenger?${stringify(parmas)}`);
             }}
           >
             <Icon type="download"/>导出乘机人信息
