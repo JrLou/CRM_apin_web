@@ -6,6 +6,7 @@ import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import DescriptionList from '../../components/DescriptionList';
 import styles from './FlyingpigDetail.less';
 import timeHelp from '../../utils/TimeHelp.js';
+import {getPar} from '../../utils/utils';
 
 const {TextArea} = Input;
 const confirm = Modal.confirm;
@@ -20,18 +21,23 @@ let id, order_status;
   flyingpigDetail: state.flyingpigDetail,
 }))
 export default class BasicProfile extends Component {
-  state = {
-    inputPrice: this.price || 0,
-    isEdit: false,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      inputPrice: this.price || 0,
+      isEdit: false,
+    };
+    this.par = getPar(this, 'params')
+  }
+
 
   componentWillMount() {
     const {dispatch} = this.props;
-    if (!this.props.location.state) {
-      dispatch(routerRedux.push('/order/flyingpig'));
+    if (!this.par.id) {
+      dispatch(routerRedux.push('/order/entrust'));
     } else {
-      id = this.props.location.state.id;
-      order_status = this.props.location.state.order_status;
+      id = this.par.id;
+      order_status = this.par.order_status;
       dispatch({
         type: 'flyingpigDetail/getDetail',
         payload: {id: id}
@@ -215,8 +221,8 @@ export default class BasicProfile extends Component {
       },
       {
         title: '状态', dataIndex: 'status', key: 'status', render: (text) => {
-        return <Badge status={text === 3 ? "error" : (text === 1||text===2) ? "success" : ''}
-                      text={text === 0 ? "待付款" : (text === 1||text===2)  ? "成功" : text===3?'失败':''}/>
+        return <Badge status={text === 3 ? "error" : (text === 1 || text === 2) ? "success" : ''}
+                      text={text === 0 ? "待付款" : (text === 1 || text === 2) ? "成功" : text === 3 ? '失败' : ''}/>
       }
       },
       {title: '支付时间', dataIndex: 'pay_time', key: 'pay_time'},
