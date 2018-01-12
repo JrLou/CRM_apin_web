@@ -95,6 +95,19 @@ export async function planClose(params) {//关闭拼团
   });
 }
 
+export async function queryGroupOrders(params) {//订单信息
+  return request('/api/demandPool/groupOrders', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function queryPublishLogs(params) {//订单推送日志
+  return request('/api/demandPool/publishLogs', {
+    method: 'POST',
+    body: params,
+  });
+}
+
 export async function queryDetailGroupVoyage(params) {// 方案明细
   return request('/api/demandPool/detailGroupVoyage', {
     method: 'POST',

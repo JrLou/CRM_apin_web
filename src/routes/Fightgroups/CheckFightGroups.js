@@ -45,13 +45,18 @@ export default class CheckFightGroups extends Component {
 
   componentDidMount() {
     const {dispatch} = this.props;
-    dispatch({//todo 这个最后记得删除
-      type: 'checkFightGroups/fetchBasic',
-      payload: this.id,
-    });
     dispatch({// 获取拼团信息
       type: 'checkFightGroups/fetchGroupsInfo',
       payload: {id: this.id},
+    });
+    dispatch({// 获取订单信息
+      type: 'checkFightGroups/fetchGroupOrders',
+      payload: {
+        id: this.id,
+        state: -1,//[-1, 空] => all
+        p: 1,
+        pc: 1000,//目前不分页，但是后台是按这种形式写的接口
+      },
     });
     dispatch({// 获取方案明细
       type: 'checkFightGroups/fetchDetailGroupVoyage',
@@ -142,7 +147,7 @@ export default class CheckFightGroups extends Component {
     );
   }
 
-  getGoodsColumns() {
+  getGroupOrdersColumns() {
     return [
       {
         title: '订单号',
@@ -150,23 +155,23 @@ export default class CheckFightGroups extends Component {
         key: 'id',
       }, {
         title: '订单状态',
-        dataIndex: 'name',
-        key: 'name',
+        dataIndex: 'order_status',
+        key: 'order_status',
         // render: renderContent,
       }, {
         title: '联系人',
-        dataIndex: 'barcode',
-        key: 'barcode',
+        dataIndex: 'contact',
+        key: 'contact',
         // render: renderContent,
       }, {
         title: '联系电话',
-        dataIndex: 'price',
-        key: 'price',
+        dataIndex: 'mobile',
+        key: 'mobile',
         // render: renderContent,
       }, {
         title: '订单人数',
-        dataIndex: 'num',
-        key: 'num',
+        dataIndex: 'adult_count',
+        key: 'adult_count',
       }, {
         title: '推送次数',
         dataIndex: 'amount',
@@ -175,15 +180,24 @@ export default class CheckFightGroups extends Component {
         title: '操作',
         dataIndex: 'action',
         key: 'action',
-        render: (text, row, index) => {
+        render: (text, record, index) => {//生成复杂数据的渲染函数，参数分别为当前行的值，当前行数据，行索引，@return里面可以设置表格行/列合并
           return (
-            <a
-              onClick={() => {
-                this.setState({modalType: 1}, () => {
-                  this.handleshowModal()
+            <a onClick={() => {
+              this.setState({modalType: 1}, () => {
+                const action =
+                this.handleshowModal();
+                //发起请求，获取订单推送日志
+                const {dispatch} = this.props;
+                dispatch({
+                  type: 'checkFightGroups/fetchPublishLogs',
+                  payload: {
+                    id: record.id,
+                    p: 1,
+                    pc: 1000,
+                  },
                 });
-              }}
-            >
+              });
+            }}>
               推送日志
             </a>
           );
@@ -192,11 +206,23 @@ export default class CheckFightGroups extends Component {
     ];
   }
 
-  getOrderInfoView(basicLoading, basicGoods, goodsColumns) {
-    const {groupsInfoData: {data: groupsInfoDataData}} = this.props.checkFightGroups;
-    const data = {id: this.id, continueFlag: true,  cityArr: groupsInfoDataData.city_arr, cityDep: groupsInfoDataData.city_dep };
-    console.log("data~~~~~~~~~~~~~",data);
-    let params = formatPar(data);
+  getOrderInfoView() {
+    const {
+      groupOrdersData: {data, code, msg},
+      groupOrdersLoading,
+      groupsInfoData: {data: groupsInfoDataData},
+    } = this.props.checkFightGroups;
+    const groupOrdersColumns = this.getGroupOrdersColumns();
+
+    //传递给《添加订单》页面的params
+    let params = {
+      id: this.id,
+      continueFlag: true,
+      cityArr: groupsInfoDataData.city_arr,
+      cityDep: groupsInfoDataData.city_dep
+    };
+    params = formatPar(params);
+
     return (
       <div>
         <div className={styles.title}><Icon type="schedule"/>
@@ -219,9 +245,9 @@ export default class CheckFightGroups extends Component {
         <Table
           style={{marginBottom: 24, position: 'relative'}}
           pagination={false}
-          loading={basicLoading}
-          dataSource={basicGoods}
-          columns={goodsColumns}
+          loading={groupOrdersLoading}
+          dataSource={data}
+          columns={groupOrdersColumns}
           rowKey="id"
         />
       </div>
@@ -274,7 +300,6 @@ export default class CheckFightGroups extends Component {
     const dataSource = data.map(currV => ({
       ...currV,
       create_time: formatDate(currV.create_time, 'YYYY-MM-DD HH:mm:ss'),
-      key: currV.id,
     }));
 
     return (
@@ -286,6 +311,7 @@ export default class CheckFightGroups extends Component {
           pagination={false}
           dataSource={dataSource}
           columns={progressColumns}
+          rowKey="id"
         />
       </div>
     );
@@ -308,26 +334,6 @@ export default class CheckFightGroups extends Component {
           }
         }}
       />
-      // <Modal
-      //   title="请确认是否关闭拼团，关闭请输入原因："
-      //   visible={showModal}
-      //   onOk={this.handleOk.bind(this)}
-      //   onCancel={this.handleCancel.bind(this)}
-      //   confirmLoading={modalConfirmLoading}
-      // >
-      //   {
-      //     //TODO 这里的placeholder需要产品确认
-      //   }
-      //   <TextArea
-      //     placeholder="请输入关闭拼团原因，最多100个字"
-      //     autosize={{minRows: 2, maxRows: 4}}
-      //     value={this.state.closeReason}
-      //     onChange={(e) => {
-      //       const value = e.target.value;
-      //       value.length <= 100 && this.setState({closeReason: value});
-      //     }}
-      //   />
-      // </Modal>
     );
   }
 
@@ -341,7 +347,7 @@ export default class CheckFightGroups extends Component {
     );
   }
 
-  getExportPassengerModal(showModal, modalConfirmLoading) {
+  getExportPassengerModal(showModal) {
     return (
       <ExportPassengerModal
         visible={showModal}
@@ -404,10 +410,6 @@ export default class CheckFightGroups extends Component {
   }
 
   render() {
-    const {checkFightGroups} = this.props;
-    const {basicGoods, basicLoading} = checkFightGroups;
-    const goodsColumns = this.getGoodsColumns();
-
     return (
       <PageHeaderLayout>
         <Card bordered={false}>
@@ -416,7 +418,7 @@ export default class CheckFightGroups extends Component {
           <Divider style={{marginBottom: 32}}/>
 
           {/*订单信息*/}
-          {this.getOrderInfoView(basicLoading, basicGoods, goodsColumns)}
+          {this.getOrderInfoView()}
           <Divider style={{marginBottom: 32}}/>
 
           {/*方案明细*/}
