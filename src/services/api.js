@@ -172,7 +172,7 @@ export async function querySupplierList(params) {
   return request(`/api/suplierList?${stringify(params)}`);
 }
 export async function queryFlyList(params) {
-  return request('/api/order/getOrderList', {
+  return request('/api/resource/getAirLinesFlyPigs', {
     method: 'POST',
     body: params,
   });

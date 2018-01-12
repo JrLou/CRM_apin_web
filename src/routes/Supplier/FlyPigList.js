@@ -67,13 +67,12 @@ export default class TableList extends PureComponent {
         const values = {
           ...fieldsValue,
         };
-        values.group_type = Number(values.group_type);
+        values.state = Number(values.state);
         for (let item in values) {
           if (values[item] === undefined) {
             values[item] = '';
           }
         }
-        values.order_status = typeof values.order_status == 'string' ? '' : Number(values.order_status);
 
         this.setState({
           formValues: values,
@@ -123,10 +122,10 @@ export default class TableList extends PureComponent {
           <Col md={6} sm={24}>
             <FormItem label="资源状态">
               {getFieldDecorator('state', {
-                initialValue: ''
+                initialValue: '-1'
               })(
                 <Select placeholder="请选择" style={{width: '100%'}}>
-                  <Option value='-1'>全部</Option>
+                  <Option value='-1' key='-1'>全部</Option>
                   {
                     status.map((item, index) => <Option value={index} key={index}>{item}</Option>)
                   }
@@ -161,36 +160,36 @@ export default class TableList extends PureComponent {
         dataIndex: 'id',
       }, {
         title: '出发/回程城市',
-        dataIndex: 'city_dep',
+        dataIndex: 'voyage',
       }, {
         title: '航空公司',
         dataIndex: 'city_arr'
       }, {
         title: '出发/回程航班号',
-        dataIndex: 'city_arr'
+        dataIndex: 'flight_no',
       }, {
         title: '出发日期',
         dataIndex: 'dep_yyyymm',
       }, {
         title: '出发时刻',
-        dataIndex: 'dep_yyyymm',
+        dataIndex: 'time_dep',
       }, {
         title: '回程日期',
         dataIndex: 'dep_yyyymm',
       }, {
         title: '回程时刻',
-        dataIndex: 'dep_yyyymm',
+        dataIndex: 'time_arr',
       }, {
         title: '含税价',
-        dataIndex: 'adult_count',
+        dataIndex: 'sell_price',
         render: val => `￥${val}`,
       }, {
         title: '折扣',
-        dataIndex: 'adult_count',
+        dataIndex: 'discount',
         render: val => `${val}`,
       }, {
         title: '状态',
-        dataIndex: 'order_status',
+        dataIndex: 'is_invalid',
         render: (text) => {
           return status[text];
         },
