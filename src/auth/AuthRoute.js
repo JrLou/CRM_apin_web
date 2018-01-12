@@ -42,9 +42,9 @@ export default (WrappedComponent, exacpath) => {
     constructor(props) {
       super(props);
       if (this.props.routerPath.some(item => item.url == exacpath||item.url == (exacpath.replace(/^\//, '')))) {
-        this.state = {load: true};
+        this.state = {load: true,notauth:false};
       } else {
-        this.state = {load: false};
+        this.state = {load: false,notauth:false};
       }
     }
     componentWillMount() {
@@ -56,14 +56,14 @@ export default (WrappedComponent, exacpath) => {
       }
     }
     componentWillReceiveProps(nextProps) {
-      console.log('322323')
       if (nextProps.routerPath.some(item =>item.url == exacpath||item.url == (exacpath.replace(/^\//, '')))) {
         this.setState({load: true});
+      }else{
+        this.setState({notauth: true});
       }
     }
     render() {
-      console.log('322323')
-      return (this.state.load ? <WrappedComponent {...this.props} /> : <NotAuth />)
+      return (this.state.load ? <WrappedComponent {...this.props} />:notauth?<NotAuth />:<Spin size="large" style={{ width: "100%",margin: "40px 0 !important"}} />)
     }
   }
   const A = connect(state => ({
