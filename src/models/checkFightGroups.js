@@ -1,4 +1,5 @@
 import {changeStatus} from '../services/api';//这个要删除的
+import {stringify} from 'qs';
 import {
   queryOrderInfo,
   planClose,
@@ -130,14 +131,23 @@ export default {
         payload: {modalTableLoading: false},
       });
     },
-    * fetchExportPassenger({payload}, {call}) {// 导出乘机人信息（已付款的）
-      const response = yield call(loadExportPassenger, payload);
+    * fetchExportPassenger({payload,callBack}, {call}) {// 导出乘机人信息（已付款的）
+      // const response = yield call(loadExportPassenger, payload);
+      //
+      // if (typeof response.code === object && response < 1) {
+      //   message.error(response.msg);
+      // } else {
+      //   message.success("下载成功");
+      // }
 
-      if (typeof response.code === object && response < 1) {
-        message.error(response.msg);
-      } else {
+      const response = yield call(loadExportPassenger, payload);
+      if (response.code === 200) {
+        callBack && callBack();
         message.success("下载成功");
+      } else {
+        message.error("暂无可下载资源");
       }
+
     },
 
     * fetchPublishLogs({payload}, {call, put}) {// 获取订单推送日志
@@ -264,7 +274,7 @@ export default {
         ...payload,
       };
     },
-    resetModalData(state, {payload}){
+    resetModalData(state, {payload}) {
       return {
         ...state,
         ...payload,

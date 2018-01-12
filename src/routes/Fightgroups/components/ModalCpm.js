@@ -291,13 +291,16 @@ class ExportPassengerModal extends Component {
               debugger;
               const {checkFightGroups: {groupsInfoData: {data}}, id, dispatch} = this.props;
               const fsName = formatDate(data.date_dep, 'MM月DD日') + id + '团乘机人.xlsx';
-              const parmas = {//todo 目前这里都写死了
+              const params = {//todo 目前这里都写死了
                 uuid: "10cd0ef740dc452db5114b2bf28e5148",
-                fsName
+                fsName,
               };
               dispatch({
                 type: 'checkFightGroups/fetchExportPassenger',
-                payload: parmas,
+                payload: params,
+                callBack: () => {
+                  window.location.href = `http://192.168.0.32:9712/api/demandPool/exportPassenger?${stringify(params)}&download=true`;
+                }
               });
               // window.open(`http://192.168.0.32:9712/api/demandPool/exportPassenger?${stringify(parmas)}`);
             }}
