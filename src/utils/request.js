@@ -2,7 +2,7 @@
 
 import fetch from 'dva/fetch';
 import { notification } from 'antd';
-
+import Cookies from './cookies.js'
 const codeMessage = {
   200: '服务器成功返回请求的数据',
   201: '新建或修改数据成功。',
@@ -63,8 +63,9 @@ function checkCode(json) {
       message: `提示`,
       description: errortext,
     });
-    if (json.code == -2 && json.code == -8) {
-      location.reload()
+    if(json.code==-2&&json.code==-8){
+       Cookies.clearCookie()
+       location.reload()
     }
   } else if (json.code >= -100 && json.code < -7) {
     notification.error({
