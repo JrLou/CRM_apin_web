@@ -11,7 +11,17 @@ export default {
     menusloaderr: false,
     menus: [],
     routerdata: [],
-    routerPath:[{path:'welcome',url:"welcome"}]
+    routerPath:[{path:'welcome',url:"welcome"}],
+    authlist:{
+      "customer/userList":{},
+      "supplier/supplierPolicy/flightstock":{},
+      "fightgroups/demand":{},
+      "fightgroups/list":{},
+      "order/flyingpig":{},
+      "order/entrust":{},
+      "order/refund":{},
+      "operations/banner":{}
+    } // 用于权限控制的数据表
   },
 
   effects: {
