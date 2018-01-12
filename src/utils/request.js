@@ -57,8 +57,8 @@ function checkCode(json) {
     6: '接口不存在',
     7: '非法请求',
   };
-  if(json.code&&json.code*1<1&&json.code*1>-7){
-    const errortext = codeMessage[json.code*-1];
+  if (json.code && json.code * 1 < 1 && json.code * 1 > -7) {
+    const errortext = codeMessage[json.code * -1];
     notification.error({
       message: `提示`,
       description: errortext,
@@ -67,24 +67,24 @@ function checkCode(json) {
        Cookies.clearCookie()
        location.reload()
     }
-  }else if(json.code>=-100&&json.code<-7){
+  } else if (json.code >= -100 && json.code < -7) {
     notification.error({
       message: `提示`,
-      description: json.msg||"",
+      description: json.msg || "",
     });
-  }else if(json.code*1<=-100&&json.code*1>=-199){
+  } else if (json.code * 1 <= -100 && json.code * 1 >= -199) {
     notification.error({
       message: "用户输入信息校验错误",
-      description: json.msg||"",
+      description: json.msg || "",
     });
-  }else if(json.code*1<=-200&&json.code*1>=-299){
+  } else if (json.code * 1 <= -200 && json.code * 1 >= -299) {
     notification.error({
       message: "后端业务提交错误",
-      description: json.msg||"",
+      description: json.msg || "",
     });
   }
   return json
-  }
+}
 
 export default function request(url, options) {
   const defaultOptions = {
@@ -100,13 +100,20 @@ export default function request(url, options) {
   //   };
   // } catch (e) {
   // }
-    if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
+  if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
     newOptions.headers = {
       Accept: 'application/json',
-      'Content-Type': 'application/json; charset=utf-8',
+      'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
       ...newOptions.headers,
     };
-    newOptions.body = JSON.stringify(newOptions.body);
+    // newOptions.body = JSON.stringify(newOptions.body);
+    let paramsDemo = '';
+    let i = 0;
+    for (let key in newOptions.body) {
+      paramsDemo += i == 0 ? (key + '=' + newOptions.body[key]) : ('&' + key + '=' + newOptions.body[key]);
+      ++i;
+    }
+    newOptions.body = paramsDemo;
   }
 
   return fetch(url, newOptions)
@@ -117,7 +124,7 @@ export default function request(url, options) {
       }
       return response.json();
     }).then(checkCode)
-  ;
+    ;
 }
 
 

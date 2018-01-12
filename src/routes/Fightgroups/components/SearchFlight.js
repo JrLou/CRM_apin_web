@@ -57,10 +57,11 @@ export default class SearchFlight extends PureComponent {
     }
     searchFlight = (isLeft) => {
         const { getFieldValue } = this.props.form;
+        let reg = /^([a-zA-Z][0-9a-zA-Z]|[0-9a-zA-Z][a-zA-Z])([0-9]{1,4})$/;
         let date = isLeft ? getFieldValue('startDate') : getFieldValue('endDate');
         let flightNo = isLeft ? getFieldValue('flightNoDep') : getFieldValue('flightNoArr');
-        if (!date || !flightNo) {
-            message.warning('请输入日期和航班号再查询')
+        if (!date || !flightNo || !reg.test(flightNo)) {
+            message.warning('请输入日期和正确的航班号再查询')
             return
         }
         this.props.dispatch({

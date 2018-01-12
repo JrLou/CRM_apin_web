@@ -214,7 +214,7 @@ export async function getdetailAirLine(params) {
 }
 //日历数据
 export async function getpriceAirline(params) {
-  return request('/api/resource/priceAirline',{
+  return request('/api/resource/priceAirline', {
     method: 'POST',
     body: params,
   });

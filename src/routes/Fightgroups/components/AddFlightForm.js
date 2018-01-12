@@ -34,7 +34,10 @@ class AddFlightForm extends Component {
                     <FormItem>
                         <label htmlFor="" className={css.required}>航班号：</label>
                         {getFieldDecorator("FlightNo", {
-                            rules: [{ required: true, message: "必填" }, { max: 6, message: "航班号最大6位" }],
+                            rules: [{ required: true, message: "必填" }, {
+                                pattern: /^([a-zA-Z][0-9a-zA-Z]|[0-9a-zA-Z][a-zA-Z])([0-9]{1,4})$/,
+                                message: '请输入正确的航班号',
+                            }],
                             initialValue: this.props.inputFlightNo
                         })(
                             <Input
