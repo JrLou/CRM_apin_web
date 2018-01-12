@@ -57,8 +57,8 @@ class BannerEdit extends PureComponent {
         message.warning('请上传图片');
         return;
       }
-      values.start_time = this.state.start_time;
-      values.end_time = this.state.end_time;
+      values.start_time = moment(values.validityTime[0]).format('YYYY-MM-DD HH:mm');
+      values.end_time = moment(values.validityTime[1]).format('YYYY-MM-DD HH:mm');
       values.banner_url = banner_url;
       delete (values["validityTime"]);
       delete (values["actionType"]);
