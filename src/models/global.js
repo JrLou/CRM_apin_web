@@ -1,12 +1,17 @@
-import { queryMenus } from '../services/api';
+import { queryMenus,authrouteApi} from '../services/api';
+import CookieHelp from './../utils/cookies';
+import { routerRedux } from 'dva/router';
+import { debug } from 'util';
 
 export default {
   namespace: 'global',
-
   state: {
     collapsed: false,
-    menusload:false,
-    menus:[],
+    menusload: false,
+    menusloaderr: false,
+    menus: [],
+    routerdata: [],
+    routerPath:[]
   },
 
   effects: {
@@ -15,25 +20,46 @@ export default {
         type: 'changeMenusLoading',
         payload: true,
       });
-      const data = yield call(queryMenus);
-      yield put({
-        type: 'saveMenus',
-        payload: data,
-      });
+      const res = yield call(queryMenus);
+      if (res && res.code >= 1) {
+        const { data } = res
+        yield put({
+          type: 'changerouterPathData',
+          payload:data
+        })
+        data.forEach(item=>item.path=item.url)
+        let menus_children = data.filter(item => !item.parentId).map((element, index, arr) => {
+          let children = data.filter(item => item.parentId == element.id)
+              element.children = children
+              return element
+        });
+        yield put({
+          type: 'changeMenusData',
+          payload: menus_children
+        })
+        yield put({
+          type: 'changeMenusload',
+          payload: true
+        })
+      }else{
+        CookieHelp.clearCookie()
+        yield put(routerRedux.push('/user/login'));
+      }
     },
-    // *clearNotices({ payload }, { put, select }) {
-    //   yield put({
-    //     type: 'saveClearedNotices',
-    //     payload,
-    //   });
-    //   const count = yield select(state => state.global.notices.length);
-    //   yield put({
-    //     type: 'user/changeNotifyCount',
-    //     payload: count,
-    //   });
-    // },
+    *authroute({ payload },{call,put,select}){
+      console.log(payload)
+      const  routerPath = yield select(state => state.global.routerPath);
+      const id = routerPath.filter(item=>item.parentId&&payload.indexOf(item.path)>-1)[0].id
+      const res = yield call(authrouteApi,{id});
+      if (res && res.code >= 1) {
+        const { data } = res
+        yield put({
+          type: 'changerouterPathData',
+          payload:data
+        })
+      }
+    }
   },
-
   reducers: {
     changeLayoutCollapsed(state, { payload }) {
       return {
@@ -41,39 +67,24 @@ export default {
         collapsed: payload,
       };
     },
-    saveMenus(state, { payload }) {
-      const menus = payload&&payload.data?payload.data:null
-      if(!menus){
-        return {
-          ...state,
-          menus: [],
-          menusload: true,
-        };
-      }
-     let menus_children = menus.filter(item=>!item.groupId).map((element,index,arr) => {
-          let children = menus.filter(item=>item.groupId== element.id)
-          element.children=children
-          element.path=element.url
-          return element
-      });
+    changeMenusload(state, { payload }) {
       return {
         ...state,
-        menus: menus_children,
-        menusload: true,
+        menusload: payload,
       };
     },
-    // saveClearedNotices(state, { payload }) {
-    //   return {
-    //     ...state,
-    //     notices: state.notices.filter(item => item.type !== payload),
-    //   };
-    // },
-    changeMenusLoading(state, { payload }) {
+    changeMenusData(state, { payload }) {
       return {
         ...state,
-        menusload: true,
+        menus: payload,
       };
     },
+    changerouterPathData(state,{payload}){
+      return {
+        ...state,
+        routerPath: state.routerPath.concat(payload),
+      };
+    }
   },
 
   subscriptions: {

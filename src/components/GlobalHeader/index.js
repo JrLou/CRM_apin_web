@@ -83,7 +83,6 @@ export default class GlobalHeader extends PureComponent {
       </Menu>
     );
     // const noticeData = this.getNoticeData();
-    console.log(currentUser)
     return (
       <Header className={styles.header}>
         <Icon

@@ -193,7 +193,16 @@ export async function AccountLogin(params) {
   }
 }
 export async function queryMenus() {
-  return request('/uc/authapi/v1.1/modules');
+  return request('/api/user/getNavigators',{
+    method:'POST',
+    body:{}
+  });
+}
+export async function authrouteApi(params){
+  return request('/api/user/getFunNavigators',{
+    method:'POST',
+    body:params
+  });
 }
 export async function financePaymentList(params) {
   return request('/bo/orderapi/v1.0/orders/recordList', {
