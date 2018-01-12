@@ -3,13 +3,7 @@ import { Spin } from 'antd';
 import { connect } from 'dva';
 export default (WrappedComponent) => {
   class Loadmenu2 extends React.Component {
-    // constructor(props) {
-    //   super(props);
-    //   // this.state = {
-    //   //   load:this.props.menusload
-    //   // }
-    // }
-    componentDidMount() {
+    componentWillMount() {
       this.props.menusload||this.props.dispatch({
         type: 'global/fetchMenus',
       });

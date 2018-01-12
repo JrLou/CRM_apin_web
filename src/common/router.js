@@ -52,14 +52,14 @@ export const getRouterData = (app) => {
     '/order/flyingpig': {
       component: dynamicWrapper(app, ['flyingpig'], () => import('../routes/Order/Flyingpig.js')),
     },
-    '/order/flyingpig/detail': {
+    '/order/flyingpig/detail/:params': {
       name: "飞猪&供应商订单详情",
       component: dynamicWrapper(app, ['flyingpigDetail'], () => import('../routes/Order/FlyingpigDetail.js')),
     },
     '/order/entrust': {
       component: dynamicWrapper(app, ['flyingpig'], () => import('../routes/Order/Entrust.js')),
     },
-    '/order/entrust/detail': {
+    '/order/entrust/detail/:params': {
       name: "委托订单详情",
       component: dynamicWrapper(app, ['flyingpigDetail'], () => import('../routes/Order/EntrustProfile.js')),
     },
@@ -129,11 +129,23 @@ export const getRouterData = (app) => {
     },
     //供应商政策
     '/supplier/supplierPolicy/flightstock': {
+      name:'供应商资源列表',
       component: dynamicWrapper(app, ['flightstock'], () => import('../routes/Supplier/supplierPolicy/Flightstock')),
     },
     //供应商政策-新增
-    '/supplier/supplierPolicy/flightstockAdd': {
+    '/supplier/supplierPolicy/flightstock/Add': {
+      name:'新增供应商',
       component: dynamicWrapper(app, ['flightstockAdd'], () => import('../routes/Supplier/supplierPolicy/FlightstockAdd')),
+    },
+    //供应商政策-编辑
+    '/supplier/supplierPolicy/flightstock/Edit': {
+      name:'编辑供应商',
+      component: dynamicWrapper(app, ['flightstockEdit'], () => import('../routes/Supplier/supplierPolicy/FlightstockEdit')),
+    },
+    //供应商政策-查看
+    '/supplier/supplierPolicy/flightstock/View': {
+      name:'查看供应商',
+      component: dynamicWrapper(app, ['flightstockView'], () => import('../routes/Supplier/supplierPolicy/FlightstockView')),
     },
     //飞猪资源
     '/supplier/flyPigList': {

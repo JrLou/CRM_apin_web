@@ -20,21 +20,6 @@ import fetch from 'dva/fetch';
 /**
  * 根据菜单取得重定向地址.
  */
-// const redirectData = [];
-// const getRedirect = (item) => {
-//   if (item && item.children) {
-//     if (item.children[0] && item.children[0].path) {
-//       redirectData.push({
-//         from: `/${item.path}`,
-//         to: `/${item.children[0].path}`,
-//       });
-//       item.children.forEach((children) => {
-//         getRedirect(children);
-//       });
-//     }
-//   }
-// };
-// getMenuData().forEach(getRedirect); //把一级栏目 重定向首个子栏目·
 const { Content } = Layout;
 const query = {
   'screen-xs': {
@@ -130,7 +115,7 @@ class BasicLayout extends React.PureComponent {
           collapsed={collapsed}
           location={location}
           dispatch={dispatch}
-          menus={getMenuData()}
+          menus={this.props.menus}
         />
         <Layout>
           <GlobalHeader
@@ -147,12 +132,12 @@ class BasicLayout extends React.PureComponent {
                   )
                 }
                 {
-                  getRoutes(match.path, routerData).map(item => (
+                  getRoutes(match.path, routerData).map(Item => (
                     <Route
-                      key={item.key}
-                      path={item.path}
-                      component={item.component}
-                      exact={item.exact}
+                      key={Item.key}
+                      path={Item.path}
+                      component={AuthRoute(Item.component,Item.path)}
+                      exact={Item.exact}
                     />
                   ))
                 }
@@ -183,6 +168,6 @@ class BasicLayout extends React.PureComponent {
 }
 
 export default connect(state => ({
+  menus: state.global.menus,
   collapsed: state.global.collapsed,
-  menus:state.global.menus
 }))(BasicLayout);

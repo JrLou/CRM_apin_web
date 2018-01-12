@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'dva';
 import {Modal, Table, Input, Button, message, Upload, Icon} from 'antd';
 import less from './ModalCpm.less'
+import {formatDate} from "../../../utils/utils";
 
 const {TextArea} = Input;
 
@@ -68,42 +69,74 @@ class SendLogModal extends Component {
     this.props.changeVisible && this.props.changeVisible();
   };
 
-  render() {
-    const {basicGoods, basicLoading} = this.props.checkFightGroups;
+  getDataSource(data) {
+    const mapStatusToTxt = (status) => {
+      let txt = '';
+      switch (status) {//状态（0取消，1推送，2接受，3支付超时）
+        case 0:
+          txt = '取消';
+          break;
+        case 1:
+          txt = '推送';
+          break;
+        case 2:
+          txt = '接受';
+          break;
+        case 3:
+          txt = '支付超时';
+          break;
+      }
+      return txt;
+    };
+    return data.map((item) => {
+      const depFlightInfo = item.flightInfo.filter(oneFlight => oneFlight.trip_index === 0)[0];
+      const arrFlightInfo = item.flightInfo.filter(oneFlight => oneFlight.trip_index === 1)[0];
+      return {
+        ...item,
+        flight_no: depFlightInfo.flight_no + '/' + arrFlightInfo.flight_no,
+        flight_dep: formatDate(depFlightInfo.time_dep, 'YYYY-MM-DD'),
+        flight_arr: formatDate(arrFlightInfo.time_dep, 'YYYY-MM-DD'),
+        sell_price: depFlightInfo.sell_price,//此字段任意一个航班都是一样的，因为价格是真个拼团的价格
+        status: mapStatusToTxt(item.status),
+      }
+    });
+  }
 
+  render() {
     const columns = [
       {
         title: '推送时间',
-        dataIndex: 'id',
-        key: 'id',
+        dataIndex: 'create_time',
+        key: 'create_time',
       }, {
         title: '航班号',
-        dataIndex: 'name',
-        key: 'name',
+        dataIndex: 'flight_no',
+        key: 'flight_no',
       }, {
         title: '起飞日期',
-        dataIndex: 'barcode',
-        key: 'barcode',
+        dataIndex: 'flight_dep',
+        key: 'flight_dep',
       }, {
         title: '返回日期',
-        dataIndex: 'price',
-        key: 'price',
+        dataIndex: 'flight_arr',
+        key: 'flight_arr',
       }, {
         title: '销售价',
-        dataIndex: 'num',
-        key: 'num',
+        dataIndex: 'sell_price',
+        key: 'sell_price',
       }, {
         title: '用户反馈',
-        dataIndex: 'amount',
-        key: 'amount',
+        dataIndex: 'status',
+        key: 'status',
       }, {
         title: '原因',
-        dataIndex: 'action',
-        key: 'action',
+        dataIndex: 'remark',
+        key: 'remark',
       }];
 
-    const {closeReason, checkFightGroups} = this.props;//每个modal的table都是用这两行，取同一个地方的数据，因为他们不可能同时出现
-    const {modalData: {data}} = checkFightGroups;
+    const {checkFightGroups} = this.props;//每个modal的table都是用这两行，取同一个地方的数据，因为他们不可能同时出现
+    const {modalData: {data, code, msg}, modalTableLoading} = checkFightGroups;
+    const dataSource = this.getDataSource(data);
 
     return (
       <Modal
@@ -115,8 +148,8 @@ class SendLogModal extends Component {
         <Table
           style={{marginBottom: 24}}
           pagination={false}
-          loading={basicLoading}
-          dataSource={basicGoods}
+          loading={modalTableLoading}
+          dataSource={dataSource}
           columns={columns}
           rowKey="id"
         />

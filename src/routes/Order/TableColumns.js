@@ -15,6 +15,7 @@ import {
 } from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './TableList.less';
+import {formatPar} from '../../utils/utils';
 
 const {RangePicker} = DatePicker;
 const FormItem = Form.Item;
@@ -201,21 +202,15 @@ export default class TableList extends PureComponent {
     );
   }
 
-  pushUrl(data) {
-    this.props.history.push({
-      pathname: '/order/flyingpig/detail',
-      state: {id: data.id, order_status: data.order_status}
-    })
-  }
-
   render() {
     const {flyingpigList: {loading, list, total}, backpath} = this.props;
+    let Url = backpath === 'FlyingPig' ? '/order/flyingpig/detail/' : '/order/entrust/detail/';
     let columns = [
       {
         title: '订单号', dataIndex: 'id', render: (text, record) => {
-        return <a onClick={() => {
-          this.pushUrl(record)
-        }}>{text}</a>
+        return <Link
+          to={Url + formatPar({id: record.id, order_status: record.order_status})}>
+          {text}</Link>
       }
       },
       {
@@ -273,9 +268,9 @@ export default class TableList extends PureComponent {
       {
         title: '操作', render: (text, record) => {
         let title = (record.order_status === 4 && backpath === 'Entrust') || (backpath === 'FlyingPig' && record.order_status === 2 ) ? '出票' : '查看';
-        return <a onClick={() => {
-          this.pushUrl(record)
-        }}>{title}</a>
+        return <Link
+          to={Url + formatPar({id: record.id, order_status: record.order_status})}>
+          {title}</Link>
       }
       }];
     if (backpath === 'Entrust') {
