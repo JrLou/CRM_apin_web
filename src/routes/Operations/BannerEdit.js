@@ -30,8 +30,8 @@ class BannerEdit extends PureComponent {
           type: 'bannerList/addBanner',
         })
       }
-      this.startTime = bannerList.start_time;
-      this.endTime = bannerList.end_time;
+      this.startTime = this.props.bannerList.start_time;
+      this.endTime = this.props.bannerList.end_time;
     }
   }
   onChange = (date, dateString) => {
@@ -166,7 +166,7 @@ class BannerEdit extends PureComponent {
             <Row>
               <Col md={16} sm={24}>
                 <FormItem label="指向地址:" {...formItemLayout}>
-                  {getFieldDecorator('link_url', { initialValue: data.link_url ? data.link_url : undefined })
+                  {getFieldDecorator('link_url', { initialValue: data.link_url ? data.link_url : '' })
                     (<Input placeholder="请输入…" />)
                   }
                 </FormItem>
@@ -193,7 +193,7 @@ class BannerEdit extends PureComponent {
               <Row>
                 <Col md={16} sm={24}>
                   <FormItem label="状态:" {...formItemLayout}>
-                    {getFieldDecorator('state', { initialValue: data.state ? 1 : 0, rules: [{ required: true, message: '请选择状态' }], })
+                    {getFieldDecorator('state', { initialValue: data.state == 0 ? 0 : 1, rules: [{ required: true, message: '请选择状态' }], })
                       (
                       <RadioGroup>
                         <Radio value={1}>上架</Radio>

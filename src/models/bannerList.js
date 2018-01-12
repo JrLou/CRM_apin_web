@@ -47,10 +47,10 @@ export default {
         if (callback) {
           callback(response);
         }
-        yield put({
-          type: 'save',
-          payload: response.data,
-        });
+        // yield put({
+        //   type: 'save',
+        //   payload: response.data,
+        // });
         yield put({
           type: 'changeLoading',
           payload: false,

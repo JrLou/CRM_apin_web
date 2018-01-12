@@ -67,17 +67,17 @@ function checkCode(json) {
        Cookies.clearCookie()
        location.reload()
     }
-  } else if (json.code >= -100 && json.code < -7) {
+  } else if (json.code &&  json.code >= -100 && json.code < -7) {
     notification.error({
       message: `提示`,
       description: json.msg || "",
     });
-  } else if (json.code * 1 <= -100 && json.code * 1 >= -199) {
+  } else if (json.code && json.code * 1 <= -100 && json.code * 1 >= -199) {
     notification.error({
       message: "用户输入信息校验错误",
       description: json.msg || "",
     });
-  } else if (json.code * 1 <= -200 && json.code * 1 >= -299) {
+  } else if (json.code && json.code * 1 <= -200 && json.code * 1 >= -299) {
     notification.error({
       message: "后端业务提交错误",
       description: json.msg || "",
@@ -119,6 +119,9 @@ export default function request(url, options) {
   return fetch(url, newOptions)
     .then(checkStatus)
     .then((response) => {
+      if(response.headers.get('Content-Type')=='blob'){
+          return URL.createObjectURL(response.blob)
+      }
       if (newOptions.method === 'DELETE' || response.status === 204) {
         return response.text();
       }
