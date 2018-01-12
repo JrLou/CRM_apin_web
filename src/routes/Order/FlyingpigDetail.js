@@ -6,6 +6,7 @@ import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import DescriptionList from '../../components/DescriptionList';
 import styles from './FlyingpigDetail.less';
 import timeHelp from '../../utils/TimeHelp.js';
+import {getPar} from '../../utils/utils';
 
 const {TextArea} = Input;
 const confirm = Modal.confirm;
@@ -19,18 +20,23 @@ let id, order_status;
   flyingpigDetail: state.flyingpigDetail,
 }))
 export default class BasicProfile extends Component {
-  state = {
-    inputPrice: this.price || 0,
-    isEdit: false,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      inputPrice: this.price || 0,
+      isEdit: false,
+    };
+    this.par = getPar(this, 'params')
+  }
+
 
   componentWillMount() {
     const {dispatch} = this.props;
-    if (!this.props.location.state) {
+    if (!this.par.id) {
       dispatch(routerRedux.push('/order/flyingpig'));
     } else {
-      id = this.props.location.state.id;
-      order_status = this.props.location.state.order_status;
+      id = this.par.id;
+      order_status = this.par.order_status;
       dispatch({
         type: 'flyingpigDetail/getDetail',
         payload: {id: id}
@@ -45,12 +51,24 @@ export default class BasicProfile extends Component {
   }
 
   isEdit() {
-    let {isEdit} = this.state;
+    let {isEdit, inputPrice} = this.state;
+    const {dispatch, flyingpigDetail: {amountResponse}} = this.props;
     this.setState({
       isEdit: !isEdit
     });
     if (isEdit) {
-      alert(1);
+      dispatch({
+        type: 'flyingpigDetail/updateSettleAmount',
+        payload: {order_id: this.orderData.id, settlement_amount: Number(inputPrice)}
+      });
+      if (amountResponse.code > 0) {
+        message.success('修改成功');
+      } else {
+        message.error('修改失败');
+        this.setState({
+          inputPrice: this.orderData.settlement_amount
+        })
+      }
     }
   }
 
@@ -86,7 +104,16 @@ export default class BasicProfile extends Component {
   }
 
   failReason(reason) {
-    console.log("提交成功了", reason);
+    const {dispatch, flyingpigDetail: {failResponse}} = this.props;
+    dispatch({
+      type: 'flyingpigDetail/ticketFail',
+      payload: {order_id: this.orderData.id, message: reason}
+    });
+    if (failResponse.code > 0) {
+      message.success('修改成功');
+    } else {
+      message.error('修改失败');
+    }
   }
 
   render() {
@@ -193,8 +220,8 @@ export default class BasicProfile extends Component {
       },
       {
         title: '状态', dataIndex: 'status', key: 'status', render: (text) => {
-        return <Badge status={text === 0 ? "error" : text === 1 ? "success" : ''}
-                      text={text === 0 ? "失败" : text === 1 ? "成功" : ''}/>
+        return <Badge status={text === 3 ? "error" : (text === 1 || text === 2) ? "success" : ''}
+                      text={text === 0 ? "待付款" : (text === 1 || text === 2) ? "成功" : text === 3 ? '失败' : ''}/>
       }
       },
       {title: '支付时间', dataIndex: 'pay_time', key: 'pay_time'},
@@ -225,7 +252,9 @@ export default class BasicProfile extends Component {
                 : null
             }
           </div>
-          <div className={styles.remarkText}>这里是出票失败备注，这里是出票失败备注。</div>
+          {
+            order_status != 4 ? null : <div className={styles.remarkText}>{order.ticket_fail_message || ''}</div>
+          }
           <div className={styles.title}><Icon type="profile"/> 订单信息</div>
           <DescriptionList size="large" style={{marginBottom: 32}} col={4}>
             <Description term="订单号">{order.id || ''}</Description>
@@ -255,12 +284,11 @@ export default class BasicProfile extends Component {
             columns={passengerColumns}
             rowKey="id"
           />
-          {/*{*/}
-          {/*order_status == 2 ?*/}
-          {/*<div className={styles.acticnBtn}><Button type='primary' onClick={::this.ticketConfirm}>出票</Button></div>*/}
-          {/*: null*/}
-          {/*}*/}
-          <div className={styles.acticnBtn}><Button type='primary' onClick={::this.ticketConfirm}>出票</Button></div>
+          {
+            order_status == 2 ?
+              <div className={styles.acticnBtn}><Button type='primary' onClick={::this.ticketConfirm}>出票</Button></div>
+              : null
+          }
           <Divider style={{marginBottom: 32}}/>
           <div className={styles.title}><Icon type="red-envelope"/> 支付信息</div>
           {
@@ -273,23 +301,29 @@ export default class BasicProfile extends Component {
                     <span
                       className={styles.priceDesc}>{order.sell_price * this.adult_count}={order.sell_price}(成人价)*{this.adult_count}</span>
                   </li>
-                  <li>
-                    <span className={styles.titleDesc}>实际结算价</span>
-                    <span className={styles.priceDesc}>
-                {
-                  isEdit ?
-                    <Input value={inputPrice} className={styles.inputPrice} min={0} type="number"
-                           onChange={::this.inputPrice}/>
-                    :
-                    <span className={styles.inputPrice}>{inputPrice}</span>
-                }
-                      <Button type='primary' onClick={::this.isEdit}>{isEdit ? '保存' : '修改'}</Button></span>
-                  </li>
-                  <li>
-                    <span className={styles.titleDesc}>差额</span>
-                    <span className={styles.priceDesc}
-                          style={{color: (order.sell_price * this.adult_count - inputPrice) > 0 ? '#f00' : ''}}>{order.sell_price * this.adult_count - inputPrice}</span>
-                  </li>
+                  {
+                    order_status == 4 ? null :
+                      <li>
+                        <span className={styles.titleDesc}>实际结算价</span>
+                        <span className={styles.priceDesc}>
+                      {
+                        isEdit ?
+                          <Input value={inputPrice} className={styles.inputPrice} min={0} type="number"
+                                 onChange={::this.inputPrice}/>
+                          :
+                          <span className={styles.inputPrice}>{inputPrice}</span>
+                      }
+                          <Button type='primary' onClick={::this.isEdit}>{isEdit ? '保存' : '修改'}</Button></span>
+                      </li>
+                  }
+                  {
+                    order_status == 4 ? null :
+                      <li>
+                        <span className={styles.titleDesc}>差额</span>
+                        <span className={styles.priceDesc}
+                              style={{color: (order.sell_price * this.adult_count - inputPrice) > 0 ? '#f00' : ''}}>{order.sell_price * this.adult_count - inputPrice}</span>
+                      </li>
+                  }
                 </ul>
                 <div className={styles.myTable} style={{marginBottom: '25px'}}>
                   <Table

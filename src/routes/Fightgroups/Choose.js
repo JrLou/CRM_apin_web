@@ -17,14 +17,14 @@ const period = [
   { label: '晚上航班（19:00-06:00）', value: '3' },
 ];
 const daysArr = [
-  { label: '2天', value: '0' },
-  { label: '3天', value: '1' },
-  { label: '4天', value: '2' },
-  { label: '5天', value: '3' },
-  { label: '6天', value: '4' },
-  { label: '7天及以上', value: '5' }
+  { label: '2天', value: '2' },
+  { label: '3天', value: '3' },
+  { label: '4天', value: '4' },
+  { label: '5天', value: '5' },
+  { label: '6天', value: '6' },
+  { label: '7天及以上', value: '7' }
 ]
-const allValues = ['0', '1', '2', '3', '4', '5']
+const allValues = ['2', '3', '4', '5', '6', '7']
 @connect(state => ({
   chooseData: state.choose,
 }))
@@ -100,7 +100,16 @@ export default class Choose extends PureComponent {
       values.startDate = values.flightTime ? moment(values.flightTime[0]).format('YYYY-MM-DD') : '';
       values.endDate = values.flightTime ? moment(values.flightTime[1]).format('YYYY-MM-DD') : '';
       delete values.flightTime;
-
+      // 转成字符串
+      const { checkedList, daysCheckedList } = this.state;
+      values.timeSlot = (checkedList).join(',');
+      values.tripDays = (daysCheckedList).join(',');
+      if (checkedList.length == 3) {
+        values.timeSlot = '0,' + values.timeSlot;
+      }
+      if (daysCheckedList.length == 6) {
+        values.tripDays = '-1,' + values.tripDays;
+      }
       console.log(values);
       this.searchValue = values;
       dispatch({
@@ -132,9 +141,12 @@ export default class Choose extends PureComponent {
     }
     // 推送当前方案直接到查看
     if (continueFlag) {
-      this.props.history.push('/fightgroups/demand/checkFightGroups/' + id);
+      dispatch({
+        type: 'choose/continueAdd',
+        payload: { groupId: id, idString: this.state.selectedRowKeys.join(',') },
+      });
     } else {
-      this.props.history.push({ pathname: '/fightgroups/demand/push', state: { demandId: id, orderList: this.state.selectRows } });
+      this.props.history.push({ pathname: '/fightgroups/demand/push', state: { orderList: this.state.selectRows } });
     }
   }
 
@@ -252,7 +264,7 @@ export default class Choose extends PureComponent {
     const { dispatch } = this.props;
     dispatch({
       type: 'choose/getLogs',
-      payload: id,
+      payload: { ...{ p: 1, pc: 9999 }, id },
     });
     this.handleModalVisible(true)
   }
@@ -262,7 +274,7 @@ export default class Choose extends PureComponent {
       {
         title: '订单号',
         dataIndex: 'id',
-        render: (text, record) => <Link to={'/fightgroups/demand/checkFightGroups'}>{text}</Link>,
+        render: (text, record) => <Link to={{ pathname: '/order/entrust/detail', state: { id: text, order_status: 1 } }}>{text}</Link>,
       },
 
       {
@@ -276,6 +288,9 @@ export default class Choose extends PureComponent {
       {
         title: '下单时间',
         dataIndex: 'create_time',
+        render: (text, record) => {
+          return moment(text).format('YYYY-MM-DD');
+        }
       },
       {
         title: '起飞时间',
@@ -287,6 +302,9 @@ export default class Choose extends PureComponent {
       {
         title: '订单状态',
         dataIndex: 'order_status',
+        render: (text, record) => {
+          return '委托中';
+        }
       },
       {
         title: '是否接受微调',
@@ -341,7 +359,7 @@ export default class Choose extends PureComponent {
             footer={null}
             width={800}
           >
-            <LogTable logData={logData}> </LogTable>
+            <LogTable logData={logData.data} bordered={true}> </LogTable>
           </Modal>
         </Spin>
       </PageHeaderLayout>

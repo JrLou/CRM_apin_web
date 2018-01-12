@@ -11,7 +11,8 @@ export default {
         flightsTableShow: false,
         flightsArr: [],
         showWhat: '',
-        modalTitle: ''
+        modalTitle: '',
+        flightNo: ''
     },
     effects: {
         *fetch({ payload }, { call, put }) {
@@ -22,14 +23,15 @@ export default {
             const response = yield call(postGroupData, payload);
             if (response.code >= 1) {
                 message.success('推送成功，将进入拼团查看页面');
-
-                yield put(routerRedux.push('/fightgroups/demand/checkFightGroups/' + payload.id));
+                // 成功后清空
+                yield put({
+                    type: 'reset',
+                    payload: '',
+                });
+                // yield put(routerRedux.push('/fightgroups/demand/checkFightGroups/' + payload.id));
+            } else {
+                message.error(response.msg);
             }
-            // 路由跳转
-            yield put({
-                type: 'reset',
-                payload: '',
-            });
             yield put({
                 type: 'changeLoading',
                 payload: false,
@@ -45,33 +47,15 @@ export default {
                 message.success('操作成功');
                 yield put({
                     type: 'getFlights',
-                    payload: { ...response, modalTitle: '航班号为：' + payload.flightNo + '的所有航班' },
+                    payload: { ...response, modalTitle: '航班号为：' + payload.fnum + '的所有航班', flightNo: payload.fnum },
                 });
-            }
-            yield put({
-                type: 'changeLoading',
-                payload: false,
-            });
-        },
-        *addFlight({ payload }, { call, put }) {
-            yield put({
-                type: 'changeLoading',
-                payload: true,
-            });
-            const response = yield call(addFlights, payload);
-            if (response.code >= 1) {
-                message.success('操作成功');
-                yield put({
-                    type: 'setCard',
-                    payload: [payload],
-                });
-
             }
             yield put({
                 type: 'changeLoading',
                 payload: false,
             });
         }
+
     },
 
     reducers: {
@@ -94,7 +78,7 @@ export default {
         },
         getFlights(state, action) {
             // 判断是不是查到了航班，如果是空数组则跳出手动添加按钮。
-            let data = action.payload.data.length > 0 ?
+            let data = action.payload.data && action.payload.data.length > 0 ?
                 {
                     ...state,
                     flightsArr: action.payload.data,
@@ -105,9 +89,10 @@ export default {
                 :
                 {
                     ...state,
-                    flightsArr: action.payload.data,
+                    flightsArr: [],
                     flightsTableShow: true,
                     showWhat: 'toAddFlight',
+                    flightNo: action.payload.flightNo,
                     modalTitle: action.payload.modalTitle
                 };
             return data;
@@ -137,10 +122,11 @@ export default {
         goAddFlight(state, action) {
             return {
                 ...state,
+                flightNo: action.payload,
                 showWhat: 'addFlight',
                 modalTitle: '手工录入航班'
             };
-        },
+        }
 
     },
 };
