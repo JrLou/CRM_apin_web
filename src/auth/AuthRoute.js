@@ -56,11 +56,13 @@ export default (WrappedComponent, exacpath) => {
       }
     }
     componentWillReceiveProps(nextProps) {
+      console.log('322323')
       if (nextProps.routerPath.some(item =>item.url == exacpath||item.url == (exacpath.replace(/^\//, '')))) {
         this.setState({load: true});
       }
     }
     render() {
+      console.log('322323')
       return (this.state.load ? <WrappedComponent {...this.props} /> : <NotAuth />)
     }
   }

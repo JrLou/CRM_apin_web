@@ -11,7 +11,7 @@ export default {
     menusloaderr: false,
     menus: [],
     routerdata: [],
-    routerPath:[]
+    routerPath:[{path:'welcome',url:"welcome"}]
   },
 
   effects: {
@@ -47,7 +47,6 @@ export default {
       }
     },
     *authroute({ payload },{call,put,select}){
-      console.log(payload)
       const  routerPath = yield select(state => state.global.routerPath);
       const id = routerPath.filter(item=>item.parentId&&payload.indexOf(item.path)>-1)[0].id
       const res = yield call(authrouteApi,{id});
