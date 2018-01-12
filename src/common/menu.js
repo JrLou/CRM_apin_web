@@ -17,8 +17,11 @@ const menuData = [{
     //   name: '供应商列表',
     //   path: 'supplier/supplierPolicy/flightstock',
     // }, {
-    //   name: '编辑，新增，查看供应商',
+    //   name: '新增',
     //   path: 'supplier/supplierPolicy/flightstockAdd',
+    // }, {
+    //   name: '编辑',
+    //   path: 'supplier/supplierPolicy/flightstockEdit',
     // }],
   }, {
     name: '飞猪资源',

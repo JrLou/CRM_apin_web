@@ -14,6 +14,8 @@ import moment from 'moment';
 const confirm = Modal.confirm;
 const {Column,} = Table;
 import Filter from '../../../components/screening/Filter.js';
+import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
+
 
 @connect(state => ({
   flightstock: state.flightstock,
@@ -46,7 +48,7 @@ class page extends Component {
   companyname(ole, e, event) { //全局函数（根据ole作为标识可以快速查找各功能实现位置）
     switch (ole) {
       case 0: //新增政策跳转新增页面
-        this.props.history.push({pathname: 'flightstockAdd'});
+        this.props.history.push({pathname: 'flightstock/Add'});
         break;
       case 1: //弹窗确认按钮所调函数
         this.setState({visible: false})
@@ -106,8 +108,10 @@ class page extends Component {
 
       ],
     };
-    let form = (<div><Filter formData={formData} dataProcess={this.dataProcess.bind(this)}
-                             add={this.companyname.bind(this, 0)}/> {this.getTableView()}</div>)
+    let form = (      <PageHeaderLayout>
+        <Filter formData={formData} dataProcess={this.dataProcess.bind(this)}
+                add={this.companyname.bind(this, 0)}/> {this.getTableView()}      </PageHeaderLayout>
+    )
     return form;
   }
 
@@ -224,7 +228,7 @@ class page extends Component {
                   return <div>
                     <a
                       style={{cursor: "pointer", margin: "6px"}}
-                      onClick={this.operating.bind(this, record, 0, '编辑航班库存')}>编辑
+                      onClick={this.operating.bind(this, record, 0,)}>编辑
                     </a>
                     <Divider type="vertical"/>
                     <a style={{cursor: "pointer", margin: "6px"}}
@@ -240,12 +244,12 @@ class page extends Component {
                   return <div>
                     <a
                       style={{cursor: "pointer", margin: "6px"}}
-                      onClick={this.operating.bind(this, record, 0, '编辑航班库存')}>编辑
+                      onClick={this.operating.bind(this, record, 0, )}>编辑
                     </a>
                     <Divider type="vertical"/>
                     <a
                       style={{cursor: "pointer", margin: "6px"}}
-                      onClick={this.operating.bind(this, record, 4, '查看航班库存')}>查看
+                      onClick={this.operating.bind(this, record, 4, )}>查看
                     </a>
                     <Divider type="vertical"/>
                     <a style={{cursor: "pointer", margin: "6px"}}
@@ -266,10 +270,12 @@ class page extends Component {
           <Table pagination={false} dataSource={datalgo ? datalgo : []} columns={columns}/>
         </Modal>
       </div>
+
     )
   }
 
-  operating(data, ole, txt, ide) {
+
+  operating(data, ole,) {
     let _this = this;
     const confirms = (data, titlea) => {
       confirm({
@@ -286,7 +292,8 @@ class page extends Component {
     }
     switch (ole) {
       case 0:
-        this.props.history.push({pathname: 'flightstockAdd',
+        this.props.history.push({
+          pathname: 'flightstock/Edit',
           state: {
             data: data,
           }
@@ -307,6 +314,14 @@ class page extends Component {
             pc: 100,
             uuid: data.id,
           },
+        });
+        break;
+      case 4:
+        _this.props.history.push({
+          pathname: 'flightstock/View',
+          state: {
+            data: data,
+          }
         });
         break;
     }
