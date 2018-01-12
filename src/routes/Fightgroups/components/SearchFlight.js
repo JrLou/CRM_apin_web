@@ -43,16 +43,21 @@ export default class SearchFlight extends PureComponent {
                     message.warning('请选择出发航班和返回航班后再提交')
                     return
                 }
+                let idString = orderList.map((v, k) => {
+                    return v.id
+                })
+                values.startDate = moment(values.startDate).format('YYYY-MM-DD');
+                values.endDate = moment(values.endDate).format('YYYY-MM-DD');
                 this.props.dispatch({
                     type: 'push/fetch',
-                    payload: { ...values, depData, arrData, id: demandId },
+                    payload: { ...values, goAirLine: [depData], backAirLine: [arrData], idString: idString.join(',') },
                 });
             }
         });
     }
     searchFlight = (isLeft) => {
         const { getFieldValue } = this.props.form;
-        let date = isLeft ? getFieldValue('beginDate') : getFieldValue('endDate');
+        let date = isLeft ? getFieldValue('startDate') : getFieldValue('endDate');
         let flightNo = isLeft ? getFieldValue('flightNoDep') : getFieldValue('flightNoArr');
         if (!date || !flightNo) {
             message.warning('请输入日期和航班号再查询')
@@ -64,7 +69,7 @@ export default class SearchFlight extends PureComponent {
         });
         this.props.dispatch({
             type: 'push/search',
-            payload: { date: moment(date).format('YYYY-MM-DD'), flightNo: flightNo },
+            payload: { endDate: moment(date).format('YYYY-MM-DD'), startDate: moment(date).format('YYYY-MM-DD'), fnum: flightNo },
         });
 
     }
@@ -81,22 +86,23 @@ export default class SearchFlight extends PureComponent {
         });
     }
     goAddFlight = () => {
+        const { data: { flightNo } } = this.props;
         this.props.dispatch({
             type: 'push/goAddFlight',
-            payload: '',
+            payload: flightNo,
         });
     }
     addFlight = (values) => {
         this.props.dispatch({
-            type: 'push/addFlight',
-            payload: values,
+            type: 'push/setCard',
+            payload: [values],
         });
     }
     getLogs = (id) => {
         const { dispatch } = this.props;
         dispatch({
             type: 'choose/getLogs',
-            payload: id,
+            payload: { ...{ p: 1, pc: 9999 }, id },
         });
         this.handleModalVisible(true)
     }
@@ -104,6 +110,10 @@ export default class SearchFlight extends PureComponent {
         this.setState({
             modalVisible: !!flag
         });
+    }
+    disabledDate = (current) => {
+        // Can not select days before today and today
+        return current && current < moment().endOf('day');
     }
     render() {
         // const { data: { list, loading } } = this.props; 
@@ -118,7 +128,7 @@ export default class SearchFlight extends PureComponent {
             },
         };
         const { getFieldDecorator, getFieldValue } = this.props.form;
-        const { data: { depData, arrData, flightsArr, flightsTableShow, showWhat, isLeft, modalTitle, loading } } = this.props;
+        const { data: { depData, arrData, flightsArr, flightsTableShow, showWhat, isLeft, modalTitle, loading, flightNo } } = this.props;
         const { logData } = this.props.logTableList ? this.props.logTableList : {};
         const showDepCard = JSON.stringify(depData) !== "{}";
         const showArrCard = JSON.stringify(arrData) !== "{}";
@@ -134,64 +144,75 @@ export default class SearchFlight extends PureComponent {
                 </div>
                 break;
             case 'addFlight':
-                component = <Spin spinning={loading}><AddFlightForm sumit={this.addFlight} /></Spin>
+                component = <Spin spinning={loading}><AddFlightForm inputFlightNo={flightNo} sumit={this.addFlight} /></Spin>
                 break;
             default:
                 component = null
                 break;
         }
-        const columns = [{
-            title: '订单号',
-            dataIndex: 'id',
-            render: (text, record) => <Link to={'/fightgroups/demand/checkFightGroups'}>{text}</Link>,
-        },
+        const columns = [
+            {
+                title: '订单号',
+                dataIndex: 'id',
+                render: (text, record) => <Link to={{ pathname: '/order/entrust/detail', state: { id: text, order_status: 1 } }}>{text}</Link>,
+            },
 
-        {
-            title: '出发城市',
-            dataIndex: 'depAirport',
-        },
-        {
-            title: '到达城市',
-            dataIndex: 'arrAirport',
-        },
-        {
-            title: '下单时间',
-            dataIndex: 'createTime',
-        },
-        {
-            title: '起飞时间',
-            dataIndex: 'createTimePeriod',
-        },
-        {
-            title: '订单状态',
-            dataIndex: 'status',
-        },
-        {
-            title: '是否接受微调',
-            dataIndex: 'isAllowChange',
-        },
-        {
-            title: '订单人数',
-            dataIndex: 'orderCount',
-        },
-        {
-            title: '出行天数',
-            dataIndex: 'days',
-        },
-        {
-            title: '推送记录',
-            render: (text, record) => <a href="javascript:;" onClick={this.getLogs.bind(this, record.id)}>推送日志</a>,
-        }];
+            {
+                title: '出发城市',
+                dataIndex: 'city_dep',
+            },
+            {
+                title: '到达城市',
+                dataIndex: 'city_arr',
+            },
+            {
+                title: '下单时间',
+                dataIndex: 'create_time',
+                render: (text, record) => {
+                    return moment(text).format('YYYY-MM-DD');
+                }
+            },
+            {
+                title: '起飞时间',
+                dataIndex: 'dep_yyyymm',
+                render: (text, record) => {
+                    return text.toString().substring(0, 4) + "-" + text.toString().substring(4);
+                }
+            },
+            {
+                title: '订单状态',
+                dataIndex: 'order_status',
+            },
+            {
+                title: '是否接受微调',
+                dataIndex: 'is_adjust',
+                render: (text, record) => {
+                    let innerText = ['否', ' 是']
+                    return innerText[text]
+                },
+            },
+            {
+                title: '订单人数',
+                dataIndex: 'adult_count',
+            },
+            {
+                title: '出行天数',
+                dataIndex: 'trip_days',
+            },
+            {
+                title: '推送记录',
+                render: (text, record) => <a href="javascript:;" onClick={this.getLogs.bind(this, record.id)}>推送日志</a>,
+            }];
         return (
             <div style={{ 'minWidth': '900px' }}>
                 <Form className='searchForm' onSubmit={this.handleSubmit} >
                     <Row>
                         <Col span={9}>
                             <FormItem label="起飞日期"  {...formItemLayout} className={styles.formItem}>
-                                {getFieldDecorator('beginDate', {
+                                {getFieldDecorator('startDate', {
                                     rules: [{ required: true, message: '必填' }],
                                 })(
-                                    <DatePicker />
+                                    <DatePicker disabledDate={this.disabledDate} />
                                     )}
                             </FormItem>
                         </Col>
@@ -201,7 +222,7 @@ export default class SearchFlight extends PureComponent {
                                     rules: [{ required: true, message: '必填' }],
 
                                 })(
-                                    <DatePicker />)}
+                                    <DatePicker disabledDate={this.disabledDate} />)}
                             </FormItem>
                         </Col>
                     </Row>
@@ -255,7 +276,7 @@ export default class SearchFlight extends PureComponent {
                     <Row>
                         <Col span={9}>
                             <FormItem label="销售价格"  {...formItemLayout} className={styles.formItem}>
-                                {getFieldDecorator('price', {
+                                {getFieldDecorator('sellPrice', {
                                     rules: [{ required: true, message: '必填' },
                                     {
                                         pattern: /^\+?[1-9]\d{0,5}$/,
@@ -270,7 +291,7 @@ export default class SearchFlight extends PureComponent {
                         </Col>
                         <Col span={9}>
                             <FormItem label="方案有效时间"  {...formItemLayout} className={styles.formItem}>
-                                {getFieldDecorator('validDate', {
+                                {getFieldDecorator('expiredTime', {
                                     rules: [{ required: true, message: '必填' },
                                     {
                                         pattern: /^\+?[1-9]\d{0,2}$/,
@@ -325,16 +346,20 @@ export default class SearchFlight extends PureComponent {
                     width={600}
                     onCancel={this.showModal.bind(null, false)}
                 >
-                    {flightsTableShow ? component : null}
+                    <div className={styles.contentBox}>
+                        {flightsTableShow ? component : null}
+                    </div>
                 </Modal>
                 <Modal
                     title="日志"
                     visible={this.state.modalVisible}
                     onCancel={() => this.handleModalVisible(false)}
                     footer={null}
-                    width={800}
+                    width={1000}
                 >
-                    <LogTable logData={logData} bordered={true}> </LogTable>
+                    <div className={styles.contentBox}>
+                        <LogTable logData={logData && logData.data} bordered={true}> </LogTable>
+                    </div>
                 </Modal>
             </div>
         );

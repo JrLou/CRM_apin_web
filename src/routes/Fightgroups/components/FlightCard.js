@@ -4,12 +4,17 @@
 import React, { Component } from 'react'
 import { Col, Row, Card, Icon } from 'antd';
 import css from './FlightCard.less';
+import moment from 'moment';
 
 class FlightCard extends Component {
     constructor(props) {
         super(props);
     }
+    changeTime(originDate) {
+        return moment(originDate, 'YYYY-MM-DD HH:mm:ss').format('HH:mm');
+    }
     render() {
+
         return (
             this.props.visiable ?
                 <div className={css.cardContainer}>
@@ -18,7 +23,7 @@ class FlightCard extends Component {
                             <Col span={24} offset={0}>
                                 <Col span={11}>
                                     <div className={css.cardTop} style={{ textAlign: "right" }}>
-                                        <span className={css.city}>{this.props.cardData.flightDep}</span>
+                                        <span className={css.city}>{this.props.cardData.FlightDep}</span>
                                     </div>
                                 </Col>
                                 <Col span={2}>
@@ -28,21 +33,21 @@ class FlightCard extends Component {
                                 </Col>
                                 <Col span={11}>
                                     <div className={css.cardTop} style={{ textAlign: "left" }}>
-                                        <span className={css.city}>{this.props.cardData.flightArr}</span>
+                                        <span className={css.city}>{this.props.cardData.FlightArr}</span>
                                     </div>
                                 </Col>
                             </Col>
                         </Row>
                         <div className={css.companyBox}>
-                            <span className={css.company}>{this.props.cardData.flightCompany}</span>
-                            <span className={css.company}>{this.props.cardData.flightNo}</span>
+                            <span className={css.company}>{this.props.cardData.FlightCompany}</span>
+                            <span className={css.company}>{this.props.cardData.FlightNo}</span>
                         </div>
                         <Row>
                             <Col span={24} offset={0}>
                                 <Col span={9}>
                                     <div className={css.cardDiv}>
-                                        <div className={css.airportL}>{this.props.cardData.flightDepAirport}</div>
-                                        <div className={css.flyTimeL}>{this.props.cardData.flightDeptimePlanDate}</div>
+                                        <div className={css.airportL}>{this.props.cardData.FlightDepAirport}</div>
+                                        <div className={css.flyTimeL}>{this.changeTime(this.props.cardData.FlightDeptimePlanDate)}</div>
                                     </div>
                                 </Col>
                                 <Col span={6}>
@@ -52,8 +57,8 @@ class FlightCard extends Component {
                                 </Col>
                                 <Col span={9}>
                                     <div className={css.cardDiv}>
-                                        <div className={css.airportR}>{this.props.cardData.flightArrAirport}</div>
-                                        <div className={css.flyTimeR}>{this.props.cardData.flightArrtimePlanDate}</div>
+                                        <div className={css.airportR}>{this.props.cardData.FlightArrAirport}</div>
+                                        <div className={css.flyTimeR}>{this.changeTime(this.props.cardData.FlightArrtimePlanDate)}</div>
                                     </div>
                                 </Col>
                             </Col>
@@ -67,14 +72,14 @@ class FlightCard extends Component {
 export default FlightCard
 FlightCard.defaultProps = {
     cardData: {
-        flightDepAirport: "",
-        flightDep: "",
-        flightDeptimePlanDate: "",
-        flightNo: "",
-        flightArrAirport: "",
-        flightArr: "",
-        flightArrtimePlanDate: "",
-        flightCompany: ''
+        FlightDepAirport: "",
+        FlightDep: "",
+        FlightDeptimePlanDate: "",
+        FlightNo: "",
+        FlightArrAirport: "",
+        FlightArr: "",
+        FlightArrtimePlanDate: "",
+        FlightCompany: ''
     }
 }
 

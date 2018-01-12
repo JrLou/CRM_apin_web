@@ -1,5 +1,5 @@
 import {queryAdvancedProfile, changeStatus} from '../services/api';//这个要删除的
-import {queryOrderInfo, planClose} from '../services/api';
+import {queryOrderInfo,  planClose, queryDetailGroupVoyage, queryGroupLogs,} from '../services/api';
 import {message} from 'antd';
 //TODO 这个文件刚刚copy下来，都需修改
 export default {
@@ -14,7 +14,7 @@ export default {
     // advancedLoading: true,
     groupsInfoData: {//拼团信息
       code: '',
-      data: [],
+      data: {},
       msg: '',
     },
     groupsInfoLoading: true,
@@ -26,19 +26,19 @@ export default {
     },
     orderInfoLoading: true,
 
-    logInfoData: {//日志信息
+    detailGroupVoyage: {//方案明细
       code: '',
-      data: [],
+      data: [{},{}],
       msg: '',
     },
-    logInfoLoading: true,
+    detailGroupVoyageLoading: true,
 
-    projectDetailData: {//方案明细
+    groupLogs: {//日志信息
       code: '',
       data: [],
       msg: '',
     },
-    projectDetailLoading: true,
+    groupLogsLoading: true,
 
     modalData: {//保存着当前modal需要的列表信息
       code: '',
@@ -50,13 +50,12 @@ export default {
   },
 
   effects: {
-    * fetchGroupsInfo({payload}, {call, put}) {
+    * fetchGroupsInfo({payload}, {call, put}) {// 获取拼团信息
       yield put({
         type: 'extendAll',
         payload: {groupsInfoLoading: true},
       });
       const response = yield call(queryOrderInfo, payload);
-      console.log("queryOrderInfo的res!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", response);
       yield put({
         type: 'save',
         payload: response,
@@ -67,6 +66,41 @@ export default {
         payload: {groupsInfoLoading: false},
       });
     },
+    * fetchDetailGroupVoyage({payload}, {call, put}) {// 获取方案明细
+      yield put({
+        type: 'extendAll',
+        payload: {detailGroupVoyageLoading: true},
+      });
+      const response = yield call(queryDetailGroupVoyage, payload);
+      yield put({
+        type: 'save',
+        payload: response,
+        key: "detailGroupVoyage",
+      });
+      yield put({
+        type: 'extendAll',
+        payload: {detailGroupVoyageLoading: false},
+      });
+    },
+    * fetchGroupLogs({payload}, {call, put}) {// 获取日志信息
+      yield put({
+        type: 'extendAll',
+        payload: {groupLogsLoading: true},
+      });
+      const response = yield call(queryGroupLogs, payload);
+      yield put({
+        type: 'save',
+        payload: response,
+        key: "groupLogs",
+      });
+      yield put({
+        type: 'extendAll',
+        payload: {groupLogsLoading: false},
+      });
+    },
+
+
+
     * fetchBasic({payload}, {call, put}) {
       yield put({
         type: 'extendAll',
@@ -104,7 +138,7 @@ export default {
       });
       const response = yield call(planClose, payload);
       if (response.code >= 1) {
-        message.success("保存成功");
+        message.success("拼团已关闭");
         yield put({
           type: 'extendAll',
           payload: {
@@ -112,10 +146,13 @@ export default {
             showModal: false,
           },
         });
+        yield put({
+          type: 'fetchGroupsInfo',
+          payload: payload
+        });
       } else {
         message.error("保存失败");
       }
-
     },
     * fetchConfirmExport({payload, callback}, {call, put}) {
       yield put({

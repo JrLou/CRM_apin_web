@@ -86,6 +86,7 @@ export default class TableList extends PureComponent {
             values[item] = '';
           }
         }
+        values.refund_status = typeof values.refund_status == 'string' ? '' : Number(values.refund_status);
         this.setState({
           formValues: values,
         });
@@ -101,6 +102,8 @@ export default class TableList extends PureComponent {
   renderForm() {
     const {getFieldDecorator} = this.props.form;
     const layoutForm={md: 8, lg: 24, xl: 48};
+    // 1挂起，0未退款，1退款成功，2退款中，3退款失败，4部分成功
+    const refund_status=['挂起','未退款','退款成功','退款中','退款失败','部分成功'];
     return (
       <Form layout="inline">
         <Row gutter={layoutForm}>
@@ -113,20 +116,23 @@ export default class TableList extends PureComponent {
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="订单号">
-              {getFieldDecorator('city_dep')(
+              {getFieldDecorator('order_id')(
                 <Input placeholder="请输入"/>
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="退款状态">
-              {getFieldDecorator('order_status', {
+              {getFieldDecorator('refund_status', {
                 initialValue: ''
               })(
                 <Select placeholder="请选择" style={{width: '100%'}}>
                   <Option value=''>全部</Option>
-                  <Option value='1'>已退款</Option>
-                  <Option value='2'>退款失败</Option>
+                  {
+                    refund_status.map((item,index)=>{
+                      return  <Option value={index - 1} key={index}>{item}</Option>
+                    })
+                  }
                 </Select>
               )}
             </FormItem>
@@ -154,33 +160,33 @@ export default class TableList extends PureComponent {
   render() {
     const {refund: {loading, list, total}} = this.props;
     const columns = [
-      {title: '退款单号', dataIndex: 'contact',},
+      {title: '退款单号', dataIndex: 'id',},
       {
-        title: '退款状态', dataIndex: 'order_status', render: (text) => {
-        return text == 1 ? '已退款' : text == 2 ? '退款失败' : '';
+        title: '退款状态', dataIndex: 'refund_status', render: (text) => {
+        return refund_status[text + 1];
       },
       },
       {
-        title: '退款金额', dataIndex: 'payAmount', render: (text) => {
+        title: '退款金额', dataIndex: 'amount', render: (text) => {
         return '￥' + text;
       }
       },
       {
-        title: '订单号', dataIndex: 'id', render: (text, record) => {
+        title: '订单号', dataIndex: 'order_id', render: (text, record) => {
         return <a onClick={() => {
-          this.refundModal.showModal(true, record.id);
+          this.refundModal.showModal(true, record);
         }}>{text}</a>
       }
       },
       {
-        title: '退款时间', dataIndex: 'create_time', render: (text) => {
+        title: '退款时间', dataIndex: 'audit_time', render: (text) => {
         return timeHelp.getYMDHMS(text)
       }
       },
       {
         title: '操作', render: (text, record) => {
         return <a onClick={() => {
-          this.refundModal.showModal(true, record.id);
+          this.refundModal.showModal(true, record);
         }}>查看</a>
       }
       }];
@@ -198,7 +204,7 @@ export default class TableList extends PureComponent {
               pagination={{showSizeChanger: true, showQuickJumper: true, total}}
               loading={loading}
               onChange={::this.handleTableChange}
-              rowKey="id"
+              rowKey="order_id"
             />
             <RefundModal ref={(a) => this.refundModal = a}/>
           </div>
@@ -211,20 +217,15 @@ export default class TableList extends PureComponent {
 class RefundModal extends React.Component {
   state = {
     visible: false,
+    data:{},
   };
 
-  showModal(isShow, id) {
+  showModal(isShow, data) {
     this.setState({
       visible: isShow,
-    }, () => {
-      this.getDetail(id)
+      data:data,
     })
   }
-
-  getDetail(id) {
-    alert(id);
-  }
-
   hideModal() {
     this.setState({
       visible: false,
@@ -244,7 +245,7 @@ class RefundModal extends React.Component {
   }
 
   render() {
-    let {visible} = this.state;
+    let {visible,data} = this.state;
     return (
       <Modal
         title="退款申请"
@@ -253,11 +254,11 @@ class RefundModal extends React.Component {
         footer={null}
       >
         <div>
-          {this.getContent('订单号', '11111111111', false)}
-          {this.getContent('退款单号', '11111111111', false)}
-          {this.getContent('退款金额', '11111111111', true)}
-          {this.getContent('处理客服', '11111111111', true)}
-          {this.getContent('备注', '11111111111', false)}
+          {this.getContent('订单号', data.order_id||'', false)}
+          {this.getContent('退款单号', data.id||'', false)}
+          {this.getContent('退款金额', data.amount||'', true)}
+          {this.getContent('处理客服', data.audit_user||'', true)}
+          {this.getContent('备注', data.refund_reason||'', false)}
         </div>
       </Modal>
     );

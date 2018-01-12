@@ -18,13 +18,20 @@ const {RangePicker} = DatePicker;
 }))
 @Form.create()
 class BannerEdit extends PureComponent {
+  state = {
+    start_time: this.startTime,
+    end_time: this.endTime,
+  }
   componentWillMount(){
     if(this.props.type){
       if(!this.props.bannerList.id){
+        // dispatch(routerRedux.push('/operations/banner'));
         dispatch({
-          type: 'bannerList/cancelEdit',
+          type: 'bannerList/addBanner',
         })
       }
+      this.startTime = bannerList.start_time;
+      this.endTime = bannerList.end_time;
     }
   }
   onChange = (date, dateString) => {
@@ -45,8 +52,9 @@ class BannerEdit extends PureComponent {
         message.warning('请输入图片有效期');
         return;
       }
+
       values.start_time = this.state.start_time;
-      values.end_time = this.state.start_time;
+      values.end_time = this.state.end_time;
       values.banner_url = this.props.bannerList.banner_url;
       delete(values["validityTime"]);
       delete(values["actionType"]);
@@ -72,8 +80,8 @@ class BannerEdit extends PureComponent {
   render() {
     const { bannerList:{editData:data} } = this.props;
     const {getFieldDecorator} = this.props.form;
-    let validityStart = data.validityStart?moment(data.validityStart):undefined;
-    let validityEnd = data.validityEnd?moment(data.validityEnd):undefined;
+    let validityStart = data.start_time?moment(data.start_time):undefined;
+    let validityEnd = data.end_time?moment(data.end_time):undefined;
     let validityTime = [validityStart,validityEnd];
 
     const formItemLayout = {
@@ -163,7 +171,7 @@ class BannerEdit extends PureComponent {
               <Row>
                 <Col md={16} sm={24}>
                   <FormItem label="图片有效期:" {...formItemLayout}>
-                    {getFieldDecorator('validityTime', {initialValue: validityTime, rules: [{required: true, message: '请选择图片有效期'}],})
+                    {getFieldDecorator('validityTime', {initialValue: validityTime,rules: [{required: true, message: '请选择图片有效期'}],})
                     (
                       <RangePicker
                         onChange={this.onChange.bind(this)}
@@ -180,7 +188,7 @@ class BannerEdit extends PureComponent {
               <Row>
                 <Col md={16} sm={24}>
                   <FormItem label="状态:" {...formItemLayout}>
-                    {getFieldDecorator('state', {initialValue: data.state?data.state:1, rules: [{required: true, message: '请选择状态'}],})
+                    {getFieldDecorator('state', {initialValue: data.state ? 1:0, rules: [{required: true, message: '请选择状态'}],})
                     (
                       <RadioGroup>
                         <Radio value={1}>上架</Radio>

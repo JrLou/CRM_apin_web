@@ -57,7 +57,7 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, ['flyingpigDetail'], () => import('../routes/Order/FlyingpigDetail.js')),
     },
     '/order/entrust': {
-      component: dynamicWrapper(app, ['entrust'], () => import('../routes/Order/Entrust.js')),
+      component: dynamicWrapper(app, ['flyingpig'], () => import('../routes/Order/Entrust.js')),
     },
     '/order/entrust/detail': {
       name: "委托订单详情",
