@@ -41,10 +41,10 @@ export default (WrappedComponent, exacpath) => {
   class AuthRoute extends React.PureComponent {
     constructor(props) {
       super(props);
-      if (this.props.routerPath.some(item => item.url == exacpath||item.url == (exacpath.replace(/^\//, '')))) {
-        this.state = {load: true,notauth:false};
+      if (this.props.routerPath.some(item => item.url == exacpath || item.url == (exacpath.replace(/^\//, '')))) {
+        this.state = { load: true, notauth: false };
       } else {
-        this.state = {load: false,notauth:false};
+        this.state = { load: false, notauth: false };
       }
     }
     componentWillMount() {
@@ -56,14 +56,16 @@ export default (WrappedComponent, exacpath) => {
       }
     }
     componentWillReceiveProps(nextProps) {
-      if (nextProps.routerPath.some(item =>item.url == exacpath||item.url == (exacpath.replace(/^\//, '')))) {
-        this.setState({load: true});
-      }else{
-        this.setState({notauth: true});
+      if (this.props.routerPath !== nextProps.routerPath) {
+        if (nextProps.routerPath.some(item => item.url == exacpath || item.url == (exacpath.replace(/^\//, '')))) {
+          this.setState({ load: true });
+        } else {
+          this.setState({ notauth: true });
+        }
       }
     }
     render() {
-      return (this.state.load ? <WrappedComponent {...this.props} />:this.state.notauth?<NotAuth />:<Spin size="large" style={{ width: "100%",margin: "40px 0 !important"}} />)
+      return (this.state.load ? <WrappedComponent {...this.props} /> : (this.state.notauth ? <NotAuth /> : <Spin size="large" style={{ width: "100%", margin: "40px 0 !important" }} />))
     }
   }
   const A = connect(state => ({
