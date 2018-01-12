@@ -15,18 +15,18 @@ const {Description} = DescriptionList;
 
 //TODO a. 点击关闭拼团按钮弹出页面，录入需要备注的内容，  点击【保存】 下方日志信息  *****应该刷新*****
 
-const progressColumns = [{
+const logInfoColumns = [{
   title: '操作时间',
   dataIndex: 'create_time',
-  key: 'create_time',
+  width: '25%',
 }, {
   title: '操作员',
   dataIndex: 'user_name',
-  key: 'user_name',
+  width: '25%',
 }, {
   title: "操作内容",
   dataIndex: 'create_content',
-  key: 'create_content',
+  width: '50%',
 }];
 
 
@@ -184,8 +184,8 @@ export default class CheckFightGroups extends Component {
           return (
             <a onClick={() => {
               this.setState({modalType: 1}, () => {
-                const action =
                 this.handleshowModal();
+
                 //发起请求，获取订单推送日志
                 const {dispatch} = this.props;
                 dispatch({
@@ -232,7 +232,13 @@ export default class CheckFightGroups extends Component {
             className={styles.btn}
             onClick={() => {
               this.setState({modalType: 2}, () => {
-                this.handleshowModal()
+                this.handleshowModal();
+                //发起请求，获取拼团下成功支付的乘机人信息
+                const {dispatch} = this.props;
+                dispatch({
+                  type: 'checkFightGroups/fetchPaidMember',
+                  payload: {uuid: "10cd0ef740dc452db5114b2bf28e5148"}//todo this.id
+                });
               });
             }}
           >
@@ -251,7 +257,8 @@ export default class CheckFightGroups extends Component {
           rowKey="id"
         />
       </div>
-    );
+    )
+      ;
   }
 
   getDetailGroupVoyage() {
@@ -310,7 +317,7 @@ export default class CheckFightGroups extends Component {
           style={{marginBottom: 16}}
           pagination={false}
           dataSource={dataSource}
-          columns={progressColumns}
+          columns={logInfoColumns}
           rowKey="id"
         />
       </div>
@@ -350,6 +357,7 @@ export default class CheckFightGroups extends Component {
   getExportPassengerModal(showModal) {
     return (
       <ExportPassengerModal
+        id={this.id}
         visible={showModal}
         width={920}
         changeVisible={this.handleCancel.bind(this)}
@@ -406,6 +414,17 @@ export default class CheckFightGroups extends Component {
     dispatch({
       type: 'checkFightGroups/extendAll',
       payload: {showModal: false},//传过去的参数
+    });
+    //关闭的时候，清除modalData以防报错
+    dispatch({
+      type: 'checkFightGroups/resetModalData',
+      payload: {
+        modalData: {
+          code: '',
+          data: [],
+          msg: '',
+        }
+      }
     });
   }
 

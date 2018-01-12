@@ -3,6 +3,7 @@ import {connect} from 'dva';
 import {Modal, Table, Input, Button, message, Upload, Icon} from 'antd';
 import less from './ModalCpm.less'
 import {formatDate} from "../../../utils/utils";
+import {stringify} from 'qs';
 
 const {TextArea} = Input;
 
@@ -88,7 +89,7 @@ class SendLogModal extends Component {
       }
       return txt;
     };
-    return data.map((item) => {
+    return data.map(item => {
       const depFlightInfo = item.flightInfo.filter(oneFlight => oneFlight.trip_index === 0)[0];
       const arrFlightInfo = item.flightInfo.filter(oneFlight => oneFlight.trip_index === 1)[0];
       return {
@@ -107,31 +108,24 @@ class SendLogModal extends Component {
       {
         title: '推送时间',
         dataIndex: 'create_time',
-        key: 'create_time',
       }, {
         title: '航班号',
         dataIndex: 'flight_no',
-        key: 'flight_no',
       }, {
         title: '起飞日期',
         dataIndex: 'flight_dep',
-        key: 'flight_dep',
       }, {
         title: '返回日期',
         dataIndex: 'flight_arr',
-        key: 'flight_arr',
       }, {
         title: '销售价',
         dataIndex: 'sell_price',
-        key: 'sell_price',
       }, {
         title: '用户反馈',
         dataIndex: 'status',
-        key: 'status',
       }, {
         title: '原因',
         dataIndex: 'remark',
-        key: 'remark',
       }];
 
     const {checkFightGroups} = this.props;//每个modal的table都是用这两行，取同一个地方的数据，因为他们不可能同时出现
@@ -172,29 +166,26 @@ class ExportPassengerModal extends Component {
   };
 
   getColumns() {
+    const {groupsInfoData: {data: {abroad}}} = this.props.checkFightGroups;
+
     let columns = [];
-    if (this.props.passengerType === 0) {//todo 点击【批量导出】按钮  页面应该传过来，【乘客类型】  0=>国内， 1=> 国际
+    if (abroad == 0) {// abroad	0 国内 1 国际
       columns = [
         {
           title: '订单号',
           dataIndex: 'id',
-          key: 'id',
         }, {
           title: '乘机人',
-          dataIndex: 'name',
-          key: 'name',
+          dataIndex: 'cname',
         }, {
           title: '乘机人类型',
-          dataIndex: 'barcode',
-          key: 'barcode',
+          dataIndex: 'type',
         }, {
           title: '证件号码',
-          dataIndex: 'price',
-          key: 'price',
+          dataIndex: 'cert_no',
         }, {
           title: '票号',
-          dataIndex: 'num',
-          key: 'num',
+          dataIndex: 'ticket',
         }
       ];
     } else {
@@ -202,39 +193,34 @@ class ExportPassengerModal extends Component {
         {
           title: '订单号',
           dataIndex: 'id',
-          key: 'id',
         }, {
           title: '乘机人',
-          dataIndex: 'name',
-          key: 'name',
+          dataIndex: 'cname',
         }, {
           title: '乘机人类型',
-          dataIndex: 'barcode',
-          key: 'barcode',
+          dataIndex: 'type',
         }, {
           title: '证件号码',
-          dataIndex: 'price',
-          key: 'price',
+          dataIndex: 'cert_no',
         }, {
           title: '出生年月日',
-          dataIndex: 'num',
-          key: 'num',
+          dataIndex: 'birthday',
+
         }, {
           title: '性别',
-          dataIndex: 'bbb',
-          key: 'bbb',
+          dataIndex: 'gender',
+          render(text) {
+            return text === 1 ? '男' : '女';
+          }
         }, {
           title: '证件有效期',
-          dataIndex: 'aaac',
-          key: 'aaac',
+          dataIndex: 'expire_time',
         }, {
           title: '国籍',
-          dataIndex: 'b',
-          key: 'b',
+          dataIndex: 'nation',
         }, {
           title: '票号',
-          dataIndex: 'pb',
-          key: 'pb',
+          dataIndex: 'ticket',
         }
       ];
     }
@@ -258,9 +244,10 @@ class ExportPassengerModal extends Component {
   }
 
   render() {
-    const {basicGoods, basicLoading, modalConfirmLoading} = this.props.checkFightGroups;
-    const {dispatch} = this.props;
-    console.log("this.props.checkFightGroups", this.props.checkFightGroups);
+    const {
+      modalData: {data}, modalTableLoading, modalConfirmLoading,
+      groupsInfoData: {data: {abroad}}
+    } = this.props.checkFightGroups;
 
     const uploadProps = {
       name: 'file',
@@ -281,22 +268,19 @@ class ExportPassengerModal extends Component {
     };
 
     const columns = this.getColumns();
-
-    const {closeReason, checkFightGroups} = this.props;
-    const {modalData: {data}} = checkFightGroups;
-
     return (
       <Modal
         title={"乘机人信息—" + (this.props.passengerType === 0 ? "国内" : "国际")}
         onCancel={this.handleCancel}
         footer={null}
         {...this.props}
+        width={abroad === 1 ? 1200 : this.props.width}
       >
         <Table
           style={{marginBottom: 24}}
           pagination={false}
-          loading={basicLoading}
-          dataSource={basicGoods}
+          loading={modalTableLoading}
+          dataSource={data}
           columns={columns}
           rowKey="id"
         />
@@ -304,9 +288,18 @@ class ExportPassengerModal extends Component {
           <Button
             type='primary'
             onClick={() => {//其实就是下载，很简单
-              const {dispatch} = this.props.checkFightGroups;
-              //获取url；
-              this.downloadFile("http://sw.bos.baidu.com/sw-search-sp/software/9e6bc213b9d0b/ChromeStandalone_63.0.3239.132_Setup.exe");//todo 这里地址要请求后更改
+              debugger;
+              const {checkFightGroups: {groupsInfoData: {data}}, id, dispatch} = this.props;
+              const fsName = formatDate(data.date_dep, 'MM月DD日') + id + '团乘机人.xlsx';
+              const parmas = {//todo 目前这里都写死了
+                uuid: "10cd0ef740dc452db5114b2bf28e5148",
+                fsName
+              };
+              dispatch({
+                type: 'checkFightGroups/fetchExportPassenger',
+                payload: parmas,
+              });
+              // window.open(`http://192.168.0.32:9712/api/demandPool/exportPassenger?${stringify(parmas)}`);
             }}
           >
             <Icon type="download"/>导出乘机人信息
@@ -320,6 +313,7 @@ class ExportPassengerModal extends Component {
             type='primary'
             loading={modalConfirmLoading}
             onClick={() => {
+              const {dispatch} = this.props;
               dispatch({
                 type: 'checkFightGroups/fetchConfirmExport',
                 payload: {},

@@ -1,5 +1,14 @@
 import {changeStatus} from '../services/api';//这个要删除的
-import {queryOrderInfo, planClose, queryGroupOrders, queryPublishLogs, queryDetailGroupVoyage, queryGroupLogs, } from '../services/api';
+import {
+  queryOrderInfo,
+  planClose,
+  queryGroupOrders,
+  loadExportPassenger,
+  queryPublishLogs,
+  queryDetailGroupVoyage,
+  queryGroupLogs,
+  queryPaidMember
+} from '../services/api';
 import {message} from 'antd';
 //TODO 这个文件刚刚copy下来，都需修改
 export default {
@@ -24,7 +33,7 @@ export default {
     //方案明细
     detailGroupVoyage: {
       code: '',
-      data: [{},{}],
+      data: [{}, {}],
       msg: '',
     },
     detailGroupVoyageLoading: true,
@@ -65,7 +74,7 @@ export default {
         payload: {groupsInfoLoading: false},
       });
     },
-    * fetchPlanClose({payload}, {call, put}) {
+    * fetchPlanClose({payload}, {call, put}) {// 关闭拼团
       yield put({
         type: 'extendAll',
         payload: {modalConfirmLoading: true},
@@ -105,6 +114,32 @@ export default {
         payload: {groupOrdersLoading: false},
       });
     },
+    * fetchPaidMember({payload}, {call, put}) {// 获取拼团下成功支付的乘机人信息
+      yield put({
+        type: 'extendAll',
+        payload: {modalTableLoading: true},
+      });
+      const response = yield call(queryPaidMember, payload);
+      yield put({
+        type: 'save',
+        payload: response,
+        key: "modalData",
+      });
+      yield put({
+        type: 'extendAll',
+        payload: {modalTableLoading: false},
+      });
+    },
+    * fetchExportPassenger({payload}, {call}) {// 导出乘机人信息（已付款的）
+      const response = yield call(loadExportPassenger, payload);
+
+      if (typeof response.code === object && response < 1) {
+        message.error(response.msg);
+      } else {
+        message.success("下载成功");
+      }
+    },
+
     * fetchPublishLogs({payload}, {call, put}) {// 获取订单推送日志
       yield put({
         type: 'extendAll',
@@ -224,6 +259,12 @@ export default {
      * @returns {{}}
      */
     extendAll(state, {payload}) {
+      return {
+        ...state,
+        ...payload,
+      };
+    },
+    resetModalData(state, {payload}){
       return {
         ...state,
         ...payload,
