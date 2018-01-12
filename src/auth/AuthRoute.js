@@ -41,28 +41,26 @@ export default (WrappedComponent, exacpath) => {
   class AuthRoute extends React.PureComponent {
     constructor(props) {
       super(props);
-      if (this.props.routerPath.some(item => item.url == exacpath||item.url == (exacpath.replace(/^\//, '')))) {
-        this.state = {load: true};
+      if (this.props.routerPath.some(item => item.url == exacpath || item.url == (exacpath.replace(/^\//, '')))) {
+        this.state = { load: true };
       } else {
-        this.state = {load: false};
+        this.state = { load: false };
       }
     }
     componentWillMount() {
-      if(!this.state.load){
+      if (!this.state.load) {
         this.props.dispatch({
           type: 'global/authroute',
-          payload:exacpath,
+          payload: exacpath,
         });
       }
     }
     componentWillReceiveProps(nextProps) {
-      console.log('322323')
-      if (nextProps.routerPath.some(item =>item.url == exacpath||item.url == (exacpath.replace(/^\//, '')))) {
-        this.setState({load: true});
+      if (nextProps.routerPath.some(item => item.url == exacpath || item.url == (exacpath.replace(/^\//, '')))) {
+        this.setState({ load: true });
       }
     }
     render() {
-      console.log('322323')
       return (this.state.load ? <WrappedComponent {...this.props} /> : <NotAuth />)
     }
   }
