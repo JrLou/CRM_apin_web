@@ -31,27 +31,6 @@ class Masking extends Component {
         });
     }
 
-    loadData(url, param, ole) {
-        log(param);
-        HttpTool.post(HttpTool.typeEnum.POST, url,
-            (code, msg, json, option) => {
-                if (ole == 1) {
-                    this.setState({
-                        queryDate: json,
-                    });
-                } else {
-                    message.warning(msg);
-                    this.props.loadData();
-                }
-            },
-            (code, msg, option) => {
-                message.warning(msg);
-            }
-            , param
-        );
-
-    }
-
     weeks(checkedValues) {
         let data = this.state.flightdata;
         let kyes = this.props.kyes;
@@ -77,43 +56,38 @@ class Masking extends Component {
         return false;
     }
 
-    Updates() {
-        let data = this.props.data.flightNo;
-        let kyes = this.props.kyes;
-        this.props.Updates(kyes, data);
-    }
+
 
     render() {
         return (
             <div>
                 <div className={css.flightArrDetails}>
                     <Col span={24} className={css.flightArrHeader}>
-                        {this.props.data.flightNo}
-                        <Button className={css.updates} disabled={this.props.disabledadd}
-                                onClick={this.Updates.bind(this)} type="primary">更新</Button>
+                        {this.props.data.FlightNo}
+
                     </Col>
                     <Col span={this.props.data.stopFlag ? 11 : 12}>
                         <Col span={24} className={css.flightCaption}>
-                            {this.props.data.flightDepAirport}
+                            {this.props.data.FlightDepAirport}
                         </Col>
                         <Col span={24}>
-                            {this.props.data.flightDep}
+                            {this.props.data.FlightDepcode}
                         </Col>
-                        <Col span={24}>{this.props.data.flightDeptimePlanDate}</Col>
+                        <Col span={24}>{this.props.data.FlightDeptimePlanDate}</Col>
                     </Col>
-                    {this.props.data.stopFlag &&
+                      {this.props.data.stopFlag &&
                     <Col span={2} style={{fontSize: '16px'}}>
                         经停
                     </Col>
                     }
                     <Col span={this.props.data.stopFlag ? 11 : 12}>
                         <Col span={24} className={css.flightCaption}>
-                            {this.props.data.flightArrAirport}
+                            {this.props.data.FlightArrAirport}
                         </Col>
                         <Col span={24}>
-                            {this.props.data.flightArr}
+                            {this.props.data.FlightArrcode}
                         </Col>
-                        <Col span={24}>{this.props.data.flightArrtimePlanDate}</Col>
+                        <Col span={24}>{this.props.data.FlightArrtimePlanDate}</Col>
                     </Col>
                     {this.props.kyes == 0 &&
                     <Col span={24} className={css.flightArrWeek}>

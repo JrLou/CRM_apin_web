@@ -41,10 +41,15 @@ class StandardTable extends PureComponent {
       type: 'bannerList/delete',
       payload: params,
       callback:(response)=>{
-        if(response && response.code >= 1){
-          console.log(response)
-        }else{
-          console.log(response.msg)
+        if(response.code>=1){
+          message.success('banner删除成功');
+          this.props.dispatch({
+            type: 'bannerList/fetch',
+            payload: {
+              p:1,
+              pc:10
+            },
+          });
         }
       }
     });
@@ -132,7 +137,7 @@ class StandardTable extends PureComponent {
         title: '更新时间',
         dataIndex: 'update_time',
         render:(text,record,index)=>{
-          return <span>{TimeHelp.getYMDHM(record.update_time)}</span>
+          return <span>{TimeHelp.getYMDHM(record.update_time != 0 ? record.update_time : record.create_time)}</span>
         }
       },
       {

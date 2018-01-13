@@ -379,6 +379,9 @@ class page extends Component {
       +moment(this.props.listdata.flightDate, "YYYY-MM-DD").format('MM') - 1,
       +moment(this.props.listdata.flightDate, "YYYY-MM-DD").format('DD')
     ]
+    let canPick=airline.map((v,k)=>{
+      return v.flight_date;
+    })
     return (
       <div className={css.container}>
         <div className={css.btnBox}>
@@ -412,7 +415,7 @@ class page extends Component {
                   month={month}
                   day={day}
                   currenMonthStocks={this.state.currenMonthStocks}
-                  canPick={this.state.canPick}
+                  canPick={canPick}
                   placeholder={this.state.selectedTips.length > 0 ? '已选择' : '选择分配时间'}
                   upPickInfo={this.showPickInfo.bind(this)}
                 />

@@ -5,6 +5,8 @@ import { Row, Col, Card, Form, Input, Select, Icon, Button, Dropdown, Menu, Inpu
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './TableList.less';
 import moment from 'moment';
+import timeHelp from '../../utils/TimeHelp.js';
+
 
 const {RangePicker} = DatePicker;
 const FormItem = Form.Item;
@@ -15,6 +17,10 @@ const status = ['有效', '无效' ];
 }))
 @Form.create()
 export default class TableList extends PureComponent {
+  constructor(props){
+    super(props);
+    this.getFlight = this.getFlight.bind(this);
+  }
   state = {
     formValues: {},
     pagination: {
@@ -140,7 +146,7 @@ export default class TableList extends PureComponent {
               )}
             </FormItem>
           </Col>
-          <Col md={6} sm={24}>
+          <Col md={12} sm={24}>
             <div style={{ float: 'right', marginBottom: 24 }}>
             <Button type="primary" onClick={::this.handleSearch}>查询</Button>
             <Button style={{marginLeft: 8}} onClick={::this.handleFormReset}>重置</Button>
@@ -151,9 +157,33 @@ export default class TableList extends PureComponent {
     );
   }
 
+  getFlight(data){
+    if(data.flightInfo){
+      data.flightInfo.map((item,index)=>{
+        if(item.trip_index==0){
+          data={
+            ...data,
+            'time_dep_0':item.time_dep,
+            'time_arr_0':item.time_arr,
+            'flight_no_0':item.flight_no,
+            'flight_company_0':item.flight_company,
+          }
+        }else{
+          data={
+            ...data,
+            'time_dep_1':item.time_dep,
+            'time_arr_1':item.time_arr,
+            'flight_no_1':item.flight_no,
+            'flight_company_1':item.flight_company,
+          }
+        }
+      });
+    }
+    return data;
+  }
+
   render() {
-    const {flyPiglist: {loading, list, total}} = this.props;
-    const {id} = this.state;
+    const {flyPiglist: {loading, list,flightInfo, total}} = this.props;
 
     const columns = [{
         title: '资源ID',
@@ -163,22 +193,51 @@ export default class TableList extends PureComponent {
         dataIndex: 'voyage',
       }, {
         title: '航空公司',
-        dataIndex: 'city_arr'
+        dataIndex: 'flight_company',
+        render:(text,data)=>{
+          let record = this.getFlight(data);
+          return `${record.flight_company_0}/${record.flight_company_1}`
+        }
       }, {
         title: '出发/回程航班号',
         dataIndex: 'flight_no',
+        render:(text,data)=>{
+          let record = this.getFlight(data);
+          return `${record.flight_no_0}/${record.flight_no_1}`
+        }
       }, {
         title: '出发日期',
-        dataIndex: 'dep_yyyymm',
+        dataIndex: 'flight_date',
+        render:(text,data)=>{
+          let record=this.getFlight(data);
+          return timeHelp.getYMD(record.flight_date+record.time_dep_0)
+        }
       }, {
         title: '出发时刻',
         dataIndex: 'time_dep',
+        render:(text,data)=>{
+          let record=this.getFlight(data);
+          let time_dep_0 = timeHelp.getHM(record.time_dep_0);
+          let time_arr_0 = timeHelp.getHM(record.time_arr_0);
+          return `${time_dep_0}-${time_arr_0}`;
+        }
       }, {
         title: '回程日期',
-        dataIndex: 'dep_yyyymm',
+        dataIndex: 'flight_arr',
+        render:(text,data)=>{
+          let record=this.getFlight(data);
+          let flightArr = record.flight_date+record.time_dep_1;
+          return timeHelp.getYMD(flightArr)
+        }
       }, {
         title: '回程时刻',
         dataIndex: 'time_arr',
+        render:(text,data)=>{
+          let record=this.getFlight(data);
+          let time_dep_1 = timeHelp.getHM(record.time_dep_1);
+          let time_arr_1 = timeHelp.getHM(record.time_arr_1);
+          return `${time_dep_1}-${time_arr_1}`;
+        }
       }, {
         title: '含税价',
         dataIndex: 'sell_price',
@@ -186,7 +245,7 @@ export default class TableList extends PureComponent {
       }, {
         title: '折扣',
         dataIndex: 'discount',
-        render: val => `${val}`,
+        render: val => `${val}折`,
       }, {
         title: '状态',
         dataIndex: 'is_invalid',

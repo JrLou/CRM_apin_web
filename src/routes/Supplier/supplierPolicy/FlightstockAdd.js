@@ -23,7 +23,10 @@ class page extends Component {
       data: {},
     };
   }
-
+  // componentWillReceiveProps(nextProps){
+  //   console.log('nextPropsde ((&(*&(*');
+  //   console.log(nextProps);
+  // }
   componentDidMount() {
 
   }
@@ -40,9 +43,8 @@ class page extends Component {
       payload: data,
     });
   }
-
   render() {
-    const {flightstockAdd: {accurate, numbering}} = this.props;
+    // const {flightstockAdd: {accurate, numbering}} = this.props;
     return (
       <PageHeaderLayout>
         <div className={css.formWapper}>
@@ -50,9 +52,7 @@ class page extends Component {
             <WrappedAddForm
               showLoad={this.showLoad.bind(this)}
               addPost={this.addPost.bind(this)}
-              accurate={accurate}
-              numbering={numbering}
-              details={[]}
+              {...this.props}
             />
           </Spin>
         </div>
@@ -60,7 +60,5 @@ class page extends Component {
     )
   }
 }
-
-
 const WrappedAddForm = Form.create()(Flightstockfrom);
 module.exports = page;

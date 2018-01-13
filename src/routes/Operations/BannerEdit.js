@@ -18,10 +18,6 @@ const { RangePicker } = DatePicker;
 }))
 @Form.create()
 class BannerEdit extends PureComponent {
-  state = {
-    start_time: this.startTime,
-    end_time: this.endTime,
-  }
   componentWillMount() {
     if (this.props.type) {
       if (!this.props.bannerList.id) {
@@ -30,8 +26,6 @@ class BannerEdit extends PureComponent {
           type: 'bannerList/addBanner',
         })
       }
-      this.startTime = bannerList.start_time;
-      this.endTime = bannerList.end_time;
     }
   }
   onChange = (date, dateString) => {
@@ -57,8 +51,8 @@ class BannerEdit extends PureComponent {
         message.warning('请上传图片');
         return;
       }
-      values.start_time = this.state.start_time;
-      values.end_time = this.state.end_time;
+      values.start_time = moment(values.validityTime[0]).format('YYYY-MM-DD HH:mm');
+      values.end_time = moment(values.validityTime[1]).format('YYYY-MM-DD HH:mm');
       values.banner_url = banner_url;
       delete (values["validityTime"]);
       delete (values["actionType"]);
@@ -166,7 +160,7 @@ class BannerEdit extends PureComponent {
             <Row>
               <Col md={16} sm={24}>
                 <FormItem label="指向地址:" {...formItemLayout}>
-                  {getFieldDecorator('link_url', { initialValue: data.link_url ? data.link_url : undefined })
+                  {getFieldDecorator('link_url', { initialValue: data.link_url ? data.link_url : '' })
                     (<Input placeholder="请输入…" />)
                   }
                 </FormItem>
@@ -193,7 +187,7 @@ class BannerEdit extends PureComponent {
               <Row>
                 <Col md={16} sm={24}>
                   <FormItem label="状态:" {...formItemLayout}>
-                    {getFieldDecorator('state', { initialValue: data.state ? 1 : 0, rules: [{ required: true, message: '请选择状态' }], })
+                    {getFieldDecorator('state', { initialValue: data.state == 0 ? 0 : 1, rules: [{ required: true, message: '请选择状态' }], })
                       (
                       <RadioGroup>
                         <Radio value={1}>上架</Radio>

@@ -47,10 +47,10 @@ export default {
         if (callback) {
           callback(response);
         }
-        yield put({
-          type: 'save',
-          payload: response.data,
-        });
+        // yield put({
+        //   type: 'save',
+        //   payload: response.data,
+        // });
         yield put({
           type: 'changeLoading',
           payload: false,
@@ -97,6 +97,10 @@ export default {
           type: 'changeEditData',
           payload: {},
         });
+        yield put({
+          type: 'changeBaseImg',
+          payload: '',
+        });
         yield put(routerRedux.push('/operations/banner'))
       },
       * checkEdit({ payload, callback }, { call, put }) {
@@ -118,6 +122,11 @@ export default {
           yield put({
             type: 'changeEditData',
             payload: {},
+          });
+          // 上传成功清除url
+          yield put({
+            type: 'changeBaseImg',
+            payload: ''
           });
           yield put(routerRedux.push('/operations/banner'))
         }
