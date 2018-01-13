@@ -1,5 +1,6 @@
 {
   "entry": "src/index.js",
+  "outputPath": "./server/dist",
   "extraBabelPlugins": [
     "transform-runtime",
     "transform-decorators-legacy",
