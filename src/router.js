@@ -24,8 +24,9 @@ const fakeAuth = () => {
 const PrivateRoute = ({ component: Component, ...rest }) => {
   return (
     <Route path={rest.path} render={(props) => {
-      if (fakeAuth()) {
-        return Loadmenu(<Component {...props} />)
+      if (!fakeAuth()) {
+        // return Loadmenu(<Component {...props} />)
+        return <Component {...props} />
       } else {
         return <Redirect to={{ pathname: '/user/login', state: {from: rest.location}}} />;
       }
