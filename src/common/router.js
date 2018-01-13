@@ -52,14 +52,14 @@ export const getRouterData = (app) => {
     '/order/flyingpig': {
       component: dynamicWrapper(app, ['flyingpig'], () => import('../routes/Order/Flyingpig.js')),
     },
-    '/order/flyingpig/detail': {
+    '/order/flyingpig/detail/:params': {
       name: "飞猪&供应商订单详情",
       component: dynamicWrapper(app, ['flyingpigDetail'], () => import('../routes/Order/FlyingpigDetail.js')),
     },
     '/order/entrust': {
       component: dynamicWrapper(app, ['flyingpig'], () => import('../routes/Order/Entrust.js')),
     },
-    '/order/entrust/detail': {
+    '/order/entrust/detail/:params': {
       name: "委托订单详情",
       component: dynamicWrapper(app, ['flyingpigDetail'], () => import('../routes/Order/EntrustProfile.js')),
     },

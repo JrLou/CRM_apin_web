@@ -4,7 +4,7 @@ export default {
   namespace: 'flyPiglist',
   state: {
     loading: true,
-    list: [],
+    data: {},
     total: 0,
   },
   effects: {

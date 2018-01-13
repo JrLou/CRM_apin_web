@@ -59,7 +59,7 @@ export default {
   reducers: {
     show(state, {payload}) {
       let groupVoyageArr = [];
-      if( JSON.stringify(payload.data.groupVoyage) === '{}'){
+      if( JSON.stringify(payload.data.groupVoyage) === '{}' || !payload.data.groupVoyage){
         groupVoyageArr = []
       }else{
         groupVoyageArr[0] =  payload.data.groupVoyage;

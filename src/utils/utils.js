@@ -147,7 +147,7 @@ export function getPar(obj, name) {
   if (!obj || !obj.props || !obj.props.match) { return {}; }
   let { params } = obj.props.match;
   if (!params || !params[name]) { return {} }
-  console.log('获取参数decode：' + decodeURIComponent(params[name]));
+  // console.log('获取参数decode：' + decodeURIComponent(params[name]));
   if (decodeURIComponent(params[name]).indexOf("{") < 0) {//JSON对像结构,必有
     return decodeURIComponent(params[name]);
   } else {

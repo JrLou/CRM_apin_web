@@ -95,6 +95,19 @@ export async function planClose(params) {//关闭拼团
   });
 }
 
+export async function queryGroupOrders(params) {//订单信息
+  return request('/api/demandPool/groupOrders', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function queryPublishLogs(params) {//订单推送日志
+  return request('/api/demandPool/publishLogs', {
+    method: 'POST',
+    body: params,
+  });
+}
+
 export async function queryDetailGroupVoyage(params) {// 方案明细
   return request('/api/demandPool/detailGroupVoyage', {
     method: 'POST',
@@ -159,7 +172,7 @@ export async function querySupplierList(params) {
   return request(`/api/suplierList?${stringify(params)}`);
 }
 export async function queryFlyList(params) {
-  return request('/api/order/getOrderList', {
+  return request('/api/resource/getAirLinesFlyPigs', {
     method: 'POST',
     body: params,
   });
@@ -201,7 +214,7 @@ export async function getdetailAirLine(params) {
 }
 //日历数据
 export async function getpriceAirline(params) {
-  return request('/api/resource/priceAirline',{
+  return request('/api/resource/priceAirline', {
     method: 'POST',
     body: params,
   });
@@ -229,7 +242,16 @@ export async function AccountLogin(params) {
   }
 }
 export async function queryMenus() {
-  return request('/uc/authapi/v1.1/modules');
+  return request('/api/user/getNavigators',{
+    method:'POST',
+    body:{}
+  });
+}
+export async function authrouteApi(params){
+  return request('/api/user/getFunNavigators',{
+    method:'POST',
+    body:params
+  });
 }
 export async function financePaymentList(params) {
   return request('/bo/orderapi/v1.0/orders/recordList', {

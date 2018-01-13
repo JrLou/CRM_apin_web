@@ -5,6 +5,8 @@ import { Row, Col, Card, Form, Input, Select, Icon, Button, Dropdown, Menu, Inpu
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './TableList.less';
 import moment from 'moment';
+import timeHelp from '../../utils/TimeHelp.js';
+
 
 const {RangePicker} = DatePicker;
 const FormItem = Form.Item;
@@ -15,6 +17,10 @@ const status = ['有效', '无效' ];
 }))
 @Form.create()
 export default class TableList extends PureComponent {
+  constructor(props){
+    super(props);
+    this.getFlight = this.getFlight.bind(this);
+  }
   state = {
     formValues: {},
     pagination: {
@@ -67,13 +73,12 @@ export default class TableList extends PureComponent {
         const values = {
           ...fieldsValue,
         };
-        values.group_type = Number(values.group_type);
+        values.state = Number(values.state);
         for (let item in values) {
           if (values[item] === undefined) {
             values[item] = '';
           }
         }
-        values.order_status = typeof values.order_status == 'string' ? '' : Number(values.order_status);
 
         this.setState({
           formValues: values,
@@ -123,10 +128,10 @@ export default class TableList extends PureComponent {
           <Col md={6} sm={24}>
             <FormItem label="资源状态">
               {getFieldDecorator('state', {
-                initialValue: ''
+                initialValue: '-1'
               })(
                 <Select placeholder="请选择" style={{width: '100%'}}>
-                  <Option value='-1'>全部</Option>
+                  <Option value='-1' key='-1'>全部</Option>
                   {
                     status.map((item, index) => <Option value={index} key={index}>{item}</Option>)
                   }
@@ -141,7 +146,7 @@ export default class TableList extends PureComponent {
               )}
             </FormItem>
           </Col>
-          <Col md={6} sm={24}>
+          <Col md={12} sm={24}>
             <div style={{ float: 'right', marginBottom: 24 }}>
             <Button type="primary" onClick={::this.handleSearch}>查询</Button>
             <Button style={{marginLeft: 8}} onClick={::this.handleFormReset}>重置</Button>
@@ -152,45 +157,98 @@ export default class TableList extends PureComponent {
     );
   }
 
+  getFlight(data){
+    if(data.flightInfo){
+      data.flightInfo.map((item,index)=>{
+        if(item.trip_index==0){
+          data={
+            ...data,
+            'time_dep_0':item.time_dep,
+            'time_arr_0':item.time_arr,
+            'flight_no_0':item.flight_no,
+            'flight_company_0':item.flight_company,
+          }
+        }else{
+          data={
+            ...data,
+            'time_dep_1':item.time_dep,
+            'time_arr_1':item.time_arr,
+            'flight_no_1':item.flight_no,
+            'flight_company_1':item.flight_company,
+          }
+        }
+      });
+    }
+    return data;
+  }
+
   render() {
-    const {flyPiglist: {loading, list, total}} = this.props;
-    const {id} = this.state;
+    const {flyPiglist: {loading, list,flightInfo, total}} = this.props;
 
     const columns = [{
         title: '资源ID',
         dataIndex: 'id',
       }, {
         title: '出发/回程城市',
-        dataIndex: 'city_dep',
+        dataIndex: 'voyage',
       }, {
         title: '航空公司',
-        dataIndex: 'city_arr'
+        dataIndex: 'flight_company',
+        render:(text,data)=>{
+          let record = this.getFlight(data);
+          return `${record.flight_company_0}/${record.flight_company_1}`
+        }
       }, {
         title: '出发/回程航班号',
-        dataIndex: 'city_arr'
+        dataIndex: 'flight_no',
+        render:(text,data)=>{
+          let record = this.getFlight(data);
+          return `${record.flight_no_0}/${record.flight_no_1}`
+        }
       }, {
         title: '出发日期',
-        dataIndex: 'dep_yyyymm',
+        dataIndex: 'flight_date',
+        render:(text,data)=>{
+          let record=this.getFlight(data);
+          return timeHelp.getYMD(record.flight_date+record.time_dep_0)
+        }
       }, {
         title: '出发时刻',
-        dataIndex: 'dep_yyyymm',
+        dataIndex: 'time_dep',
+        render:(text,data)=>{
+          let record=this.getFlight(data);
+          let time_dep_0 = timeHelp.getHM(record.time_dep_0);
+          let time_arr_0 = timeHelp.getHM(record.time_arr_0);
+          return `${time_dep_0}-${time_arr_0}`;
+        }
       }, {
         title: '回程日期',
-        dataIndex: 'dep_yyyymm',
+        dataIndex: 'flight_arr',
+        render:(text,data)=>{
+          let record=this.getFlight(data);
+          let flightArr = record.flight_date+record.time_dep_1;
+          return timeHelp.getYMD(flightArr)
+        }
       }, {
         title: '回程时刻',
-        dataIndex: 'dep_yyyymm',
+        dataIndex: 'time_arr',
+        render:(text,data)=>{
+          let record=this.getFlight(data);
+          let time_dep_1 = timeHelp.getHM(record.time_dep_1);
+          let time_arr_1 = timeHelp.getHM(record.time_arr_1);
+          return `${time_dep_1}-${time_arr_1}`;
+        }
       }, {
         title: '含税价',
-        dataIndex: 'adult_count',
+        dataIndex: 'sell_price',
         render: val => `￥${val}`,
       }, {
         title: '折扣',
-        dataIndex: 'adult_count',
-        render: val => `${val}`,
+        dataIndex: 'discount',
+        render: val => `${val}折`,
       }, {
         title: '状态',
-        dataIndex: 'order_status',
+        dataIndex: 'is_invalid',
         render: (text) => {
           return status[text];
         },

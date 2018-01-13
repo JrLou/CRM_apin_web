@@ -7,7 +7,7 @@ import { connect } from 'dva';
 }))
 class PicturesWall extends React.Component {
   state = {
-    loading: false,
+    loading: false
   };
 
 
@@ -17,18 +17,32 @@ class PicturesWall extends React.Component {
     reader.readAsDataURL(img);
   }
 
-  beforeUpload = (file) => {
-    const isJPG = file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/png';
-    if (!isJPG) {
-      message.error('格式只支持jpg、jpeg和png!');
+  beforeUpload = (file, filest) => {
+    let image_base64;
+    if (file) {
+      if (!/image\/\w+/.test(file.type)) {
+        message.warning("请确保文件为图像类型");
+        return false;
+      }
+      if (file.size >= 1024000) {
+        message.warning("图片过大，最大允许1M。");
+        return false;
+      }
     }
-    const isLt2M = file.size / 1024 / 1024 < 2;
-    if (!isLt2M) {
-      message.error('不超过1M!');
-    }
-    return isJPG && isLt2M;
-  }
+    this.getBase64(file, imageUrl => this.setState({
+      imageUrl,
+      loading: false,
+    }, () => {
+      let image = this.state.imageUrl;
+      const { dispatch } = this.props;
+      dispatch({
+        type: 'bannerList/baseImg',
+        payload: { image }
+      });
+    }));
 
+    return false
+  }
 
   handleChange = (info) => {
     if (info.file.status === 'uploading') {
@@ -37,24 +51,24 @@ class PicturesWall extends React.Component {
     }
     if (info.file.status === 'done') {
       // Get this url from response in real world.
-      this.getBase64(info.file.originFileObj, imageUrl => this.setState({
-        imageUrl,
-        loading: false,
-      },()=>{
-        let image = this.state.imageUrl;
-        const { dispatch } = this.props;
-        dispatch({
-          type: 'bannerList/baseImg',
-          payload: {image},
-          callback:(response)=>{
-            if(response.code==1){
-              console.log(11111,response.data)
-            }else{
-              console.log('error')
-            }
-          }
-        });
-      }));
+      // this.getBase64(info.file.originFileObj, imageUrl => this.setState({
+      //   imageUrl,
+      //   loading: false,
+      // }, () => {
+      //   let image = this.state.imageUrl;
+      //   const { dispatch } = this.props;
+      //   dispatch({
+      //     type: 'bannerList/baseImg',
+      //     payload: { image },
+      //     callback: (response) => {
+      //       if (response.code == 1) {
+      //         console.log(11111, response.data)
+      //       } else {
+      //         console.log('error')
+      //       }
+      //     }
+      //   });
+      // }));
     }
   }
   render() {
@@ -64,18 +78,19 @@ class PicturesWall extends React.Component {
         <div className="ant-upload-text">选择文件</div>
       </div>
     );
-    const imageUrl = this.state.imageUrl;
+    const { bannerList: { uploadSuccess, banner_url } } = this.props;
+    // const imageUrl = this.state.imageUrl;
     return (
       <Upload
         name="avatar"
         listType="picture-card"
         className="avatar-uploader"
         showUploadList={false}
-        action="//jsonplaceholder.typicode.com/posts/"
+        action=""
         beforeUpload={this.beforeUpload.bind(this)}
         onChange={this.handleChange.bind(this)}
       >
-        {imageUrl ? <img src={imageUrl} alt="" /> : uploadButton}
+        {banner_url && uploadSuccess ? <img style={{ width: '100px', height: '60px' }} src={banner_url} alt="" /> : uploadButton}
       </Upload>
     );
   }

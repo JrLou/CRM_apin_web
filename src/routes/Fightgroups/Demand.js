@@ -63,20 +63,24 @@ export default class Demand extends PureComponent {
   renderForm() {
     const { getFieldDecorator } = this.props.form;
     return (
-      <Form layout="inline" onSubmit={this.handleSearch.bind(this)}>
+      <Form onSubmit={this.handleSearch.bind(this)}>
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="出发城市">
-              {getFieldDecorator('cityDep')(
+              {getFieldDecorator('cityDep', {
+                rules: [{ max: 15, message: "输入位数过长" }],
+              })(
                 <Input placeholder="请输入" />
-              )}
+                )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="到达城市">
-              {getFieldDecorator('cityArr')(
+              {getFieldDecorator('cityArr', {
+                rules: [{ max: 15, message: "输入位数过长" }],
+              })(
                 <Input placeholder="请输入" />
-              )}
+                )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
@@ -122,19 +126,6 @@ export default class Demand extends PureComponent {
     return (
       <PageHeaderLayout>
         <Card bordered={false} className="poolListBox">
-          {/*跳转三级页面*/}
-          {/*<Link to={'/fightgroups/demand/id'}>*/}
-          {/*<Button>查看需求池</Button>*/}
-          {/*</Link>*/}
-          {/*<Link to={'/fightgroups/demand/choose'}>*/}
-          {/*<Button>推送方案-选择订单</Button>*/}
-          {/*</Link>*/}
-          {/*<Link to={'/fightgroups/demand/push'}>*/}
-          {/*< Button>方案推送</Button>*/}
-          {/*</Link>*/}
-          <Link to={'/fightgroups/demand/checkFightGroups'}>
-            < Button>查看拼团</Button>
-          </Link>
           <Card bordered={false}>
             <div className={styles.tableListForm}>
               {this.renderForm()}

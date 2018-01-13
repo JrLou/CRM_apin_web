@@ -28,7 +28,7 @@ export default {
                     type: 'reset',
                     payload: '',
                 });
-                // yield put(routerRedux.push('/fightgroups/demand/checkFightGroups/' + payload.id));
+                yield put(routerRedux.push('/fightgroups/demand/checkFightGroups/' + response.data));
             } else {
                 message.error(response.msg);
             }
