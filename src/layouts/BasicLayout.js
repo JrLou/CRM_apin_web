@@ -116,7 +116,7 @@ class BasicLayout extends React.PureComponent {
           location={location}
           dispatch={dispatch}
           // menus={this.props.menus}
-          menus={getMenuData()}
+          menus={this.props.env?getMenuData():this.props.menus}
         />
         <Layout>
           <GlobalHeader
@@ -137,7 +137,7 @@ class BasicLayout extends React.PureComponent {
                     <Route
                       key={Item.key}
                       path={Item.path}
-                      component={AuthRoute(Item.component,Item.path)}
+                      component={this.props.env? Item.component: AuthRoute(Item.component,Item.path)}
                       exact={Item.exact}
                     />
                   ))
@@ -169,6 +169,7 @@ class BasicLayout extends React.PureComponent {
 }
 
 export default connect(state => ({
+  env:state.global.env,
   menus: state.global.menus,
   collapsed: state.global.collapsed,
 }))(BasicLayout);
