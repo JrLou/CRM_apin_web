@@ -18,7 +18,7 @@ import {
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import DescriptionList from '../../components/DescriptionList';
 import styles from './TableList.less';
-
+import {formatPar} from '../../utils/utils';
 const {Description} = DescriptionList;
 const {RangePicker} = DatePicker;
 const FormItem = Form.Item;
@@ -117,14 +117,14 @@ export default class TableList extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem label="退款单号">
               {getFieldDecorator('id')(
-                <Input placeholder="请输入"/>
+                <Input placeholder="请输入" maxLength={32}/>
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="订单号">
               {getFieldDecorator('order_id')(
-                <Input placeholder="请输入"/>
+                <Input placeholder="请输入" maxLength={32}/>
               )}
             </FormItem>
           </Col>
@@ -217,9 +217,10 @@ export default class TableList extends PureComponent {
       },
       {
         title: '订单号', dataIndex: 'order_id', render: (text, record) => {
-        return <a onClick={() => {
-          this.refundModal.showModal(true, record);
-        }}>{text}</a>
+        let Url = record.group_type == 0 ? '/order/entrust/detail/':'/order/flyingpig/detail/';
+        return <Link
+          to={Url + formatPar({id: record.order_id})}>
+          {text}</Link>
       }
       },
       {
