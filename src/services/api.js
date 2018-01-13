@@ -301,6 +301,18 @@ export async function getRefundList(params) {
     body: params,
   });
 }
+export async function offlineRefund(params) {
+  return request('/api/order/offlineRefund', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function retryRefund(params) {
+  return request(' /api/order/retryRefund', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function postGroupData(params) {
   return request('/api/demandPool/pushPlan', { method: 'POST', body: params });
 }

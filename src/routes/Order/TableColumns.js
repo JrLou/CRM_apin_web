@@ -290,7 +290,7 @@ export default class TableList extends PureComponent {
               pagination={{showSizeChanger: true, showQuickJumper: true, total}}
               loading={loading}
               onChange={::this.handleTableChange}
-              rowKey="id"
+              rowKey={record => record.id + new Date().getTime()}
             />
           </div>
         </Card>
