@@ -245,24 +245,32 @@ class ExportPassengerModal extends Component {
 
   render() {
     const {
-      modalData: {data}, modalTableLoading, modalConfirmLoading,
-      groupsInfoData: {data: {abroad}}
-    } = this.props.checkFightGroups;
+      checkFightGroups: {
+        modalData: {data}, modalTableLoading, modalConfirmLoading,
+        groupsInfoData: {data: {abroad}}
+      },
+      id
+    } = this.props;
 
     const uploadProps = {
-      name: 'file',
-      action: '//jsonplaceholder.typicode.com/posts/',
+      accept: '.xlsx',
+      name: 'ticketFile',
+      action: '/api/demandPool/uploadTickets',
+      data: {uuid: id},
       headers: {
         authorization: 'authorization-text',
       },
-      onChange(info) {
-        if (info.file.status !== 'uploading') {
-          console.log(info.file, info.fileList);
+      onChange({file, fileList, event,}) {
+        debugger;
+        if (file.status !== 'uploading') {
+          console.log(file, fileList);
         }
-        if (info.file.status === 'done') {
-          message.success(`${info.file.name} file uploaded successfully`);
-        } else if (info.file.status === 'error') {
-          message.error(`${info.file.name} file upload failed.`);
+        if (file.status === 'done') {
+          message.warning(file.response.msg);
+          console.log("file.response,", file.response);
+        } else if (file.status === 'error') {
+          message.error(`${file.name} 上传失败`);
+          console.log("如果出现了此文字，请检查此处代码", file.response);
         }
       },
     };
@@ -291,7 +299,7 @@ class ExportPassengerModal extends Component {
               const {checkFightGroups: {groupsInfoData: {data}}, id, dispatch} = this.props;
               const fsName = formatDate(data.date_dep, 'MM月DD日') + id + '团乘机人.xlsx';
               const params = {//todo 目前这里都写死了
-                uuid: "10cd0ef740dc452db5114b2bf28e5148",
+                uuid: id,
                 fsName,
                 download: true,
               };

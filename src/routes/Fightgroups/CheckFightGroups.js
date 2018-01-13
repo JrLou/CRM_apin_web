@@ -72,6 +72,14 @@ export default class CheckFightGroups extends Component {
     });
   }
 
+  componentWillUnmount() {
+    const {dispatch} = this.props;
+    //还原redux 中的checkFightGroups的state
+    dispatch({
+      type: 'checkFightGroups/clear',
+    });
+  }
+
   mapGroupStateToTxt(group_status) {
     let txt = "";
     switch (group_status) {
@@ -237,7 +245,7 @@ export default class CheckFightGroups extends Component {
                 const {dispatch} = this.props;
                 dispatch({
                   type: 'checkFightGroups/fetchPaidMember',
-                  payload: {uuid: "10cd0ef740dc452db5114b2bf28e5148"}//todo this.id
+                  payload: {uuid: this.id}
                 });
               });
             }}
@@ -361,6 +369,7 @@ export default class CheckFightGroups extends Component {
         visible={showModal}
         width={920}
         changeVisible={this.handleCancel.bind(this)}
+        maskClosable={false}
         passengerType={0}//todo 乘机人类型  国内 or 国际
       />
     );

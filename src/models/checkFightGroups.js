@@ -11,10 +11,9 @@ import {
   queryPaidMember
 } from '../services/api';
 import {message} from 'antd';
-//TODO 这个文件刚刚copy下来，都需修改
-export default {
-  namespace: 'checkFightGroups',
-  state: {
+
+const initState = () => {
+  return {
     //拼团信息
     groupsInfoData: {
       code: '',
@@ -56,7 +55,12 @@ export default {
     showModal: false,
     modalTableLoading: true,//模态框中的table的loading
     modalConfirmLoading: false,
-  },
+  };
+};
+
+export default {
+  namespace: 'checkFightGroups',
+  state: initState(),
 
   effects: {
     * fetchGroupsInfo({payload}, {call, put}) {// 获取拼团信息
@@ -133,10 +137,9 @@ export default {
       });
     },
     * fetchExportPassenger({payload, cb}, {call}) {// 导出乘机人信息（已付款的）
-
       const response = yield call(loadExportPassenger, payload);
       if (response.code) {
-        message.error("资源下载失败");
+        message.error(response.msg);
         return;
       }
       cb && cb(response);
@@ -271,6 +274,9 @@ export default {
         ...state,
         ...payload,
       };
+    },
+    clear() {//页面卸载时重置
+      return initState();
     }
   },
 };

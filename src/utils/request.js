@@ -111,6 +111,11 @@ export default function request(url, options) {
   return fetch(url, newOptions)
     .then(checkStatus)
     .then((response) => {
+      if(response.headers.get('Content-Type')=='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
+        // const b = response.blob()
+        // const a = window.URL.createObjectURL(response.blob());
+        return response.blob();
+      }
       if (newOptions.method === 'DELETE' || response.status === 204) {
         return response.text();
       }
