@@ -25,13 +25,13 @@ class LogTable extends Component {
         {
             title: '起飞日期',
             render: (text, record) => {
-                return record.flightInfo[0].time_dep;
+                // return record.flightInfo[0].time_dep;
             },
         },
         {
             title: '返回日期',
             render: (text, record) => {
-                return record.flightInfo[1].time_dep;
+                // return record.flightInfo[1].time_dep;
             },
         },
         {

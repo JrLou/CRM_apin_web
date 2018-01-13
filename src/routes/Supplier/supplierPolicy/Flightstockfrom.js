@@ -139,8 +139,8 @@ class AddForm extends Component {
         values.backAirLine = [flightstockData[1]]
         values.cityArr = flightstockData[0].FlightArr
         values.cityDep = flightstockData[0].FlightDep
-        values.endDate = moment(data.flightTimeWill[1]).format("YYYY-MM-DD")
-        values.startDate = moment(data.flightTimeWill[1]).format("YYYY-MM-DD")
+        values.endDate = moment(flightdata.flightTimeWill[1]).format("YYYY-MM-DD")
+        values.startDate = moment(flightdata.flightTimeWill[1]).format("YYYY-MM-DD")
         console.log(values)
 
         // if (!this.props.id) {

@@ -113,8 +113,8 @@ class CalendarMain extends Component {
                                             if (styleOfDays[i] == "thisMonth") {
                                                 let currentDay = this.props.year + '-' + (this.props.month + 1) + '-' + day;
                                                 let currentDayMs = moment(currentDay, 'YYYY-MM-DD').format('x');
-                                                {/* console.log(this.props.canPick) */}
-                                                isCanPick = this.props.canPick.indexOf(currentDayMs) > -1 ? 'canPick' : '';
+                                                {/* console.log(this.props.canPick) */ }
+                                                isCanPick = this.props.canPick.indexOf(+currentDayMs) > -1 ? 'canPick' : '';
                                             }
                                             return (
                                                 <td className={styleOfDays[i] + ' ' + showClass + ' ' + isPointer + ' ' + isCanPick}
