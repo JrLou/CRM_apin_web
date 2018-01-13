@@ -1,8 +1,8 @@
 /**
  * Created by ylb on 17/08/31.
  */
-import React, {Component} from 'react'
-import {Modal} from 'antd';
+import React, { Component } from 'react'
+import { Modal } from 'antd';
 import css from './MultipleSelectCalendar.less';
 import MyCalendar from './Calendar'
 
@@ -17,7 +17,7 @@ class MultipleSelectCalendar extends Component {
     }
 
     showCalendar() {
-        this.setState({visible: !this.state.visible})
+        this.setState({ visible: !this.state.visible })
     }
 
     getPickInfo(pickInfo) {
@@ -34,9 +34,9 @@ class MultipleSelectCalendar extends Component {
                 <span className={css.wrapper} onClick={this.showCalendar.bind(this)}>
                     <div>
                         <input
-                            style={{width: '280px'}}
+                            style={{ width: '280px' }}
                             readOnly={true} value="" placeholder={this.props.placeholder}
-                            className="ant-calendar-picker-input ant-input ant-input-lg"/>
+                            className="ant-calendar-picker-input ant-input ant-input-lg" />
 
                         <span className="ant-calendar-picker-icon">
                         </span>
@@ -55,11 +55,10 @@ class MultipleSelectCalendar extends Component {
                         year={this.props.year}
                         month={this.props.month}
                         day={this.props.day}
-                        updateMonthStocks={this.props.updateMonthStocks}
                         currenMonthStocks={this.props.currenMonthStocks}
                         canPick={this.props.canPick}
                         toogleShow={this.showCalendar.bind(this)}
-                        getPickInfo={this.getPickInfo.bind(this)}/>
+                        getPickInfo={this.getPickInfo.bind(this)} />
                 </Modal>
             </span>
         )
