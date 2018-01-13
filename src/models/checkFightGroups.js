@@ -1,10 +1,9 @@
-import {changeStatus} from '../services/api';//这个要删除的
-import {stringify} from 'qs';
 import {
   queryOrderInfo,
   planClose,
   queryGroupOrders,
   loadExportPassenger,
+  saveTickets,
   queryPublishLogs,
   queryDetailGroupVoyage,
   queryGroupLogs,
@@ -196,15 +195,14 @@ export default {
       });
     },
 
-    * fetchConfirmExport({payload, callback}, {call, put}) {
+    * fetchSaveTickets({payload, succCallback}, {call, put}) {
       yield put({
         type: 'extendAll',
         payload: {modalConfirmLoading: true},
       });
-      const response = yield call(changeStatus, payload);
-
+      const response = yield call(saveTickets, payload);
       if (response && response.code >= 1) {
-        callback && callback(response);
+        succCallback && succCallback(response);
         yield put({
           type: 'save',
           payload: response,
@@ -213,14 +211,21 @@ export default {
           type: 'save',
           payload: response.data,
         });
+        yield put({
+          type: 'extendAll',
+          payload: {
+            modalConfirmLoading: false,
+            showModal: false
+          },
+        });
+      } else {
+        yield put({
+          type: 'extendAll',
+          payload: {
+            modalConfirmLoading: false,
+          },
+        });
       }
-      yield put({
-        type: 'extendAll',
-        payload: {
-          modalConfirmLoading: false,
-          showModal: false
-        },
-      });
     },
   },
 
@@ -237,6 +242,15 @@ export default {
         ...state,
         ...payload,
       };
+    },
+    insertTickets(state, {payload}) {
+      return {
+        ...state,
+        modalData: {
+          ...state.modalData,
+          data:payload,
+        },
+      }
     },
     // changeLoading(state, {payload}) {
     //   return {

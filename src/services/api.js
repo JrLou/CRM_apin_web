@@ -110,6 +110,12 @@ export async function queryPaidMember(params) {//拼团下成功支付的乘机�
 export async function loadExportPassenger(params) {//导出乘机人信息（已付款的)
   return request(`/api/demandPool/exportPassenger?${stringify(params)}`);
 }
+export async function saveTickets(params) {//确认录入票号信息
+  return request('/api/demandPool/saveTickets', {
+    method: 'POST',
+    body: params,
+  });
+}
 
 export async function queryPublishLogs(params) {//订单推送日志
   return request('/api/demandPool/publishLogs', {

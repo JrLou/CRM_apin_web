@@ -106,7 +106,7 @@ export default class CheckFightGroups extends Component {
     const {groupsInfoData: {data, code, msg}, groupsInfoLoading} = this.props.checkFightGroups;
 
     const create_time = formatDate(data.create_time, 'YYYY-MM-DD');
-    // todo 方案有效时间，通过这个字段，计算出过期时间；
+
     const expired_time = formatDate(data.expired_time, 'YYYY-MM-DD');
 
     const group_status = this.mapGroupStateToTxt(data.group_status);
@@ -276,6 +276,7 @@ export default class CheckFightGroups extends Component {
       groupsInfoData: {data: groupsInfoDataData},
     } = this.props.checkFightGroups;
 
+    // todo 方案有效时间，通过这个字段，计算出过期时间；
     let expired_hour = (groupsInfoDataData.expired_time - groupsInfoDataData.create_time) % (1000 * 60 * 60);
     expired_hour = expired_hour || (expired_hour === 0 ? 0 : "");
 
@@ -370,7 +371,6 @@ export default class CheckFightGroups extends Component {
         width={920}
         changeVisible={this.handleCancel.bind(this)}
         maskClosable={false}
-        passengerType={0}//todo 乘机人类型  国内 or 国际
       />
     );
   }

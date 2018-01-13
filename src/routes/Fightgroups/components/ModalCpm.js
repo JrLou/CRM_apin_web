@@ -89,9 +89,10 @@ class SendLogModal extends Component {
       }
       return txt;
     };
+    console.log("data~~~~~~~~~~~",data);
     return data.map(item => {
-      const depFlightInfo = item.flightInfo.filter(oneFlight => oneFlight.trip_index === 0)[0];
-      const arrFlightInfo = item.flightInfo.filter(oneFlight => oneFlight.trip_index === 1)[0];
+      const depFlightInfo = item.flightInfo? item.flightInfo.filter(oneFlight => oneFlight.trip_index === 0)[0]: {};
+      const arrFlightInfo = item.flightInfo? item.flightInfo.filter(oneFlight => oneFlight.trip_index === 1)[0]: {};
       return {
         ...item,
         flight_no: depFlightInfo.flight_no + '/' + arrFlightInfo.flight_no,
@@ -158,7 +159,16 @@ class SendLogModal extends Component {
 class ExportPassengerModal extends Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      flieList: [],
+    };
+    this.serverTicketsData = [];//导出乘机人=>确认提交票号的时候使用
+  }
+
+  componentWillUnmount() {
+    //此模态框即将消失的时候
+    this.setState({flieList: []});
+
   }
 
   handleCancel = () => {
@@ -243,42 +253,88 @@ class ExportPassengerModal extends Component {
     bodyNode.appendChild(ifr);
   }
 
+  /**
+   * 传入table的data,插入票号那一栏
+   * @param {[{},{}]} data
+   * @returns {Array}
+   */
+  insertTickets(data, abroad) {
+    /**
+     [
+     ["订单号", "乘机人", "乘机人类型", "证件号码", "出生年月日", "性别", "证件有效期", "国籍", "票号"]
+     ["201801122029488197", "姓名", "成人", "123", "2017-01-01", "女", "2018-02-28", "中国", 110, null, null, null,…]
+     ]
+     */
+    if (!this.serverTicketsData[0]) {
+      return data;
+    }
+    let resultArr = data.map((currV, index) => {
+      return {
+        ...currV,
+        ticket: this.serverTicketsData[index + 1][abroad === 0 ? 4 : 8],
+      }
+    });
+    return resultArr;
+  }
+
   render() {
     const {
       checkFightGroups: {
         modalData: {data}, modalTableLoading, modalConfirmLoading,
         groupsInfoData: {data: {abroad}}
       },
-      id
+      id,
+      dispatch,
     } = this.props;
 
     const uploadProps = {
-      accept: '.xlsx',
+      accept: '.xlsx,.xls',
       name: 'ticketFile',
       action: '/api/demandPool/uploadTickets',
       data: {uuid: id},
+      fileList: this.state.fileList,
       headers: {
         authorization: 'authorization-text',
       },
-      onChange({file, fileList, event,}) {
-        debugger;
-        if (file.status !== 'uploading') {
-          console.log(file, fileList);
+      beforeUpload: (file) => {
+        const reg = /.xls.?$/;
+        const isXlsx = reg.test(file.name);
+        if (!isXlsx) {
+          message.error('请上传excel格式');
         }
+        return isXlsx;
+      },
+      onChange: ({file, fileList, event,}) => {
+        if (file.status !== 'uploading') { }
         if (file.status === 'done') {
-          message.warning(file.response.msg);
-          console.log("file.response,", file.response);
+          //文件上传成功后，有两种情况，通过code码判断，如果为200 通过，否则，弹出msg错误消息
+          if (file.response.code === 200) {
+            this.serverTicketsData = file.response.data;
+            //处理页面上的table，插入票号数据
+            dispatch({
+              type: 'checkFightGroups/insertTickets',
+              payload: this.insertTickets(data, abroad),
+            });
+            message.success('导入票号成功');
+          } else {
+            //不符合要求时，fileList值为空
+            fileList = [];
+            message.error(file.response.msg);
+          }
         } else if (file.status === 'error') {
           message.error(`${file.name} 上传失败`);
           console.log("如果出现了此文字，请检查此处代码", file.response);
         }
+        //仅仅取fileList中的最新的一个
+        fileList = fileList.slice(-1);
+        this.setState({ fileList });
       },
     };
 
     const columns = this.getColumns();
     return (
       <Modal
-        title={"乘机人信息—" + (this.props.passengerType === 0 ? "国内" : "国际")}
+        title={"乘机人信息—" + (abroad === 0 ? "国内" : "国际")}
         onCancel={this.handleCancel}
         footer={null}
         {...this.props}
@@ -298,7 +354,7 @@ class ExportPassengerModal extends Component {
             onClick={() => {//其实就是下载，很简单
               const {checkFightGroups: {groupsInfoData: {data}}, id, dispatch} = this.props;
               const fsName = formatDate(data.date_dep, 'MM月DD日') + id + '团乘机人.xlsx';
-              const params = {//todo 目前这里都写死了
+              const params = {
                 uuid: id,
                 fsName,
                 download: true,
@@ -328,11 +384,14 @@ class ExportPassengerModal extends Component {
             type='primary'
             loading={modalConfirmLoading}
             onClick={() => {
-              const {dispatch} = this.props;
+              const {id, dispatch} = this.props;
               dispatch({
-                type: 'checkFightGroups/fetchConfirmExport',
-                payload: {},
-                callback: response => {
+                type: 'checkFightGroups/fetchSaveTickets',
+                payload: {
+                  data: JSON.stringify(this.serverTicketsData),
+                  uuid: id
+                },
+                succCallback: response => {
                   if (response.code == 200) {
                     message.success("操作成功");
                     console.log(response);
