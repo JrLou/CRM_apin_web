@@ -276,7 +276,7 @@ export default class Choose extends PureComponent {
       {
         title: '订单号',
         dataIndex: 'id',
-        render: (text, record) => <Link to={{ pathname: '/order/entrust/detail', state: { id: text, order_status: 1 } }}>{text}</Link>,
+        render: (text, record) => <Link target="_blank" to={{ pathname: '/order/entrust/detail/' + text }}>{text}</Link>,
       },
 
       {
