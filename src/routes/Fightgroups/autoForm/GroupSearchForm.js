@@ -61,7 +61,6 @@ export default class MyForm extends Component {
     let data = {
       /*************************************************************  类型（*前缀为必填项）*************  默认值  *******************  说明  ***/
       onSearch: dataObj => {
-        //todo antd@2.0 之后，时间类组件的 value 改为 moment 类型，所以在提交前需要预处理。
         this.props.onSearch && this.props.onSearch(dataObj);
       },                                                            //function(dataObj)                                             点击“搜索”的回调，参数为：收集到的form的dataObj
       onCancelAfter: dataObj => {
