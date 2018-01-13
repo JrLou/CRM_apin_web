@@ -105,15 +105,19 @@ export default {
       },
       * checkEdit({ payload, callback }, { call, put }) {
         //确定编辑，成功以后跳转到列表页
-        const response = yield call(editBannerImg, payload);
-        if (callback) {
-          callback(response);
+        const res = yield call(editBannerImg, payload);
+        // if (callback) {
+        //   callback(response);
+        // }
+        if(res&&res.code>=1){
+          yield put({
+            type: 'changeEditData',
+            payload: {},
+          });
+
+          yield put(routerRedux.push('/operations/banner'))
+          message.success('编辑成功')
         }
-        yield put({
-          type: 'changeEditData',
-          payload: {},
-        });
-        yield put(routerRedux.push('/operations/banner'))
       },
       * addBanner({ payload, callback }, { call, put }) {
         //确定编辑，成功以后跳转到列表页
@@ -128,6 +132,7 @@ export default {
             type: 'changeBaseImg',
             payload: ''
           });
+          message.success('添加成功')
           yield put(routerRedux.push('/operations/banner'))
         }
       },
@@ -167,6 +172,8 @@ export default {
       return {
         ...state,
         editData: action.payload,
+        banner_url:action.payload.banner_url,
+        uploadSuccess:true,
       };
     },
     changeLoading(state, action) {
