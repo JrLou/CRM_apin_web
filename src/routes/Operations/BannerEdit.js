@@ -18,10 +18,6 @@ const { RangePicker } = DatePicker;
 }))
 @Form.create()
 class BannerEdit extends PureComponent {
-  state = {
-    start_time: this.startTime,
-    end_time: this.endTime,
-  }
   componentWillMount() {
     if (this.props.type) {
       if (!this.props.bannerList.id) {
@@ -30,8 +26,6 @@ class BannerEdit extends PureComponent {
           type: 'bannerList/addBanner',
         })
       }
-      this.startTime = this.props.bannerList.start_time;
-      this.endTime = this.props.bannerList.end_time;
     }
   }
   onChange = (date, dateString) => {

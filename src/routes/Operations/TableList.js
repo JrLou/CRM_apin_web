@@ -137,7 +137,7 @@ class StandardTable extends PureComponent {
         title: '更新时间',
         dataIndex: 'update_time',
         render:(text,record,index)=>{
-          return <span>{TimeHelp.getYMDHM(record.update_time)}</span>
+          return <span>{TimeHelp.getYMDHM(record.update_time != 0 ? record.update_time : record.create_time)}</span>
         }
       },
       {
