@@ -7,6 +7,8 @@
     "precommit": "npm run lint-staged",
     "start": "roadhog server",
     "start:no-proxy": "cross-env NO_PROXY=true roadhog server",
+    "server":"node ./server/app.js",
+    "server_build":"roadhog build&&node ./server/app.js",
     "build": "roadhog build",
     "site": "roadhog-api-doc static && gh-pages -d dist",
     "analyze": "roadhog build --analyze",
