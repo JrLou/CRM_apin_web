@@ -3,7 +3,7 @@ const path = require('path');
 const app = express();
 const rp = require('request-promise');
 const request = require('request')
-const url = require('./config.js')
+const config = require('./config.js')
 var proxy = require('http-proxy-middleware');
 app.use(express.static(path.join(__dirname, 'dist')));
 app.get('/', function (req, res) {
@@ -14,10 +14,13 @@ app.get('/', function (req, res) {
 //   let body = await rp(requrl)
 //   res.send(body)
 // })
-app.use('/api', proxy({target:url.api, changeOrigin: true}));
+console.log(config)
+app.use('/api', proxy({target:config.api, changeOrigin: true}));
 
-// app.use('/api',async (req, res) => {
+// app.use('/api',(req, res) => {
 //   const requrl = url.api + req.originalUrl
 //   // req.pipe(request(requrl)).pipe(res);
 // })
-app.listen(9000);
+app.listen(process.env.PORT||config.PORT||3000,()=>{
+  console.log('成功起动',process.env.PORT||config.PORT||3000)
+});
