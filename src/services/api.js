@@ -206,6 +206,13 @@ export async function getpriceAirline(params) {
     body: params,
   });
 }
+//新增政策
+export async function getadd(params) {
+  return request('/api/resource/addAirLine',{
+    method: 'POST',
+    body: params,
+  });
+}
 
 export async function AccountLogin(params) {
   const newparams = Object.assign({}, { account: params.account, type: 0 })

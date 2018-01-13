@@ -58,6 +58,8 @@ class page extends Component {
               id={this.state.data.id}
               information={this.state.data}
               details={details}
+              accurate={{}}
+              {...this.props}
             />
           </Spin>
         </div>
