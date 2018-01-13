@@ -98,7 +98,7 @@ class page extends Component {
           id: 'validity',
           required: false,
           category: 1,
-          disabled: 2,
+          disabled: 0,
           options: [{name: '全部', id: '-1'}, {name: '待上架', id: '0'}, {name: '上架', id: '1',}, {
             name: '过期',
             id: '3'

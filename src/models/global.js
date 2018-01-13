@@ -1,85 +1,105 @@
-import { queryMenus } from '../services/api';
+import {queryMenus, authrouteApi} from '../services/api';
+import CookieHelp from './../utils/cookies';
+import {routerRedux} from 'dva/router';
+import {debug} from 'util';
 
 export default {
   namespace: 'global',
-
   state: {
     collapsed: false,
-    menusload:false,
-    menus:[],
+    menusload: false,  //控制导航数据
+    env: false, // 控制进入每一个进入页面的权限
+    menus: [],
+    routerdata: [],
+    routerPath: [{path: 'welcome', url: "welcome"}, {url: 'supplier/supplierPolicy/flightstock/Edit'}],  //在这里添加路由可以无视 权限
+    authlist: {
+      "customer/userList": {},
+      "supplier/supplierPolicy/flightstock": {},
+      "fightgroups/demand": {},
+      "fightgroups/list": {},
+      "order/flyingpig": {},
+      "order/entrust": {},
+      "order/refund": {},
+      "operations/banner": {}
+    } // 用于权限控制的数据表
   },
 
   effects: {
-    *fetchMenus(_, { call, put }) {
+    * fetchMenus(_, {call, put}) {
       yield put({
         type: 'changeMenusLoading',
         payload: true,
       });
-      const data = yield call(queryMenus);
-      yield put({
-        type: 'saveMenus',
-        payload: data,
-      });
+      const res = yield call(queryMenus);
+      if (res && res.code >= 1) {
+        const {data} = res
+        yield put({
+          type: 'changerouterPathData',
+          payload: data
+        })
+        data.forEach(item => item.path = item.url)
+        let menus_children = data.filter(item => !item.parentId).map((element, index, arr) => {
+          let children = data.filter(item => item.parentId == element.id)
+          element.children = children
+          return element
+        });
+        yield put({
+          type: 'changeMenusData',
+          payload: menus_children
+        })
+        yield put({
+          type: 'changeMenusload',
+          payload: true
+        })
+      } else {
+        CookieHelp.clearCookie()
+        yield put(routerRedux.push('/user/login'));
+      }
     },
-    // *clearNotices({ payload }, { put, select }) {
-    //   yield put({
-    //     type: 'saveClearedNotices',
-    //     payload,
-    //   });
-    //   const count = yield select(state => state.global.notices.length);
-    //   yield put({
-    //     type: 'user/changeNotifyCount',
-    //     payload: count,
-    //   });
-    // },
+    * authroute({payload}, {call, put, select}) {
+      const routerPath = yield select(state => state.global.routerPath);
+      const id = routerPath.filter(item => item.parentId && payload.indexOf(item.path) > -1)[0].id
+      const res = yield call(authrouteApi, {id});
+      if (res && res.code >= 1) {
+        const {data} = res
+        yield put({
+          type: 'changerouterPathData',
+          payload: data
+        })
+      }
+    }
   },
-
   reducers: {
-    changeLayoutCollapsed(state, { payload }) {
+    changeLayoutCollapsed(state, {payload}) {
       return {
         ...state,
         collapsed: payload,
       };
     },
-    saveMenus(state, { payload }) {
-      const menus = payload&&payload.data?payload.data:null
-      if(!menus){
-        return {
-          ...state,
-          menus: [],
-          menusload: true,
-        };
-      }
-     let menus_children = menus.filter(item=>!item.groupId).map((element,index,arr) => {
-          let children = menus.filter(item=>item.groupId== element.id)
-          element.children=children
-          element.path=element.url
-          return element
-      });
+    changeMenusload(state, {payload}) {
       return {
         ...state,
-        menus: menus_children,
-        menusload: true,
+        menusload: payload,
       };
     },
-    // saveClearedNotices(state, { payload }) {
-    //   return {
-    //     ...state,
-    //     notices: state.notices.filter(item => item.type !== payload),
-    //   };
-    // },
-    changeMenusLoading(state, { payload }) {
+    changeMenusData(state, {payload}) {
       return {
         ...state,
-        menusload: true,
+        menus: payload,
       };
     },
+    changerouterPathData(state, {payload}) {
+      return {
+        ...state,
+        routerPath: state.routerPath.concat(payload),
+      };
+    }
   },
 
   subscriptions: {
-    setup({ history }) {
+    setup({history}) {
       // Subscribe history(url) change, trigger `load` action if pathname is `/`
-      return history.listen(({ pathname, search }) => {
+      return history.listen(({pathname, search}) => {
         if (typeof window.ga !== 'undefined') {
           window.ga('send', 'pageview', pathname + search);
         }

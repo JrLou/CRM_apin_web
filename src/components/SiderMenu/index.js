@@ -10,7 +10,6 @@ const { SubMenu } = Menu;
 
 export default class SiderMenu extends PureComponent {
   constructor(props) {
-
     super(props);
     this.menus = this.props.menus;
     this.state = {
@@ -153,13 +152,13 @@ export default class SiderMenu extends PureComponent {
         collapsed={collapsed}
         breakpoint="md"
         onCollapse={this.onCollapse}
-        width={226}
+        width={246}
         className={styles.sider}
       >
         <div className={styles.logo}>
           <Link to="/">
             <img src={logo} alt="logo" />
-            <h1>爱拼后台管理</h1>
+            <h1>爱拼机后台管理</h1>
           </Link>
         </div>
         {

@@ -170,6 +170,7 @@ export async function baseImg(params) {
   return request('/api/common/uploadImage', {
     method: 'POST',
     body: params,
+    formData: true
   });
 }
 export async function deleteBanner(params) {
@@ -230,7 +231,14 @@ export async function getdetailAirLine(params) {
 }
 //日历数据
 export async function getpriceAirline(params) {
-  return request('/api/resource/priceAirline',{
+  return request('/api/resource/priceAirline', {
+    method: 'POST',
+    body: params,
+  });
+}
+//新增政策
+export async function getadd(params) {
+  return request('/api/resource/addAirLine', {
     method: 'POST',
     body: params,
   });
@@ -251,7 +259,16 @@ export async function AccountLogin(params) {
   }
 }
 export async function queryMenus() {
-  return request('/uc/authapi/v1.1/modules');
+  return request('/api/user/getNavigators', {
+    method: 'POST',
+    body: {}
+  });
+}
+export async function authrouteApi(params) {
+  return request('/api/user/getFunNavigators', {
+    method: 'POST',
+    body: params
+  });
 }
 export async function financePaymentList(params) {
   return request('/bo/orderapi/v1.0/orders/recordList', {
@@ -296,6 +313,18 @@ export async function addTicketFail(params) {
 }
 export async function getRefundList(params) {
   return request('/api/order/getRefundList', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function offlineRefund(params) {
+  return request('/api/order/offlineRefund', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function retryRefund(params) {
+  return request(' /api/order/retryRefund', {
     method: 'POST',
     body: params,
   });

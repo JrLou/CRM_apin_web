@@ -34,6 +34,8 @@ export default class BannerList extends PureComponent {
       pc: 10
     }
   };
+  p=1
+  pc =10
   componentDidMount() {
     this.props.dispatch({
       type: 'bannerList/fetch',
@@ -53,6 +55,7 @@ export default class BannerList extends PureComponent {
       newObj[key] = getValue(filtersArg[key]);
       return newObj;
     }, {});
+    this.pc =pagination.pageSize
     const params = {
       p: pagination.current,
       pc: pagination.pageSize,
@@ -113,10 +116,11 @@ export default class BannerList extends PureComponent {
 
   render() {
     const { bannerList: { loading: ruleLoading, data } } = this.props;
+    console.log(data)
     Object.assign(data, {
         pagination:{
-          current:this.state.p,
-          pageSize:this.state.pc
+          current:this.p,
+          pageSize:this.pc
         }
       })
     const { selectedRows } = this.state;

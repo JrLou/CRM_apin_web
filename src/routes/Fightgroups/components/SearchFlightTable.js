@@ -13,7 +13,7 @@ class FlightList extends Component {
         this.state = {};
     }
     selectThisRow(selectedRows) {
-        this.onSelectChange([selectedRows.id], [selectedRows])
+        this.onSelectChange([selectedRows.FlightNo], [selectedRows])
     }
     onSelectChange(selectedRowKeys, selectedRows) {
         this.setState({ selectedRowKeys, selectedRows });
@@ -41,7 +41,7 @@ class FlightList extends Component {
                     pagination={false}
                     showHeader={false}
                     dataSource={this.props.tableData}
-                    rowKey={record => record.id}
+                    rowKey={record => record.FlightNo}
                     rowSelection={rowSelection}
                     onRowClick={this.selectThisRow.bind(this)}
                 >
@@ -50,8 +50,8 @@ class FlightList extends Component {
                         className={css.lastCol}
                         key="action"
                         render={(text, record, index) => {
-                            record.flightDeptimePlanDate = moment(record.flightDeptimePlanDate, "HH:mm:ss").format('HH:mm');
-                            record.flightArrtimePlanDate = moment(record.flightArrtimePlanDate, "HH:mm:ss").format('HH:mm');
+                            // record.flightDeptimePlanDate = moment(record.flightDeptimePlanDate, "HH:mm:ss").format('HH:mm');
+                            // record.flightArrtimePlanDate = moment(record.flightArrtimePlanDate, "HH:mm:ss").format('HH:mm');
                             return <FlightCard visiable={true} cardData={record} />;
                         }}
                     />

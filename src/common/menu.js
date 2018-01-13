@@ -66,14 +66,14 @@ const menuData = [{
     path: 'order/flyingpig',
     // children:[{
     //   name:'飞猪&供应商订单详情',
-    //   path:'/order/flyingpig/detail',
+    //   path:'/order/flyingpig/detail/:params',
     // }]
   }, {
     name: '委托订单',
     path: 'order/entrust',
     // children:[{
     //   name:'委托订单详情',
-    //   path:'/order/entrust/detail',
+    //   path:'/order/entrust/detail/:params',
     // }]
   }, {
     name: '退款列表',
