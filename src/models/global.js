@@ -11,7 +11,7 @@ export default {
     menusloaderr: false,
     menus: [],
     routerdata: [],
-    routerPath:[{path:'welcome',url:"welcome"}],
+    routerPath:[{path:'welcome',url:"welcome"},{url:'supplier/supplierPolicy/flightstock/Edit'}],
     authlist:{
       "customer/userList":{},
       "supplier/supplierPolicy/flightstock":{},
