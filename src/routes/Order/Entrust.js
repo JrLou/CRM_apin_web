@@ -1,8 +1,8 @@
 import React from 'react'
 import TableColumns from './TableColumns'
 
-const FlyingPig = (props)=>{
+const Entrust = (props)=>{
   return <TableColumns backpath="Entrust"  {...props} />
 }
 
-export default FlyingPig
+export default Entrust

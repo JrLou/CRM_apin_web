@@ -209,7 +209,7 @@ export default class TableList extends PureComponent {
       {
         title: '订单号', dataIndex: 'id', render: (text, record) => {
         return <Link
-          to={Url + formatPar({id: record.id, order_status: record.order_status})}>
+          to={Url + formatPar({id: record.id})}>
           {text}</Link>
       }
       },
@@ -269,7 +269,7 @@ export default class TableList extends PureComponent {
         title: '操作', render: (text, record) => {
         let title = (record.order_status === 4 && backpath === 'Entrust') || (backpath === 'FlyingPig' && record.order_status === 2 ) ? '出票' : '查看';
         return <Link
-          to={Url + formatPar({id: record.id, order_status: record.order_status})}>
+          to={Url + formatPar({id: record.id})}>
           {title}</Link>
       }
       }];

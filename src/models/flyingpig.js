@@ -28,8 +28,8 @@ export default {
     save(state, { payload }) {
       return {
         ...state,
-        list: payload.data||[],
-        total: payload.option.total||0,
+        list: payload.data?payload.data:[],
+        total: payload.option.total?payload.option.total:0,
       };
     },
     changeLoading(state, { payload }) {
