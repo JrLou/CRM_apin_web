@@ -65,7 +65,7 @@ export default (WrappedComponent, exacpath) => {
       }
     }
     render() {
-      return (this.state.load ? <WrappedComponent {...this.props} /> : (this.state.notauth ? <NotAuth /> : <Spin size="large" style={{ width: "100%", margin: "40px 0 !important" }} />))
+      return (!this.state.load ? <WrappedComponent {...this.props} /> : (this.state.notauth ? <NotAuth /> : <Spin size="large" style={{ width: "100%", margin: "40px 0 !important" }} />))
     }
   }
   const A = connect(state => ({

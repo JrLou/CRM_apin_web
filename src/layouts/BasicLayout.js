@@ -115,7 +115,8 @@ class BasicLayout extends React.PureComponent {
           collapsed={collapsed}
           location={location}
           dispatch={dispatch}
-          menus={this.props.menus}
+          // menus={this.props.menus}
+          menus={getMenuData()}
         />
         <Layout>
           <GlobalHeader
