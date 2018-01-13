@@ -9,6 +9,7 @@ import LogTable from './LogTable';
 import moment from 'moment';
 import SearchFlightTable from './SearchFlightTable';
 import AddFlightForm from './AddFlightForm';
+import {formatPar} from '../../../utils/utils';
 let demandId, orderList;
 @connect(state => ({
     data: state.push,
@@ -155,7 +156,7 @@ export default class SearchFlight extends PureComponent {
             {
                 title: '订单号',
                 dataIndex: 'id',
-                render: (text, record) => <Link target="_blank" to={{ pathname: '/order/entrust/detail/' + text }}>{text}</Link>,
+                render: (text, record) => <Link target="_blank" to={{ pathname: '/order/entrust/detail/' + formatPar({id:text}) }}>{text}</Link>,
             },
 
             {

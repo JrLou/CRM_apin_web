@@ -154,6 +154,7 @@ export async function baseImg(params) {
   return request('/api/common/uploadImage', {
     method: 'POST',
     body: params,
+    formData: true
   });
 }
 export async function deleteBanner(params) {
@@ -221,7 +222,7 @@ export async function getpriceAirline(params) {
 }
 //新增政策
 export async function getadd(params) {
-  return request('/api/resource/addAirLine',{
+  return request('/api/resource/addAirLine', {
     method: 'POST',
     body: params,
   });
@@ -242,15 +243,15 @@ export async function AccountLogin(params) {
   }
 }
 export async function queryMenus() {
-  return request('/api/user/getNavigators',{
-    method:'POST',
-    body:{}
+  return request('/api/user/getNavigators', {
+    method: 'POST',
+    body: {}
   });
 }
-export async function authrouteApi(params){
-  return request('/api/user/getFunNavigators',{
-    method:'POST',
-    body:params
+export async function authrouteApi(params) {
+  return request('/api/user/getFunNavigators', {
+    method: 'POST',
+    body: params
   });
 }
 export async function financePaymentList(params) {
