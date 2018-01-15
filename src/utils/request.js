@@ -64,7 +64,7 @@ function checkCode(json) {
       message: `提示`,
       description: errortext,
     });
-    if (json.code == -2 && json.code == -8) {
+    if (json.code == -2 || json.code == -8) {
       Cookies.clearCookie()
       location.reload()
     }
