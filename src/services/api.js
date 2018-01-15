@@ -243,6 +243,34 @@ export async function getadd(params) {
     body: params,
   });
 }
+//批量修改团期价格
+export async function getmodifyPrice(params) {
+  return request('/api/resource/modifyPrice',{
+    method: 'POST',
+    body: params,
+  });
+}
+//批量修改团期库存
+export async function getmodifyInventory(params) {
+  return request('/api/resource/modifyInventory',{
+    method: 'POST',
+    body: params,
+  });
+}
+//批量修改清位时间
+  export async function getmodifyDays(params) {
+  return request('/api/resource/modifyDays',{
+    method: 'POST',
+    body: params,
+  });
+}
+//批量修改价格
+  export async function getimportFile(params) {
+  return request('/api/resource/importFile',{
+    method: 'POST',
+    body: params,
+  });
+}
 
 export async function AccountLogin(params) {
   const newparams = Object.assign({}, { account: params.account, type: 0 })
