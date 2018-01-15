@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'dva';
 import {Link} from 'dva/router';
-import {Card, Spin, Table, Divider, Icon, Row, Col, Button, message} from 'antd';
+import {Card, Spin, Table, Divider, Icon, Row, Col, Button, message, Popover} from 'antd';
 import {CloseReasonModal, SendLogModal, ExportPassengerModal} from './components/ModalCpm';
 
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
@@ -119,6 +119,7 @@ export default class CheckFightGroups extends Component {
     const paidMan = +data.paidMan;
     const creator_name = data.creator_name;
 
+
     return (
       <div>
         <div className={styles.title}>
@@ -155,39 +156,105 @@ export default class CheckFightGroups extends Component {
     );
   }
 
+  getDataSource(data) {
+    const mapOrder_statusToTxt = (order_status) => {
+      let txt = '';
+      switch (order_status) {//状态（0取消，1推送，2接受，3支付超时）
+        case 10:
+          txt = '待付款';
+          break;
+        case 11:
+        case 12:
+          txt = '订单关闭';
+          break;
+        case 21:
+        case 31:
+          txt = '委托关闭';
+          break;
+        case 20:
+        case 34:
+        case 43:
+        case 44:
+          txt = '委托中';
+          break;
+        case 22:
+        case 32:
+        case 41:
+        case 42:
+          txt = '委托过期';
+          break;
+        case 30:
+          txt = '委托选择中';
+          break;
+        case 40:
+          txt = '待付款';
+          break;
+        case 50:
+          txt = '待出票';
+          break;
+        case 51:
+          txt = '出票失败';
+          break;
+        case 60:
+          txt = '已出票';
+          break;
+      }
+      return txt;
+    };
+    return data.map(currV => ({
+        ...currV,
+        order_status: mapOrder_statusToTxt(currV.order_status)
+      })
+    );
+  };
+
   getGroupOrdersColumns() {
     return [
       {
         title: '订单号',
         dataIndex: 'id',
-        key: 'id',
+        render: (text, record, index) => {//生成复杂数据的渲染函数，参数分别为当前行的值，当前行数据，行索引，@return里面可以设置表格行/列合并
+          isRefuse = record.status === 0;
+          const popoverContent = (
+            <div>
+              <P>原因：</P>
+              <p>record.remark</p>
+            </div>
+          );
+          return (
+            <span>
+              {
+                isRefuse ?
+                  <Popover content={popoverContent} title="不接受">
+                    <Icon type="frown-o"/>
+                  </Popover>
+                  : null
+              }
+              <span>{text}</span>
+            </span>
+          );
+        }
       }, {
         title: '订单状态',
         dataIndex: 'order_status',
-        key: 'order_status',
         // render: renderContent,
       }, {
         title: '联系人',
         dataIndex: 'contact',
-        key: 'contact',
         // render: renderContent,
       }, {
         title: '联系电话',
         dataIndex: 'mobile',
-        key: 'mobile',
         // render: renderContent,
       }, {
         title: '订单人数',
         dataIndex: 'adult_count',
-        key: 'adult_count',
       }, {
         title: '推送次数',
         dataIndex: 'amount',
-        key: 'amount',
       }, {
         title: '操作',
         dataIndex: 'action',
-        key: 'action',
         render: (text, record, index) => {//生成复杂数据的渲染函数，参数分别为当前行的值，当前行数据，行索引，@return里面可以设置表格行/列合并
           return (
             <a onClick={() => {
@@ -231,6 +298,8 @@ export default class CheckFightGroups extends Component {
     };
     params = formatPar(params);
 
+    const dataSource = this.getDataSource(data);
+
     return (
       <div>
         <div className={styles.title}><Icon type="schedule"/>
@@ -260,7 +329,7 @@ export default class CheckFightGroups extends Component {
           style={{marginBottom: 24, position: 'relative'}}
           pagination={false}
           loading={groupOrdersLoading}
-          dataSource={data}
+          dataSource={dataSource}
           columns={groupOrdersColumns}
           rowKey="id"
         />

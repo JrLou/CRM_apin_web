@@ -75,7 +75,7 @@ class SendLogModal extends Component {
       let txt = '';
       switch (status) {//状态（0取消，1推送，2接受，3支付超时）
         case 0:
-          txt = '取消';
+          txt = '不接受';
           break;
         case 1:
           txt = '推送';
