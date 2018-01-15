@@ -183,6 +183,10 @@ export const getRouterData = (app) => {
       name: '线下订单列表',
       component: dynamicWrapper(app, ['offline'], () => import('../routes/Offline/OfflineList.js')),
     },
+    '/offline/order/customerMannagement': {
+      name: '客户（旅行社）管理',
+      component: dynamicWrapper(app, ['customerMannagement'], () => import('../routes/CustomerMannagement/CustomerMannagement.js')),
+    },
   };
   // Get name from ./menu.js or just set it in the router data.
   const menuData = getFlatMenuData(getMenuData());

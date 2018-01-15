@@ -102,6 +102,9 @@ const menuData = [{
     children: [{
       name: '线下订单列表',
       path: '/offline/order/orderList',
+    },{
+      name: '客户（旅行社）管理',
+      path: '/offline/order/customerMannagement',
     }],
   },
   // {
