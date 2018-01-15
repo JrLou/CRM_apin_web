@@ -119,18 +119,18 @@ class page extends Component {
     const columns = [
       {
         title: '操作人',
-        dataIndex: 'operatorUser',
-        key: 'operatorUser',
+        dataIndex: 'user_name',
+        key: 'user_name',
       }, {
         title: '操作时间',
-        dataIndex: 'createdTime',
-        key: 'createdTime',
+        dataIndex: 'create_time',
+        key: 'create_time',
       }, {
         title: '操作内容',
-        dataIndex: 'eventName',
-        key: 'eventName',
+        dataIndex: 'create_content',
+        key: 'create_content',
       }];
-    const {flightstock: {loading, list: {data, option: {current, size, total}}, logs: {datalgo, optionlog}}} = this.props;
+    const {flightstock: {loading, list: {data, option: {current, size, total}}, logs: {data:datalis, option}}} = this.props;
     return (
       <div className={css.table_container}>
         <Table
@@ -156,8 +156,8 @@ class page extends Component {
         >
           <Column
             title="机票资源号"
-            dataIndex="is_invalid"
-            key="is_invalid"
+            dataIndex="id"
+            key="id"
           />
           <Column
             title="供应商名称"
@@ -267,7 +267,7 @@ class page extends Component {
           onOk={this.companyname.bind(this, 1)}
           onCancel={this.companyname.bind(this, 1)}
         >
-          <Table pagination={false} dataSource={datalgo ? datalgo : []} columns={columns}/>
+          <Table pagination={false} dataSource={datalis ? datalis : []} columns={columns}/>
         </Modal>
       </div>
 

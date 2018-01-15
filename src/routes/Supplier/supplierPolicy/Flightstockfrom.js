@@ -6,7 +6,6 @@ import {
   Form,
   Input,
   Button,
-  Spin,
   message,
   Modal,
   Radio,
@@ -14,9 +13,8 @@ import {
   DatePicker,
   Row,
   Col,
-  Icon,
+  Table,
   AutoComplete,
-  InputNumber,
 } from 'antd';
 import {connect, Link} from 'dva';
 import css from './Flightstock.less';
@@ -27,6 +25,8 @@ import Manual from './FlightstockManual.js';
 import FlightstockCalendar from './FlightstockCalendar.js';
 import FlightstockShow from './FlightstockShow.js';
 
+const {Column,} = Table;
+const confirm = Modal.confirm;
 const Option = AutoComplete.Option;
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
@@ -41,108 +41,103 @@ class AddForm extends Component {
       flightdata: {},
       flightstockData: [{}, {}],//用于储蓄已添加航线
       linenubber: [],//用于存储以添加航线的值的索引
-      listAir: 0, //控制航班查询有数据显示数据没有数据显示手工录入(0:没有数据，1有数据)
+      listAir: 0, //控制航班查询有数据显示数据没有数据显示手工录入(1有数据)
       flightNumbering: '',
       flightNumsdbdsdering: true,
+      visible: false,
       flightstockAdd: props.flightstockAdd ? props.flightstockAdd : {},
-      flightstockEdit: props.flightstockEdit ? props.flightstockEdit : {details: []}
+      flightstockEdit: props.flightstockEdit ? props.flightstockEdit : {details: []},
+      baioshi: false,
     };
   }
 
   componentWillReceiveProps(nextProps) {
+    let {flightdata} = this.state
+
     this.setState({
       flightstockAdd: nextProps.flightstockAdd ? nextProps.flightstockAdd : {},
-      flightstockEdit: nextProps.flightstockEdit ? nextProps.flightstockEdit : {details: []}
+      flightstockEdit: nextProps.flightstockEdit ? nextProps.flightstockEdit : {details: []},
     });
+    if (nextProps.flightstockView && nextProps.flightstockView.details.length > 0 && nextProps.flightstockView.details[0].flight_no) {
+      flightdata.competence = true
+      this.setState({
+        flightstockEdit: nextProps.flightstockView,
+        flightdata:flightdata
+      });
+    }
+    if (this.state.flightstockEdit && this.state.flightstockEdit.details.length > 0) {
+      let list = this.state.flightstockEdit.details;
+      list[0].seat_type == 0 ? list[0].seat_type = "硬切" : list[0].seat_type = "代销"
+      list[0].FlightNo = list[0].flight_no
+      list[0].FlightDepAirport = list[0].city_dep_name
+      list[0].FlightDepcode = list[0].airport_dep_name
+      list[0].FlightDeptimePlanDate = moment(list[0].departure_start).format("YYYY-MM-DD")
+      list[0].FlightArrAirport = list[0].city_arr_name
+      list[0].FlightArrcode = list[0].airport_arr_name
+      list[0].FlightArrtimePlanDate = moment(list[0].departure_end).format("YYYY-MM-DD")
+      list[1].FlightNo = list[0].flight_no
+      list[1].FlightDepAirport = list[0].city_dep_name
+      list[1].FlightDepcode = list[0].airport_dep_name
+      list[1].FlightDeptimePlanDate = moment(list[0].departure_start).format("YYYY-MM-DD")
+      list[1].FlightArrAirport = list[0].city_arr_name
+      list[1].FlightArrcode = list[0].airport_arr_name
+      list[1].FlightArrtimePlanDate = moment(list[0].departure_end).format("YYYY-MM-DD")
+      flightdata.flightTimeWill = [moment(list[0].departure_start), moment(list[0].departure_end)]
+      if (list[0].trip_index == 0) {
+        flightdata.selectedWeekGroup[0] = list[0].week_flights
+        this.setState({
+          flightstockData: [list[0], list[1]],
+          linenubber: [0, 1]
+        });
+      } else {
+        flightdata.selectedWeekGroup[0] = list[1].week_flights
+        this.setState({
+          flightstockData: [list[1], list[0]],
+          linenubber: [0, 1]
+        });
+      }
+      if (nextProps.flightstockEdit && nextProps.flightstockEdit.ajaxJudgment && this.state.baioshi) {
+        this.props.away()
+      }
+      this.setState({
+        flightdata: flightdata,
+      });
+    }
+    if (nextProps.flightstockAdd && nextProps.flightstockAdd.judgment) {
+      this.props.away()
+    }
   }
 
   componentDidMount() {
     let data = this.state.flightdata;
+    data.competenceEdit = true
+    data.competence = false
     data.selectedWeekGroup = ['', '']
-    // data.visible = false; //弹窗控制变量
-    // data.listAir = false; //控制航班查询有数据显示数据，没有数据显示手工录入
-    // data.entry = false; //控制点击手工录入，切换手工录入form
-    // data.chupiaodays = 0; //用于判断余票回收天数必须大于出片天数的变量
-    // data.selectedWeekGroup = []; //选中的航班计算后的数组集群
-    // data.flightType = 0; //航班数组指针
-    // data.competence = false; //全局控制disabled
-    // data.competenceEdit = false; //编辑disabled
-    // data.flightType = 2;
-    // data.competence = false;
-    // data.competenceEdit = false;
+    if (this.props.id) {
+      data.competence = true
+      data.competenceEdit = false
+    }
     this.setState({
       flightdata: data,
     });
     this.addDate(2);
   }
 
-  // arrange(val) {
-  //   let _this = this;
-  //   let data = _this.state.flightdata;
-  //   let keys = [];
-  //   let selectedWeekGroup = [];
-  //   val.line.adultPrice = val.line.adultPrice.toString();
-  //   val.line.childPrice = val.line.childPrice.toString();
-  //   if (val.line.depositAmount) {
-  //     val.line.depositAmount = val.line.depositAmount.toString();
-  //   }
-  //   data.flightType = val.airline.flightType;
-  //   val.line.seatType == 1 ? val.line.seatType = '硬切' : val.line.seatType = '代销';
-  //   data.flightstockData = val;
-  //   data.selectedWeek = Algorithm.getPeriodWeek(data.flightstockData.line.departureStart, data.flightstockData.line.departureEnd);   //计算出所选结果区间包含的所有星期数
-  //   data.flightTime = Algorithm.dateRange(data.flightstockData.line.departureStart, data.flightstockData.line.departureEnd);
-  //   data.flightTimeWill = [moment(data.flightstockData.line.departureStart), moment(data.flightstockData.line.departureEnd)];
-  //   data.flightstockData.voyages.sort(function (a, b) {
-  //     if (a.tripIndex < b.tripIndex) {
-  //       return -1;
-  //     } else if (a.tripIndex > b.tripIndex) {
-  //       return 1;
-  //     }
-  //     return 0;
-  //   });
-  //   for (let i = 0; i < data.flightstockData.voyages.length; i++) {
-  //     keys.push(i);
-  //   }
-  //   data.flightstockData.airline.flightType == 2 ? data.days = data.flightstockData.voyages[1].days + 1 : data.days = 0;
-  //   data.flightstockData.linenubber = keys;
-  //   for (let i = 0; i < keys.length; i++) {
-  //     _this.add();
-  //     data.transshipment = i;
-  //     selectedWeekGroup.push(this.weekCalculate(data.flightstockData.voyages[i].flights));
-  //   }
-  //   data.selectedWeekGroup = selectedWeekGroup;
-  //   data.supplierName = val.line.supplierName;
-  //   data.managerId = val.line.managerId;
-  //   data.deposit = val.line.depositAmount == 0 ? false : true;
-  //   val.line.depositAmount == 0 ? this.props.form.setFieldsValue({'sdda': '全款'}) : this.props.form.setFieldsValue({'sdda': '押金'});
-  //   switch (data.flightstockData.airline.flightType) {
-  //     case 1:
-  //       data.flightstockData.airline.flightType = "单程";
-  //       break;
-  //     case 2:
-  //       data.flightstockData.airline.flightType = "往返";
-  //       break;
-  //     case 3:
-  //       data.flightstockData.airline.flightType = "多程";
-  //       break;
-  //   }
-  //   _this.setState({
-  //     flightdata: data,
-  //   });
-  // }
-
   handleSubmit(e, event) {  //提交时数据格式整理，数据校验
-    let { flightstockData, flightdata} = this.state
+    let _this = this
+    let {flightstockData, flightdata} = _this.state
     e.preventDefault();
-    this.props.form.validateFields((err, values) => {
+    _this.props.form.validateFields((err, values) => {
       if (!err) {
-        if (!flightstockData[1].FlightArr) {
-          message.warning('请查询并选择返程航线');
-          return
-        }
-        if (!flightstockData[0].FlightArr) {
-          message.warning('请查询并选择出发航线');
-          return
+        if (!_this.props.id) {
+          if (!flightstockData[1].FlightArr) {
+            message.warning('请查询并选择返程航线');
+            return
+          }
+          if (!flightstockData[0].FlightArr) {
+            message.warning('请查询并选择出发航线');
+            return
+          }
         }
         values.backAirLine = JSON.stringify([flightstockData[1]])
         values.goAirLine = JSON.stringify([flightstockData[0]])
@@ -150,12 +145,20 @@ class AddForm extends Component {
         values.seatType == "硬切" ? values.seatType = 0 : values.seatType = 1
         values.cityDep = flightstockData[0].FlightDep
         values.endDate = moment(flightdata.flightTimeWill[1]).format("YYYY-MM-DD")
-        values.startDate = moment(flightdata.flightTimeWill[1]).format("YYYY-MM-DD")
+        values.startDate = moment(flightdata.flightTimeWill[0]).format("YYYY-MM-DD")
         values.flightNumber = flightstockData[0].FlightNo + '-' + flightstockData[0].FlightNo
         values.weekFlights = flightdata.selectedWeekGroup[0]
         values.managerId = 0
+        this.setState({
+          baioshi: true,
+        });
         console.log(values)
-        this.props.addPost('flightstockAdd/getaddtit', values);
+        if (_this.props.id) {
+          values.id = _this.props.id
+          _this.props.addPost('flightstockEdit/geteditAirlines', values);
+        } else {
+          _this.props.addPost('flightstockAdd/getaddtit', values);
+        }
       }
     });
   }
@@ -163,17 +166,6 @@ class AddForm extends Component {
   onChange(value, selectedOptions) {  //日期选择器结果输出
     let data = this.state.flightdata;
     data.flightTimeWill = value;
-    // if (data.flightstockData.voyages.length > 0) {
-    //   for (let i = 0; i < data.flightstockData.voyages.length; i++) {
-    //     for (let j = 0; j < data.selectedWeek.length; j++) {
-    //       if (Algorithm.toogleToWeekArr(data.flightstockData.voyages[i].data.flights).indexOf(data.selectedWeek[j]) != -1) {
-    //         week.push(data.selectedWeek[j]);
-    //       }
-    //     }
-    //     data.selectedWeekGroup[i] = week;
-    //     week = [];
-    //   }
-    // }
     this.setState({flightdata: data});
   }
 
@@ -191,6 +183,12 @@ class AddForm extends Component {
     this.props.addPost('flightstockAdd/visiblebs', {
       visible: false,
     },);
+  }
+
+  handleCancels() {
+    this.setState({
+      visible: false,
+    });
   }
 
   transshipments(ole, data) { //把选中的航线信息存入数组并且
@@ -231,25 +229,28 @@ class AddForm extends Component {
   inquiries(ole, value, event) {  //查询航线详细信息
     let data = this.state.flightdata
     let {flightstockAdd, flightstockData, linenubber, flightdata} = this.state
-    if (!value) {
-      message.warning('请填写要查询的航班');
-      return;
-    }
-    if (data.flightTimeWill) {
-      flightstockData[ole] = {}
-      flightdata.selectedWeekGroup[ole] = ''
-      this.setState({
-        flightstockData: flightstockData,
-        flightdata: flightdata,
-      });
-      this.props.addPost('flightstockAdd/addAirLine', {
-        endDate: moment(data.flightTimeWill[1]).format("YYYY-MM-DD"),
-        fnum: value,
-        startDate: moment(data.flightTimeWill[0]).format("YYYY-MM-DD"),
-        numbering: ole,
-      },);
-    } else {
-      message.warning('请先选择出发航班日期');
+    if (!data.competence) {
+      if (!value) {
+        message.warning('请填写要查询的航班');
+        return;
+      }
+      if (data.flightTimeWill) {
+        flightstockData[ole] = {}
+        flightdata.selectedWeekGroup[ole] = ''
+        this.setState({
+          flightstockData: flightstockData,
+          flightNumbering: '航班号为：' + value + '的所有的航班',
+          flightdata: flightdata,
+        });
+        this.props.addPost('flightstockAdd/addAirLine', {
+          endDate: moment(data.flightTimeWill[1]).format("YYYY-MM-DD"),
+          fnum: value,
+          startDate: moment(data.flightTimeWill[0]).format("YYYY-MM-DD"),
+          numbering: ole,
+        },);
+      } else {
+        message.warning('请先选择出发航班日期');
+      }
     }
   }
 
@@ -283,13 +284,9 @@ class AddForm extends Component {
 
   handleOk() { //弹窗确定操作回调
     let {flightstockAdd, flightdata, flightstockData} = this.state;
-    console.log(flightstockAdd)
-    console.log(flightdata.selectedWeekGroup)
-    console.log(flightstockData)
     switch (flightstockAdd.ok) {
       case "选择航班":
-        if (flightstockData[flightstockAdd.numbering] == {}) {
-          debugger
+        if (!flightstockData[flightstockAdd.numbering].FlightNo) {
           message.warning('请选择航班');
           return
         } else {
@@ -350,14 +347,13 @@ class AddForm extends Component {
 
 
   valHeadquarters(olr, e, event) {
-    let data = this.state.flightdata;
+    let _this = this
+    let data = _this.state.flightdata;
+    let {flightstockAdd} = _this.state;
     switch (olr) {
-      case 0:
-        data.days = parseFloat(e.target.value);
-        break
       case 5:
         data.chupiaodays = parseFloat(e.target.value);
-        this.setState({
+        _this.setState({
           flightdata: data,
         });
         break;
@@ -367,12 +363,33 @@ class AddForm extends Component {
           return;
         }
         break;
+      case 7:
+        _this.setState({
+          listAir: 1,
+          visible: true,
+        });
+        break;
+      case 8:
+        console.log(e.target.value)
+        break;
+      case 9:
+        this.props.addPost('flightstockEdit/loglist', {
+          p: 1,
+          pc: 10000,
+          uuid: this.props.id,
+        },);
+        _this.setState({
+          listAir: 2,
+          visible: true,
+        });
+
+        break;
     }
   }
 
   weekSelect(week, ole) {
     let data = this.state.flightdata;
-    data.selectedWeekGroup[ole] = week;
+    data.selectedWeekGroup[ole] = Algorithm.toogleToWeekStr(week);
     this.setState({
       flightdata: data,
     });
@@ -385,6 +402,8 @@ class AddForm extends Component {
       flightdata: data,
       flightNumsdbdsdering: true,
     });
+
+
   }
 
   addDate(ole, add) {
@@ -400,20 +419,54 @@ class AddForm extends Component {
     }
   }
 
+  shelves() {
+    console.log(this.props)
+    let _this = this
+    let data = _this.props.information.airline_status
+    data == 0 ? data = "上架" : data = "下架"
+    console.log(data)
+    confirm({
+      title: '您确定要' + data + '吗？',
+      onOk() {
+        _this.props.addPost('flightstockEdit/getstateAirLines', {
+          id: _this.props.id,
+          airlineStatus: data == "上架" ? 1 : 2,
+        },);
+      },
+      onCancel() {
+      },
+    });
+  }
+
   render() {
-    const {getFieldDecorator, getFieldProps, getFieldValue} = this.props.form;
+    const {getFieldDecorator, getFieldProps, getFieldsValue, getFieldValue} = this.props.form;
     const formItemLayout = {
       labelCol: {span: 3},
       wrapperCol: {span: 21},
     };
-    const {flightstockData, flightstockAdd, flightstockEdit,} = this.state
+    const {flightstockData, flightstockAdd, flightstockEdit, visible} = this.state
     const plainOptionsb = ['硬切', '代销'];
     const requiredText = "请填写此选项"
-    // if (flightstockData) {
-    //   for (let i = 0; i < flightstockData.length; i++) {
-    //     getFieldDecorator('names-' + i, {initialValue: flightstockData[i].FlightNo});
-    //   }
-    // }
+    const columns = [
+      {
+        title: '操作人',
+        dataIndex: 'user_name',
+        key: 'user_name',
+      }, {
+        title: '操作时间',
+        dataIndex: 'create_time',
+        key: 'create_time',
+      }, {
+        title: '操作内容',
+        dataIndex: 'create_content',
+        key: 'create_content',
+      }];
+    if (flightstockEdit && flightstockEdit.details.length > 0) {
+      for (let i = 0; i < flightstockEdit.details.length; i++) {
+        getFieldDecorator('names-' + i, {initialValue: flightstockEdit.details[i].flight_no});
+      }
+      console.log(getFieldsValue())
+    }
     getFieldDecorator('keys', {initialValue: []});
     const keys = getFieldValue('keys');
     const formItems = keys.map((k, index) => {
@@ -429,16 +482,15 @@ class AddForm extends Component {
                 required: true,
                 message: requiredText,
               },
+                {
+                  max: 6,
+                  message: "航班号最长六位"
+                },
 
-                //   {
-                //   max: 6,
-                //   message: "航班号最长六位"
-                // },
-                //
-                //   {
-                //   pattern: /^([a-zA-Z][0-9a-zA-Z]|[0-9a-zA-Z][a-zA-Z])([0-9]{1,4})$/,
-                //   message: "请输入正确航班号"
-                // }
+                {
+                  pattern: /^([a-zA-Z][0-9a-zA-Z]|[0-9a-zA-Z][a-zA-Z])([0-9]{1,4})$/,
+                  message: "请输入正确航班号"
+                }
               ],
             })(
               <Search
@@ -446,6 +498,7 @@ class AddForm extends Component {
                 style={{width: '450px'}}
                 // disabled={this.state.flightdata.competence}
                 onSearch={this.inquiries.bind(this, k)}
+                disabled={this.state.flightdata.competence}
                 enterButton
               />
             )}
@@ -454,8 +507,7 @@ class AddForm extends Component {
         </Col>
       )
     });
-    // let rangeValue = this.props.post.id ? [moment(flightstockData.line.departureStart, 'YYYY-MM-DD'), moment(flightstockData.line.departureEnd, 'YYYY-MM-DD')] : [];
-    let rangeValue = [];
+    let rangeValue = flightstockEdit.details[0] ? [moment(flightstockEdit.details[0].departure_start), moment(flightstockEdit.details[0].departure_end)] : [];
     return (
       <div className={css.AgenciesView_box}>
         <Tabs type="card">
@@ -467,7 +519,10 @@ class AddForm extends Component {
                 供应商名称：<span>{this.props.information.supplier_name ? this.props.information.supplier_name : ''}</span>
               </p>
               <p>航班号：<span>{this.props.information.flight_no}</span></p>
-              <p>当前状态：<span>{this.props.information.airline_status = 0 ? "待上架" : "已上架"}</span></p>
+              <p>当前状态：<span>{this.props.information.airline_status == 0 ? "待上架" : "已上架"}</span></p>
+              <Button style={{float: 'right', position: "relative", top: '30px', marginRight: "20px", zIndex: "10"}}
+                      onClick={this.shelves.bind(this)}
+                      type="primary">{this.props.information.airline_status == 0 ? "上架" : "下架"}</Button>
             </div>
             }
             <Form layout={'horizontal'} onSubmit={this.handleSubmit.bind(this)}>
@@ -481,14 +536,13 @@ class AddForm extends Component {
                     >
                       {getFieldDecorator('seatType', {
                         rules: [{required: true, message: requiredText}],
-                        initialValue: flightstockData.line ? flightstockData.line.seatType : '',
-
+                        initialValue: flightstockEdit.details.length > 0 ? flightstockEdit.details[0].seat_type : '',
                       })
                       (<RadioGroup options={plainOptionsb}
                                    disabled={(this.state.flightdata.competence && this.state.flightdata.competenceEdit)}/>)}
                     </FormItem>
                   </Col>
-
+                  {!this.props.id &&
                   <Col span={24}>
                     <FormItem
                       label="输入供应商"
@@ -501,11 +555,13 @@ class AddForm extends Component {
                       })
                       (
                         < Input placeholder="请填写供应商"
-                                disabled={(this.state.flightdata.competence && this.state.flightdata.competenceEdit)}
+                                disabled={(this.state.flightdata.competence)}
                                 style={{width: '450px', marginRight: '10px'}}/>
                       )}
                     </FormItem>
                   </Col>
+                  }
+
                   <Col span={24}>
                     <FormItem
                       label="航线负责人"
@@ -550,7 +606,6 @@ class AddForm extends Component {
                         initialValue: flightstockEdit.details.length > 0 ? flightstockEdit.details[0].days : '',
                       })
                       (< Input placeholder="请输入出行天数"
-                               onChange={this.valHeadquarters.bind(this, 0)}
                                disabled={this.state.flightdata.competence}
                                style={{width: '450px'}}
                       />)}
@@ -569,7 +624,7 @@ class AddForm extends Component {
                           required: true,
                           message: requiredText,
                         }, {pattern: /^[1-9]\d{0,4}$/, message: "请输入小于6位的正整数"}],
-                        initialValue: flightstockData.line ? flightstockData.line.seatCount : '',
+                        initialValue: flightstockEdit.details.length > 0 ? flightstockEdit.details[0].seat_count : '',
                       })
                       (< Input placeholder="请填写"
                                disabled={this.state.flightdata.competence}
@@ -593,7 +648,7 @@ class AddForm extends Component {
                           max: 6,
                           message: "最多6位"
                         }],
-                        initialValue: flightstockEdit.details.length > 0 ? flightstockEdit.details[0].settlement_price : '',
+                        initialValue: flightstockEdit.details.length > 0 ? flightstockEdit.details[0].settlement_price.toString() : '',
 
                       })
                       (< Input placeholder="请填写"
@@ -619,7 +674,7 @@ class AddForm extends Component {
                           max: 6,
                           message: "最多6位"
                         }],
-                        initialValue: flightstockEdit.details.length > 0 ? flightstockEdit.details[0].sell_price : '',
+                        initialValue: flightstockEdit.details.length > 0 ? flightstockEdit.details[0].sell_price.toString() : '',
                       })
                       (< Input placeholder="请填写"
                                disabled={this.state.flightdata.competence}
@@ -646,9 +701,9 @@ class AddForm extends Component {
                         initialValue: flightstockEdit.details.length > 0 ? flightstockEdit.details[0].discount : '',
                       })
                       (< Input placeholder="请填写"
-                               disabled={this.state.flightdata.competence}
+                               disabled={(this.state.flightdata.competence && this.state.flightdata.competenceEdit)}
+
                                style={{width: '260px', marginRight: '10px'}}/>)}
-                      <span>元/人</span>
                     </FormItem>
                   </Col>
                   <Col span={24} style={{display: '-webkit-box', paddingLeft: "4%"}}>
@@ -667,6 +722,7 @@ class AddForm extends Component {
                         })
                         (< Input placeholder="请填写"
                                  disabled={(this.state.flightdata.competence && this.state.flightdata.competenceEdit)}
+
                                  style={{
                                    width: '70px',
                                    marginLeft: '10px',
@@ -688,6 +744,7 @@ class AddForm extends Component {
                         })
                         (< Input placeholder="请填写"
                                  disabled={(this.state.flightdata.competence && this.state.flightdata.competenceEdit)}
+
                                  style={{
                                    width: '70px',
                                    marginLeft: '10px',
@@ -757,8 +814,14 @@ class AddForm extends Component {
                               htmlType="submit"
                               size="large"
                               style={{height: "30px", marginRight: "10px"}}>保存</Button>
+                      {this.props.id &&
+                      <Button type="primary" style={{height: "30px", marginRight: "10px"}}
+                              onClick={this.valHeadquarters.bind(this, 7)}>备注</Button>}
+                      {this.props.id &&
+                      < Button type="primary" style={{height: "30px", marginRight: "10px"}}
+                               onClick={this.valHeadquarters.bind(this, 9)}>日志</Button>
+                      }
 
-                      <Button onClick={this.props.retures}>取消</Button>
                     </div>
                   </Col>
                 </Row>
@@ -798,7 +861,22 @@ class AddForm extends Component {
           </Modal>
         </div>
         }
-
+        {visible &&
+        < div className={css.shoudes}>
+          <Modal
+            className={css.popModal}
+            title={"添加备注"}
+            visible={visible}
+            onCancel={this.handleCancels.bind(this)}
+            footer={null}
+          >
+            {this.state.listAir == 1 && <Input placeholder="请填写" onClick={this.valHeadquarters.bind(this, 8)}/>}
+            {this.state.listAir == 2 &&
+            <Table pagination={false} dataSource={flightstockEdit.logs.data ? flightstockEdit.logs.data : []}
+                   columns={columns}/>}
+          </Modal>
+        </div>
+        }
       </div>
     )
   }

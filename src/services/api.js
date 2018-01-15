@@ -271,6 +271,13 @@ export async function getmodifyInventory(params) {
     body: params,
   });
 }
+//批量修改价格
+  export async function geteditAirline(params) {
+  return request('/api/resource/editAirline',{
+    method: 'POST',
+    body: params,
+  });
+}
 
 export async function AccountLogin(params) {
   const newparams = Object.assign({}, { account: params.account, type: 0 })
