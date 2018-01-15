@@ -36,6 +36,10 @@ export default class BasicProfile extends Component {
 
 
   componentWillMount() {
+    this.getDetail();
+  }
+
+  getDetail() {
     const {dispatch, backpath} = this.props;
     if (!this.par.id) {
       let url = backpath === 'FlyingPig' ? '/order/flyingpig' : '/order/entrust';
@@ -44,84 +48,100 @@ export default class BasicProfile extends Component {
       dispatch({
         type: 'flyingpigDetail/getDetail',
         payload: {id: this.par.id},
-        callBack: (response) => {
-          if (response.code < 0) {
-            message.error('请求失败')
-          }
-        }
       });
     }
   }
 
   inputPrice(e) {
+    let val = e.target.value;
     this.setState({
-      inputPrice: e.target.value
+      inputPrice: val.length < 32 ? val : val.slice(0, 8)
     })
   }
 
   isEdit() {
     let {isEdit, inputPrice} = this.state;
-    const {dispatch, flyingpigDetail: {amountResponse}} = this.props;
+    const {dispatch} = this.props;
     this.setState({
       isEdit: !isEdit
     });
     if (isEdit) {
       dispatch({
         type: 'flyingpigDetail/updateSettleAmount',
-        payload: {order_id: this.orderData.id, settlement_amount: Number(inputPrice)}
+        payload: {order_id: this.orderData.id, settlement_amount: Number(inputPrice)},
+        callback: (res) => {
+          if (res.code >= 1) {
+            message.success('修改成功');
+          } else {
+            message.error('修改失败');
+            this.setState({
+              inputPrice: this.orderData.settlement_amount
+            })
+          }
+        }
       });
-      if (amountResponse.code > 0) {
-        message.success('修改成功');
-      } else {
-        message.error('修改失败');
-        this.setState({
-          inputPrice: this.orderData.settlement_amount
-        })
-      }
     }
   }
 
   ticketConfirm() {
-    let ticketInfo = [], {dispatch, flyingpigDetail: {ticketResponse}} = this.props;
-    for (let i = 0; i < this.passengerData.length; i++) {
-      let user = this.passengerData[i], ticket = user.ticketDep + ',' + user.ticketArr;
-      ticketInfo.push({id: user.id, ticket: ticket})
+    let ticketInfo = [], {dispatch} = this.props;
+    if (this.passengerData && this.passengerData.length > 0) {
+      for (let i = 0; i < this.passengerData.length; i++) {
+        let user = this.passengerData[i], ticket = user.ticketDep + ',' + user.ticketArr;
+        ticketInfo.push({id: user.id, ticket: ticket})
+      }
+      let params = {
+        group_id: this.orderData.group_id,
+        order_id: this.orderData.id,
+        ticketInfo: ticketInfo,
+      };
+      confirm({
+        title: '是否确认出票?',
+        content: '出票后，将无法修改',
+        onOk() {
+          dispatch({
+            type: 'flyingpigDetail/addTicket',
+            payload: {ticketObj: params},
+            callback: (res) => {
+              if (res.code >= 1) {
+                message.success('出票成功');
+                this.getDetail();
+              } else {
+                message.error('出票失败');
+              }
+            }
+          });
+        },
+        onCancel() {
+        },
+      });
+    } else {
+      message.warning('没有乘机人不能出票');
     }
-    let params = {
-      group_id: this.orderData.group_id,
-      order_id: this.orderData.id,
-      ticketInfo: ticketInfo,
-    };
-    confirm({
-      title: '是否确认出票?',
-      content: '出票后，将无法修改',
-      onOk() {
-        dispatch({
-          type: 'flyingpigDetail/addTicket',
-          payload: {ticketObj: params}
-        });
-        if (ticketResponse.code > 0) {
-          message.success('出票成功');
-          dispatch(routerRedux.push('/order/flyingpig'));
-        } else {
-          message.error('出票失败');
-        }
-      },
-      onCancel() {
-      },
-    });
+
   }
 
   failReason(reason) {
-    const {dispatch, flyingpigDetail: {failResponse}} = this.props;
+    const {dispatch} = this.props;
     dispatch({
       type: 'flyingpigDetail/ticketFail',
-      payload: {order_id: this.orderData.id, message: reason}
+      payload: {order_id: this.orderData.id, message: reason},
+      callback: (res) => {
+        if (res.code >= 1) {
+          message.success('提交成功');
+          this.getDetail();
+        } else {
+          message.error('提交失败');
+        }
+      }
     });
-    if (failResponse.code > 0) {
-      message.success('修改成功');
+  }
+
+  ticketChange(e, type) {
+    if (e.target.value.length < 32) {
+      record[type] = e.target.value;
     } else {
-      message.error('修改失败');
+      record[type] = e.target.value.slice(0, 32);
     }
   }
 
@@ -169,13 +189,7 @@ export default class BasicProfile extends Component {
       },
       {title: '证件号码', dataIndex: 'cert_no', key: 'cert_no'},
       {title: '国籍', dataIndex: 'nation', key: 'nation'},
-      {
-        title: '出生日期', dataIndex: 'birthday', key: 'birthday', render: (text) => {
-        let date1 = String(text).substr(0, 4) || '', date2 = String(text).substr(4, 2) || '',
-          date3 = String(text).substr(6, 2) || '';
-        return date1 + '-' + date2 + '-' + date3
-      }
-      },
+      {title: '出生日期', dataIndex: 'birthday', key: 'birthday'},
       {title: '证件有效期', dataIndex: 'expire_time', key: 'expire_time'},
       {title: '联系电话', dataIndex: 'phone', key: 'phone'},
       {
@@ -189,14 +203,9 @@ export default class BasicProfile extends Component {
               (nameType == 'FlyingPig' && order_status == 2) || (nameType == 'Entrust' && order_status == 4) ?
                 <span>
                   去
-                  <Input className={styles.inputTicket} maxLength={32} onChange={(e) => {
-                    record['ticketDep'] = e.target.value;
-                  }
-                  }/>
+                  <Input className={styles.inputTicket} onChange={this.ticketChange.bind(this, 'ticketDep')}/>
                   返
-                  <Input className={styles.inputTicket} maxLength={32} onChange={(e) => {
-                    record["ticketArr"] = e.target.value;
-                  }}/>
+                  <Input className={styles.inputTicket} onChange={this.ticketChange.bind(this, 'ticketArr')}/>
                 </span>
                 :
                 (nameType == 'FlyingPig' && order_status == 3) || (nameType == 'Entrust' && order_status == 5) ?
@@ -404,7 +413,7 @@ export default class BasicProfile extends Component {
                         {
                           isEdit ?
                             <Input value={inputPrice} className={styles.inputPrice} min={0} type="number"
-                                   onChange={::this.inputPrice} maxLength={32}/>
+                                   onChange={::this.inputPrice}/>
                             :
                             <span className={styles.inputPrice}>{inputPrice}元</span>
                         }
@@ -509,8 +518,13 @@ class FailModal extends React.Component {
   }
 
   handleOk() {
-    this.props.failReason(this.state.textAreaValue);
-    this.hideModal();
+    let {textAreaValue} = this.state;
+    if (textAreaValue.length < 32) {
+      this.props.failReason(textAreaValue);
+      this.hideModal();
+    } else {
+      message.warning('出票失败的原因最多32个字')
+    }
   }
 
   render() {
@@ -529,7 +543,10 @@ class FailModal extends React.Component {
             </Button>,
           ]}
         >
+
           <TextArea rows={4} placeholder="请输入出票失败的原因(非必填)" onChange={::this.textAreaChange} value={textAreaValue}/>
+          <span style={{float: 'right'}}><span
+            style={{color: textAreaValue.length > 32 ? '#f00' : ''}}>{textAreaValue.length || 0}</span>/32</span>
         </Modal>
       </div>
     );

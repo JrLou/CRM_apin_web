@@ -117,22 +117,26 @@ export default class TableList extends PureComponent {
         <Row gutter={layoutForm}>
           <Col md={8} sm={24}>
             <FormItem label="订单号">
-              {getFieldDecorator('id')(
-                <Input placeholder="请输入" maxLength={32}/>
-              )}
+              {getFieldDecorator('id',
+                {
+                  rules: [{max: 32, message: "最长32位"}],
+                  initialValue: ""
+                })
+              (<Input placeholder="请输入"/>)
+              }
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="出发城市">
-              {getFieldDecorator('city_dep')(
-                <Input placeholder="请输入" maxLength={32}/>
+              {getFieldDecorator('city_dep', {rules: [{max: 32, message: "最长32位"}], initialValue: ""})(
+                <Input placeholder="请输入"/>
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="到达城市">
-              {getFieldDecorator('city_arr')(
-                <Input placeholder="请输入" maxLength={32}/>
+              {getFieldDecorator('city_arr', {rules: [{max: 32, message: "最长32位"}], initialValue: ""})(
+                <Input placeholder="请输入" />
               )}
             </FormItem>
           </Col>
@@ -179,15 +183,18 @@ export default class TableList extends PureComponent {
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="联系人">
-              {getFieldDecorator('contact')(
-                <Input placeholder="请输入" maxLength={32}/>
+              {getFieldDecorator('contact', {rules: [{max: 32, message: "最长32位"}], initialValue: ""})(
+                <Input placeholder="请输入"/>
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="联系电话">
-              {getFieldDecorator('mobile')(
-                <Input placeholder="请输入" type="tel" maxLength={32}/>
+              {getFieldDecorator('mobile', {
+                rules: [{max: 32, message: "最长11位"}],
+                initialValue: ""
+              })(
+                <Input placeholder="请输入" type="tel"/>
               )}
             </FormItem>
           </Col>

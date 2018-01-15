@@ -62,7 +62,7 @@ const menuData = [{
   icon: 'profile',
   path: 'order',
   children: [{
-    name: '飞猪&供应商订单',
+    name: 'OTA&供应商订单',
     path: 'order/flyingpig',
     // children:[{
     //   name:'飞猪&供应商订单详情',
