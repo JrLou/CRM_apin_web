@@ -4,7 +4,9 @@ export default {
   namespace: 'offline',
   state: {
     list: {},
+    usernameData: ['a', 'b', 'c', 'd', 'e'],
     loading: false,
+    isDill: false
   },
   effects: {
     *fetch({ payload }, { call, put }) {
@@ -35,6 +37,12 @@ export default {
       return {
         ...state,
         loading: action.payload,
+      };
+    },
+    changeIsdill(state, action) {
+      return {
+        ...state,
+        isDill: action.payload == '1' ? true : false,
       };
     },
   },

@@ -179,9 +179,13 @@ export const getRouterData = (app) => {
     // '/user/:id': {
     //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),
     // },
-    '/offline/order/orderList': {
+    '/offline/order': {
       name: '线下订单列表',
       component: dynamicWrapper(app, ['offline'], () => import('../routes/Offline/OfflineList.js')),
+    },
+    '/offline/order/addOrder': {
+      name: '新增订单',
+      component: dynamicWrapper(app, ['offline'], () => import('../routes/Offline/AddOrder.js')),
     },
     '/offline/order/customerMannagement': {
       name: '客户（旅行社）管理',
