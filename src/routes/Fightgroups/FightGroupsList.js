@@ -171,16 +171,18 @@ export default class TableList extends PureComponent {
   //生成form内容
   renderForm() {
     return (
-      <GroupSearchForm
-        onSearch={data => {
-          this.formValues = data;
-          this.loadTableData();
-        }}
-        onCancelAfter={data => {
-          this.reset();
-          this.loadTableData(this.formValues);
-        }}
-      />
+      <div className={less.formContainer}>
+        <GroupSearchForm
+          onSearch={data => {
+            this.formValues = data;
+            this.loadTableData();
+          }}
+          onCancelAfter={data => {
+            this.reset();
+            this.loadTableData(this.formValues);
+          }}
+        />
+      </div>
     );
   }
 

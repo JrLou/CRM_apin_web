@@ -5,7 +5,8 @@ import {
   Form,
   Input,
   Button,
-  message
+  Row,
+  Col
 } from 'antd';
 import StandardTable from './TableList';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
@@ -114,37 +115,48 @@ export default class TableList extends PureComponent {
   renderForm() {
     const {getFieldDecorator} = this.props.form;
     const formItemStyle = {
-      width: "350px",
-      display: "inline-block"
+      // width: "350px",
+      // display: "inline-block"
     };
     const inputStyle = {
-      width: "220px",
+      // width: "220px",
     };
+
+    const layoutForm = {md: 8, lg: 24, xl: 48};
+
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
-        <FormItem label="微信昵称:" style={formItemStyle}>
-          {getFieldDecorator('name', {
-            initialValue: "",
-            rules: [{max: 30, message: '长度不能超过30'}],
-          })
-          (<Input placeholder="请输入" style={inputStyle}/>)
-          }
-        </FormItem>
-        <FormItem label="手机号:" style={formItemStyle}>
-          {getFieldDecorator('mobile', {
-            initialValue: "",
-            rules: [{
-              pattern: /^\d{0,11}$/,
-              message: '请输入正确的手机号'
-            }],
-          })
-          (<Input placeholder="请输入" style={inputStyle}/>)
-          }
-        </FormItem>
-        <FormItem style={formItemStyle}>
-          <Button type="primary" htmlType="submit">查询</Button>
-          <Button style={{marginLeft: 8}} onClick={this.handleFormReset}>重置</Button>
-        </FormItem>
+        <Row gutter={layoutForm}>
+          <Col md={8} sm={24}>
+            <FormItem label="微信昵称:" style={formItemStyle}>
+              {getFieldDecorator('name', {
+                initialValue: "",
+                rules: [{max: 30, message: '长度不能超过30'}],
+              })
+              (<Input placeholder="请输入" style={inputStyle}/>)
+              }
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="手机号:" style={formItemStyle}>
+              {getFieldDecorator('mobile', {
+                initialValue: "",
+                rules: [{
+                  pattern: /^\d{0,11}$/,
+                  message: '请输入正确的手机号'
+                }],
+              })
+              (<Input placeholder="请输入" style={inputStyle}/>)
+              }
+            </FormItem>
+          </Col>
+          <div style={{textAlign: 'right', marginBottom: 24}}>
+            <FormItem style={formItemStyle}>
+              <Button type="primary" htmlType="submit">查询</Button>
+              <Button style={{marginLeft: 8}} onClick={this.handleFormReset}>重置</Button>
+            </FormItem>
+          </div>
+        </Row>
       </Form>
     );
   }
