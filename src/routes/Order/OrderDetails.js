@@ -48,45 +48,43 @@ export default class BasicProfile extends Component {
       dispatch({
         type: 'flyingpigDetail/getDetail',
         payload: {id: this.par.id},
-        callBack: (response) => {
-          if (response.code < 0) {
-            message.error('请求失败')
-          }
-        }
       });
     }
   }
 
   inputPrice(e) {
+    let val = e.target.value;
     this.setState({
-      inputPrice: e.target.value
+      inputPrice: val.length < 32 ? val : val.slice(0, 8)
     })
   }
 
   isEdit() {
     let {isEdit, inputPrice} = this.state;
-    const {dispatch, flyingpigDetail: {amountResponse}} = this.props;
+    const {dispatch} = this.props;
     this.setState({
       isEdit: !isEdit
     });
     if (isEdit) {
       dispatch({
         type: 'flyingpigDetail/updateSettleAmount',
-        payload: {order_id: this.orderData.id, settlement_amount: Number(inputPrice)}
+        payload: {order_id: this.orderData.id, settlement_amount: Number(inputPrice)},
+        callback: (res) => {
+          if (res.code >= 1) {
+            message.success('修改成功');
+          } else {
+            message.error('修改失败');
+            this.setState({
+              inputPrice: this.orderData.settlement_amount
+            })
+          }
+        }
       });
-      if (amountResponse.code >= 1) {
-        message.success('修改成功');
-      } else {
-        message.error('修改失败');
-        this.setState({
-          inputPrice: this.orderData.settlement_amount
-        })
-      }
     }
   }
 
   ticketConfirm() {
-    let ticketInfo = [], {dispatch, flyingpigDetail: {ticketResponse}} = this.props;
+    let ticketInfo = [], {dispatch} = this.props;
     if (this.passengerData && this.passengerData.length > 0) {
       for (let i = 0; i < this.passengerData.length; i++) {
         let user = this.passengerData[i], ticket = user.ticketDep + ',' + user.ticketArr;
@@ -103,14 +101,16 @@ export default class BasicProfile extends Component {
         onOk() {
           dispatch({
             type: 'flyingpigDetail/addTicket',
-            payload: {ticketObj: params}
+            payload: {ticketObj: params},
+            callback: (res) => {
+              if (res.code >= 1) {
+                message.success('出票成功');
+                this.getDetail();
+              } else {
+                message.error('出票失败');
+              }
+            }
           });
-          if (ticketResponse.code >= 1) {
-            message.success('出票成功');
-            this.getDetail();
-          } else {
-            message.error('出票失败');
-          }
         },
         onCancel() {
         },
@@ -122,17 +122,19 @@ export default class BasicProfile extends Component {
   }
 
   failReason(reason) {
-    const {dispatch, flyingpigDetail: {failResponse}} = this.props;
+    const {dispatch} = this.props;
     dispatch({
       type: 'flyingpigDetail/ticketFail',
-      payload: {order_id: this.orderData.id, message: reason}
+      payload: {order_id: this.orderData.id, message: reason},
+      callback: (res) => {
+        if (res.code >= 1) {
+          message.success('提交成功');
+          this.getDetail();
+        } else {
+          message.error('提交失败');
+        }
+      }
     });
-    if (failResponse.code >= 1) {
-      message.success('提交成功');
-      this.getDetail();
-    } else {
-      message.error('提交失败');
-    }
   }
 
   ticketChange(e, type) {
@@ -411,7 +413,7 @@ export default class BasicProfile extends Component {
                         {
                           isEdit ?
                             <Input value={inputPrice} className={styles.inputPrice} min={0} type="number"
-                                   onChange={::this.inputPrice} maxLength={32}/>
+                                   onChange={::this.inputPrice}/>
                             :
                             <span className={styles.inputPrice}>{inputPrice}元</span>
                         }
@@ -542,8 +544,9 @@ class FailModal extends React.Component {
           ]}
         >
 
-            <TextArea rows={4} placeholder="请输入出票失败的原因(非必填)" onChange={::this.textAreaChange} value={textAreaValue}/>
-            <span style={{float:'right'}}><span style={{color:textAreaValue.length>32?'#f00':''}}>{textAreaValue.length || 0}</span>/32</span>
+          <TextArea rows={4} placeholder="请输入出票失败的原因(非必填)" onChange={::this.textAreaChange} value={textAreaValue}/>
+          <span style={{float: 'right'}}><span
+            style={{color: textAreaValue.length > 32 ? '#f00' : ''}}>{textAreaValue.length || 0}</span>/32</span>
         </Modal>
       </div>
     );
