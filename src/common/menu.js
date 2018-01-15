@@ -95,6 +95,15 @@ const menuData = [{
     // }]
   }],
 },
+{
+    name: '线下订单管理',
+    icon: 'table',
+    path: 'offline',
+    children: [{
+      name: '线下订单列表',
+      path: '/offline/order/orderList',
+    }],
+  },
   // {
   //   name: '财务管理',
   //   icon: 'table',

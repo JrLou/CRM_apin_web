@@ -180,6 +180,7 @@ const proxy = {
   'POST /api/group/demandList': demandList,
   'POST /api/group/viewList': viewList,
   'POST /api/group/orderList': orderList,
+  'POST /crm/offline/offlineList': orderList,
 
 };
 

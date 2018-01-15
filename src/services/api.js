@@ -351,3 +351,7 @@ export async function logList(params) {
 export async function continueAdd(params) {
   return request('/api/demandPool/pushPlanMore', { method: 'POST', body: params });
 }
+// 线下订单
+export async function offlineList(params) {
+  return request('/crm/offline/offlineList', { method: 'POST', body: params });
+}

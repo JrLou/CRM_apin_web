@@ -129,22 +129,22 @@ export const getRouterData = (app) => {
     },
     //供应商政策
     '/supplier/supplierPolicy/flightstock': {
-      name:'供应商资源列表',
+      name: '供应商资源列表',
       component: dynamicWrapper(app, ['flightstock'], () => import('../routes/Supplier/supplierPolicy/Flightstock')),
     },
     //供应商政策-新增
     '/supplier/supplierPolicy/flightstock/Add': {
-      name:'新增供应商',
+      name: '新增供应商',
       component: dynamicWrapper(app, ['flightstockAdd'], () => import('../routes/Supplier/supplierPolicy/FlightstockAdd')),
     },
     //供应商政策-编辑
     '/supplier/supplierPolicy/flightstock/Edit': {
-      name:'编辑供应商',
+      name: '编辑供应商',
       component: dynamicWrapper(app, ['flightstockEdit'], () => import('../routes/Supplier/supplierPolicy/FlightstockEdit')),
     },
     //供应商政策-查看
     '/supplier/supplierPolicy/flightstock/View': {
-      name:'查看供应商',
+      name: '查看供应商',
       component: dynamicWrapper(app, ['flightstockView'], () => import('../routes/Supplier/supplierPolicy/FlightstockView')),
     },
     //飞猪资源
@@ -169,16 +169,20 @@ export const getRouterData = (app) => {
     },
     //banner添加/编辑
     '/operations/banner/bannerAdd': {
-      name:'新增banner',
+      name: '新增banner',
       component: dynamicWrapper(app, ['bannerList'], () => import('../routes/Operations/BannerAdd.js')),
     },
     '/operations/banner/bannerEdit': {
-      name:'编辑banner',
+      name: '编辑banner',
       component: dynamicWrapper(app, ['bannerList'], () => import('../routes/Operations/BannerView.js')),
     },
     // '/user/:id': {
     //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),
     // },
+    '/offline/order/orderList': {
+      name: '线下订单列表',
+      component: dynamicWrapper(app, ['offline'], () => import('../routes/Offline/OfflineList.js')),
+    },
   };
   // Get name from ./menu.js or just set it in the router data.
   const menuData = getFlatMenuData(getMenuData());
