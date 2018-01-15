@@ -9,6 +9,7 @@ import Masking from './FlightMasking.js';
 import css from './Flightstock.less';
 import md5 from 'md5';
 import {connect, Link} from 'dva';
+import fetch from 'dva/fetch';
 // 推荐在入口文件全局设置 locale
 import 'moment/locale/zh-cn';
 import AllocationCalendar from './AllocationCalendar/MultipleSelectCalendar.js';
@@ -32,6 +33,18 @@ class page extends Component {
       canPick: [],
       selectedTips: [],
       datesArr: [],
+      flightstockEdit: {},
+      judgment: null
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log(window.location)
+    this.setState({
+      flightstockEdit: nextProps.flightstockEdit ? nextProps.flightstockEdit : {}
+    });
+    if (nextProps.flightstockEdit && nextProps.flightstockEdit.ajaxJudgment) {
+      this.pamdiam()
     }
   }
 
@@ -41,6 +54,7 @@ class page extends Component {
     const dateStart = moment(this.props.listdata.departure_start, "YYYY-MM-DD").format('YYYY/MM/DD');
     let [year, month, day] = [new Date(dateStart).getFullYear(), new Date(dateStart).getMonth(), new Date(dateStart).getDate()]
   }
+
   loadData(url, data) {
     this.props.dispatch({
       type: url,
@@ -74,12 +88,10 @@ class page extends Component {
   }
 
   dateGetReturn() {
-    this.loadData(APILXF.api_detail, {
-      airlineId: this.props.listdata.id,
-      accountId: this.props.listdata.accountId,
-      endDate: this.state.dateSelect.endOf('month').format("YYYY-MM-DD"),
-      startDate: this.state.dateSelect.format("YYYY-MM") + "-01",
-    });
+    this.loadData('flightstockEdit/getpriceAirline', {
+      date: moment(this.state.dateSelect).format('YYYY-MM'),
+      id: this.props.listdata.id,
+    },);
   }
 
   getListData(value) {
@@ -93,22 +105,22 @@ class page extends Component {
               {
                 type: 'warning',
                 content: '销售价',
-                price: 23
+                price: airline[i].sell_price
               },
               {
                 type: 'error',
                 content: '结算价',
-                price: 12
+                price: airline[i].settlement_price
               },
               {
                 type: 'normal',
                 content: '库存(已售/总):',
-                price:  0
+                price: airline[i].sale_count + '/' + airline[i].seat_count
               },
               {
                 type: 'errorss',
                 content: '清位时间',
-                price: 12
+                price: moment(airline[i].clear_date).format("YYYY-MM-DD")
               },
             ]
           };
@@ -121,8 +133,18 @@ class page extends Component {
       ], tishis: 0,
     };
   }
+
+  addPost(url, data) {
+    this.props.dispatch({
+      type: url,
+      payload: data,
+    });
+  }
+
   // 封装批量修改
   modifyData(values, myValidate) {
+    let {flightstockEdit, judgment} = this.state;
+    let url = ''
     if (!this.state.datesArr || this.state.datesArr.length < 1) {
       message.warning('请选择批量修改的日期')
       return
@@ -135,28 +157,75 @@ class page extends Component {
         return
       }
     }
-    HttpTool.post(APILXF.api_airlines_add,
-      (code, msg, json, option) => {
-        if (code == 200) {
-          message.success('操作成功')
-          this.showModal(false);
-          // 刷新日历
-          this.dateGetReturn();
-          // 清空
-          this.setState({
-            recycleDay: ''
-          })
-          // 清空表单
-          this.form.resetFields()
-        } else {
-          message.success(msg)
-        }
-      },
-      (code, msg, option) => {
-        message.warning(msg);
-      }
-      , Object.assign({flightDates: this.state.datesArr, airlineId: this.props.listdata.id}, values)
-    )
+    switch (judgment) {
+      case 0:
+        url = 'flightstockEdit/getmodifyPricees'
+        break;
+      case 1:
+        url = 'flightstockEdit/getmodifyInventoryes'
+        break;
+      case 2:
+        url = 'flightstockEdit/getgetmodifyDayses'
+        break;
+      default:
+        break;
+    }
+    this.addPost("flightstockEdit/ajaxJu", {ajaxJudgment: false})
+    this.addPost(url, Object.assign({
+      dateString: this.state.datesArr.join(","),
+      uuid: this.props.listdata.id
+    }, values))
+    // if (flightstockEdit && flightstockEdit.ajaxJudgment) {
+    //   message.success('操作成功')
+    //   this.showModal(false);
+    //   // 刷新日历
+    //   this.dateGetReturn();
+    //   // 清空
+    //   this.setState({
+    //     recycleDay: ''
+    //   })
+    //   // 清空表单
+    //   this.form.resetFields()
+    // }
+    this.pamdiam();
+    // HttpTool.post(APILXF.api_airlines_add,
+    //   (code, msg, json, option) => {
+    //     if (code == 200) {
+    //       message.success('操作成功')
+    //       this.showModal(false);
+    //       // 刷新日历
+    //       this.dateGetReturn();
+    //       // 清空
+    //       this.setState({
+    //         recycleDay: ''
+    //       })
+    //       // 清空表单
+    //       this.form.resetFields()
+    //     } else {
+    //       message.success(msg)
+    //     }
+    //   },
+    //   (code, msg, option) => {
+    //     message.warning(msg);
+    //   }
+    //   , Object.assign({flightDates: this.state.datesArr, airlineId: this.props.listdata.id}, values)
+    // )
+  }
+
+  pamdiam() {
+    let {flightstockEdit} = this.state;
+    if (flightstockEdit && flightstockEdit.ajaxJudgment) {
+      message.success('操作成功')
+      this.showModal(false);
+      // 刷新日历
+      this.dateGetReturn();
+      // 清空
+      this.setState({
+        recycleDay: ''
+      })
+      // 清空表单
+      this.form.resetFields()
+    }
   }
 
   ObtainloadData() {
@@ -206,18 +275,23 @@ class page extends Component {
 
   // 通过参数控制多个modal显
   changeModal(rightType) {
+    let {judgment} = this.state
     switch (rightType) {
       case 'modifyPrice':
         this.modalTitle = "批量设置团期价格"
+        judgment = 0
         break;
       case 'modifyStock':
         this.modalTitle = "批量设置团期库存"
+        judgment = 1
         break;
       case 'modifyClearTime':
         this.modalTitle = "批量设置清位时间"
+        judgment = 2
         break;
       case 'addStage':
         this.modalTitle = "新增团期报价"
+        judgment = 3
         break;
       default:
         break;
@@ -226,7 +300,8 @@ class page extends Component {
       rightType: rightType,
       visible: true,
       selectedTips: [],
-      datesArr: []
+      datesArr: [],
+      judgment: judgment
     })
     // 如果只是关闭叉叉
     this.outter && this.outter.resetCalendar()
@@ -379,7 +454,7 @@ class page extends Component {
       +moment(this.props.listdata.flightDate, "YYYY-MM-DD").format('MM') - 1,
       +moment(this.props.listdata.flightDate, "YYYY-MM-DD").format('DD')
     ]
-    let canPick=airline.map((v,k)=>{
+    let canPick = airline.map((v, k) => {
       return v.flight_date;
     })
     return (
@@ -442,8 +517,11 @@ class page extends Component {
           <WrappedBulkImportForm
             dateGetReturn={this.dateGetReturn.bind(this)}
             showImportModal={this.showImportModal.bind(this)}
-            listdata={this.props.listdata} airlineId={this.props.listdata.id}
+            listdata={this.props.listdata}
+            airlineId={this.props.listdata.id}
+            addPost={this.addPost.bind(this)}
             upFile={this.upLoadFile.bind(this)}/>
+
         </Modal>
       </div>
     );
@@ -475,11 +553,11 @@ class ModifyPriceFrom extends Component {
         {this.props.row == 'addStage' || this.props.row == 'modifyPrice' ?
           <div>
             <FormItem
-              label="成人结算价"
+              label="销售价"
               labelCol={{span: 6}}
               wrapperCol={{span: 9}}
             >
-              {getFieldDecorator('adultPrice', {
+              {getFieldDecorator('sellPrice', {
                 rules: [{required: true, message: '必填'}, {
                   pattern: /^[1-9]\d{0,4}$/,
                   message: "请输入小于6位的正整数"
@@ -490,11 +568,11 @@ class ModifyPriceFrom extends Component {
             </FormItem>
             {/* <hr className={css.hr} /> */}
             <FormItem
-              label="儿童结算价"
+              label="结算价"
               labelCol={{span: 6}}
               wrapperCol={{span: 9}}
             >
-              {getFieldDecorator('childPrice', {
+              {getFieldDecorator('settlementPrice', {
                 rules: [{required: true, message: '必填'}, {
                   pattern: /^[1-9]\d{0,4}$/,
                   message: "请输入小于6位的正整数"
@@ -513,7 +591,7 @@ class ModifyPriceFrom extends Component {
             labelCol={{span: 6}}
             wrapperCol={{span: 15}}
           >
-            {getFieldDecorator('storeType', {
+            {getFieldDecorator('flightType', {
               rules: [{required: true, message: '必填'}],
             })(
               <RadioGroup>
@@ -530,7 +608,7 @@ class ModifyPriceFrom extends Component {
             labelCol={{span: 6}}
             wrapperCol={{span: 15}}
           >
-            {getFieldDecorator('storeCount', {
+            {getFieldDecorator('seatCount', {
               rules: [{required: true, message: '必填'}, {
                 pattern: /^[0-9]\d{0,4}$/,
                 message: "请输入小于6位的整数"
@@ -562,7 +640,7 @@ class ModifyPriceFrom extends Component {
             labelCol={{span: 6}}
             wrapperCol={{span: 9}}
           >
-            {getFieldDecorator('recycleDay', {
+            {getFieldDecorator('clearDate', {
               rules: [{required: true, message: '必填'}, {
                 pattern: /^[1-9]\d{0,4}$/,
                 message: "请输入小于6位的正整数"
@@ -638,16 +716,11 @@ class BulkImportForm extends Component {
           fileList: []
         })
       }
-      if (obj.file.response) {
-        HttpTool.post(APILXF.api_airlines_import,
-          (code, msg, json, option) => {
-            code == "200" ? message.success(msg) : message.warning(msg + "上传失败")
-          }, (code, msg, json, option) => {
-            message.warning(msg + "上传失败");
-          }, {
-            airlineId: this.props.airlineId,
-            fileUrl: obj.file.response.data.url.split("/")[obj.file.response.data.url.split("/").length - 1],
-          })
+      console.log(obj.file.response);
+
+      if (obj.file.response && obj.file.response.code >= 1) {
+        message.success('操作成功')
+        console.log(obj)
       }
       this.setState({
         fileList: obj.fileList
@@ -655,7 +728,6 @@ class BulkImportForm extends Component {
 
     }
   }
-
   render() {
     const {getFieldDecorator} = this.props.form;
     const formItemLayout = {
@@ -672,7 +744,7 @@ class BulkImportForm extends Component {
               {...formItemLayout}
             >
               {getFieldDecorator('resourceIndex', {
-                initialValue: this.props.listdata && this.props.listdata.airlineNo
+                initialValue: this.props.listdata && this.props.listdata.is_invalid
               })
               (< Input className={css.notEdit} placeholder="" readOnly
                        style={{width: '150px', marginRight: '10px'}}/>)}
@@ -685,7 +757,7 @@ class BulkImportForm extends Component {
               {...formItemLayout}
             >
               {getFieldDecorator('flightNo', {
-                initialValue: this.props.listdata && this.props.listdata.flightNumber
+                initialValue: this.props.listdata && this.props.listdata.flight_no
               })
               (< Input className={css.notEdit} placeholder="" readOnly
                        style={{width: '150px', marginRight: '10px'}}/>)}
@@ -705,10 +777,13 @@ class BulkImportForm extends Component {
           })
           (
             <Upload
-              action="/Upload"
+              action={window.location.origin + "/api/resource/importFile"}
               headers={{
                 authorization: 'authorization-text',
               }}
+              data={{'uuid': this.props.listdata.id}}
+              name={'File'}
+              // beforeUpload={this.dome.bind(this)}
               accept='.xlsx,.xls'
               fileList={this.state.fileList}
               onChange={this.beforeUploadGroup.bind(this)}

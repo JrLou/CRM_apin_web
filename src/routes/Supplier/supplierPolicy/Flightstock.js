@@ -156,8 +156,8 @@ class page extends Component {
         >
           <Column
             title="机票资源号"
-            dataIndex="id"
-            key="id"
+            dataIndex="is_invalid"
+            key="is_invalid"
           />
           <Column
             title="供应商名称"

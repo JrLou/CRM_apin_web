@@ -56,6 +56,7 @@ export default {
       const response = yield call(getadd, payload)
 
     }
+
   },
   reducers: {
     numbering(state, action) {
