@@ -128,7 +128,7 @@ export default class CheckFightGroups extends Component {
     return (
       <div>
         <div className={styles.title}>
-          <Icon type="profile"/>
+          <Icon type="profile"/>&nbsp;
           <span>拼团信息</span>
           <Button
             type="primary"
@@ -313,8 +313,8 @@ export default class CheckFightGroups extends Component {
 
     return (
       <div>
-        <div className={styles.title}><Icon type="schedule"/>
-          订单信息
+        <div className={styles.title}><Icon type="idcard" />&nbsp;
+          <span>订单信息</span>
           <Button
             type="primary"
             className={styles.btn}
@@ -373,7 +373,7 @@ export default class CheckFightGroups extends Component {
 
     return (
       <div>
-        <div className={styles.title}><Icon type="schedule"/> 方案明细</div>
+        <div className={styles.title}><Icon type="schedule"/>&nbsp;方案明细</div>
         <Spin spinning={detailGroupVoyageLoading}>
           <div className={styles.schemeInfo}>
             <DescriptionList size="large" style={{marginBottom: 32}} col={2}>
@@ -406,10 +406,10 @@ export default class CheckFightGroups extends Component {
 
     return (
       <div>
-        <div className={styles.title}><Icon type="form"/> 日志信息</div>
+        <div className={styles.title}><Icon type="form"/>&nbsp;日志信息</div>
         <Table
           loading={groupLogsLoading}
-          style={{marginBottom: 16}}
+          style={{marginBottom: 16,width:'60%',minWidth:'850px'}}
           pagination={false}
           dataSource={dataSource}
           columns={logInfoColumns}
