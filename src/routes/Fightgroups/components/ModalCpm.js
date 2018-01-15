@@ -89,12 +89,12 @@ class SendLogModal extends Component {
       }
       return txt;
     };
-    console.log("data~~~~~~~~~~~",data);
     return data.map(item => {
       const depFlightInfo = item.flightInfo? item.flightInfo.filter(oneFlight => oneFlight.trip_index === 0)[0]: {};
       const arrFlightInfo = item.flightInfo? item.flightInfo.filter(oneFlight => oneFlight.trip_index === 1)[0]: {};
       return {
         ...item,
+        create_time: formatDate(item.create_time, 'YYYY-MM-DD HH:mm:ss'),//2017-12-31 12:00:00
         flight_no: depFlightInfo.flight_no + '/' + arrFlightInfo.flight_no,
         flight_dep: formatDate(depFlightInfo.time_dep, 'YYYY-MM-DD'),
         flight_arr: formatDate(arrFlightInfo.time_dep, 'YYYY-MM-DD'),
@@ -319,7 +319,7 @@ class ExportPassengerModal extends Component {
           } else {
             //不符合要求时，fileList值为空
             fileList = [];
-            message.error(file.response.msg);
+            // message.error(file.response.msg);
           }
         } else if (file.status === 'error') {
           message.error(`${file.name} 上传失败`);

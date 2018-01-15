@@ -44,14 +44,19 @@ export default class Login extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
+    var reg = new RegExp("(^|&)" + 'from' + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+    var r = this.props.location.search.substr(1).match(reg); //匹配目标参数
+    const from = r ? decodeURIComponent(r[2]): '/'
     this.props.form.validateFields({ force: true },
       (err, values) => {
         if (!err) {
           this.props.dispatch({
             type: 'login/login',
-            payload: {
-              ...values,
-            },
+            payload: { ...values, },
+            callBack: () => {
+              this.props.dispatch(routerRedux.push(from));
+              location.reload()
+            }
           });
         }
       }
@@ -73,43 +78,43 @@ export default class Login extends Component {
     const { count, type } = this.state;
     return (
       <div className={styles.main}>
-      <div className={styles.text}>• 登录 •</div>
-        <Form onSubmit={this.handleSubmit}>
-              {
-                login.status === 'error' &&
-                login.type === 'account' &&
-                login.submitting === false &&
-                this.renderMessage('账户或密码错误')
-              }
-              <FormItem>
-                {getFieldDecorator('account', {
-                  rules: [{
-                    required: type === 'account', message: '请输入账户名！',
-                  }],initialValue:""
-                })(
-                  <Input
-                    size="large"
-                    prefix={<Icon type="user" className={styles.prefixIcon} />}
-                    placeholder="请输入账户名"
-                  />
-                )}
-              </FormItem>
-              <FormItem>
-                {getFieldDecorator('password', {
-                  rules: [{
-                    required: type === 'account', message: '请输入密码！',
-                  }],initialValue:""
-                })(
-                  <Input
-                    size="large"
-                    prefix={<Icon type="lock" className={styles.prefixIcon} />}
-                    type="password"
-                    placeholder="请输入密码"
-                  />
-                )}
-              </FormItem>
+        <div className={styles.text}>• 登录 •</div>
+        <Form onSubmit={this.handleSubmit.bind(this)}>
+          {
+            login.status === 'error' &&
+            login.type === 'account' &&
+            login.submitting === false &&
+            this.renderMessage('账户或密码错误')
+          }
+          <FormItem>
+            {getFieldDecorator('account', {
+              rules: [{
+                required: type === 'account', message: '请输入账户名！',
+              }], initialValue: ""
+            })(
+              <Input
+                size="large"
+                prefix={<Icon type="user" className={styles.prefixIcon} />}
+                placeholder="请输入账户名"
+              />
+              )}
+          </FormItem>
+          <FormItem>
+            {getFieldDecorator('password', {
+              rules: [{
+                required: type === 'account', message: '请输入密码！',
+              }], initialValue: ""
+            })(
+              <Input
+                size="large"
+                prefix={<Icon type="lock" className={styles.prefixIcon} />}
+                type="password"
+                placeholder="请输入密码"
+              />
+              )}
+          </FormItem>
           <FormItem className={styles.additional}>
-           {/* {getFieldDecorator('remember',{
+            {/* {getFieldDecorator('remember',{
               valuePropName: 'checked',
               initialValue: true,
               })(

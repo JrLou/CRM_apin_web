@@ -289,7 +289,6 @@ class AddForm extends Component {
     switch (flightstockAdd.ok) {
       case "选择航班":
         if (flightstockData[flightstockAdd.numbering] == {}) {
-          debugger
           message.warning('请选择航班');
           return
         } else {

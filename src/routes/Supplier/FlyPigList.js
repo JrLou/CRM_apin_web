@@ -11,7 +11,7 @@ import timeHelp from '../../utils/TimeHelp.js';
 const {RangePicker} = DatePicker;
 const FormItem = Form.Item;
 const {Option} = Select;
-const status = ['有效', '无效' ];
+const status = ['有效', '失效' ];
 @connect(state => ({
   flyPiglist: state.flyPiglist,
 }))
