@@ -78,7 +78,7 @@ export default {
         payload: {groupsInfoLoading: false},
       });
     },
-    * fetchPlanClose({payload}, {call, put}) {// 关闭拼团
+    * fetchPlanClose({payload, succCB}, {call, put}) {// 关闭拼团
       yield put({
         type: 'extendAll',
         payload: {modalConfirmLoading: true},
@@ -93,12 +93,14 @@ export default {
             showModal: false,
           },
         });
-        yield put({
-          type: 'fetchGroupsInfo',
-          payload: payload
-        });
+        succCB && succCB();
       } else {
-        message.error("保存失败");
+        yield put({
+          type: 'extendAll',
+          payload: {
+            modalConfirmLoading: false,
+          },
+        });
       }
     },
 
@@ -124,7 +126,6 @@ export default {
         payload: {modalTableLoading: true},
       });
       const response = yield call(queryPaidMember, payload);
-      console.log("queryPaidMember__response", response);
       yield put({
         type: 'save',
         payload: response,
@@ -138,7 +139,7 @@ export default {
     * fetchExportPassenger({payload, cb}, {call}) {// 导出乘机人信息（已付款的）
       const response = yield call(loadExportPassenger, payload);
       if (response.code) {
-        message.error(response.msg);
+        // message.error(response.msg);
         return;
       }
       cb && cb(response);
@@ -248,7 +249,7 @@ export default {
         ...state,
         modalData: {
           ...state.modalData,
-          data:payload,
+          data: payload,
         },
       }
     },

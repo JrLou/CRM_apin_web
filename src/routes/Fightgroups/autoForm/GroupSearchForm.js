@@ -72,10 +72,10 @@ export default class MyForm extends Component {
         // wrapperCol: {style: {width: "200px"}},
       },
       formItemStyle4Each: {                                               //object                                                        每个表单控件的样式,
-        width: "350px",
+        // width: "31%",
         marginBottom: "20px",
       },
-      span: 6,                                                      //number                                                        栅格值，一行一共24个栅格，只有在  layout === horizontal  的时候该属性才生效
+      span: 8,                                                      //number                                                        栅格值，一行一共24个栅格，只有在  layout === horizontal  的时候该属性才生效
       data: [                                                       //*object[]                                                      生成所有表单控件的JSON格式数据
         {
           type: 1,					                                        //*number		                          1				                  表单控件的type;1=>Input  2=>Select  3=>DatePicker  3.1=>RangePicker   5=>Button
