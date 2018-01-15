@@ -44,6 +44,19 @@ export default class CheckFightGroups extends Component {
   }
 
   componentDidMount() {
+    this.loadInitPageData();
+  }
+
+  componentWillUnmount() {
+    const {dispatch} = this.props;
+    //还原redux 中的checkFightGroups的state
+    dispatch({
+      type: 'checkFightGroups/clear',
+    });
+  }
+
+  loadInitPageData = () => {
+    console.log("loadInitPageData");
     const {dispatch} = this.props;
     dispatch({// 获取拼团信息
       type: 'checkFightGroups/fetchGroupsInfo',
@@ -70,15 +83,7 @@ export default class CheckFightGroups extends Component {
         pc: 1000,//目前不分页，但是后台是按这种形式写的接口
       },
     });
-  }
-
-  componentWillUnmount() {
-    const {dispatch} = this.props;
-    //还原redux 中的checkFightGroups的state
-    dispatch({
-      type: 'checkFightGroups/clear',
-    });
-  }
+  };
 
   mapGroupStateToTxt(group_status) {
     let txt = "";
@@ -221,6 +226,12 @@ export default class CheckFightGroups extends Component {
               <p>{record.remark}</p>
             </div>
           );
+          const orderIdContent = (
+            <Link
+              to={'/order/entrust/detail/' + formatPar({id: text})}>
+              {text}
+            </Link>
+          );
           return (
             <span>
               {
@@ -230,7 +241,7 @@ export default class CheckFightGroups extends Component {
                   </Popover>
                   : null
               }
-              <span>{text}</span>
+              <span>{orderIdContent}</span>
             </span>
           );
         }
@@ -490,6 +501,7 @@ export default class CheckFightGroups extends Component {
         reason: this.state.closeReason,
         id: this.id,
       },
+      succCB: () => this.loadInitPageData(),
     });
   }
 
