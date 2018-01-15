@@ -9,12 +9,10 @@ export default {
       data: [],
       option: {}
     },
-    editData: {
-
-    },
+    editData: {},
     loading: true,
     banner_url: '',
-    uploadSuccess: false
+    uploadSuccess: false,
   },
 
   effects:
@@ -76,7 +74,7 @@ export default {
         });
       },
       * toAdd({ payload }, { call, put }) {
-        // 列表页，跳转到添加页面
+        // 列表页，跳转到新增banner页面
         yield put({
           type: 'changeEditData',
           payload: payload,
@@ -84,7 +82,7 @@ export default {
         yield put(routerRedux.push('/operations/banner/bannerAdd'))
       },
       * toEdit({ payload }, { call, put }) {
-        //列表页，跳转到编辑页面
+        //列表页，跳转到编辑banner页面
         yield put({
           type: 'changeEditData',
           payload: payload,
@@ -105,15 +103,19 @@ export default {
       },
       * checkEdit({ payload, callback }, { call, put }) {
         //确定编辑，成功以后跳转到列表页
-        const response = yield call(editBannerImg, payload);
-        if (callback) {
-          callback(response);
+        const res = yield call(editBannerImg, payload);
+        // if (callback) {
+        //   callback(response);
+        // }
+        if(res&&res.code>=1){
+          yield put({
+            type: 'changeEditData',
+            payload: {},
+          });
+
+          yield put(routerRedux.push('/operations/banner'))
+          message.success('banner编辑成功')
         }
-        yield put({
-          type: 'changeEditData',
-          payload: {},
-        });
-        yield put(routerRedux.push('/operations/banner'))
       },
       * addBanner({ payload, callback }, { call, put }) {
         //确定编辑，成功以后跳转到列表页
@@ -128,10 +130,12 @@ export default {
             type: 'changeBaseImg',
             payload: ''
           });
+          message.success('添加成功')
           yield put(routerRedux.push('/operations/banner'))
         }
       },
       * baseImg({ payload, callback }, { call, put }) {
+        //上传banner
         yield put({
           type: 'changeFlag',
           payload: false,
@@ -167,6 +171,8 @@ export default {
       return {
         ...state,
         editData: action.payload,
+        banner_url:action.payload.banner_url,
+        uploadSuccess:true,
       };
     },
     changeLoading(state, action) {

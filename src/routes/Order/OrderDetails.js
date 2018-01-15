@@ -167,7 +167,7 @@ export default class BasicProfile extends Component {
         return certType[text - 1];
       }
       },
-      {title: '证件号', dataIndex: 'cert_no', key: 'cert_no'},
+      {title: '证件号码', dataIndex: 'cert_no', key: 'cert_no'},
       {title: '国籍', dataIndex: 'nation', key: 'nation'},
       {
         title: '出生日期', dataIndex: 'birthday', key: 'birthday', render: (text) => {
@@ -189,12 +189,12 @@ export default class BasicProfile extends Component {
               (nameType == 'FlyingPig' && order_status == 2) || (nameType == 'Entrust' && order_status == 4) ?
                 <span>
                   去
-                  <Input className={styles.inputTicket} onChange={(e) => {
+                  <Input className={styles.inputTicket} maxLength={32} onChange={(e) => {
                     record['ticketDep'] = e.target.value;
                   }
                   }/>
                   返
-                  <Input className={styles.inputTicket} onChange={(e) => {
+                  <Input className={styles.inputTicket} maxLength={32} onChange={(e) => {
                     record["ticketArr"] = e.target.value;
                   }}/>
                 </span>
@@ -212,21 +212,26 @@ export default class BasicProfile extends Component {
     ];
     //支付信息
     const payColumns = [
-      {title: '支付单号', dataIndex: 'id', key: 'id'},
-      {title: '付款金额(元)', dataIndex: 'pay_amount', key: 'pay_amount'},
-      {
-        title: '支付方式', dataIndex: 'pay_type', key: 'pay_type', render: (text, record) => {
-        return record.pay_amount < 0 ? '退款' : payType[text];
-      }
-      },
-      {
-        title: '状态', dataIndex: 'status', key: 'status', render: (text) => {
-        return <Badge status={text === 3 ? "error" : (text === 1 || text === 2) ? "success" : ''}
-                      text={text === 0 ? "待付款" : (text === 1 || text === 2) ? "成功" : text === 3 ? '失败' : ''}/>
-      }
-      },
-      {title: '支付时间', dataIndex: 'pay_time', key: 'pay_time'},
-    ];
+        {title: '支付单号', dataIndex: 'id', key: 'id'},
+        {title: '付款金额(元)', dataIndex: 'pay_amount', key: 'pay_amount'},
+        {
+          title: '支付方式', dataIndex: 'pay_type', key: 'pay_type', render: (text, record) => {
+          return record.pay_amount < 0 ? '退款' : payType[text];
+        }
+        },
+        {
+          title: '支付状态', dataIndex: 'status', key: 'status', render: (text) => {
+          return <Badge status={text === 3 ? "error" : (text === 1 || text === 2) ? "success" : ''}
+                        text={text === 0 ? "待付款" : (text === 1 || text === 2) ? "成功" : text === 3 ? '失败' : ''}/>
+        }
+        },
+        {
+          title: '支付时间', dataIndex: 'pay_time', key: 'pay_time', render: (text) => {
+          return timeHelp.getYMDHMS(text);
+        }
+        },
+      ]
+    ;
     //委托信息
     const groupVoyageColumns = [
       {
@@ -340,8 +345,10 @@ export default class BasicProfile extends Component {
             <Description term="联系人">{order.contact ? order.contact : ''}</Description>
             <Description term="联系电话">{order.mobile ? order.mobile : ''}</Description>
             <Description term="微信昵称">{order.member_name ? order.member_name : ''}</Description>
-            <Description term={nameType === 'FlyingPig'?'订单来源':''}>{  nameType === 'FlyingPig'?source[order.group_type - 1] :''}</Description>
-            <Description term={nameType === 'FlyingPig'?'资源ID':''}>{  nameType === 'FlyingPig'?order.flight_id :''}</Description>
+            <Description
+              term={nameType === 'FlyingPig' ? '订单来源' : ''}>{nameType === 'FlyingPig' ? source[order.group_type - 1] : ''}</Description>
+            <Description
+              term={nameType === 'FlyingPig' ? '资源ID' : ''}>{nameType === 'FlyingPig' ? order.flight_id : ''}</Description>
           </DescriptionList>
           {
             (nameType === 'Entrust' && (order_status == 4 || order_status == 5 || order_status == 6 )) || nameType === 'FlyingPig' ?
@@ -353,7 +360,7 @@ export default class BasicProfile extends Component {
                     loading={loading}
                     dataSource={order.voyage ? order.voyage : []}
                     columns={orderColumns}
-                    rowKey="id"
+                    rowKey={record => record.id + record.group_id}
                   />
                 </div>
                 <Divider style={{marginBottom: 32}}/>
@@ -364,7 +371,7 @@ export default class BasicProfile extends Component {
                   loading={loading}
                   dataSource={passenger}
                   columns={passengerColumns}
-                  rowKey="id"
+                  rowKey={record => record.id + record.order_id}
                 />
               </div>
               : null
@@ -387,7 +394,7 @@ export default class BasicProfile extends Component {
                       <li>
                         <span className={styles.titleDesc}>机票销售价</span>
                         <span
-                          className={styles.priceDesc}>{order.sell_price * this.adult_count}={order.sell_price}(成人价)*{this.adult_count}</span>
+                          className={styles.priceDesc}>{order.sell_price * this.adult_count}={order.sell_price}元(成人价)*{this.adult_count}</span>
                       </li>
                       {
                         (nameType === 'Entrust' && order_status == 6) || (nameType === 'FlyingPig' && order_status == 4) ? null :
@@ -397,9 +404,9 @@ export default class BasicProfile extends Component {
                         {
                           isEdit ?
                             <Input value={inputPrice} className={styles.inputPrice} min={0} type="number"
-                                   onChange={::this.inputPrice}/>
+                                   onChange={::this.inputPrice} maxLength={32}/>
                             :
-                            <span className={styles.inputPrice}>{inputPrice}</span>
+                            <span className={styles.inputPrice}>{inputPrice}元</span>
                         }
                               <Button type='primary' onClick={::this.isEdit}>{isEdit ? '保存' : '修改'}</Button></span>
                           </li>
@@ -420,7 +427,7 @@ export default class BasicProfile extends Component {
                     bordered={true}
                     dataSource={payrecord ? payrecord : []}
                     columns={payColumns}
-                    rowKey="id"
+                    rowKey={record => record.id + record.pay_time}
                   />
                 </div>
               </div>
@@ -445,14 +452,14 @@ export default class BasicProfile extends Component {
               null :
               <div>
                 <Divider style={{marginBottom: 32}}/>
-                <div className={styles.title}><Icon type="profile"/> 推送方案</div>
+                <div className={styles.title}><Icon type="profile"/> 方案推送记录</div>
                 <Table
                   style={{width: '60%'}}
                   pagination={false}
                   bordered={true}
                   dataSource={orderGroup ? orderGroup : []}
                   columns={orderGroupColumns}
-                  rowKey="id"
+                  rowKey={record => record.id + record.create_time}
                 />
               </div>
           }
@@ -465,7 +472,7 @@ export default class BasicProfile extends Component {
             bordered={true}
             dataSource={log ? log : []}
             columns={logColumns}
-            rowKey="create_time"
+            rowKey={record => record.message + record.create_time}
           />
         </Card>
       </PageHeaderLayout>

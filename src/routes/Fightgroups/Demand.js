@@ -150,7 +150,7 @@ export default class Demand extends PureComponent {
                         <Button type="primary">方案推送</Button>
                       </Link>
                     ]}
-                    title={<span><b className={styles.cardTitle}></b>{item.city_dep + '-' + item.city_arr}</span>}
+                    title={<span className={styles.titleBox} title={item.city_dep + '-' + item.city_arr}><b className={styles.cardTitle}></b>{item.city_dep + '-' + item.city_arr}</span>}
                     extra={item.total + '人'}>
                     <Card.Meta
                       description={(

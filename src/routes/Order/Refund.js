@@ -13,20 +13,28 @@ import {
   DatePicker,
   Table,
   Modal,
+  message,
 } from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import DescriptionList from '../../components/DescriptionList';
 import styles from './TableList.less';
-
+import {formatPar} from '../../utils/utils';
 const {Description} = DescriptionList;
 const {RangePicker} = DatePicker;
 const FormItem = Form.Item;
 const {Option} = Select;
+const confirm = Modal.confirm;
+const {TextArea} = Input;
+const refundStatus = ['挂起', '未退款', '退款成功', '退款中', '退款失败', '部分成功'];
 @connect(state => ({
   refund: state.refund,
 }))
 @Form.create()
 export default class TableList extends PureComponent {
+  constructor(props) {
+    super(props);
+  }
+
   state = {
     formValues: {},
     pagination: {
@@ -35,6 +43,7 @@ export default class TableList extends PureComponent {
     },
     timeArr: [],
     visible: false,
+    orderID: '',
   };
 
   componentDidMount() {
@@ -101,23 +110,21 @@ export default class TableList extends PureComponent {
 
   renderForm() {
     const {getFieldDecorator} = this.props.form;
-    const layoutForm={md: 8, lg: 24, xl: 48};
-    // 1挂起，0未退款，1退款成功，2退款中，3退款失败，4部分成功
-    const refund_status=['挂起','未退款','退款成功','退款中','退款失败','部分成功'];
+    const layoutForm = {md: 8, lg: 24, xl: 48};
     return (
       <Form layout="inline">
         <Row gutter={layoutForm}>
           <Col md={8} sm={24}>
             <FormItem label="退款单号">
               {getFieldDecorator('id')(
-                <Input placeholder="请输入"/>
+                <Input placeholder="请输入" maxLength={32}/>
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="订单号">
               {getFieldDecorator('order_id')(
-                <Input placeholder="请输入"/>
+                <Input placeholder="请输入" maxLength={32}/>
               )}
             </FormItem>
           </Col>
@@ -129,8 +136,8 @@ export default class TableList extends PureComponent {
                 <Select placeholder="请选择" style={{width: '100%'}}>
                   <Option value=''>全部</Option>
                   {
-                    refund_status.map((item,index)=>{
-                      return  <Option value={index - 1} key={index}>{item}</Option>
+                    refundStatus.map((item, index) => {
+                      return <Option value={index - 1} key={index}>{item}</Option>
                     })
                   }
                 </Select>
@@ -157,13 +164,50 @@ export default class TableList extends PureComponent {
     );
   }
 
+  afreshRefund(id) {
+    const {dispatch, refund: {retryResponse}} = this.props;
+    confirm({
+      title: '请确认是否重新退款?',
+      okText: '是',
+      cancelText: '否',
+      onOk() {
+        dispatch({
+          type: 'refund/retryRefund',
+          payload: {order_id: id},
+        });
+        if (retryResponse.code > 0) {
+          message.success('操作成功');
+          this.handleSearch();
+        } else {
+          message.error('操作失败');
+        }
+      },
+      onCancel() {
+      },
+    });
+  }
+
+  failReason(params) {
+    const {dispatch, refund: {offlineResponse}} = this.props;
+    dispatch({
+      type: 'refund/offlineRefund',
+      payload: {...params},
+    });
+    if (offlineResponse.code > 0) {
+      message.success('操作成功');
+      this.handleSearch();
+    } else {
+      message.error('操作失败');
+    }
+  }
+
   render() {
     const {refund: {loading, list, total}} = this.props;
     const columns = [
       {title: '退款单号', dataIndex: 'id',},
       {
         title: '退款状态', dataIndex: 'refund_status', render: (text) => {
-        return refund_status[text + 1];
+        return refundStatus[text + 1];
       },
       },
       {
@@ -173,21 +217,33 @@ export default class TableList extends PureComponent {
       },
       {
         title: '订单号', dataIndex: 'order_id', render: (text, record) => {
-        return <a onClick={() => {
-          this.refundModal.showModal(true, record);
-        }}>{text}</a>
+        let Url = record.group_type == 0 ? '/order/entrust/detail/':'/order/flyingpig/detail/';
+        return <Link
+          to={Url + formatPar({id: record.order_id})}>
+          {text}</Link>
       }
       },
       {
         title: '退款时间', dataIndex: 'audit_time', render: (text) => {
-        return timeHelp.getYMDHMS(text)
+        return text ? timeHelp.getYMDHMS(text) : ''
       }
       },
       {
         title: '操作', render: (text, record) => {
-        return <a onClick={() => {
-          this.refundModal.showModal(true, record);
-        }}>查看</a>
+        return <span>
+          {
+            record.refund_status != 3 ? null :
+              <span>
+                 <a onClick={this.afreshRefund.bind(this, record.id)}>重新退款</a>
+                 <OfflineModal failReason={::this.failReason} data={record}/>
+              </span>
+          }
+
+          <a onClick={() => {
+            this.refundModal.showModal(true, record);
+          }}>查看</a>
+
+        </span>
       }
       }];
 
@@ -204,7 +260,7 @@ export default class TableList extends PureComponent {
               pagination={{showSizeChanger: true, showQuickJumper: true, total}}
               loading={loading}
               onChange={::this.handleTableChange}
-              rowKey="order_id"
+              rowKey={record => record.order_id + Math.random() * 100 + record.audit_time}
             />
             <RefundModal ref={(a) => this.refundModal = a}/>
           </div>
@@ -217,15 +273,16 @@ export default class TableList extends PureComponent {
 class RefundModal extends React.Component {
   state = {
     visible: false,
-    data:{},
+    data: {},
   };
 
   showModal(isShow, data) {
     this.setState({
       visible: isShow,
-      data:data,
+      data: data,
     })
   }
+
   hideModal() {
     this.setState({
       visible: false,
@@ -233,7 +290,7 @@ class RefundModal extends React.Component {
   };
 
   getContent(label, desc, isShow) {
-    return <Row>
+    return <Row style={{margin: '15px 0'}}>
       <Col span={6} style={{textAlign: 'right'}}>
         {
           isShow ? <span style={{color: '#f00', marginRight: 8}}>*</span> : null
@@ -245,7 +302,7 @@ class RefundModal extends React.Component {
   }
 
   render() {
-    let {visible,data} = this.state;
+    let {visible, data} = this.state;
     return (
       <Modal
         title="退款申请"
@@ -254,13 +311,70 @@ class RefundModal extends React.Component {
         footer={null}
       >
         <div>
-          {this.getContent('订单号', data.order_id||'', false)}
-          {this.getContent('退款单号', data.id||'', false)}
-          {this.getContent('退款金额', data.amount||'', true)}
-          {this.getContent('处理客服', data.audit_user||'', true)}
-          {this.getContent('备注', data.refund_reason||'', false)}
+          {this.getContent('订单号', data.order_id || '', false)}
+          {this.getContent('退款单号', data.id || '', false)}
+          {this.getContent('退款金额', data.amount || '', true)}
+          {this.getContent('处理客服', data.audit_user || '', true)}
+          {this.getContent('备注', data.refund_reason || '', false)}
         </div>
       </Modal>
+    );
+  }
+}
+
+class OfflineModal extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      visible: false,
+      textAreaValue: '',
+    }
+  }
+
+  showModal() {
+    this.setState({
+      visible: true,
+      textAreaValue: '',
+    });
+  };
+
+  hideModal() {
+    this.setState({
+      visible: false,
+    });
+  };
+
+  textAreaChange(e) {
+    this.setState({
+      textAreaValue: e.target.value,
+    })
+  }
+
+  handleOk() {
+    let {data, failReason} = this.props, {textAreaValue} = this.state;
+    failReason({'message': textAreaValue, 'order_id': data.order_id, 'pay_id': data.id});
+    this.hideModal();
+  }
+
+  render() {
+    let {textAreaValue, visible} = this.state;
+    return (
+      <div style={{display: 'inline', margin: '0 8px'}}>
+        <a onClick={::this.showModal}>线下退款</a>
+        <Modal
+          title="原因"
+          visible={visible}
+          onCancel={::this.hideModal}
+          footer={[
+            <span key="tip" style={{marginRight: 10}}>提交后,将直接退款</span>,
+            <Button key="submit" type="primary" onClick={::this.handleOk}>
+              提交
+            </Button>,
+          ]}
+        >
+          <TextArea rows={4} placeholder="请输入线下退款的原因（非必填）" onChange={::this.textAreaChange} value={textAreaValue}/>
+        </Modal>
+      </div>
     );
   }
 }

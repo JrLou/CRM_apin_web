@@ -101,6 +101,22 @@ export async function queryGroupOrders(params) {//订单信息
     body: params,
   });
 }
+export async function queryPaidMember(params) {//拼团下成功支付的乘机人信息
+  return request('/api/demandPool/getPaidMember', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function loadExportPassenger(params) {//导出乘机人信息（已付款的)
+  return request(`/api/demandPool/exportPassenger?${stringify(params)}`);
+}
+export async function saveTickets(params) {//确认录入票号信息
+  return request('/api/demandPool/saveTickets', {
+    method: 'POST',
+    body: params,
+  });
+}
+
 export async function queryPublishLogs(params) {//订单推送日志
   return request('/api/demandPool/publishLogs', {
     method: 'POST',
@@ -154,6 +170,7 @@ export async function baseImg(params) {
   return request('/api/common/uploadImage', {
     method: 'POST',
     body: params,
+    formData: true
   });
 }
 export async function deleteBanner(params) {
@@ -221,7 +238,7 @@ export async function getpriceAirline(params) {
 }
 //新增政策
 export async function getadd(params) {
-  return request('/api/resource/addAirLine',{
+  return request('/api/resource/addAirLine', {
     method: 'POST',
     body: params,
   });
@@ -270,15 +287,15 @@ export async function AccountLogin(params) {
   }
 }
 export async function queryMenus() {
-  return request('/api/user/getNavigators',{
-    method:'POST',
-    body:{}
+  return request('/api/user/getNavigators', {
+    method: 'POST',
+    body: {}
   });
 }
-export async function authrouteApi(params){
-  return request('/api/user/getFunNavigators',{
-    method:'POST',
-    body:params
+export async function authrouteApi(params) {
+  return request('/api/user/getFunNavigators', {
+    method: 'POST',
+    body: params
   });
 }
 export async function financePaymentList(params) {
@@ -324,6 +341,18 @@ export async function addTicketFail(params) {
 }
 export async function getRefundList(params) {
   return request('/api/order/getRefundList', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function offlineRefund(params) {
+  return request('/api/order/offlineRefund', {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function retryRefund(params) {
+  return request(' /api/order/retryRefund', {
     method: 'POST',
     body: params,
   });

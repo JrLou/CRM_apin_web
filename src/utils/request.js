@@ -56,18 +56,19 @@ function checkCode(json) {
     4: '用户被禁用',
     6: '接口不存在',
     7: '非法请求',
+    8: '凭证过期'
   };
-  if (json.code && json.code * 1 < 1 && json.code * 1 > -7) {
+  if (json.code && json.code * 1 < 1 && json.code * 1 > -10) {
     const errortext = codeMessage[json.code * -1];
     notification.error({
       message: `提示`,
       description: errortext,
     });
-    if(json.code==-2&&json.code==-8){
-       Cookies.clearCookie()
-       location.reload()
+    if (json.code == -2 && json.code == -8) {
+      Cookies.clearCookie()
+      location.reload()
     }
-  } else if (json.code &&  json.code >= -100 && json.code < -7) {
+  } else if (json.code && json.code >= -100 && json.code < -7) {
     notification.error({
       message: `提示`,
       description: json.msg || "",
@@ -103,24 +104,30 @@ export default function request(url, options) {
   if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
     newOptions.headers = {
       Accept: 'application/json',
-      'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+      'Content-Type': options.formData ? 'application/x-www-form-urlencoded; charset=utf-8' : 'application/json; charset=utf-8',
       ...newOptions.headers,
     };
-    // newOptions.body = JSON.stringify(newOptions.body);
-    let paramsDemo = '';
-    let i = 0;
-    for (let key in newOptions.body) {
-      paramsDemo += i == 0 ? (key + '=' + newOptions.body[key]) : ('&' + key + '=' + newOptions.body[key]);
-      ++i;
+    if (options.formData) {
+      let paramsDemo = '';
+      let i = 0;
+      for (let key in newOptions.body) {
+        paramsDemo += i == 0 ? (key + '=' + newOptions.body[key]) : ('&' + key + '=' + newOptions.body[key]);
+        ++i;
+      }
+      newOptions.body = paramsDemo;
+    } else {
+      newOptions.body = JSON.stringify(newOptions.body);
     }
-    newOptions.body = paramsDemo;
+
   }
 
   return fetch(url, newOptions)
     .then(checkStatus)
     .then((response) => {
-      if(response.headers.get('Content-Type')=='blob'){
-          return URL.createObjectURL(response.blob)
+      if(response.headers.get('Content-Type')=='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
+        // const b = response.blob()
+        // const a = window.URL.createObjectURL(response.blob());
+        return response.blob();
       }
       if (newOptions.method === 'DELETE' || response.status === 204) {
         return response.text();

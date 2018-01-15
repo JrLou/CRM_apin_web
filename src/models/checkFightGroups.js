@@ -1,10 +1,18 @@
-import {changeStatus} from '../services/api';//这个要删除的
-import {queryOrderInfo, planClose, queryGroupOrders, queryPublishLogs, queryDetailGroupVoyage, queryGroupLogs, } from '../services/api';
+import {
+  queryOrderInfo,
+  planClose,
+  queryGroupOrders,
+  loadExportPassenger,
+  saveTickets,
+  queryPublishLogs,
+  queryDetailGroupVoyage,
+  queryGroupLogs,
+  queryPaidMember
+} from '../services/api';
 import {message} from 'antd';
-//TODO 这个文件刚刚copy下来，都需修改
-export default {
-  namespace: 'checkFightGroups',
-  state: {
+
+const initState = () => {
+  return {
     //拼团信息
     groupsInfoData: {
       code: '',
@@ -24,7 +32,7 @@ export default {
     //方案明细
     detailGroupVoyage: {
       code: '',
-      data: [{},{}],
+      data: [{}, {}],
       msg: '',
     },
     detailGroupVoyageLoading: true,
@@ -46,7 +54,12 @@ export default {
     showModal: false,
     modalTableLoading: true,//模态框中的table的loading
     modalConfirmLoading: false,
-  },
+  };
+};
+
+export default {
+  namespace: 'checkFightGroups',
+  state: initState(),
 
   effects: {
     * fetchGroupsInfo({payload}, {call, put}) {// 获取拼团信息
@@ -65,7 +78,7 @@ export default {
         payload: {groupsInfoLoading: false},
       });
     },
-    * fetchPlanClose({payload}, {call, put}) {
+    * fetchPlanClose({payload}, {call, put}) {// 关闭拼团
       yield put({
         type: 'extendAll',
         payload: {modalConfirmLoading: true},
@@ -105,6 +118,32 @@ export default {
         payload: {groupOrdersLoading: false},
       });
     },
+    * fetchPaidMember({payload}, {call, put}) {// 获取拼团下成功支付的乘机人信息
+      yield put({
+        type: 'extendAll',
+        payload: {modalTableLoading: true},
+      });
+      const response = yield call(queryPaidMember, payload);
+      console.log("queryPaidMember__response", response);
+      yield put({
+        type: 'save',
+        payload: response,
+        key: "modalData",
+      });
+      yield put({
+        type: 'extendAll',
+        payload: {modalTableLoading: false},
+      });
+    },
+    * fetchExportPassenger({payload, cb}, {call}) {// 导出乘机人信息（已付款的）
+      const response = yield call(loadExportPassenger, payload);
+      if (response.code) {
+        message.error(response.msg);
+        return;
+      }
+      cb && cb(response);
+    },
+
     * fetchPublishLogs({payload}, {call, put}) {// 获取订单推送日志
       yield put({
         type: 'extendAll',
@@ -156,15 +195,14 @@ export default {
       });
     },
 
-    * fetchConfirmExport({payload, callback}, {call, put}) {
+    * fetchSaveTickets({payload, succCallback}, {call, put}) {
       yield put({
         type: 'extendAll',
         payload: {modalConfirmLoading: true},
       });
-      const response = yield call(changeStatus, payload);
-
+      const response = yield call(saveTickets, payload);
       if (response && response.code >= 1) {
-        callback && callback(response);
+        succCallback && succCallback(response);
         yield put({
           type: 'save',
           payload: response,
@@ -173,14 +211,21 @@ export default {
           type: 'save',
           payload: response.data,
         });
+        yield put({
+          type: 'extendAll',
+          payload: {
+            modalConfirmLoading: false,
+            showModal: false
+          },
+        });
+      } else {
+        yield put({
+          type: 'extendAll',
+          payload: {
+            modalConfirmLoading: false,
+          },
+        });
       }
-      yield put({
-        type: 'extendAll',
-        payload: {
-          modalConfirmLoading: false,
-          showModal: false
-        },
-      });
     },
   },
 
@@ -197,6 +242,15 @@ export default {
         ...state,
         ...payload,
       };
+    },
+    insertTickets(state, {payload}) {
+      return {
+        ...state,
+        modalData: {
+          ...state.modalData,
+          data:payload,
+        },
+      }
     },
     // changeLoading(state, {payload}) {
     //   return {
@@ -228,6 +282,15 @@ export default {
         ...state,
         ...payload,
       };
+    },
+    resetModalData(state, {payload}) {
+      return {
+        ...state,
+        ...payload,
+      };
+    },
+    clear() {//页面卸载时重置
+      return initState();
     }
   },
 };

@@ -1,4 +1,4 @@
-import { getRefundList } from '../services/api';
+import { getRefundList,offlineRefund,retryRefund } from '../services/api';
 
 export default {
   namespace: "refund",
@@ -6,6 +6,8 @@ export default {
     loading: true,
     list: [],
     total: 0,
+    offlineResponse:{},
+    retryResponse:{},
   },
   effects: {
     *getList({ payload }, { call, put }) {
@@ -23,6 +25,20 @@ export default {
         payload: false,
       });
     },
+    *offlineRefund({ payload,callback }, { call, put }) {
+      const response = yield call(offlineRefund, payload);
+      yield put({
+        type: 'offline',
+        payload: response,
+      });
+    },
+    *retryRefund({ payload,callback }, { call, put }) {
+      const response = yield call(retryRefund, payload);
+      yield put({
+        type: 'retry',
+        payload: response,
+      });
+    },
   },
   reducers: {
     save(state, { payload }) {
@@ -30,6 +46,18 @@ export default {
         ...state,
         list: payload.data||[],
         total: payload.option.total||0,
+      };
+    },
+    offline(state, { payload }) {
+      return {
+        ...state,
+        offlineResponse:payload
+      };
+    },
+    retry(state, { payload }) {
+      return {
+        ...state,
+        retryResponse:payload
       };
     },
     changeLoading(state, { payload }) {

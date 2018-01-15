@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
+import { routerRedux } from 'dva/router';
 import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
 import { Card, Form, Row, Col, Input, Button, Select, Radio, DatePicker, message, Upload, Icon } from 'antd';
@@ -19,21 +20,18 @@ const { RangePicker } = DatePicker;
 @Form.create()
 class BannerEdit extends PureComponent {
   componentWillMount() {
-    if (this.props.type) {
-      if (!this.props.bannerList.id) {
-        // dispatch(routerRedux.push('/operations/banner'));
-        dispatch({
-          type: 'bannerList/addBanner',
-        })
+    if (this.props.edit) {
+      if (JSON.stringify(this.props.bannerList.editData)=='{}') {
+        this.props.dispatch(routerRedux.push('/operations/banner'));
       }
     }
   }
-  onChange = (date, dateString) => {
-    this.setState({
-      start_time: dateString[0],
-      end_time: dateString[1],
-    });
-  }
+  // onChange = (date, dateString) => {
+  //   this.setState({
+  //     start_time: dateString[0],
+  //     end_time: dateString[1],
+  //   });
+  // }
   handleSubmit = (e) => {
     e.preventDefault();
     const { dispatch, form } = this.props;
@@ -56,17 +54,32 @@ class BannerEdit extends PureComponent {
       values.banner_url = banner_url;
       delete (values["validityTime"]);
       delete (values["actionType"]);
-      dispatch({
-        type: 'bannerList/addBanner',
-        payload: values,
-        callback: (response) => {
-          if (response.code == 1) {
-            console.log(response);
-          } else {
-            console.log(response.msg);
+      if(this.props.edit){
+        dispatch({
+          type: 'bannerList/checkEdit',
+          payload: values,
+          callback: (response) => {
+            if (response.code == 1) {
+              console.log(response);
+            } else {
+              console.log(response.msg);
+            }
           }
-        }
-      });
+        });
+      }else{
+        delete (values["id"]);
+        dispatch({
+          type: 'bannerList/addBanner',
+          payload: values,
+          callback: (response) => {
+            if (response.code == 1) {
+              console.log(response);
+            } else {
+              console.log(response.msg);
+            }
+          }
+        });
+      }
     });
   };
 
@@ -77,6 +90,7 @@ class BannerEdit extends PureComponent {
   };
   render() {
     const { bannerList: { editData: data } } = this.props;
+
     const { getFieldDecorator } = this.props.form;
     let validityStart = data.start_time ? moment(data.start_time) : undefined;
     let validityEnd = data.end_time ? moment(data.end_time) : undefined;
@@ -90,10 +104,7 @@ class BannerEdit extends PureComponent {
         sm: { span: 14 },
       },
     };
-
-
     const fileList = [];
-
     const upimgprops = {
       action: '',
       listType: 'picture',
@@ -104,6 +115,11 @@ class BannerEdit extends PureComponent {
       <PageHeaderLayout>
         <Card>
           <Form onSubmit={this.handleSubmit}>
+                  {getFieldDecorator('id', {
+                    initialValue: data.id ? data.id :'',
+                  })
+                    (<Input placeholder="请输入…" type='hidden' />)
+                  }
             <Row>
               <Col md={16} sm={24}>
                 <FormItem label="图片名称:" {...formItemLayout}>
@@ -137,9 +153,6 @@ class BannerEdit extends PureComponent {
             <Row>
               <Col md={16} sm={24}>
                 <FormItem label="上传图片:" {...formItemLayout}>
-                  {/*{getFieldDecorator('imgUrl', {initialValue: data.imgUrl?data.imgUrl:undefined, rules: [{required: true, message: '请选择图片'}],})*/}
-                  {/*(<Input placeholder="请输入…"/>)*/}
-                  {/*}*/}
                   <PicturesWall />
                 </FormItem>
               </Col>
@@ -160,7 +173,7 @@ class BannerEdit extends PureComponent {
             <Row>
               <Col md={16} sm={24}>
                 <FormItem label="指向地址:" {...formItemLayout}>
-                  {getFieldDecorator('link_url', { initialValue: data.link_url ? data.link_url : '' })
+                  {getFieldDecorator('link_url', { initialValue: data.link_url ? data.link_url : '',rules: [{ required: false, message: '请输入指向地址' }]})
                     (<Input placeholder="请输入…" />)
                   }
                 </FormItem>
@@ -172,13 +185,7 @@ class BannerEdit extends PureComponent {
                   <FormItem label="图片有效期:" {...formItemLayout}>
                     {getFieldDecorator('validityTime', { initialValue: validityTime, rules: [{ required: true, message: '请选择图片有效期' }], })
                       (
-                      <RangePicker
-                        onChange={this.onChange.bind(this)}
-                        showTime={{
-                          format: 'HH:mm',
-                        }}
-                        format="YYYY-MM-DD HH:mm"
-                      />
+                      <RangePicker style={{width:'100%'}} format="YYYY-MM-DD HH:mm" />
                       )
                     }
                   </FormItem>

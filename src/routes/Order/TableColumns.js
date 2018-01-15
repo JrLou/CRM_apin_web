@@ -118,21 +118,21 @@ export default class TableList extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem label="订单号">
               {getFieldDecorator('id')(
-                <Input placeholder="请输入"/>
+                <Input placeholder="请输入" maxLength={32}/>
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="出发城市">
               {getFieldDecorator('city_dep')(
-                <Input placeholder="请输入"/>
+                <Input placeholder="请输入" maxLength={32}/>
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="到达城市">
               {getFieldDecorator('city_arr')(
-                <Input placeholder="请输入"/>
+                <Input placeholder="请输入" maxLength={32}/>
               )}
             </FormItem>
           </Col>
@@ -180,14 +180,14 @@ export default class TableList extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem label="联系人">
               {getFieldDecorator('contact')(
-                <Input placeholder="请输入"/>
+                <Input placeholder="请输入" maxLength={32}/>
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="联系电话">
               {getFieldDecorator('mobile')(
-                <Input placeholder="请输入" type="tel"/>
+                <Input placeholder="请输入" type="tel" maxLength={32}/>
               )}
             </FormItem>
           </Col>
@@ -290,7 +290,7 @@ export default class TableList extends PureComponent {
               pagination={{showSizeChanger: true, showQuickJumper: true, total}}
               loading={loading}
               onChange={::this.handleTableChange}
-              rowKey="id"
+              rowKey={record => record.id + new Date().getTime()}
             />
           </div>
         </Card>

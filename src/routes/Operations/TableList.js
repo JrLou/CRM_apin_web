@@ -93,8 +93,8 @@ class StandardTable extends PureComponent {
 
 
   render() {
-    const { data: { data, pagination,options }, loading } = this.props;
-    Object.assign(pagination,{total:options && options.total||0});
+    const { data: { data, pagination,option }, loading } = this.props;
+    Object.assign(pagination,{total:option && option.total||0});
     const columns = [
       {
         title: '显示顺序',
@@ -109,7 +109,7 @@ class StandardTable extends PureComponent {
         dataIndex:'banner_url',
         render:(text, record, index) => {
           if (record.banner_url) {
-              return <ImageWrapper className={styles.picTable} src={text} desc="示意图"/>
+              return <ImageWrapper className={styles.picTable} src={text} desc="banner"/>
           } else {
               return <span>无</span>
           }
@@ -170,9 +170,7 @@ class StandardTable extends PureComponent {
   getBtns(text, record, index){
     return (
       <div>
-        <Button
-          type={'primary'}
-          className={styles.btn}
+        <Button type='primary' className={styles.btn}
           onClick={()=>{
             let status = record.state==1?0:1;
             this.changeStatus(record.id,status);
@@ -180,18 +178,14 @@ class StandardTable extends PureComponent {
         >
           {record.state==1?'下架':'上架'}
         </Button>
-        <Button
-          type={'primary'}
-          className={styles.btn}
+        <Button type={'primary'} className={styles.btn}
           onClick={()=>{
             this.handleEdit(record);
           }}
         >
           编辑
         </Button>
-        <Button
-          type={'primary'}
-          className={styles.btn}
+        <Button type={'primary'} className={styles.btn}
           disabled={record.state===1?true:false}
           onClick={()=>{this.handleDelete(record.id);}}
         >
