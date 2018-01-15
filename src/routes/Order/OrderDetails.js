@@ -55,7 +55,7 @@ export default class BasicProfile extends Component {
   inputPrice(e) {
     let val = e.target.value;
     this.setState({
-      inputPrice: val.length < 32 ? val : val.slice(0, 8)
+      inputPrice: val.length < 8 ? val : val.slice(0, 8)
     })
   }
 
@@ -85,6 +85,7 @@ export default class BasicProfile extends Component {
 
   ticketConfirm() {
     let ticketInfo = [], {dispatch} = this.props;
+    let _this=this;
     if (this.passengerData && this.passengerData.length > 0) {
       for (let i = 0; i < this.passengerData.length; i++) {
         let user = this.passengerData[i], ticket = user.ticketDep + ',' + user.ticketArr;
@@ -105,7 +106,7 @@ export default class BasicProfile extends Component {
             callback: (res) => {
               if (res.code >= 1) {
                 message.success('出票成功');
-                this.getDetail();
+                _this.getDetail();
               } else {
                 message.error('出票失败');
               }
@@ -137,7 +138,7 @@ export default class BasicProfile extends Component {
     });
   }
 
-  ticketChange(e, type) {
+  ticketChange(e, record, type) {
     if (e.target.value.length < 32) {
       record[type] = e.target.value;
     } else {
@@ -203,9 +204,13 @@ export default class BasicProfile extends Component {
               (nameType == 'FlyingPig' && order_status == 2) || (nameType == 'Entrust' && order_status == 4) ?
                 <span>
                   去
-                  <Input className={styles.inputTicket} onChange={this.ticketChange.bind(this, 'ticketDep')}/>
+                  <Input className={styles.inputTicket} onChange={(e) => {
+                    this.ticketChange(e, record, 'ticketDep')
+                  }}/>
                   返
-                  <Input className={styles.inputTicket} onChange={this.ticketChange.bind(this, 'ticketArr')}/>
+                  <Input className={styles.inputTicket} onChange={(e) => {
+                    this.ticketChange(e, record, 'ticketArr')
+                  }}/>
                 </span>
                 :
                 (nameType == 'FlyingPig' && order_status == 3) || (nameType == 'Entrust' && order_status == 5) ?
