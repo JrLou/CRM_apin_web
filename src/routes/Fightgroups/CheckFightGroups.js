@@ -214,11 +214,11 @@ export default class CheckFightGroups extends Component {
         title: '订单号',
         dataIndex: 'id',
         render: (text, record, index) => {//生成复杂数据的渲染函数，参数分别为当前行的值，当前行数据，行索引，@return里面可以设置表格行/列合并
-          isRefuse = record.status === 0;
+          const isRefuse = record.status === 0;
           const popoverContent = (
             <div>
-              <P>原因：</P>
-              <p>record.remark</p>
+              <p>原因：</p>
+              <p>{record.remark}</p>
             </div>
           );
           return (
@@ -226,7 +226,7 @@ export default class CheckFightGroups extends Component {
               {
                 isRefuse ?
                   <Popover content={popoverContent} title="不接受">
-                    <Icon type="frown-o"/>
+                    <Icon type="frown-o"/>&nbsp;&nbsp;
                   </Popover>
                   : null
               }
@@ -322,7 +322,13 @@ export default class CheckFightGroups extends Component {
             批量导出乘机人 / 出票
           </Button>
           <Link to={'/fightgroups/demand/choose/' + params}>
-            <Button type="primary" className={styles.btn}>继续添加订单</Button>
+            <Button
+              type="primary"
+              className={styles.btn}
+              disabled={groupsInfoDataData.group_status !== 1}
+            >
+              继续添加订单
+            </Button>
           </Link>
         </div>
         <Table
