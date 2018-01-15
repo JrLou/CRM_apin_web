@@ -56,8 +56,9 @@ function checkCode(json) {
     4: '用户被禁用',
     6: '接口不存在',
     7: '非法请求',
+    8: '凭证过期'
   };
-  if (json.code && json.code * 1 < 1 && json.code * 1 > -7) {
+  if (json.code && json.code * 1 < 1 && json.code * 1 > -10) {
     const errortext = codeMessage[json.code * -1];
     notification.error({
       message: `提示`,
