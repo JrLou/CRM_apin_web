@@ -33,6 +33,7 @@ export default {
     *logout(_, { put }) {
       CookieHelp.clearCookie()
       yield put(routerRedux.push('/user/login'));
+      location.reload()
     },
   },
 
