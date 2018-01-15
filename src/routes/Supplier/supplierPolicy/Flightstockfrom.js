@@ -132,44 +132,30 @@ class AddForm extends Component {
   // }
 
   handleSubmit(e, event) {  //提交时数据格式整理，数据校验
-    let {flightstockAdd, flightstockData, linenubber, flightdata} = this.state
+    let { flightstockData, flightdata} = this.state
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        values.backAirLine = [flightstockData[1]]
+        if (!flightstockData[1].FlightArr) {
+          message.warning('请查询并选择返程航线');
+          return
+        }
+        if (!flightstockData[0].FlightArr) {
+          message.warning('请查询并选择出发航线');
+          return
+        }
+        values.backAirLine = JSON.stringify([flightstockData[1]])
+        values.goAirLine = JSON.stringify([flightstockData[0]])
         values.cityArr = flightstockData[0].FlightArr
+        values.seatType == "硬切" ? values.seatType = 0 : values.seatType = 1
         values.cityDep = flightstockData[0].FlightDep
         values.endDate = moment(flightdata.flightTimeWill[1]).format("YYYY-MM-DD")
         values.startDate = moment(flightdata.flightTimeWill[1]).format("YYYY-MM-DD")
+        values.flightNumber = flightstockData[0].FlightNo + '-' + flightstockData[0].FlightNo
+        values.weekFlights = flightdata.selectedWeekGroup[0]
+        values.managerId = 0
         console.log(values)
-
-        // if (!this.props.id) {
-        //   for (let i = 0; i < datas.flightstockData.voyages.length; i++) {
-        //     datas.flightstockData.voyages[i].data.tripIndex = datas.flightstockData.voyages[i].numbering;
-        //     details.push(datas.flightstockData.voyages[i].data)
-        //   }
-        // }
-        // for (let j = 0; j < details.length; j++) {
-        //   if (datas.selectedWeekGroup[j].length > 0) {
-        //     details[j].flights = Algorithm.toogleToWeekStr(datas.selectedWeekGroup[j])
-        //   }
-        // }
-        // if (details.length < 2 && !this.props.post.id) {
-        //   message.warning('请查询并选择出发航线或返程航线');
-        //   return;
-        // }
-        // values.flightType = 2;
-        // this.props.post.id ? datas.flightstockData.voyages[0].days = 0 : details[0].days = 0;
-        // this.props.post.id ? datas.flightstockData.voyages[1].days = values.days - 1 : details[1].days = values.days - 1;
-        // values.seatType == '硬切' ? values.seatType = 1 : values.seatType = 2;
-        // values.departureStart = values.time[0].format("YYYY-MM-DD");
-        // values.departureEnd = values.time[1].format("YYYY-MM-DD");
-        // datas.remark ? values.canChange = datas.remark : values.canChange = '';
-        // delete values.days;
-        // delete values.time;
-        // delete values.keys;
-        // values = JSON.stringify(values);
-        // this.props.id ? this.addPost(APILXF.api_edit, values, 0) : this.addPost(APILXF.api_add, values, 0);
+        this.props.addPost('flightstockAdd/getaddtit', values);
       }
     });
   }
