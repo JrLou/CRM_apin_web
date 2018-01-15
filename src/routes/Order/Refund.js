@@ -116,14 +116,20 @@ export default class TableList extends PureComponent {
         <Row gutter={layoutForm}>
           <Col md={8} sm={24}>
             <FormItem label="退款单号">
-              {getFieldDecorator('id')(
-                <Input placeholder="请输入" maxLength={32}/>
+              {getFieldDecorator('id',{
+                rules: [{max: 32, message: "最长32位"}],
+                initialValue: ""
+              })(
+                <Input placeholder="请输入"/>
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="订单号">
-              {getFieldDecorator('order_id')(
+              {getFieldDecorator('order_id',{
+                rules: [{max: 32, message: "最长32位"}],
+                initialValue: ""
+              })(
                 <Input placeholder="请输入" maxLength={32}/>
               )}
             </FormItem>
@@ -352,8 +358,12 @@ class OfflineModal extends React.Component {
 
   handleOk() {
     let {data, failReason} = this.props, {textAreaValue} = this.state;
-    failReason({'message': textAreaValue, 'order_id': data.order_id, 'pay_id': data.id});
-    this.hideModal();
+    if (textAreaValue.length < 32) {
+      failReason({'message': textAreaValue, 'order_id': data.order_id, 'pay_id': data.id});
+      this.hideModal();
+    } else {
+      message.warning('出票失败的原因最多32个字')
+    }
   }
 
   render() {
@@ -373,6 +383,7 @@ class OfflineModal extends React.Component {
           ]}
         >
           <TextArea rows={4} placeholder="请输入线下退款的原因（非必填）" onChange={::this.textAreaChange} value={textAreaValue}/>
+          <span style={{float:'right'}}><span style={{color:textAreaValue.length>32?'#f00':''}}>{textAreaValue.length || 0}</span>/32</span>
         </Modal>
       </div>
     );
