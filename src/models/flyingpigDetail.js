@@ -29,13 +29,13 @@ export default {
         payload: false,
       });
     },
-    * addTicket({payload}, {call, put}) {
+    * addTicket({payload,callback}, {call, put}) {
       const response = yield call(flyDetailAddTicket, payload);
       if (callback) {
         callback(response);
       }
     },
-    * updateSettleAmount({payload}, {call, put}) {
+    * updateSettleAmount({payload,callback}, {call, put}) {
       const response = yield call(updateSettleAmount, payload);
       if (callback) {
         callback(response);

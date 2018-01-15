@@ -130,7 +130,7 @@ export default class TableList extends PureComponent {
                 rules: [{max: 32, message: "最长32位"}],
                 initialValue: ""
               })(
-                <Input placeholder="请输入" maxLength={32}/>
+                <Input placeholder="请输入"/>
               )}
             </FormItem>
           </Col>
