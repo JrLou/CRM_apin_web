@@ -23,7 +23,6 @@ const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
 @Form.create()
 export default class TableList extends PureComponent {
   state = {
-    selectedRows: [],
     formValues: {},
     modalFormValues: {},
     visible: false,
@@ -69,12 +68,6 @@ export default class TableList extends PureComponent {
     dispatch({
       type: 'customerMannagement/fetch',
       payload: {},
-    });
-  };
-
-  handleSelectRows = (rows) => {
-    this.setState({
-      selectedRows: rows,
     });
   };
 
@@ -274,20 +267,9 @@ export default class TableList extends PureComponent {
 
   render() {
     const {customerMannagement: {loading: ruleLoading, data,}} = this.props;
-    const {selectedRows} = this.state;
-    // const breadcrumbList = [{
-    //   title: '一级菜单',
-    //   href: '/',
-    // }, {
-    //   title: '二级菜单',
-    //   href: '/',
-    // }, {
-    //   title: '三级菜单',
-    // }];
+    console.log("父级这里的data",data);
     return (
-      <PageHeaderLayout
-        // breadcrumbList={breadcrumbList}
-      >
+      <PageHeaderLayout>
         <Card
           bordered={false}
           style={{minWidth: '780px'}}
@@ -298,10 +280,8 @@ export default class TableList extends PureComponent {
             </div>
             <p>共搜索到{data.option.total}条数据</p>
             <StandardTable
-              selectedRows={selectedRows}
               loading={ruleLoading}
               data={data}
-              onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
             />
           </div>
@@ -311,7 +291,7 @@ export default class TableList extends PureComponent {
           visible={this.state.visible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
-          // footer={null}
+          footer={null}
         >
           {this.renderModalForm()}
         </Modal>
