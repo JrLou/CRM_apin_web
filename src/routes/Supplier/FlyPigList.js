@@ -96,36 +96,40 @@ export default class TableList extends PureComponent {
     const {getFieldDecorator} = this.props.form;
     return (
       <Form layout="inline">
-        <Row gutter={{md: 6, lg: 24, xl: 48}}>
-          <Col md={6} sm={24}>
+        <Row gutter={{md:8, lg: 24, xl: 48}}>
+          <Col md={8} sm={24}>
             <FormItem label="出发城市">
-              {getFieldDecorator('cityDep')(
+              {getFieldDecorator('cityDep',{rules: [{ max: 32, message: '最长32位' }]})
+              (
                 <Input placeholder="请输入"/>
               )}
             </FormItem>
           </Col>
-          <Col md={6} sm={24}>
+          <Col md={8} sm={24}>
             <FormItem label="到达城市">
-              {getFieldDecorator('cityArr')(
+              {getFieldDecorator('cityArr',{rules: [{ max: 32, message: '最长32位' }]})
+              (
                 <Input placeholder="请输入"/>
               )}
             </FormItem>
           </Col>
-          <Col md={6} sm={24}>
+          <Col md={8} sm={24}>
             <FormItem label="去程航班号">
-              {getFieldDecorator('airLineGo')(
+              {getFieldDecorator('airLineGo',{rules: [{ max: 32, message: '最长32位' }]})
+              (
                 <Input placeholder="请输入"/>
               )}
             </FormItem>
           </Col>
-          <Col md={6} sm={24}>
+          <Col md={8} sm={24}>
             <FormItem label="返程航班号">
-              {getFieldDecorator('airLineBack')(
+              {getFieldDecorator('airLineBack',{rules: [{ max: 32, message: '最长32位' }]})
+              (
                 <Input placeholder="请输入" type="tel"/>
               )}
             </FormItem>
           </Col>
-          <Col md={6} sm={24}>
+          <Col md={8} sm={24}>
             <FormItem label="资源状态">
               {getFieldDecorator('state', {
                 initialValue: '-1'
@@ -139,20 +143,21 @@ export default class TableList extends PureComponent {
               )}
             </FormItem>
           </Col>
-          <Col md={6} sm={24}>
+          <Col md={8} sm={24}>
             <FormItem label="资源ID">
-              {getFieldDecorator('id')(
+              {getFieldDecorator('id',{rules: [{ max: 32, message: '最长32位' }]})
+              (
                 <Input placeholder="请输入"/>
               )}
             </FormItem>
           </Col>
-          <Col md={12} sm={24}>
-            <div style={{ float: 'right', marginBottom: 24 }}>
+        </Row>
+        <div style={{overflow: 'hidden'}}>
+          <span style={{float: 'right', marginBottom: 24}}>
             <Button type="primary" onClick={::this.handleSearch}>查询</Button>
             <Button style={{marginLeft: 8}} onClick={::this.handleFormReset}>重置</Button>
-            </div>
-          </Col>
-        </Row>
+          </span>
+        </div>
       </Form>
     );
   }
@@ -226,7 +231,7 @@ export default class TableList extends PureComponent {
         dataIndex: 'flight_arr',
         render:(text,data)=>{
           let record=this.getFlight(data);
-          let flightArr = record.flight_date+record.time_dep_1;
+          let flightArr = record.flight_date + record.time_arr_0 + (record.days - 1)*24*60*60*1000;
           return timeHelp.getYMD(flightArr)
         }
       }, {
