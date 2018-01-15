@@ -179,9 +179,13 @@ export const getRouterData = (app) => {
     // '/user/:id': {
     //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),
     // },
-    '/offline/order/orderList': {
+    '/offline/order': {
       name: '线下订单列表',
       component: dynamicWrapper(app, ['offline'], () => import('../routes/Offline/OfflineList.js')),
+    },
+    '/offline/order/addOrder': {
+      name: '新增订单',
+      component: dynamicWrapper(app, ['offline'], () => import('../routes/Offline/AddOrder.js')),
     },
   };
   // Get name from ./menu.js or just set it in the router data.

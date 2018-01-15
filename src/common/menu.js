@@ -101,7 +101,7 @@ const menuData = [{
     path: 'offline',
     children: [{
       name: '线下订单列表',
-      path: '/offline/order/orderList',
+      path: 'offline/order',
     }],
   },
   // {
