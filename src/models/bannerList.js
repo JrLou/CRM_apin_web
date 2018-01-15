@@ -9,12 +9,10 @@ export default {
       data: [],
       option: {}
     },
-    editData: {
-
-    },
+    editData: {},
     loading: true,
     banner_url: '',
-    uploadSuccess: false
+    uploadSuccess: false,
   },
 
   effects:
@@ -76,7 +74,7 @@ export default {
         });
       },
       * toAdd({ payload }, { call, put }) {
-        // 列表页，跳转到添加页面
+        // 列表页，跳转到新增banner页面
         yield put({
           type: 'changeEditData',
           payload: payload,
@@ -84,7 +82,7 @@ export default {
         yield put(routerRedux.push('/operations/banner/bannerAdd'))
       },
       * toEdit({ payload }, { call, put }) {
-        //列表页，跳转到编辑页面
+        //列表页，跳转到编辑banner页面
         yield put({
           type: 'changeEditData',
           payload: payload,
@@ -116,7 +114,7 @@ export default {
           });
 
           yield put(routerRedux.push('/operations/banner'))
-          message.success('编辑成功')
+          message.success('banner编辑成功')
         }
       },
       * addBanner({ payload, callback }, { call, put }) {
@@ -137,6 +135,7 @@ export default {
         }
       },
       * baseImg({ payload, callback }, { call, put }) {
+        //上传banner
         yield put({
           type: 'changeFlag',
           payload: false,

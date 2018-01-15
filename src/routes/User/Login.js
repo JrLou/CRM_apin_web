@@ -73,7 +73,7 @@ export default class Login extends Component {
     const { count, type } = this.state;
     return (
       <div className={styles.main}>
-      <div className={styles.text}>• 登陆 •</div>
+      <div className={styles.text}>• 登录 •</div>
         <Form onSubmit={this.handleSubmit}>
               {
                 login.status === 'error' &&

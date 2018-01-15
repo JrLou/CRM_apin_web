@@ -1,17 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import {
-  Row,
-  Col,
-  Card,
-  Form,
-  Input,
-  Select,
-  Button,
-  Modal,
-  DatePicker,
-  message
-} from 'antd';
+import {Row,Col, Card, Form, Input, Select, Button, Modal, DatePicker, message } from 'antd';
 import StandardTable from './TableList';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 
@@ -29,13 +18,10 @@ const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
 export default class BannerList extends PureComponent {
   state = {
     selectedRows: [],
-    page: {
-      p: 1,
-      pc: 10
-    }
+    // p: 1,
+    // pc: 10
   };
-  p=1
-  pc =10
+
   componentDidMount() {
     this.props.dispatch({
       type: 'bannerList/fetch',
@@ -55,6 +41,8 @@ export default class BannerList extends PureComponent {
       newObj[key] = getValue(filtersArg[key]);
       return newObj;
     }, {});
+
+    this.p =pagination.current
     this.pc =pagination.pageSize
     const params = {
       p: pagination.current,
@@ -116,7 +104,6 @@ export default class BannerList extends PureComponent {
 
   render() {
     const { bannerList: { loading: ruleLoading, data } } = this.props;
-    console.log(data)
     Object.assign(data, {
         pagination:{
           current:this.p,
@@ -128,14 +115,7 @@ export default class BannerList extends PureComponent {
       <PageHeaderLayout>
         <Card bordered={false}>
           <div className={styles.tools}>
-            <Button
-              className={styles.addBtn}
-              size={'large'}
-              type={'primary'}
-              onClick={()=>{
-                this.handleAdd();
-              }}
-            >
+            <Button className={styles.addBtn} type='primary' onClick={::this.handleAdd}>
               新增banner
             </Button>
           </div>
