@@ -122,6 +122,7 @@ class BasicLayout extends React.PureComponent {
           <GlobalHeader
             currentUser={currentUser}
             collapsed={collapsed}
+            location={location}
             dispatch={dispatch}
           />
           <Content style={{ margin: '24px 24px 0', height: '100%' }}>

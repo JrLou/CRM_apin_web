@@ -227,7 +227,7 @@ export default class AutoForm extends React.Component {
         placeholder: itemData.placeholder || undefined,
         type: itemData.htmlType || 'text',
         dataSource: itemData.dataSource || undefined,
-        style: Object.assign({width: type < 5 ? "220px" : ""}, itemData.style),
+        style: Object.assign({width: type < 5 ? "100%" : ""}, itemData.style),
       }, {...fieldsProps}));
 
       let formItemEle = null;
@@ -261,13 +261,14 @@ export default class AutoForm extends React.Component {
 
       //todo 如何让属性设置成，传递了下来则有，否则没
       const key = itemData.fieldDecorator || Math.random();
-      const FormItemView = type < 5 ? <FormItem
+      const FormItemView = type < 5 ? <Col span={8} key={key}><FormItem
           key={key}
           {...formItemLayout4Self}
           {...formItemProps}
         >
           {getFieldDecorator(itemData.fieldDecorator, option)(formItemEle)}
         </FormItem>
+        </Col>
         : <FormItem
           key={key}
           {...formItemLayout4Self}
@@ -282,24 +283,26 @@ export default class AutoForm extends React.Component {
     const btnView = wapperAddCol(<FormItem
       {...formBtnLayout}
     >
-      <Button
-        type="primary"
-        htmlType="submit"
-        disabled={this.hasErrors(getFieldsError())}
-      >
-        搜索
-      </Button>
-      <Button style={{marginLeft: 8}} onClick={this.handleReset}>
-        重置
-      </Button>
+      <div style={{textAlign: 'right'}}>
+        <Button
+          type="primary"
+          htmlType="submit"
+          disabled={this.hasErrors(getFieldsError())}
+        >
+          搜索
+        </Button>
+        <Button style={{marginLeft: 8}} onClick={this.handleReset}>
+          重置
+        </Button>
+      </div>
     </FormItem>, span, "myBtn", layout);
 
     return (
       <Form layout={layout} onSubmit={this.handleSearch}>
-        <Row>
+        <Row gutter={{md: 8, lg: 24, xl: 48}}>
           {ColItems}
-          {btnView}
         </Row>
+        {btnView}
       </Form>
     );
   }

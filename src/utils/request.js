@@ -46,33 +46,37 @@ function checkCode(json) {
   //     -6  接口不存在
   //     -7  非法请求
   //     ......
+  // -1系统未捕获异常 -2未登录 -3没有权限访问 -4用户被禁用 -5列表无数据 -6接口不存在 -7非法请求
+  //  -8无效凭证 -9用户不存在 -10 未授权的功能(接口无权限) -11用户失效 -12过期凭证 -13访问频繁
   // }
   // -199 ~ -100  用户输入信息校验错误
   // -299 ~ -200  后端业务提交错误
-  const codeMessage = {
-    1: '系统未捕获异常',
-    2: '未登录',
-    3: '没有权限访问',
-    4: '用户被禁用',
-    6: '接口不存在',
-    7: '非法请求',
-    8: '凭证过期'
-  };
-  if (json.code && json.code * 1 < 1 && json.code * 1 > -10) {
-    const errortext = codeMessage[json.code * -1];
-    notification.error({
-      message: `提示`,
-      description: errortext,
-    });
-    if (json.code == -2 && json.code == -8) {
-      Cookies.clearCookie()
-      location.reload()
-    }
-  } else if (json.code && json.code >= -100 && json.code < -7) {
+  // const codeMessage = {
+  //   1: '系统未捕获异常',
+  //   2: '未登录',
+  //   3: '没有权限访问',
+  //   4: '用户被禁用',
+  //   6: '接口不存在',
+  //   7: '非法请求',
+  //   8: '凭证过期',
+  //   9: '用户不存在',
+  //   10: '未授权的功能',
+  //   11: '用户失效',
+  //   12: '过期凭证',
+  //   13: '访问频繁'
+  //   14: '登录密码错误'
+  // };
+  if (json.code && json.code * 1 < 1 && json.code * 1 > -100) {
+    // const errortext = codeMessage[json.code * -1];
     notification.error({
       message: `提示`,
       description: json.msg || "",
     });
+
+    if (json.code == -2 || json.code == -8 || json.code == -4 || json.code== -11|| json.code== -12 ||json.code== -10) {
+      Cookies.clearCookie()
+      location.reload()
+    }
   } else if (json.code && json.code * 1 <= -100 && json.code * 1 >= -199) {
     notification.error({
       message: "用户输入信息校验错误",
