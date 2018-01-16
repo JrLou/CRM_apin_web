@@ -44,7 +44,7 @@ class CloseReasonModal extends Component {
           //TODO 这里的placeholder需要产品确认
         }
         <TextArea
-          placeholder="请输入关闭拼团原因，最多100个字"
+          placeholder="请输入内容"
           autosize={{minRows: 2, maxRows: 4}}
           value={closeReason}
           onChange={(e) => {
