@@ -57,7 +57,7 @@ export default class TableList extends PureComponent {
     };
 
     const params = {
-      ...page,
+      ...this.page,
       ...formValues,
       ...filters,
     };
@@ -71,6 +71,15 @@ export default class TableList extends PureComponent {
     });
 
   };
+
+  //当【查询】or 【重置】时，都应该从第一页从新请求
+  resetCurrentPage = () => {
+    this.page = {
+      ...this.page,
+      p:1,
+    }
+  };
+
   handleFormReset = () => {
     const {form, dispatch} = this.props;
     form.resetFields();
@@ -81,6 +90,7 @@ export default class TableList extends PureComponent {
         this.setState({formValues});
       }
     );
+    this.resetCurrentPage();
     dispatch({
       type: 'userList/fetch',
       payload: {...this.page},
@@ -99,6 +109,7 @@ export default class TableList extends PureComponent {
     form.validateFields((err, formValues) => {
       if (err) return;
       this.setState({formValues}, () => {
+        this.resetCurrentPage();
         dispatch({
           type: 'userList/fetch',
           payload: {
