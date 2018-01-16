@@ -51,7 +51,6 @@ class page extends Component {
     });
   }
   render() {
-    const {flightstockEdit: {accurate, details}} = this.props;
     return (
       <PageHeaderLayout>
         <div className={css.formWapper}>
@@ -61,7 +60,6 @@ class page extends Component {
               addPost={this.addPost.bind(this)}
               id={this.props.location.state ? this.props.location.state.data.id : ''}
               information={this.props.location.state ? this.props.location.state.data : {}}
-              details={details}
               away={this.away.bind(this)}
               accurate={{}}
               {...this.props}
