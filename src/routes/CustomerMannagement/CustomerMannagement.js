@@ -30,7 +30,9 @@ export default class TableList extends PureComponent {
 
   componentDidMount() {
     this.props.dispatch({
-      type: 'customerMannagement/fetch'
+      type: 'customerMannagement/fetch',
+      payload: {},
+      succCB: (data) => this.cacheData = data.map(item => ({...item}))//先缓存
     });
   }
 
@@ -58,6 +60,7 @@ export default class TableList extends PureComponent {
     dispatch({
       type: 'customerMannagement/fetch',
       payload: params,
+      succCB: (data) => this.cacheData = data.map(item => ({...item}))//先缓存
     });
 
   };
@@ -68,6 +71,7 @@ export default class TableList extends PureComponent {
     dispatch({
       type: 'customerMannagement/fetch',
       payload: {},
+      succCB: (data) => this.cacheData = data.map(item => ({...item}))//先缓存
     });
   };
 
@@ -88,6 +92,7 @@ export default class TableList extends PureComponent {
       dispatch({
         type: 'customerMannagement/fetch',
         payload: values,
+        succCB: (data) => this.cacheData = data.map(item => ({...item}))//先缓存
       });
     });
   };
@@ -108,6 +113,7 @@ export default class TableList extends PureComponent {
       dispatch({
         type: 'customerMannagement/fetch',
         payload: values,
+        succCB: (data) => this.cacheData = data.map(item => ({...item}))//先缓存
       });
     });
   };
@@ -283,6 +289,8 @@ export default class TableList extends PureComponent {
               loading={ruleLoading}
               data={data}
               onChange={this.handleStandardTableChange}
+              cacheData={this.cacheData}
+              setCacheData={cacheData=>this.cacheData = cacheData}
             />
           </div>
         </Card>
