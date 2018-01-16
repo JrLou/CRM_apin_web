@@ -643,10 +643,7 @@ class AddForm extends Component {
                         rules: [{
                           required: true,
                           message: requiredText,
-                        }, {
-                          pattern: /^[1-9][0-9]*(\.[0-9][0-9])?$|^[1-9][0-9]*(\.[0-9])?$|^[0]\.([1-9])$|^[0]\.([0-9][1-9])$/,
-                          message: "成人价需大于0，且最多两位小数"
-                        }, {
+                        }, {pattern: /^[1-9]\d{0,4}$/, message: "请输入小于6位的正整数"}, {
                           max: 6,
                           message: "最多6位"
                         }],
@@ -669,10 +666,7 @@ class AddForm extends Component {
                         rules: [{
                           required: true,
                           message: requiredText,
-                        }, {
-                          pattern: /^[1-9][0-9]*(\.[0-9][0-9])?$|^[1-9][0-9]*(\.[0-9])?$|^[0]\.([1-9])$|^[0]\.([0-9][1-9])$/,
-                          message: "儿童价需大于0，且最多两位小数"
-                        }, {
+                        }, {pattern: /^[1-9]\d{0,4}$/, message: "请输入小于6位的正整数"}, {
                           max: 6,
                           message: "最多6位"
                         }],

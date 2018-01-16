@@ -183,7 +183,7 @@ class AddForm extends Component {
       visible: false,
     });
   }
-  
+
   weekCalculate(arr) {
     let data = this.state.flightdata;
     let selectedWeek = [];
