@@ -82,12 +82,7 @@ export default class MyForm extends Component {
           fieldDecorator: "cityDep",				                            //*string		                    				                        与后台数据传输的“键名”
           initialValue: "",				                                  //按需			                            ""				                仅当需要回显的时候才需要出入值
           label: "出发城市",				                                  //string|ReactNode						                                  label标签的文本
-          rules: [                                                  //object[]                                                      具体参数详见：https://ant.design/components/form-cn/#校验规则
-            {
-              required: false,
-              message: 'nothing',
-            }
-          ],
+          rules: [{max: 32, message: '最长32位'}],
           placeholder: "请输入",                                //string			                        "请输入"			            同html中的placeholder
           htmlType: "text",			                                    //string		                          "text"			            同input中的type,有"text"/"password"等
           style: {},            //object                                                      传入给Input/Select的css行内样式,默认宽度为220px
@@ -100,12 +95,7 @@ export default class MyForm extends Component {
           fieldDecorator: "cityArr",
           initialValue: "",
           label: "目的城市",
-          rules: [
-            {
-              required: false,
-              message: '请输入目的城市'
-            }
-          ],
+          rules: [{max: 32, message: '最长32位'}],
           placeholder: "请输入",
           style: {},
         }, {
@@ -144,12 +134,7 @@ export default class MyForm extends Component {
           fieldDecorator: "id",
           initialValue: "",
           label: "拼团单号",
-          rules: [
-            {
-              required: false,
-              message: '请输入拼团单号'
-            }
-          ],
+          rules: [{max: 32, message: '最长32位'}],
           placeholder: "请输入",
           style: {},
         }, {

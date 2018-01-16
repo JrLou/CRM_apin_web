@@ -140,7 +140,7 @@ export default class TableList extends PureComponent {
             <FormItem label="微信昵称:" style={formItemStyle}>
               {getFieldDecorator('name', {
                 initialValue: "",
-                rules: [{max: 30, message: '长度不能超过30'}],
+                rules: [{max: 32, message: '最长32位'}],
               })
               (<Input placeholder="请输入" style={inputStyle}/>)
               }
