@@ -62,61 +62,23 @@ export default class TableList extends PureComponent {
         this.setState({visible: false})
     }
   }
-
-  handleTableChange(pagination) {
-    this.setState({
-      pagination: {
-        p: pagination.current,
-        pc: pagination.pageSize,
-      }
-    }, () => {
-      this.handleSearch();
-    });
-  }
-
   handleFormReset() {
     this.props.form.resetFields();
-    const param = this.props.form.getFieldsValue();
-    this.setState({
-      formValues: param,
-      pagination: {
-        p: 1,
-        pc: 10,
-      }
-    }, () => {
-      this.handleSearch();
-    });
+    // const param = this.props.form.getFieldsValue();
+    // this.setState({
+    //   formValues: param,
+    //   pagination: {
+    //     p: 1,
+    //     pc: 10,
+    //   }
+    // }, () => {
+    //   this.handleSearch();
+    // });
   };
 
   selectTime(date, dateString) {
     this.setState({
       timeArr: dateString,
-    });
-  }
-
-  handleSearch() {
-    const {dispatch, form} = this.props, {pagination, timeArr} = this.state;
-    form.validateFields((err, fieldsValue) => {
-      if (!err) {
-        const values = {
-          ...fieldsValue,
-        };
-        values.state = Number(values.state);
-        for (let item in values) {
-          if (values[item] === undefined) {
-            values[item] = '';
-          }
-        }
-        console.log(values)
-        // this.setState({
-        //   filter: values,
-        // });
-        let params = Object.assign(pagination, values);
-        dispatch({
-          type: 'H5List/fetch',
-          payload: params,
-        });
-      }
     });
   }
 
@@ -301,8 +263,8 @@ export default class TableList extends PureComponent {
               {this.renderForm()}
             </div>
             <Table
-              loading={loading}
-              dataSource={data}
+              loading={false}
+              dataSource={[]}
               rowKey={'id'}
               pagination={{
                 pageSize: size ? size : 10,
