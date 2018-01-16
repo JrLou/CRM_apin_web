@@ -316,7 +316,7 @@ class ExportPassengerModal extends Component {
               payload: this.insertTickets(data, abroad),
             });
             message.success('导入票号成功');
-          } else {
+          } else {//todo 我这里没有走request，所以就没有错误消息啦
             //不符合要求时，fileList值为空
             fileList = [];
             // message.error(file.response.msg);

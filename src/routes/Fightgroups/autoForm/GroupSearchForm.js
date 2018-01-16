@@ -88,7 +88,7 @@ export default class MyForm extends Component {
               message: 'nothing',
             }
           ],
-          placeholder: "请输入出发城市",                                //string			                        "请输入"			            同html中的placeholder
+          placeholder: "请输入",                                //string			                        "请输入"			            同html中的placeholder
           htmlType: "text",			                                    //string		                          "text"			            同input中的type,有"text"/"password"等
           style: {},            //object                                                      传入给Input/Select的css行内样式,默认宽度为220px
           // prefix: <Icon type="team"/>,                              //string|ReactNode                                            带有前缀图标的 input/select
@@ -106,7 +106,7 @@ export default class MyForm extends Component {
               message: '请输入目的城市'
             }
           ],
-          placeholder: "请输入目的城市",
+          placeholder: "请输入",
           style: {},
         }, {
           type: 2,
@@ -150,7 +150,7 @@ export default class MyForm extends Component {
               message: '请输入拼团单号'
             }
           ],
-          placeholder: "请输入拼团单号",
+          placeholder: "请输入",
           style: {},
         }, {
           type: 2,

@@ -289,7 +289,7 @@ export default class AutoForm extends React.Component {
           htmlType="submit"
           disabled={this.hasErrors(getFieldsError())}
         >
-          搜索
+          查询
         </Button>
         <Button style={{marginLeft: 8}} onClick={this.handleReset}>
           重置
