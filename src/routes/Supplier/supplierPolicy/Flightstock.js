@@ -94,7 +94,7 @@ class page extends Component {
         },
         {name: '资源负责人', id: 'principalName', required: false, category: 0,},
         {
-          name: '请选择有效性',
+          name: '有效性',
           id: 'validity',
           required: false,
           category: 1,

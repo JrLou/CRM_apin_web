@@ -332,6 +332,13 @@ class page extends Component {
     })
   }
 
+  visiblees() {
+    let _this = this
+    _this.setState({
+      showImportModal: false
+    })
+  }
+
   rightContent() {
     //  'modifyPrice',   //'modifyStock'   'modifyClearTime'
     switch (this.state.rightType) {
@@ -490,7 +497,9 @@ class page extends Component {
             listdata={this.props.listdata}
             airlineId={this.props.listdata.id}
             addPost={this.addPost.bind(this)}
-            upFile={this.upLoadFile.bind(this)}/>
+            upFile={this.upLoadFile.bind(this)}
+            visiblees={this.visiblees.bind(this)}
+          />
 
         </Modal>
       </div>
@@ -690,7 +699,9 @@ class BulkImportForm extends Component {
 
       if (obj.file.response && obj.file.response.code >= 1) {
         message.success('操作成功')
+        this.props.visiblees();
         console.log(obj)
+        console.log(this.props)
       }
       this.setState({
         fileList: obj.fileList
