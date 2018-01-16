@@ -48,6 +48,7 @@ class AddForm extends Component {
       flightstockAdd: props.flightstockAdd ? props.flightstockAdd : {},
       flightstockEdit: props.flightstockEdit ? props.flightstockEdit : {details: []},
       baioshi: false,
+      competencese: false,
     };
   }
 
@@ -62,7 +63,8 @@ class AddForm extends Component {
       flightdata.competence = true
       this.setState({
         flightstockEdit: nextProps.flightstockView,
-        flightdata:flightdata
+        flightdata: flightdata,
+        competencese:true
       });
     }
     if (this.state.flightstockEdit && this.state.flightstockEdit.details.length > 0) {
@@ -814,10 +816,10 @@ class AddForm extends Component {
                               htmlType="submit"
                               size="large"
                               style={{height: "30px", marginRight: "10px"}}>保存</Button>
-                      {this.props.id &&
+                      {this.props.id && !this.state.competencese &&
                       <Button type="primary" style={{height: "30px", marginRight: "10px"}}
                               onClick={this.valHeadquarters.bind(this, 7)}>备注</Button>}
-                      {this.props.id &&
+                      {this.props.id && !this.state.competencese &&
                       < Button type="primary" style={{height: "30px", marginRight: "10px"}}
                                onClick={this.valHeadquarters.bind(this, 9)}>日志</Button>
                       }
@@ -831,9 +833,9 @@ class AddForm extends Component {
           {this.props.id &&
           <TabPane tab="航班库存价格" key="2">
             <FlightstockCalendar
-              disabledadd={this.state.flightdata.competence}
+              disabledadd={this.state.competencese}
               listdata={this.props.information}
-              date={['2018-09-19', '2018-09-19']}
+              date={[moment(flightstockEdit.details[0].departure_start).format("YYYY-MM-DD"), moment(flightstockEdit.details[0].departure_end).format("YYYY-MM-DD")]}
             />
           </TabPane>
           }

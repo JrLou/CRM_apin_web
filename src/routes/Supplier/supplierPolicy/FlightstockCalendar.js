@@ -444,6 +444,7 @@ class page extends Component {
     })
     return (
       <div className={css.container}>
+        {!this.props.disabledadd &&
         <div className={css.btnBox}>
           <Button onClick={this.showImportModal.bind(this, true)}>价格批量导入</Button>
           {/* <Button onClick={this.changeModal.bind(this, "addStage")}>新增团期报价</Button> */}
@@ -451,6 +452,7 @@ class page extends Component {
           <Button onClick={this.changeModal.bind(this, "modifyStock")}>修改库存</Button>
           <Button onClick={this.changeModal.bind(this, "modifyClearTime")}>修改清位时间</Button>
         </div>
+        }
         <Calendar
           value={this.state.dateSelect}
           dateCellRender={this.dateCellRender.bind(this)}
