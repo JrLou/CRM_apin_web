@@ -125,6 +125,7 @@ class StandardTable extends PureComponent {
       {
         title: '操作',
         dataIndex: 'operation',
+        width:'140px',
         render: (text, record) => {
           const {editable} = record;
           return (//todo 我的同时按下两个修改，会有bug
@@ -133,12 +134,26 @@ class StandardTable extends PureComponent {
                 editable ?
                   <span>
                   <a onClick={() => this.save(record.key)}>保存</a>&nbsp;&nbsp;
-                  <Popconfirm title="取消保存?" onConfirm={() => this.cancel(record.key)}>
+                    <Popconfirm title="取消保存?" onConfirm={() => this.cancel(record.key)}>
                     <a>取消</a>
                   </Popconfirm>
                 </span>
                   : <a onClick={() => this.edit(record.id)}>修改</a>
               }
+              <Popconfirm
+                title="确定删除?"
+                onConfirm={() => {
+                }}
+              >
+                <a
+                  style={{
+                    position: "absolute",
+                    right: "20px"
+                  }}
+                >
+                  删除
+                </a>
+              </Popconfirm>
             </div>
           );
         }
