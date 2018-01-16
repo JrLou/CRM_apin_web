@@ -218,7 +218,7 @@ export default class OfflineList extends PureComponent {
       {
         title: '订单号',
         dataIndex: 'id',
-        render: (text, record) => <Link target="_blank" to={{ pathname: '/order/entrust/detail/' + formatPar({ id: text }) }}>{text}</Link>,
+        render: (text, record) => <Link to={"/offline/order/ViewOrder/" + text}>{text}</Link>,
       },
 
       {
@@ -286,7 +286,7 @@ export default class OfflineList extends PureComponent {
         title: '操作',
         render: (text, record) => {
           return <div className={styles.handleBtn}>
-            <Button type='primary'>查看</Button>
+            <Button type='primary'><Link to={"/offline/order/ViewOrder/" + record.id}>查看</Link></Button>
             <Button type='primary'>修改</Button>
             <Button type='primary'>删除</Button>
           </div>
