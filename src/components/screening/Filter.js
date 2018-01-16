@@ -189,12 +189,6 @@ class HorizontalLoginForm extends Component {
         <Row gutter={{md: 8, lg: 24, xl: 48}}>
           {formssd()}
         </Row>
-        {/*<div style={{overflow: 'hidden'}}>*/}
-          {/*<span style={{float: 'right', marginBottom: 24}}>*/}
-            {/*<Button type="primary">查询</Button>*/}
-            {/*<Button style={{marginLeft: 8}}>重置</Button>*/}
-          {/*</span>*/}
-        {/*</div>*/}
         <div style={{overflow: 'hidden'}}>
           <span style={{float: 'right', marginBottom: 24}}>
           <FormItem>

@@ -50,12 +50,12 @@ class AddForm extends Component {
       flightstockEdit: props.flightstockEdit ? props.flightstockEdit : {details: []},
       baioshi: false,
       competencese: false,
+      numbering: null,
     };
   }
 
   componentWillReceiveProps(nextProps) {
     let {flightdata} = this.state
-
     this.setState({
       flightstockAdd: nextProps.flightstockAdd ? nextProps.flightstockAdd : {},
       flightstockEdit: nextProps.flightstockEdit ? nextProps.flightstockEdit : {details: []},
@@ -246,6 +246,7 @@ class AddForm extends Component {
           flightstockData: flightstockData,
           flightNumbering: '航班号为：' + value + '的所有的航班',
           flightdata: flightdata,
+          numbering: ole
         });
         this.props.addPost('flightstockAdd/addAirLine', {
           endDate: moment(data.flightTimeWill[1]).format("YYYY-MM-DD"),
@@ -285,6 +286,18 @@ class AddForm extends Component {
       flightstockData: flightstockData,
       linenubber: linenubber,
       flightdata: flightdata,
+    });
+  }
+
+  mokecopen(ole) { //手动录入成功回调函数
+    console.log(ole)
+    let {linenubber, flightdata, flightstockData, flightstockAdd, numbering} = this.state
+    flightstockAdd.visible = false;
+    flightstockData[numbering] = ole
+    flightdata.selectedWeekGroup[numbering] = Algorithm.toogleToWeekStr(ole.flights)
+    linenubber[numbering] = numbering
+    this.setState({
+      flightstockAdd: flightstockAdd,
     });
   }
 
@@ -411,16 +424,7 @@ class AddForm extends Component {
     });
   }
 
-  mokecopen(ole) { //手动录入成功回调函数
-    let data = this.state.flightdata;
-    data.visible = false;
-    this.setState({
-      flightdata: data,
-      flightNumsdbdsdering: true,
-    });
 
-
-  }
 
   addDate(ole, add) {
     let _this = this;

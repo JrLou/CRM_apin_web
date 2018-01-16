@@ -69,7 +69,7 @@ class HorizontalLoginForm extends Component {
                     {...formItemLayout}
                     style={{marginBottom: "20px"}}
                 >
-                    {getFieldDecorator('flightNo', {
+                    {getFieldDecorator('FlightNo', {
                         rules: [{
                             required: true,
                             message: requiredText
@@ -83,7 +83,7 @@ class HorizontalLoginForm extends Component {
                     {...formItemLayout}
                     style={{marginBottom: "20px"}}
                 >
-                    {getFieldDecorator('flightCompany', {
+                    {getFieldDecorator('FlightCompany', {
                         rules: [{
                             required: true,
                             message: requiredText
@@ -100,7 +100,7 @@ class HorizontalLoginForm extends Component {
                             label="时间"
                             {...formItemLayout}
                         >
-                            {getFieldDecorator('flightDeptimePlanDate', {
+                            {getFieldDecorator('FlightDeptimePlanDate', {
                                 rules: [{
                                     required: true,
                                     message: requiredText
@@ -114,7 +114,7 @@ class HorizontalLoginForm extends Component {
                         <FormItem
                             {...formItemLayout}
                         >
-                            {getFieldDecorator('flightArrtimePlanDate', {
+                            {getFieldDecorator('FlightArrtimePlanDate', {
                                 rules: [{
                                     required: true,
                                     message: requiredText
@@ -130,7 +130,7 @@ class HorizontalLoginForm extends Component {
                             label="城市名称"
                             {...formItemLayout}
                         >
-                            {getFieldDecorator('flightDep', {
+                            {getFieldDecorator('FlightDep', {
                                 rules: [{
                                     required: true,
                                     message: requiredText
@@ -145,7 +145,7 @@ class HorizontalLoginForm extends Component {
                             // label="城市名称"
                             {...formItemLayout}
                         >
-                            {getFieldDecorator('flightArr', {
+                            {getFieldDecorator('FlightArr', {
                                 rules: [{
                                     required: true,
                                     message: requiredText
@@ -159,7 +159,7 @@ class HorizontalLoginForm extends Component {
                             label="机场三字码"
                             {...formItemLayout}
                         >
-                            {getFieldDecorator('flightDepcode', {
+                            {getFieldDecorator('FlightDepcode', {
                                 rules: [{
                                     required: true,
                                     message: requiredText
@@ -172,7 +172,7 @@ class HorizontalLoginForm extends Component {
                         <FormItem
                             {...formItemLayout}
                         >
-                            {getFieldDecorator('flightArrcode', {
+                            {getFieldDecorator('FlightArrcode', {
                                 rules: [{
                                     required: true,
                                     message: requiredText
