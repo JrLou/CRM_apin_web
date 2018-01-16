@@ -43,5 +43,23 @@ export default {
         loading: action.payload,
       };
     },
+    setStatereducer(state, {payload}) {
+      console.log("state", state);
+      console.log("payload", payload);
+      console.log("QQQQQQQQQQ", {
+        ...state,
+        data: {
+          ...state.data,
+          ...payload
+        },
+      });
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          ...payload
+        },
+      };
+    }
   },
 };

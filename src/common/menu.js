@@ -104,7 +104,10 @@ const menuData = [{
       path: 'offline/order', 
     },{
       name: '客户（旅行社）管理',
-      path: '/offline/order/customerMannagement',
+      path: '/offline/order/customerMannagement', 
+    },{
+      name: '客户（旅行社）管理',
+      path: '/offline/customerMannagement',
     }],
   },
   // {
