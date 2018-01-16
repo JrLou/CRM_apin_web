@@ -186,7 +186,7 @@ class HorizontalLoginForm extends Component {
                 <div>
                     <FormItem>
                         {/*<Button type="primary" htmlType="submit" style={{width:100}} loading={this.state.isLoadingSearch}>搜索</Button>*/}
-                        <Button type="primary" htmlType="submit" style={{width: 100}}>搜索</Button>
+                        <Button type="primary" htmlType="submit" style={{width: 100}}>查询</Button>
                     </FormItem>
                     <FormItem>
                         {/*<Button loading={this.state.isLoadingRet} style={{width:100}} onClick={this.resetValue.bind(this)}>重置</Button>*/}

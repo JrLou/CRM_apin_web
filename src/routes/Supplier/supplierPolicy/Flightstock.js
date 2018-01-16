@@ -191,7 +191,7 @@ class page extends Component {
             key="days"
           />
           <Column
-            title="航班负责人"
+            title="资源负责人"
             dataIndex="manager"
             key="manager"
           />
@@ -205,7 +205,7 @@ class page extends Component {
                   return <div>待上架</div>
                   break;
                 case 1:
-                  return <div>已上架</div>
+                  return <div>上架</div>
                   break;
               }
             }}
