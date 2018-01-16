@@ -118,7 +118,7 @@ export default class TableList extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem label="退款单号">
               {getFieldDecorator('id', {
-                rules: [{max: 32, message: "最长32位"}, {pattern: /^|[0-9][0-9]{0,33}$/, message: '请输入正确的退款单号'}],
+                rules: [{max: 32, message: "最长32位"}],
                 initialValue: ""
               })(
                 <Input placeholder="请输入"/>
@@ -128,7 +128,7 @@ export default class TableList extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem label="订单号">
               {getFieldDecorator('order_id', {
-                rules: [{max: 32, message: "最长32位"}, {pattern: /^|[0-9][0-9]{0,33}$/, message: '请输入正确的订单号'}],
+                rules: [{max: 32, message: "最长32位"}],
                 initialValue: ""
               })(
                 <Input placeholder="请输入"/>

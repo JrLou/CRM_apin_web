@@ -24,7 +24,7 @@ export default class BasicProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      inputPrice: this.price || 0,
+      inputPrice: this.price,
       isEdit: false,
     };
     this.par = getPar(this, 'params');
@@ -53,7 +53,7 @@ export default class BasicProfile extends Component {
   }
 
   inputPrice(e) {
-    let val = e.target.value,reg= /^\+?[0-9]\d{0,7}$/ ;
+    let val = e.target.value,reg= /^\+?[1-9]\d{0,7}$/ ;
     if(reg.test(val)||!val){
       this.setState({
         inputPrice: val
@@ -68,20 +68,24 @@ export default class BasicProfile extends Component {
       isEdit: !isEdit
     });
     if (isEdit) {
-      dispatch({
-        type: 'flyingpigDetail/updateSettleAmount',
-        payload: {order_id: this.orderData.id, settlement_amount: Number(inputPrice)*100},
-        callback: (res) => {
-          if (res.code >= 1) {
-            message.success('修改成功');
-          } else {
-            message.error('修改失败');
-            this.setState({
-              inputPrice: this.price
-            })
+      if(!inputPrice){
+        message.warning('您尚未输入实际结算价')
+      }else{
+        dispatch({
+          type: 'flyingpigDetail/updateSettleAmount',
+          payload: {order_id: this.orderData.id, settlement_amount: Number(inputPrice)*100},
+          callback: (res) => {
+            if (res.code >= 1) {
+              message.success('修改成功');
+            } else {
+              message.error('修改失败');
+              this.setState({
+                inputPrice: this.price
+              })
+            }
           }
-        }
-      });
+        });
+      }
     }
   }
 
@@ -156,6 +160,8 @@ export default class BasicProfile extends Component {
     this.passengerData = passenger;
     this.orderData = order;
     order_status = order.status ? order.status : 0;
+    let count_middle= Number(order.sell_price) / 100 * this.adult_count;
+    let count_little=inputPrice?count_middle-inputPrice:count_middle;
     //订单信息数据
     const orderColumns = [
       {title: '航班号', dataIndex: 'flight_no', key: 'flight_no',},
@@ -200,6 +206,7 @@ export default class BasicProfile extends Component {
         render: (text, record) => {
           if (text) {
             var ticketArr = text.split(',');
+            console.log(ticketArr)
           }
           return (<span>
             {
@@ -217,8 +224,8 @@ export default class BasicProfile extends Component {
                 :
                 (nameType == 'FlyingPig' && order_status == 3) || (nameType == 'Entrust' && order_status == 5) ?
                   <span>去 <span
-                    className={styles.showTicket}>{ticketArr && ticketArr[0] & ticketArr[0] != undefined ? ticketArr[0] : '无'}</span> 返 <span
-                    className={styles.showTicket}>{ticketArr && ticketArr[1] & ticketArr[1] != undefined ? ticketArr[1] : '无'}</span></span>
+                    className={styles.showTicket}>{ticketArr && ticketArr[0]!="undefined"  ? ticketArr[0] : '无'}</span> 返 <span
+                    className={styles.showTicket}>{ticketArr && ticketArr[1]!="undefined" ? ticketArr[1] : '无'}</span></span>
                   : null
             }
         </span>
@@ -350,7 +357,7 @@ export default class BasicProfile extends Component {
           <div className={styles.statusTitle}>
             {this.status[order_status] || ''}
             {
-              (nameType === 'FlyingPig' && order_status == 4) || (nameType === 'Entrust' && order_status == 6) ?
+              (nameType === 'FlyingPig' && order_status == 2) || (nameType === 'Entrust' && order_status == 4) ?
                 <FailModal failReason={::this.failReason}/>
                 : null
             }
@@ -414,7 +421,7 @@ export default class BasicProfile extends Component {
                       <li>
                         <span className={styles.titleDesc}>机票销售价</span>
                         <span
-                          className={styles.priceDesc}>{Number(order.sell_price)/100 * this.adult_count}.00={Number(order.sell_price)/100}元(成人价)*{this.adult_count}</span>
+                          className={styles.priceDesc}>{count_middle}={Number(order.sell_price)/100}元(成人价)*{this.adult_count}</span>
                       </li>
                       {
                         (nameType === 'Entrust' && order_status == 6) || (nameType === 'FlyingPig' && order_status == 4) ? null :
@@ -423,10 +430,10 @@ export default class BasicProfile extends Component {
                             <span className={styles.priceDesc}>
                         {
                           isEdit ?
-                            <Input value={inputPrice} className={styles.inputPrice} min={0} type="number"
+                            <Input value={inputPrice} className={styles.inputPrice} min={1} type="number"
                                    onChange={::this.inputPrice} />
                             :
-                            <span className={styles.inputPrice}>{inputPrice}元</span>
+                            <span className={styles.inputPrice}>{inputPrice?inputPrice+'元':''}</span>
                         }
                               <Button type='primary' onClick={::this.isEdit}>{isEdit ? '保存' : '修改'}</Button></span>
                           </li>
@@ -436,7 +443,7 @@ export default class BasicProfile extends Component {
                           <li>
                             <span className={styles.titleDesc}>差额</span>
                             <span className={styles.priceDesc}
-                                  style={{color: (order.sell_price * this.adult_count - inputPrice) > 0 ? '#f00' : ''}}>{order.sell_price * this.adult_count - inputPrice}</span>
+                                  style={{color: count_little > 0 ? '#f00' : ''}}>{count_little}</span>
                           </li>
                       }
                     </ul>
