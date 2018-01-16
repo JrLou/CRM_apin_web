@@ -85,13 +85,13 @@ export default class TableList extends PureComponent {
         break;
       case 2:
         result = {
-          txt: "拼团完成",
+          txt: "拼团成功",
           backgroundColor: '#33cc66'
         };
         break;
       case 3:
         result = {
-          txt: "拼团成功",
+          txt: "拼团完成",
           backgroundColor: '#33cc66'
         };
         break;
@@ -209,7 +209,7 @@ export default class TableList extends PureComponent {
     };
     return (
       <Spin spinning={loading}>
-        <p>共搜索到{this.total}个拼团</p>
+        <p>共有{this.total}个拼团</p>
         <div className={less.listParCon}>{/*这个div是less用的*/}
           <List
             grid={{gutter: 24, span: 4}}

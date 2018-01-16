@@ -127,7 +127,6 @@ export default class AutoForm extends React.Component {
         onCancelAfter && onCancelAfter(fieldsValue);
       }
     );
-
   };
 
   cloneObj = (obj) => {//深度克隆,对象或者数组
@@ -289,7 +288,7 @@ export default class AutoForm extends React.Component {
           htmlType="submit"
           disabled={this.hasErrors(getFieldsError())}
         >
-          搜索
+          查询
         </Button>
         <Button style={{marginLeft: 8}} onClick={this.handleReset}>
           重置

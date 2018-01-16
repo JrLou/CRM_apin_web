@@ -56,7 +56,6 @@ export default class CheckFightGroups extends Component {
   }
 
   loadInitPageData = () => {
-    console.log("loadInitPageData");
     const {dispatch} = this.props;
     dispatch({// 获取拼团信息
       type: 'checkFightGroups/fetchGroupsInfo',
@@ -95,10 +94,10 @@ export default class CheckFightGroups extends Component {
         txt = "拼团中";
         break;
       case 2:
-        txt = "拼团完成";
+        txt = "拼团成功";
         break;
       case 3:
-        txt = "拼团成功";
+        txt = "拼团完成";
         break;
       default:
         txt = "未知的拼团状态";
@@ -110,9 +109,9 @@ export default class CheckFightGroups extends Component {
   getFightGroupsInfoView() {
     const {groupsInfoData: {data, code, msg}, groupsInfoLoading} = this.props.checkFightGroups;
 
-    const create_time = formatDate(data.create_time, 'YYYY-MM-DD');
+    const create_time = formatDate(data.create_time, 'YYYY-MM-DD HH:mm');
 
-    const expired_time = formatDate(data.expired_time, 'YYYY-MM-DD');
+    const expired_time = formatDate(data.expired_time, 'YYYY-MM-DD HH:mm');
 
     const group_status = this.mapGroupStateToTxt(data.group_status);
     const city_dep = data.city_dep;
@@ -133,7 +132,7 @@ export default class CheckFightGroups extends Component {
           <Button
             type="primary"
             className={styles.btn}
-            disabled={data.group_status !== 2 || groupsInfoLoading}
+            disabled={data.group_status !== 3 || groupsInfoLoading}
             onClick={() => {
               this.setState({modalType: 0}, () => {
                 this.handleshowModal()
@@ -313,7 +312,7 @@ export default class CheckFightGroups extends Component {
 
     return (
       <div>
-        <div className={styles.title}><Icon type="idcard" />&nbsp;
+        <div className={styles.title}><Icon type="idcard"/>&nbsp;
           <span>订单信息</span>
           <Button
             type="primary"
@@ -362,10 +361,8 @@ export default class CheckFightGroups extends Component {
       groupsInfoData: {data: groupsInfoDataData},
     } = this.props.checkFightGroups;
 
-    // todo 方案有效时间，通过这个字段，计算出过期时间；
-    let expired_hour = (groupsInfoDataData.expired_time - groupsInfoDataData.create_time) % (1000 * 60 * 60);
-    expired_hour = expired_hour || (expired_hour === 0 ? 0 : "");
-
+    const expired_hour = ( (groupsInfoDataData.expired_time - groupsInfoDataData.create_time) / (1000 * 60 * 60) ).toFixed(1, 10);
+    const sell_price = ( (groupsInfoDataData.sell_price) / 100 ).toFixed(2, 10);
     const goFlightInfo = data.filter(currV => currV.trip_index === 0)[0] || {};
     const backFlightInfo = data.filter(currV => currV.trip_index === 1)[0] || {};
     const time_dep = formatDate(goFlightInfo.time_dep, 'YYYY-MM-DD');
@@ -387,7 +384,7 @@ export default class CheckFightGroups extends Component {
               <SingleFightView data={backFlightInfo}/>
             </div>
             <DescriptionList size="large" style={{marginTop: 32}} col={2}>
-              <Description term="销售价格">{groupsInfoDataData.sell_price || "未知价格"} 元 / 人</Description>
+              <Description term="销售价格">{sell_price || "未知价格"} 元 / 人</Description>
               <Description term="方案有效时间">{expired_hour} 小时</Description>
               <Description term="折扣">{groupsInfoDataData.discount}折</Description>
             </DescriptionList>
@@ -409,7 +406,7 @@ export default class CheckFightGroups extends Component {
         <div className={styles.title}><Icon type="form"/>&nbsp;日志信息</div>
         <Table
           loading={groupLogsLoading}
-          style={{marginBottom: 16,width:'60%',minWidth:'850px'}}
+          style={{marginBottom: 16, width: '60%', minWidth: '850px'}}
           pagination={false}
           dataSource={dataSource}
           columns={logInfoColumns}

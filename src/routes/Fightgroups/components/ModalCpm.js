@@ -319,7 +319,7 @@ class ExportPassengerModal extends Component {
           } else {
             //不符合要求时，fileList值为空
             fileList = [];
-            // message.error(file.response.msg);
+            message.error("导入失败，"+file.response.msg);//todo 我这里没有走request，所以就没有错误消息啦
           }
         } else if (file.status === 'error') {
           message.error(`${file.name} 上传失败`);
