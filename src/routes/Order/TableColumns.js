@@ -119,7 +119,7 @@ export default class TableList extends PureComponent {
             <FormItem label="订单号">
               {getFieldDecorator('id',
                 {
-                  rules: [{max: 32, message: "最长32位"}, {pattern: /^|[0-9][0-9]{0,33}$/, message: '请输入正确的订单号'}],
+                  rules: [{max: 32, message: "最长32位"}],
                   initialValue: ""
                 })
               (<Input placeholder="请输入"/>)
@@ -193,10 +193,10 @@ export default class TableList extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem label="联系电话">
               {getFieldDecorator('mobile', {
-                rules: [{max: 32, message: "最长11位"}],
+                rules: [{max: 32, message: "最长32位"}],
                 initialValue: ""
               })(
-                <Input placeholder="请输入" type="tel"/>
+                <Input placeholder="请输入"/>
               )}
             </FormItem>
           </Col>
@@ -262,7 +262,7 @@ export default class TableList extends PureComponent {
       {title: '人数', dataIndex: 'adult_count',},
       {
         title: '已付金额', dataIndex: 'payAmount', render: (text) => {
-        return '￥' + text;
+        return '￥' + Number(text)/100;
       }
       },
       {

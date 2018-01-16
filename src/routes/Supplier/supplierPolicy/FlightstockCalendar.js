@@ -42,6 +42,14 @@ class page extends Component {
     this.setState({
       flightstockEdit: nextProps.flightstockEdit ? nextProps.flightstockEdit : {}
     });
+    if (nextProps.flightstockEdit && nextProps.flightstockEdit.ajaxJudgment) {
+      this.props.addPost('flightstockEdit/ajaxJu', {ajaxJudgment: false},)
+      this.dateGetReturn();
+      this.form.resetFields()
+      this.setState({
+        visible: false,
+      });
+    }
   }
 
   componentDidMount() {
@@ -171,29 +179,6 @@ class page extends Component {
       dateString: this.state.datesArr.join(","),
       uuid: this.props.listdata.id
     }, values))
-    this.pamdiam();
-    // HttpTool.post(APILXF.api_airlines_add,
-    //   (code, msg, json, option) => {
-    //     if (code == 200) {
-    //       message.success('操作成功')
-    //       this.showModal(false);
-    //       // 刷新日历
-    //       this.dateGetReturn();
-    //       // 清空
-    //       this.setState({
-    //         recycleDay: ''
-    //       })
-    //       // 清空表单
-    //       this.form.resetFields()
-    //     } else {
-    //       message.success(msg)
-    //     }
-    //   },
-    //   (code, msg, option) => {
-    //     message.warning(msg);
-    //   }
-    //   , Object.assign({flightDates: this.state.datesArr, airlineId: this.props.listdata.id}, values)
-    // )
   }
 
   pamdiam() {
@@ -344,6 +329,13 @@ class page extends Component {
     this.createSelectedText(pickInfo)
     this.setState({
       selectedStocks: pickInfo
+    })
+  }
+
+  visiblees() {
+    let _this = this
+    _this.setState({
+      showImportModal: false
     })
   }
 
@@ -505,7 +497,9 @@ class page extends Component {
             listdata={this.props.listdata}
             airlineId={this.props.listdata.id}
             addPost={this.addPost.bind(this)}
-            upFile={this.upLoadFile.bind(this)}/>
+            upFile={this.upLoadFile.bind(this)}
+            visiblees={this.visiblees.bind(this)}
+          />
 
         </Modal>
       </div>
@@ -705,7 +699,9 @@ class BulkImportForm extends Component {
 
       if (obj.file.response && obj.file.response.code >= 1) {
         message.success('操作成功')
+        this.props.visiblees();
         console.log(obj)
+        console.log(this.props)
       }
       this.setState({
         fileList: obj.fileList
