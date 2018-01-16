@@ -8,7 +8,7 @@ import {
 } from 'antd';
 import {connect, Link} from 'dva';
 import css from './Flightstock.less';
-import Flightstockfrom from './Flightstockfrom.js';
+import Flightstockfrom from './FlightstockfromView.js';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 
 @connect(state => ({
@@ -23,9 +23,7 @@ class page extends Component {
       data: {},
     };
   }
-
   componentDidMount() {
-    console.log(this.props.location.state)
     if (this.props.location.state) {
       this.addPost('flightstockView/addtailAirLine', {id: this.props.location.state.data.id});
       this.setState({
@@ -39,14 +37,12 @@ class page extends Component {
       loading: loading,
     });
   }
-
   addPost(url, data) {
     this.props.dispatch({
       type: url,
       payload: data,
     });
   }
-
   render() {
     return (
       <PageHeaderLayout>

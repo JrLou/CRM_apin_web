@@ -20,7 +20,7 @@ const RadioGroup = Radio.Group;
 const InputGroup = Input.Group;
 
 @connect(state => ({
-  flightstockEdit: state.flightstockEdit,
+  flightstockView: state.flightstockView,
 }))
 class page extends Component {
   constructor(props) {
@@ -33,14 +33,14 @@ class page extends Component {
       canPick: [],
       selectedTips: [],
       datesArr: [],
-      flightstockEdit: {},
+      flightstockView: {},
       judgment: null
     }
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      flightstockEdit: nextProps.flightstockEdit ? nextProps.flightstockEdit : {}
+      flightstockView: nextProps.flightstockView ? nextProps.flightstockView : {}
     });
   }
 
@@ -64,7 +64,7 @@ class page extends Component {
     let a = moment(this.props.listdata.departure_start, "YYYY-MM").format('x');
     let c = moment(this.props.listdata.departure_end, "YYYY-MM").format('x');
     if (b > a && b < c) {
-      this.loadData('flightstockEdit/getpriceAirline', {
+      this.loadData('flightstockView/getpriceAirline', {
         date: moment(this.props.listdata.departure_start).format('YYYY-MM'),
         id: this.props.listdata.id,
       },);
@@ -73,7 +73,7 @@ class page extends Component {
       })
 
     } else {
-      this.loadData('flightstockEdit/getpriceAirline', {
+      this.loadData('flightstockView/getpriceAirline', {
         date: dates,
         id: this.props.listdata.id,
       },);
@@ -84,14 +84,14 @@ class page extends Component {
   }
 
   dateGetReturn() {
-    this.loadData('flightstockEdit/getpriceAirline', {
+    this.loadData('flightstockView/getpriceAirline', {
       date: moment(this.state.dateSelect).format('YYYY-MM'),
       id: this.props.listdata.id,
     },);
   }
 
   getListData(value) {
-    const {flightstockEdit: {airline}} = this.props;
+    const {flightstockView: {airline}} = this.props;
     let listData;
     if (airline.length > 0) {
       for (let i = 0; i < airline.length; i++) {
@@ -139,7 +139,7 @@ class page extends Component {
 
   // 封装批量修改
   modifyData(values, myValidate) {
-    let {flightstockEdit, judgment} = this.state;
+    let {flightstockView, judgment} = this.state;
     let url = ''
     if (!this.state.datesArr || this.state.datesArr.length < 1) {
       message.warning('请选择批量修改的日期')
@@ -155,18 +155,18 @@ class page extends Component {
     }
     switch (judgment) {
       case 0:
-        url = 'flightstockEdit/getmodifyPricees'
+        url = 'flightstockView/getmodifyPricees'
         break;
       case 1:
-        url = 'flightstockEdit/getmodifyInventoryes'
+        url = 'flightstockView/getmodifyInventoryes'
         break;
       case 2:
-        url = 'flightstockEdit/getgetmodifyDayses'
+        url = 'flightstockView/getgetmodifyDayses'
         break;
       default:
         break;
     }
-    this.addPost("flightstockEdit/ajaxJu", {ajaxJudgment: false})
+    this.addPost("flightstockView/ajaxJu", {ajaxJudgment: false})
     this.addPost(url, Object.assign({
       dateString: this.state.datesArr.join(","),
       uuid: this.props.listdata.id
@@ -198,8 +198,8 @@ class page extends Component {
 
   pamdiam() {
     let _this = this
-    let {flightstockEdit} = _this.state
-    if (flightstockEdit && flightstockEdit.ajaxJudgment) {
+    let {flightstockView} = _this.state
+    if (flightstockView && flightstockView.ajaxJudgment) {
       message.success('操作成功')
       // 刷新日历
       _this.dateGetReturn();
@@ -251,7 +251,7 @@ class page extends Component {
     this.setState({
       dateSelect: value,
     });
-    this.loadData('flightstockEdit/getpriceAirline', {
+    this.loadData('flightstockView/getpriceAirline', {
       date: moment(value).format('YYYY-MM'),
       id: this.props.listdata.id,
     },);
@@ -433,7 +433,7 @@ class page extends Component {
 
   render() {
     // 库存
-    const {flightstockEdit: {airline}} = this.props;
+    const {flightstockView: {airline}} = this.props;
     let [year, month, day] = [
       +moment(this.props.listdata.flightDate, "YYYY-MM-DD").format('YYYY'),
       +moment(this.props.listdata.flightDate, "YYYY-MM-DD").format('MM') - 1,
