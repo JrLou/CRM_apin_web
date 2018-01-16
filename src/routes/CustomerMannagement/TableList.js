@@ -55,7 +55,6 @@ class StandardTable extends PureComponent {
 
     const newData = [...data];
     const target = newData.filter(item => key === item.id)[0];
-    debugger;
     if (target) {
       target.editable = true;
       //实时更新state
@@ -63,10 +62,10 @@ class StandardTable extends PureComponent {
     }
   }
 
-  setReduxState = (payload)=>{
+  setReduxState = (payload) => {
     const {dispatch} = this.props;
     dispatch({
-      type:'customerMannagement/setStatereducer',
+      type: 'customerMannagement/setStatereducer',
       payload,
     });
   };
@@ -106,38 +105,36 @@ class StandardTable extends PureComponent {
       {
         title: '头像',
         dataIndex: 'avatar',
+        render: (text, record, index) => this.renderColumns(text, record, 'avatar'),
       },
       {
         title: '绑定手机号',
         dataIndex: 'mobile',
+        render: (text, record, index) => this.renderColumns(text, record, 'mobile'),
       },
       {
         title: '注册时间',
         dataIndex: 'created_time',
-        render: (text, record, index) => {
-          return <span>{TimeHelp.getYMDHMS(text)}</span>
-        }
+        render: (text, record, index) => this.renderColumns(text, record, 'created_time'),
       },
       {
         title: '最近打开时间',
         dataIndex: 'last_open_time',
-        render: (text, record, index) => {
-          return <span>{TimeHelp.getYMDHMS(text)}</span>
-        }
+        render: (text, record, index) => this.renderColumns(text, record, 'last_open_time'),
       },
       {
         title: '操作',
         dataIndex: 'operation',
         render: (text, record) => {
           const {editable} = record;
-          return (
+          return (//todo 我的同时按下两个修改，会有bug
             <div className="editable-row-operations">
               {
                 editable ?
                   <span>
-                  <a onClick={() => this.save(record.key)}>Save</a>
-                  <Popconfirm title="Sure to cancel?" onConfirm={() => this.cancel(record.key)}>
-                    <a>Cancel</a>
+                  <a onClick={() => this.save(record.key)}>保存</a>&nbsp;&nbsp;
+                  <Popconfirm title="取消保存?" onConfirm={() => this.cancel(record.key)}>
+                    <a>取消</a>
                   </Popconfirm>
                 </span>
                   : <a onClick={() => this.edit(record.id)}>修改</a>

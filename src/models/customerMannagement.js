@@ -53,7 +53,6 @@ export default {
           ...payload
         },
       });
-      debugger;
       return {
         ...state,
         data: {
