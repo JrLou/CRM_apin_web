@@ -355,3 +355,11 @@ export async function continueAdd(params) {
 export async function offlineList(params) {
   return request('/crm/offline/offlineList', { method: 'POST', body: params });
 }
+
+//线下 客户管理
+export async function offlineCustomerList(params) {
+  return request('/offline/customer/list', { method: 'POST', body: params });
+}
+export async function offlineCustomerAdd(params) {
+  return request('/offline/customer/create', { method: 'POST', body: params });
+}

@@ -1,9 +1,7 @@
-import {queryCustomerList} from '../services/api';
+import {offlineCustomerList,offlineCustomerAdd} from '../services/api';
 
-export default {
-  namespace: 'customerMannagement',
-
-  state: {
+const initState = () => {
+  return {
     data: {
       data: [],
       msg: '',
@@ -19,15 +17,40 @@ export default {
     showModal: false,
     modalTableLoading: false,//模态框中的table的loading
     modalConfirmLoading: false,
-  },
+  };
+};
+
+export default {
+  namespace: 'customerMannagement',
+
+  state: initState(),
   effects: {
     * fetch({payload, succCB}, {call, put}) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
       yield put({
         type: 'changeLoading',
         payload: true,
       });
-      const response = yield call(queryCustomerList, payload);
+      const response = yield call(offlineCustomerList, payload);
       if (response && response.code >= 1) {//todo 这里应该这样写，其他文件记得也参考这里
+        yield put({
+          type: 'save',
+          payload: response,
+        });
+        succCB && succCB(response.data);
+      }
+      yield put({
+        type: 'changeLoading',
+        payload: false,
+      });
+    },
+    * fetchAdd({payload, succCB}, {call, put}) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
+      debugger;
+      yield put({
+        type: 'changeLoading',
+        payload: true,
+      });
+      const response = yield call(offlineCustomerAdd, payload);
+      if (response && response.code >= 1) {
         yield put({
           type: 'save',
           payload: response,
@@ -69,5 +92,8 @@ export default {
         ...payload,
       };
     },
+    clear() {//页面卸载时重置
+      return initState();
+    }
   },
 };
