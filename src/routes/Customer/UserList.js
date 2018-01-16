@@ -21,34 +21,25 @@ const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
 }))
 @Form.create()
 export default class TableList extends PureComponent {
-  state = {
-    selectedRows: [],
-    formValues: {},
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedRows: [],
+      formValues: {},
+    };
+    this.page = {
+      p: 1,
+      pc: 10,
+    };
+  }
 
   componentDidMount() {
     this.props.dispatch({
-      type: 'userList/fetch'
+      type: 'userList/fetch',
+      payload: {...this.page}
     });
   }
 
-  // getList(){
-  //   const values = this.props.form.getFieldsValue();
-  //   for (let item in values) {
-  //     if (values[item] === undefined) {
-  //       values[item] = '';
-  //     }
-  //   }
-  //   this.setState({
-  //     formValues:values,
-  //   });
-  //   let {page}=this.state;
-  //   let params = Object.assign(page, values);
-  //   this.props.dispatch({
-  //     type: 'userList/fetch',
-  //     payload: params,
-  //   });
-  // }
   handleStandardTableChange = (pagination, filtersArg, sorter) => {//分页、排序、筛选变化时触发
     console.log("pagination", pagination);
     const {dispatch} = this.props;
@@ -60,9 +51,13 @@ export default class TableList extends PureComponent {
       return newObj;
     }, {});
 
-    const params = {
+    this.page = {
       p: pagination.current,
       pc: pagination.pageSize,
+    };
+
+    const params = {
+      ...page,
       ...formValues,
       ...filters,
     };
@@ -79,9 +74,16 @@ export default class TableList extends PureComponent {
   handleFormReset = () => {
     const {form, dispatch} = this.props;
     form.resetFields();
+    form.validateFields((err, formValues) => {
+        if (err) {
+          return;
+        }
+        this.setState({formValues});
+      }
+    );
     dispatch({
       type: 'userList/fetch',
-      payload: {},
+      payload: {...this.page},
     });
   };
 
@@ -93,21 +95,17 @@ export default class TableList extends PureComponent {
 
   handleSearch = (e) => {
     e.preventDefault();
-
     const {dispatch, form} = this.props;
-
-    form.validateFields((err, fieldsValue) => {
+    form.validateFields((err, formValues) => {
       if (err) return;
-      const values = {
-        ...fieldsValue,
-        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
-      };
-      this.setState({
-        formValues: values,
-      });
-      dispatch({
-        type: 'userList/fetch',
-        payload: values,
+      this.setState({formValues}, () => {
+        dispatch({
+          type: 'userList/fetch',
+          payload: {
+            ...this.state.formValues,
+            ...this.page,
+          },
+        });
       });
     });
   };

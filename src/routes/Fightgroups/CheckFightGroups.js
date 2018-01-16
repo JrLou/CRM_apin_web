@@ -56,7 +56,6 @@ export default class CheckFightGroups extends Component {
   }
 
   loadInitPageData = () => {
-    console.log("loadInitPageData");
     const {dispatch} = this.props;
     dispatch({// 获取拼团信息
       type: 'checkFightGroups/fetchGroupsInfo',
@@ -110,9 +109,9 @@ export default class CheckFightGroups extends Component {
   getFightGroupsInfoView() {
     const {groupsInfoData: {data, code, msg}, groupsInfoLoading} = this.props.checkFightGroups;
 
-    const create_time = formatDate(data.create_time, 'YYYY-MM-DD');
+    const create_time = formatDate(data.create_time, 'YYYY-MM-DD HH:mm');
 
-    const expired_time = formatDate(data.expired_time, 'YYYY-MM-DD');
+    const expired_time = formatDate(data.expired_time, 'YYYY-MM-DD HH:mm');
 
     const group_status = this.mapGroupStateToTxt(data.group_status);
     const city_dep = data.city_dep;
@@ -362,10 +361,7 @@ export default class CheckFightGroups extends Component {
       groupsInfoData: {data: groupsInfoDataData},
     } = this.props.checkFightGroups;
 
-    // todo 方案有效时间，通过这个字段，计算出过期时间；
-    let expired_hour = (groupsInfoDataData.expired_time - groupsInfoDataData.create_time) % (1000 * 60 * 60);
-    expired_hour = expired_hour || (expired_hour === 0 ? 0 : "");
-
+    const expired_hour = (groupsInfoDataData.expired_time - groupsInfoDataData.create_time) / (1000 * 60 * 60);
     const goFlightInfo = data.filter(currV => currV.trip_index === 0)[0] || {};
     const backFlightInfo = data.filter(currV => currV.trip_index === 1)[0] || {};
     const time_dep = formatDate(goFlightInfo.time_dep, 'YYYY-MM-DD');
