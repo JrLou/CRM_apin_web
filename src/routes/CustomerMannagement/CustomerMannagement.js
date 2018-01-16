@@ -11,11 +11,11 @@ import {
 } from 'antd';
 import StandardTable from './TableList';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
+import {AddModal} from './ModalCpm'
 
 import styles from './CustomerMannagement.less';
 
 const FormItem = Form.Item;
-const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
 
 @connect(state => ({
   customerMannagement: state.customerMannagement,
@@ -28,19 +28,18 @@ export default class TableList extends PureComponent {
       formValues: {},
       modalFormValues: {},
       visible: false,
+      modalType: 'add',//add、 edit、 delete
     };
     this.page = {
       p: 1,
       pc: 10,
-    }
+    };
   }
-
 
   componentDidMount() {
     this.props.dispatch({
       type: 'customerMannagement/fetch',
       payload: this.page,
-      succCB: (data) => this.cacheData = data.map(item => ({...item}))//先缓存
     });
   }
 
@@ -59,7 +58,6 @@ export default class TableList extends PureComponent {
         ...this.page,
         ...this.state.formValues,
       },
-      succCB: (data) => this.cacheData = data.map(item => ({...item}))//先缓存
     });
   };
 
@@ -85,7 +83,6 @@ export default class TableList extends PureComponent {
             ...this.page,
             ...this.state.formValues
           },
-          succCB: (data) => this.cacheData = data.map(item => ({...item}))//先缓存
         });
       });
     });
@@ -105,7 +102,6 @@ export default class TableList extends PureComponent {
             ...this.page,
             ...this.state.formValues
           },
-          succCB: (data) => this.cacheData = data.map(item => ({...item}))//先缓存
         });
       });
 
@@ -128,7 +124,6 @@ export default class TableList extends PureComponent {
       dispatch({
         type: 'customerMannagement/fetch',
         payload: values,
-        succCB: (data) => this.cacheData = data.map(item => ({...item}))//先缓存
       });
     });
   };
@@ -186,7 +181,7 @@ export default class TableList extends PureComponent {
         </Row>
         <Row>
           <Col span={12}>
-            <Button type="primary" onClick={this.showModal}>新增客户</Button>
+            <Button type="primary" onClick={this.handleshowModal.bind(this)}>新增客户</Button>
           </Col>
           <Col span={12} style={{textAlign: 'right'}}>
             <FormItem>
@@ -268,26 +263,86 @@ export default class TableList extends PureComponent {
     );
   }
 
-  showModal = () => {
-    this.setState({
-      visible: true,
+  handleCancel(e) {
+    const {dispatch} = this.props;
+    dispatch({
+      type: 'customerMannagement/extendAll',
+      payload: {showModal: false},//传过去的参数
+    });
+    //关闭的时候，清除modalData以防报错
+    dispatch({
+      type: 'customerMannagement/extendAll',
+      payload: {
+        modalData: {
+          code: '',
+          data: [],
+          msg: '',
+        }
+      }
     });
   }
-  handleOk = (e) => {
-    console.log(e);
-    this.setState({
-      visible: false,
+
+  handleOk(e) {
+    if (!this.state.closeReason.trim()) {
+      message.warning("请输入关闭拼团原因");
+      return;
+    }
+    const {dispatch} = this.props;
+    dispatch({
+      type: 'customerMannagement/fetchPlanClose',
+      payload: {//传过去的参数
+        reason: this.state.closeReason,
+        id: this.id,
+      },
     });
   }
-  handleCancel = (e) => {
-    console.log(e);
-    this.setState({
-      visible: false,
+
+
+  getAddModal(showModal, modalConfirmLoading) {
+    return (
+      <AddModal
+        title="请确认是否关闭拼团，关闭请输入原因："
+        visible={showModal}
+        onOk={this.handleOk.bind(this)}
+        onCancel={this.handleCancel.bind(this)}
+        confirmLoading={modalConfirmLoading}
+        maskClosable={false}
+      >
+        {this.renderModalForm()}
+      </AddModal>
+    );
+  }
+
+  switchModalView() {
+    const {showModal, modalConfirmLoading} = this.props.customerMannagement;
+    let ModalView = null;
+    switch (this.state.modalType) {
+      case 'add':
+        ModalView = this.getAddModal(showModal, modalConfirmLoading);
+        break;
+      case 'edit':
+        ModalView = this.getEditModal(showModal, modalConfirmLoading);
+        break;
+      case 'delete':
+        ModalView = this.getDeleteModal(showModal, modalConfirmLoading);
+        break;
+      default:
+        ModalView = null;
+        break;
+    }
+    return ModalView;
+  }
+
+  handleshowModal() {
+    const {dispatch} = this.props;
+    dispatch({
+      type: 'customerMannagement/extendAll',//modalConfirmLoading
+      payload: {showModal: true},//传过去的参数
     });
   }
 
   render() {
-    const {customerMannagement: {loading: ruleLoading, data,}} = this.props;
+    const {customerMannagement: {loading: ruleLoading, data,}, showModal} = this.props;
     console.log("父级这里的data", data);
     return (
       <PageHeaderLayout>
@@ -304,21 +359,56 @@ export default class TableList extends PureComponent {
               loading={ruleLoading}
               data={data}
               onChange={this.handleStandardTableChange}
-              cacheData={this.cacheData}
-              setCacheData={cacheData => this.cacheData = cacheData}
             />
           </div>
         </Card>
         <Modal
           title="新增客户"
-          visible={this.state.visible}
+          visible={showModal}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
           footer={null}
         >
           {this.renderModalForm()}
         </Modal>
+        {this.switchModalView()}
       </PageHeaderLayout>
     );
   }
 }
+
+// class OperationModal extends PureComponent {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       visible: false,
+//     }
+//   }
+//
+//   render() {
+//     let title = '';
+//     switch (props.type) {
+//       case 'add':
+//         title = '新增客户';
+//         break;
+//       case 'edit':
+//         title = '修改客户';
+//         break;
+//       case 'delete':
+//         title = '修改客户';
+//         break;
+//
+//     }
+//
+//     return <Modal
+//       title={title}
+//       visible={props.visible}
+//       onOk={props.handleOk}
+//       onCancel={props.handleCancel}
+//     >
+//       {this.renderModalForm()}
+//     </Modal>
+//   }
+// };
+
+

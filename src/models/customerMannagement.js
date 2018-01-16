@@ -10,6 +10,15 @@ export default {
       option: {},//这里面会有分页器需要的信息： current、 pageSize、total，但需要转换
     },
     loading: true,
+
+    modalData: {
+      code: '',
+      data: [],
+      msg: '',
+    },
+    showModal: false,
+    modalTableLoading: false,//模态框中的table的loading
+    modalConfirmLoading: false,
   },
   effects: {
     * fetch({payload, succCB}, {call, put}) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
@@ -47,14 +56,18 @@ export default {
         loading: action.payload,
       };
     },
-    setStatereducer(state, {payload}) {
+    /**
+     * 展开所有传过来的属性
+     * 把上面重复了的几个函数都提取成这个
+     * @param state
+     * @param payload
+     * @returns {{}}
+     */
+    extendAll(state, {payload}) {
       return {
         ...state,
-        data: {
-          ...state.data,
-          ...payload
-        },
+        ...payload,
       };
-    }
+    },
   },
 };
