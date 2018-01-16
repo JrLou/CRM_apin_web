@@ -1,4 +1,4 @@
-import { getdetailAirLine, getpriceAirline, getmodifyPrice,getmodifyInventory,getmodifyDays,getimportFile,geteditAirline,stateAirLine,getAirLineLogs} from '../services/api';
+import { getdetailAirLine, getpriceAirline, getmodifyPrice,getmodifyInventory,getmodifyDays,getimportFile,geteditAirline,stateAirLine,getAirLineLogs,getLogAirLine} from '../services/api';
 import {message} from 'antd';
 
 export default {
@@ -35,6 +35,7 @@ export default {
     * getmodifyPricees({payload}, {call, put}) {
       const response = yield call(getmodifyPrice, payload)
       if (response.code > 0) {
+        message.success('操作成功')
         yield put({
           type: 'ajaxJudg',
           payload: {
@@ -47,6 +48,7 @@ export default {
     * getmodifyInventoryes({payload}, {call, put}) {
       const response = yield call(getmodifyInventory, payload)
       if (response.code > 0) {
+        message.success('操作成功')
         yield put({
           type: 'ajaxJudg',
           payload: {
@@ -59,6 +61,7 @@ export default {
     * getgetmodifyDayses({payload}, {call, put}) {
       const response = yield call(getmodifyDays, payload)
       if (response.code > 0) {
+        message.success('操作成功')
         yield put({
           type: 'ajaxJudg',
           payload: {
@@ -71,6 +74,7 @@ export default {
     * getimportFilees({payload}, {call, put}) {
       const response = yield call(getimportFile, payload)
       if (response.code > 0) {
+        message.success('操作成功')
         yield put({
           type: 'ajaxJudg',
           payload: {
@@ -112,6 +116,19 @@ export default {
         type: 'log',
         payload: response,
       });
+    },
+    * LogAirLine({payload}, {call, put}) {
+      //日志添加
+      const response = yield call(getLogAirLine, payload)
+      if (response.code > 0) {
+        message.success('操作成功')
+        yield put({
+          type: 'ajaxJudg',
+          payload: {
+            ajaxJudgment: true,
+          },
+        })
+      }
     },
     //请求成功回调判断
     * ajaxJu({payload}, {call, put}) {

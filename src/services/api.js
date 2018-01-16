@@ -278,6 +278,13 @@ export async function getmodifyInventory(params) {
     body: params,
   });
 }
+//添加日志
+  export async function getLogAirLine(params) {
+  return request('/api/resource/LogAirLine',{
+    method: 'POST',
+    body: params,
+  });
+}
 
 export async function AccountLogin(params) {
   const newparams = Object.assign({}, { account: params.account, type: 0 })

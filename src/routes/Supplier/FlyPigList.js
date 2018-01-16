@@ -246,7 +246,7 @@ export default class TableList extends PureComponent {
       }, {
         title: '含税价',
         dataIndex: 'sell_price',
-        render: val => `￥${val}`,
+        render: val => `￥${val/100}`,
       }, {
         title: '折扣',
         dataIndex: 'discount',
