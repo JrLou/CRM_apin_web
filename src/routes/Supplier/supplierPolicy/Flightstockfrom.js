@@ -835,7 +835,7 @@ class AddForm extends Component {
             <FlightstockCalendar
               disabledadd={this.state.competencese}
               listdata={this.props.information}
-              date={[moment(flightstockEdit.details[0].departure_start).format("YYYY-MM-DD"), moment(flightstockEdit.details[0].departure_end).format("YYYY-MM-DD")]}
+              // date={[moment(flightstockEdit.details[0].departure_start).format("YYYY-MM-DD"), moment(flightstockEdit.details[0].departure_end).format("YYYY-MM-DD")]}
             />
           </TabPane>
           }
