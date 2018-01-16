@@ -84,7 +84,7 @@ class page extends Component {
         {name: '到达城市', id: 'city_arr', required: false, category: 0,},
         {name: '去程航班号', id: 'airLineGo', required: false, category: 0,},
         {name: '返程航班号', id: 'airLineBack', required: false, category: 0,},
-        {name: '机票资源号', id: 'airlineNo', required: false, category: 0,},
+        {name: '机票资源号', id: 'id', required: false, category: 0,},
         {
           name: '往返天数',
           id: 'days',
@@ -92,7 +92,7 @@ class page extends Component {
           category: 0,
           check: [{pattern: /^[0-9]*$/, message: "只能输入数字"}]
         },
-        {name: '资源负责人', id: 'charger', required: false, category: 0,},
+        {name: '资源负责人', id: 'principalName', required: false, category: 0,},
         {
           name: '请选择有效性',
           id: 'validity',
@@ -104,7 +104,7 @@ class page extends Component {
             id: '3'
           }]
         },
-        {name: '供应商名称', id: 'departureCityssss', required: false, category: 0,},
+        {name: '供应商名称', id: 'supplierName', required: false, category: 0,},
 
       ],
     };
@@ -119,18 +119,18 @@ class page extends Component {
     const columns = [
       {
         title: '操作人',
-        dataIndex: 'operatorUser',
-        key: 'operatorUser',
+        dataIndex: 'user_name',
+        key: 'user_name',
       }, {
         title: '操作时间',
-        dataIndex: 'createdTime',
-        key: 'createdTime',
+        dataIndex: 'create_time',
+        key: 'create_time',
       }, {
         title: '操作内容',
-        dataIndex: 'eventName',
-        key: 'eventName',
+        dataIndex: 'create_content',
+        key: 'create_content',
       }];
-    const {flightstock: {loading, list: {data, option: {current, size, total}}, logs: {datalgo, optionlog}}} = this.props;
+    const {flightstock: {loading, list: {data, option: {current, size, total}}, logs: {data:datalis, option}}} = this.props;
     return (
       <div className={css.table_container}>
         <Table
@@ -156,8 +156,8 @@ class page extends Component {
         >
           <Column
             title="机票资源号"
-            dataIndex="is_invalid"
-            key="is_invalid"
+            dataIndex="id"
+            key="id"
           />
           <Column
             title="供应商名称"
@@ -267,7 +267,7 @@ class page extends Component {
           onOk={this.companyname.bind(this, 1)}
           onCancel={this.companyname.bind(this, 1)}
         >
-          <Table pagination={false} dataSource={datalgo ? datalgo : []} columns={columns}/>
+          <Table pagination={false} dataSource={datalis ? datalis : []} columns={columns}/>
         </Modal>
       </div>
 

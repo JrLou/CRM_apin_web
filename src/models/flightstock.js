@@ -9,7 +9,7 @@ export default {
       option: {},
     },
     loading: true,
-    logs: {},
+      logs: {},
   },
   effects: {
     * fetch({payload}, {call, put}) {
@@ -35,8 +35,8 @@ export default {
         payload: true,
       });
       const judgment = yield call(stateAirLine, payload);
-      if (judgment.payload.code >= 1) {
-        message.warning('上架成功');
+      if (judgment.code >= 1) {
+        message.success('上架成功');
       }
       const response = yield call(flightstockList, {p: 1, pc: 10})
       yield put({
