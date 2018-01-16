@@ -39,13 +39,9 @@ class page extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(window.location)
     this.setState({
       flightstockEdit: nextProps.flightstockEdit ? nextProps.flightstockEdit : {}
     });
-    if (nextProps.flightstockEdit && nextProps.flightstockEdit.ajaxJudgment) {
-      this.pamdiam()
-    }
   }
 
   componentDidMount() {
@@ -175,18 +171,6 @@ class page extends Component {
       dateString: this.state.datesArr.join(","),
       uuid: this.props.listdata.id
     }, values))
-    // if (flightstockEdit && flightstockEdit.ajaxJudgment) {
-    //   message.success('操作成功')
-    //   this.showModal(false);
-    //   // 刷新日历
-    //   this.dateGetReturn();
-    //   // 清空
-    //   this.setState({
-    //     recycleDay: ''
-    //   })
-    //   // 清空表单
-    //   this.form.resetFields()
-    // }
     this.pamdiam();
     // HttpTool.post(APILXF.api_airlines_add,
     //   (code, msg, json, option) => {
@@ -213,18 +197,18 @@ class page extends Component {
   }
 
   pamdiam() {
-    let {flightstockEdit} = this.state;
+    let _this = this
+    let {flightstockEdit} = _this.state
     if (flightstockEdit && flightstockEdit.ajaxJudgment) {
       message.success('操作成功')
-      this.showModal(false);
       // 刷新日历
-      this.dateGetReturn();
+      _this.dateGetReturn();
       // 清空
-      this.setState({
-        recycleDay: ''
+      _this.setState({
+        visible: false,
       })
       // 清空表单
-      this.form.resetFields()
+      _this.form.resetFields()
     }
   }
 
@@ -309,8 +293,9 @@ class page extends Component {
 
   // 通过参数控制多个modal显
   showModal(isShow = false) {
-    this.form.resetFields()
-    this.setState({
+    let _this = this
+    _this.form.resetFields()
+    _this.setState({
       visible: isShow,
     })
   }
@@ -459,6 +444,7 @@ class page extends Component {
     })
     return (
       <div className={css.container}>
+        {!this.props.disabledadd &&
         <div className={css.btnBox}>
           <Button onClick={this.showImportModal.bind(this, true)}>价格批量导入</Button>
           {/* <Button onClick={this.changeModal.bind(this, "addStage")}>新增团期报价</Button> */}
@@ -466,6 +452,7 @@ class page extends Component {
           <Button onClick={this.changeModal.bind(this, "modifyStock")}>修改库存</Button>
           <Button onClick={this.changeModal.bind(this, "modifyClearTime")}>修改清位时间</Button>
         </div>
+        }
         <Calendar
           value={this.state.dateSelect}
           dateCellRender={this.dateCellRender.bind(this)}
@@ -728,6 +715,7 @@ class BulkImportForm extends Component {
 
     }
   }
+
   render() {
     const {getFieldDecorator} = this.props.form;
     const formItemLayout = {

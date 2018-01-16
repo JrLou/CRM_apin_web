@@ -136,7 +136,7 @@ export default class TableList extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem label="到达城市">
               {getFieldDecorator('city_arr', {rules: [{max: 32, message: "最长32位"}], initialValue: ""})(
-                <Input placeholder="请输入" />
+                <Input placeholder="请输入"/>
               )}
             </FormItem>
           </Col>
@@ -177,7 +177,9 @@ export default class TableList extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem label="下单时间">
               {getFieldDecorator('start_time')(
-                <RangePicker style={{width: '100%'}} onChange={::this.selectTime}/>
+                <RangePicker style={{width: '100%'}} onChange={::this.selectTime} disabledDate={(current) => {
+                  return current.valueOf() > Date.now()
+                }}/>
               )}
             </FormItem>
           </Col>

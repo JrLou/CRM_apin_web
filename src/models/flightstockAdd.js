@@ -1,4 +1,5 @@
-import {getaddAirLine,getadd} from '../services/api';
+import {getaddAirLine, getadd} from '../services/api';
+import {message} from 'antd';
 
 export default {
   namespace: 'flightstockAdd',
@@ -7,6 +8,7 @@ export default {
     numbering: null,
     visible: false,
     ok: '',
+    judgment:false
   },
   effects: {
     //飞常准查询
@@ -27,17 +29,17 @@ export default {
         })
         yield put({
           type: 'oktxt',
-          payload: {ok:"选择航班"},
+          payload: {ok: "选择航班"},
         })
       } else {
         yield put({
           type: 'oktxt',
-          payload: {ok:"手工录入"},
+          payload: {ok: "手工录入"},
         })
       }
       yield put({
         type: 'visibles',
-        payload: {visible:true},
+        payload: {visible: true},
       })
     },
     * visiblebs({payload}, {call, put}) {
@@ -52,9 +54,15 @@ export default {
         payload: payload,
       })
     },
-    *getaddtit({payload}, {call, put}){
+    * getaddtit({payload}, {call, put}) {
       const response = yield call(getadd, payload)
-
+      if (response.code > 1) {
+        message.success('操作成功')
+        yield put({
+          type: 'judgmentes',
+          payload: {judgmentes:true},
+        })
+      }
     }
 
   },
@@ -65,8 +73,8 @@ export default {
         numbering: action.payload.numbering,
       }
     },
-    oktxt(state,action){
-      return{
+    oktxt(state, action) {
+      return {
         ...state,
         ok: action.payload.ok,
       }
@@ -77,8 +85,8 @@ export default {
         accurate: action.payload,
       }
     },
-    clearAdd(state, action){
-      return{
+    clearAdd(state, action) {
+      return {
         ...state,
         accurate: {},
         numbering: null,
@@ -88,6 +96,12 @@ export default {
       return {
         ...state,
         visible: action.payload.visible,
+      }
+    },
+    judgmentes(state, action) {
+      return {
+        ...state,
+        judgment: action.payload.judgmentes,
       }
     },
   },

@@ -85,7 +85,7 @@ export default class BasicProfile extends Component {
 
   ticketConfirm() {
     let ticketInfo = [], {dispatch} = this.props;
-    let _this=this;
+    let _this = this;
     if (this.passengerData && this.passengerData.length > 0) {
       for (let i = 0; i < this.passengerData.length; i++) {
         let user = this.passengerData[i], ticket = user.ticketDep + ',' + user.ticketArr;
@@ -215,8 +215,8 @@ export default class BasicProfile extends Component {
                 :
                 (nameType == 'FlyingPig' && order_status == 3) || (nameType == 'Entrust' && order_status == 5) ?
                   <span>去 <span
-                    className={styles.showTicket}>{ticketArr && ticketArr[0] ? ticketArr[0] : '无'}</span> 返 <span
-                    className={styles.showTicket}>{ticketArr && ticketArr[1] ? ticketArr[1] : '无'}</span></span>
+                    className={styles.showTicket}>{ticketArr && ticketArr[0] & ticketArr[0] != undefined ? ticketArr[0] : '无'}</span> 返 <span
+                    className={styles.showTicket}>{ticketArr && ticketArr[1] & ticketArr[1] != undefined ? ticketArr[1] : '无'}</span></span>
                   : null
             }
         </span>

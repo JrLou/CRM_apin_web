@@ -12,7 +12,7 @@ import Flightstockfrom from './Flightstockfrom.js';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 
 @connect(state => ({
-  flightstockEdit: state.flightstockEdit,
+  flightstockView: state.flightstockView,
 }))
 class page extends Component {
 
@@ -25,8 +25,9 @@ class page extends Component {
   }
 
   componentDidMount() {
+    console.log(this.props.location.state)
     if (this.props.location.state) {
-      this.addPost('flightstockEdit/addtailAirLine', {id: this.props.location.state.data.id});
+      this.addPost('flightstockView/addtailAirLine', {id: this.props.location.state.data.id});
       this.setState({
         data: this.props.location.state.data,
       });
@@ -47,7 +48,6 @@ class page extends Component {
   }
 
   render() {
-    const {flightstockEdit: {accurate, details}} = this.props;
     return (
       <PageHeaderLayout>
         <div className={css.formWapper}>
@@ -57,7 +57,7 @@ class page extends Component {
               addPost={this.addPost.bind(this)}
               id={this.state.data.id}
               information={this.state.data}
-              details={details}
+              {...this.props}
             />
           </Spin>
         </div>

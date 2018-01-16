@@ -1,21 +1,15 @@
-import {getaddAirLine, getdetailAirLine,getpriceAirline} from '../services/api';
+import {getdetailAirLine, getpriceAirline,} from '../services/api';
 
 export default {
   namespace: 'flightstockView',
   state: {
-    accurate: {},//飞常准数据
     details: [],//编辑回显数据
-    airline: []//日历数据
+    airline: [],//日历数据
+    accurate: null,//飞常准数据
+    ajaxJudgment: false,
+    logs: {},
   },
   effects: {
-    //飞常准查询
-    * addAirLine({payload}, {call, put}) {
-      const response = yield call(getaddAirLine, payload)
-      yield put({
-        type: 'accurates',
-        payload: response,
-      })
-    },
     //编辑回显数据
     * addtailAirLine({payload}, {call, put}) {
       const response = yield call(getdetailAirLine, payload)
@@ -29,21 +23,22 @@ export default {
     //获取日历数据
     * getpriceAirline({payload}, {call, put}) {
       const response = yield call(getpriceAirline, payload)
-      if (response.code >= 1) {
+      if (response.code > 0) {
         yield put({
           type: 'airline',
           payload: response,
         })
       }
     },
+    //请求成功回调判断
+    * ajaxJu({payload}, {call, put}) {
+      yield put({
+        type: 'ajaxJudg',
+        payload: payload,
+      })
+    },
   },
   reducers: {
-    accurates(state, action) {
-      return {
-        ...state,
-        accurate: action.payload,
-      }
-    },
     detail(state, action) {
       return {
         ...state,
@@ -56,5 +51,17 @@ export default {
         airline: action.payload.data,
       }
     },
+    log(state, action) {
+      return {
+        ...state,
+        logs: action.payload,
+      };
+    },
+    ajaxJudg(state, action) {
+      return {
+        ...state,
+        ajaxJudgment: action.payload.ajaxJudgment,
+      }
+    }
   },
 };

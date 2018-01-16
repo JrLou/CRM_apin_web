@@ -1,4 +1,5 @@
-import {getaddAirLine, getdetailAirLine, getpriceAirline, getmodifyPrice,getmodifyInventory,getmodifyDays,getimportFile} from '../services/api';
+import { getdetailAirLine, getpriceAirline, getmodifyPrice,getmodifyInventory,getmodifyDays,getimportFile,geteditAirline,stateAirLine,getAirLineLogs} from '../services/api';
+import {message} from 'antd';
 
 export default {
   namespace: 'flightstockEdit',
@@ -7,6 +8,7 @@ export default {
     airline: [],//日历数据
     accurate: null,//飞常准数据
     ajaxJudgment: false,
+    logs: {},
   },
   effects: {
     //编辑回显数据
@@ -22,7 +24,7 @@ export default {
     //获取日历数据
     * getpriceAirline({payload}, {call, put}) {
       const response = yield call(getpriceAirline, payload)
-      if (response.code >= 1) {
+      if (response.code > 0) {
         yield put({
           type: 'airline',
           payload: response,
@@ -32,7 +34,7 @@ export default {
     //批量修改团期价格
     * getmodifyPricees({payload}, {call, put}) {
       const response = yield call(getmodifyPrice, payload)
-      if (response.code >= 1) {
+      if (response.code > 0) {
         yield put({
           type: 'ajaxJudg',
           payload: {
@@ -44,7 +46,7 @@ export default {
     //批量修改团期库存
     * getmodifyInventoryes({payload}, {call, put}) {
       const response = yield call(getmodifyInventory, payload)
-      if (response.code >= 1) {
+      if (response.code > 0) {
         yield put({
           type: 'ajaxJudg',
           payload: {
@@ -56,7 +58,7 @@ export default {
     //批量修改清位时间
     * getgetmodifyDayses({payload}, {call, put}) {
       const response = yield call(getmodifyDays, payload)
-      if (response.code >= 1) {
+      if (response.code > 0) {
         yield put({
           type: 'ajaxJudg',
           payload: {
@@ -68,7 +70,7 @@ export default {
     //批量批量修改价格
     * getimportFilees({payload}, {call, put}) {
       const response = yield call(getimportFile, payload)
-      if (response.code >= 1) {
+      if (response.code > 0) {
         yield put({
           type: 'ajaxJudg',
           payload: {
@@ -76,6 +78,40 @@ export default {
           },
         })
       }
+    },
+    //编辑
+    * geteditAirlines({payload}, {call, put}) {
+      const response = yield call(geteditAirline, payload)
+      if (response.code > 0) {
+        message.success('操作成功')
+        yield put({
+          type: 'ajaxJudg',
+          payload: {
+            ajaxJudgment: true,
+          },
+        })
+      }
+    },
+    //上架
+    * getstateAirLines({payload}, {call, put}) {
+      const response = yield call(stateAirLine, payload)
+      if (response.code > 0) {
+        message.success('操作成功')
+        yield put({
+          type: 'ajaxJudg',
+          payload: {
+            ajaxJudgment: true,
+          },
+        })
+      }
+    },
+    * loglist({payload}, {call, put}) {
+      //日志
+      const response = yield call(getAirLineLogs, payload)
+      yield put({
+        type: 'log',
+        payload: response,
+      });
     },
     //请求成功回调判断
     * ajaxJu({payload}, {call, put}) {
@@ -97,6 +133,12 @@ export default {
         ...state,
         airline: action.payload.data,
       }
+    },
+    log(state, action) {
+      return {
+        ...state,
+        logs: action.payload,
+      };
     },
     ajaxJudg(state, action) {
       return {
