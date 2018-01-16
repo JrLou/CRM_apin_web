@@ -163,6 +163,10 @@ export const getRouterData = (app) => {
     '/supplier/supplierList/price': {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Supplier/Price')),
     },
+    //冷门资源h
+    '/supplier/supplierPolicy/h5': {
+      component: dynamicWrapper(app, ['h5List'], () => import('../routes/Supplier/H5/H5List')),
+    },
     //运营管理
     '/operations/banner': {
       component: dynamicWrapper(app, ['bannerList'], () => import('../routes/Operations/Banner.js')),
