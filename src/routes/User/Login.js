@@ -54,8 +54,8 @@ export default class Login extends Component {
             type: 'login/login',
             payload: { ...values, },
             callBack: () => {
-              this.props.dispatch(routerRedux.push(from));
-              location.reload()
+              window.location.reload()
+              // this.props.dispatch(routerRedux.push(from));
             }
           });
         }

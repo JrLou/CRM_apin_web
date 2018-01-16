@@ -31,7 +31,7 @@ export default {
     },
     *logout({payload}, { put }) {
       CookieHelp.clearCookie()
-      location.reload()
+      window.location.reload()
       yield put(routerRedux.push('/user/login'+'?from='+encodeURIComponent(payload)));
     },
   },
