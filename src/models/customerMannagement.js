@@ -12,7 +12,7 @@ export default {
     loading: true,
   },
   effects: {
-    * fetch({payload}, {call, put}) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
+    * fetch({payload, succCB}, {call, put}) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
       yield put({
         type: 'changeLoading',
         payload: true,
@@ -23,6 +23,7 @@ export default {
           type: 'save',
           payload: response,
         });
+        succCB && succCB(response.data);
       }
       yield put({
         type: 'changeLoading',
@@ -34,7 +35,10 @@ export default {
     save(state, action) {
       return {
         ...state,
-        data: action.payload,
+        data: {
+          ...state.data,
+          ...action.payload
+        },
       };
     },
     changeLoading(state, action) {
@@ -44,15 +48,6 @@ export default {
       };
     },
     setStatereducer(state, {payload}) {
-      console.log("state", state);
-      console.log("payload", payload);
-      console.log("QQQQQQQQQQ", {
-        ...state,
-        data: {
-          ...state.data,
-          ...payload
-        },
-      });
       return {
         ...state,
         data: {
