@@ -118,7 +118,7 @@ export default class TableList extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem label="退款单号">
               {getFieldDecorator('id', {
-                rules: [{max: 32, message: "最长32位"}],
+                rules: [{max: 32, message: "最长32位"}, {pattern: /^|[0-9][0-9]{0,33}$/, message: '请输入正确的退款单号'}],
                 initialValue: ""
               })(
                 <Input placeholder="请输入"/>
@@ -128,7 +128,7 @@ export default class TableList extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem label="订单号">
               {getFieldDecorator('order_id', {
-                rules: [{max: 32, message: "最长32位"}],
+                rules: [{max: 32, message: "最长32位"}, {pattern: /^|[0-9][0-9]{0,33}$/, message: '请输入正确的订单号'}],
                 initialValue: ""
               })(
                 <Input placeholder="请输入"/>
@@ -297,7 +297,7 @@ class RefundModal extends React.Component {
     });
   };
 
-  getContent(label, desc, isShow,txt) {
+  getContent(label, desc, isShow, txt) {
     return <Row style={{margin: '15px 0'}}>
       <Col span={6} style={{textAlign: 'right'}}>
         {
@@ -323,7 +323,7 @@ class RefundModal extends React.Component {
         <div>
           {this.getContent('订单号', data.order_id || '', false)}
           {this.getContent('退款单号', data.id || '', false)}
-          {this.getContent('退款金额', price, true,'元')}
+          {this.getContent('退款金额', price, true, '元')}
           {this.getContent('处理客服', data.audit_user || '', true)}
           {this.getContent('备注', data.refund_reason || '', false)}
         </div>
