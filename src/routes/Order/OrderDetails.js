@@ -206,6 +206,7 @@ export default class BasicProfile extends Component {
         render: (text, record) => {
           if (text) {
             var ticketArr = text.split(',');
+            console.log(ticketArr)
           }
           return (<span>
             {
@@ -223,8 +224,8 @@ export default class BasicProfile extends Component {
                 :
                 (nameType == 'FlyingPig' && order_status == 3) || (nameType == 'Entrust' && order_status == 5) ?
                   <span>去 <span
-                    className={styles.showTicket}>{ticketArr && ticketArr[0]!=undefined  ? ticketArr[0] : '无'}</span> 返 <span
-                    className={styles.showTicket}>{ticketArr && ticketArr[1]!=undefined ? ticketArr[1] : '无'}</span></span>
+                    className={styles.showTicket}>{ticketArr && ticketArr[0]!="undefined"  ? ticketArr[0] : '无'}</span> 返 <span
+                    className={styles.showTicket}>{ticketArr && ticketArr[1]!="undefined" ? ticketArr[1] : '无'}</span></span>
                   : null
             }
         </span>
