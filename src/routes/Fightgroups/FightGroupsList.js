@@ -209,7 +209,7 @@ export default class TableList extends PureComponent {
     };
     return (
       <Spin spinning={loading}>
-        <p>共搜索到{this.total}个拼团</p>
+        <p>共有{this.total}个拼团</p>
         <div className={less.listParCon}>{/*这个div是less用的*/}
           <List
             grid={{gutter: 24, span: 4}}

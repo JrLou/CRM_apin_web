@@ -127,7 +127,6 @@ export default class AutoForm extends React.Component {
         onCancelAfter && onCancelAfter(fieldsValue);
       }
     );
-
   };
 
   cloneObj = (obj) => {//深度克隆,对象或者数组
