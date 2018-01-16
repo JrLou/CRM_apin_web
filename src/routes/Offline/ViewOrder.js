@@ -10,14 +10,14 @@ import AddorderForm from './components/AddOrderForm';
 @connect(state => ({
     offline: state.offline,
 }))
-export default class AddOrder extends PureComponent {
+export default class ViewOrder extends PureComponent {
     constructor() {
         super()
     }
     render() {
         return (
             <PageHeaderLayout>
-                <AddorderForm />
+                <AddorderForm isView={true} />
             </PageHeaderLayout >
         )
     }
