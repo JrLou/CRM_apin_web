@@ -53,10 +53,14 @@ export default class BasicProfile extends Component {
   }
 
   inputPrice(e) {
-    let val = e.target.value;
-    this.setState({
-      inputPrice: val.length < 8 ? val : val.slice(0, 8)
-    })
+    let val = e.target.value,reg= /^-?\d+$/ ;
+    // /^|[0-9][0-9]{0,33}$/
+    console.log(reg.test(val));
+    if(reg.test(val)){
+      this.setState({
+        inputPrice: val.length < 8 ? val : val.slice(0, 8)
+      })
+    }
   }
 
   isEdit() {
@@ -408,7 +412,7 @@ export default class BasicProfile extends Component {
                       <li>
                         <span className={styles.titleDesc}>机票销售价</span>
                         <span
-                          className={styles.priceDesc}>{order.sell_price * this.adult_count}={order.sell_price}元(成人价)*{this.adult_count}</span>
+                          className={styles.priceDesc}>{order.sell_price * this.adult_count}.00={order.sell_price?order.sell_price+'.00':''}元(成人价)*{this.adult_count}</span>
                       </li>
                       {
                         (nameType === 'Entrust' && order_status == 6) || (nameType === 'FlyingPig' && order_status == 4) ? null :
@@ -418,7 +422,7 @@ export default class BasicProfile extends Component {
                         {
                           isEdit ?
                             <Input value={inputPrice} className={styles.inputPrice} min={0} type="number"
-                                   onChange={::this.inputPrice}/>
+                                   onChange={::this.inputPrice} />
                             :
                             <span className={styles.inputPrice}>{inputPrice}元</span>
                         }

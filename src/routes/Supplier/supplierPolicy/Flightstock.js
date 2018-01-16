@@ -84,7 +84,7 @@ class page extends Component {
         {name: '到达城市', id: 'city_arr', required: false, category: 0,},
         {name: '去程航班号', id: 'airLineGo', required: false, category: 0,},
         {name: '返程航班号', id: 'airLineBack', required: false, category: 0,},
-        {name: '机票资源号', id: 'airlineNo', required: false, category: 0,},
+        {name: '机票资源号', id: 'id', required: false, category: 0,},
         {
           name: '往返天数',
           id: 'days',
@@ -92,7 +92,7 @@ class page extends Component {
           category: 0,
           check: [{pattern: /^[0-9]*$/, message: "只能输入数字"}]
         },
-        {name: '资源负责人', id: 'charger', required: false, category: 0,},
+        {name: '资源负责人', id: 'principalName', required: false, category: 0,},
         {
           name: '请选择有效性',
           id: 'validity',
@@ -104,7 +104,7 @@ class page extends Component {
             id: '3'
           }]
         },
-        {name: '供应商名称', id: 'departureCityssss', required: false, category: 0,},
+        {name: '供应商名称', id: 'supplierName', required: false, category: 0,},
 
       ],
     };
