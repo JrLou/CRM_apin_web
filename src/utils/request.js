@@ -68,15 +68,14 @@ function checkCode(json) {
   // };
   if (json.code && json.code * 1 < 1 && json.code * 1 > -100) {
     // const errortext = codeMessage[json.code * -1];
+    if (json.code == -2 || json.code == -8 || json.code == -4 || json.code== -11|| json.code== -12) {
+      Cookies.clearCookie()
+      location.reload()
+    }
     notification.error({
       message: `提示`,
       description: json.msg || "",
     });
-
-    if (json.code == -2 || json.code == -8 || json.code == -4 || json.code== -11|| json.code== -12 ||json.code== -10) {
-      Cookies.clearCookie()
-      location.reload()
-    }
   } else if (json.code && json.code * 1 <= -100 && json.code * 1 >= -199) {
     notification.error({
       message: "用户输入信息校验错误",
