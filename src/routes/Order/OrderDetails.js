@@ -53,12 +53,10 @@ export default class BasicProfile extends Component {
   }
 
   inputPrice(e) {
-    let val = e.target.value,reg= /^-?\d+$/ ;
-    // /^|[0-9][0-9]{0,33}$/
-    console.log(reg.test(val));
-    if(reg.test(val)){
+    let val = e.target.value,reg= /^\+?[0-9]\d{0,7}$/ ;
+    if(reg.test(val)||!val){
       this.setState({
-        inputPrice: val.length < 8 ? val : val.slice(0, 8)
+        inputPrice: val
       })
     }
   }
@@ -72,14 +70,14 @@ export default class BasicProfile extends Component {
     if (isEdit) {
       dispatch({
         type: 'flyingpigDetail/updateSettleAmount',
-        payload: {order_id: this.orderData.id, settlement_amount: Number(inputPrice)},
+        payload: {order_id: this.orderData.id, settlement_amount: Number(inputPrice)*100},
         callback: (res) => {
           if (res.code >= 1) {
             message.success('修改成功');
           } else {
             message.error('修改失败');
             this.setState({
-              inputPrice: this.orderData.settlement_amount
+              inputPrice: this.price
             })
           }
         }
@@ -154,7 +152,7 @@ export default class BasicProfile extends Component {
     const {inputPrice, isEdit} = this.state;
     let {flyingpigDetail: {log, order, passenger, payrecord, loading, groupVoyage, orderGroup}, nameType} = this.props;
     this.adult_count = order.adult_count ? order.adult_count : 1;
-    this.price = order.settlement_amount;
+    this.price = order.settlement_amount/100;
     this.passengerData = passenger;
     this.orderData = order;
     order_status = order.status ? order.status : 0;
@@ -231,7 +229,9 @@ export default class BasicProfile extends Component {
     //支付信息
     const payColumns = [
         {title: '支付单号', dataIndex: 'id', key: 'id'},
-        {title: '付款金额(元)', dataIndex: 'pay_amount', key: 'pay_amount'},
+        {title: '付款金额(元)', dataIndex: 'pay_amount', key: 'pay_amount',render:(text)=>{
+          return Number(text)/100
+        }},
         {
           title: '支付方式', dataIndex: 'pay_type', key: 'pay_type', render: (text, record) => {
           return record.pay_amount < 0 ? '退款' : payType[text];
@@ -319,7 +319,9 @@ export default class BasicProfile extends Component {
         return timeHelp.getYMDHMS(text)
       }
       },
-      {title: '销售价', dataIndex: 'sell_price', key: 'sell_price'},
+      {title: '销售价', dataIndex: 'sell_price', key: 'sell_price',render:(text)=>{
+        return Number(text)/100
+      }},
       {
         title: '用户反馈', dataIndex: 'status', key: 'status', render: (text) => {
         return user_status[text]
@@ -412,7 +414,7 @@ export default class BasicProfile extends Component {
                       <li>
                         <span className={styles.titleDesc}>机票销售价</span>
                         <span
-                          className={styles.priceDesc}>{order.sell_price * this.adult_count}.00={order.sell_price?order.sell_price+'.00':''}元(成人价)*{this.adult_count}</span>
+                          className={styles.priceDesc}>{Number(order.sell_price)/100 * this.adult_count}.00={Number(order.sell_price)/100}元(成人价)*{this.adult_count}</span>
                       </li>
                       {
                         (nameType === 'Entrust' && order_status == 6) || (nameType === 'FlyingPig' && order_status == 4) ? null :

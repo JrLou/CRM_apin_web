@@ -220,7 +220,7 @@ export default class TableList extends PureComponent {
       {
         title: '退款金额', dataIndex: 'amount', render: (text) => {
         text = text ? String(text).substr(1) : '';
-        return text;
+        return Number(text)/100;
       }
       },
       {
@@ -312,6 +312,7 @@ class RefundModal extends React.Component {
   render() {
     let {visible, data} = this.state;
     let price = data.amount ? String(data.amount).substr(1) : null;
+    let priceRel=Number(price)/100;
     return (
       <Modal
         title="退款申请"
@@ -323,7 +324,7 @@ class RefundModal extends React.Component {
         <div>
           {this.getContent('订单号', data.order_id || '', false)}
           {this.getContent('退款单号', data.id || '', false)}
-          {this.getContent('退款金额', price, true, '元')}
+          {this.getContent('退款金额', priceRel, true, '元')}
           {this.getContent('处理客服', data.audit_user || '', true)}
           {this.getContent('备注', data.refund_reason || '', false)}
         </div>

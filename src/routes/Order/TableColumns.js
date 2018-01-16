@@ -262,7 +262,7 @@ export default class TableList extends PureComponent {
       {title: '人数', dataIndex: 'adult_count',},
       {
         title: '已付金额', dataIndex: 'payAmount', render: (text) => {
-        return '￥' + text;
+        return '￥' + Number(text)/100;
       }
       },
       {
