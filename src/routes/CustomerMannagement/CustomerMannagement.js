@@ -22,16 +22,24 @@ const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
 }))
 @Form.create()
 export default class TableList extends PureComponent {
-  state = {
-    formValues: {},
-    modalFormValues: {},
-    visible: false,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      formValues: {},
+      modalFormValues: {},
+      visible: false,
+    };
+    this.page = {
+      p: 1,
+      pc: 10,
+    }
+  }
+
 
   componentDidMount() {
     this.props.dispatch({
       type: 'customerMannagement/fetch',
-      payload: {},
+      payload: this.page,
       succCB: (data) => this.cacheData = data.map(item => ({...item}))//先缓存
     });
   }
@@ -39,61 +47,68 @@ export default class TableList extends PureComponent {
   handleStandardTableChange = (pagination, filtersArg, sorter) => {//分页、排序、筛选变化时触发
     console.log("pagination", pagination);
     const {dispatch} = this.props;
-    const {formValues} = this.state;
 
-    const filters = Object.keys(filtersArg).reduce((obj, key) => {
-      const newObj = {...obj};
-      newObj[key] = getValue(filtersArg[key]);
-      return newObj;
-    }, {});
-
-    const params = {
+    this.page = {
       p: pagination.current,
       pc: pagination.pageSize,
-      ...formValues,
-      ...filters,
     };
-    if (sorter.field) {
-      params.sorter = `${sorter.field}_${sorter.order}`;
-    }
 
     dispatch({
       type: 'customerMannagement/fetch',
-      payload: params,
+      payload: {
+        ...this.page,
+        ...this.state.formValues,
+      },
       succCB: (data) => this.cacheData = data.map(item => ({...item}))//先缓存
     });
-
   };
+
+  //当【查询】or 【重置】时，都应该从第一页从新请求
+  resetCurrentPage = () => {
+    this.page = {
+      ...this.page,
+      p: 1,
+    }
+  };
+
 
   handleFormReset = () => {
     const {form, dispatch} = this.props;
     form.resetFields();
-    dispatch({
-      type: 'customerMannagement/fetch',
-      payload: {},
-      succCB: (data) => this.cacheData = data.map(item => ({...item}))//先缓存
+    form.validateFields((err, formValues) => {
+      if (err) return;
+      this.setState({formValues}, () => {
+        this.resetCurrentPage();
+        dispatch({
+          type: 'customerMannagement/fetch',
+          payload: {
+            ...this.page,
+            ...this.state.formValues
+          },
+          succCB: (data) => this.cacheData = data.map(item => ({...item}))//先缓存
+        });
+      });
     });
   };
 
   handleSearch = (e) => {
     e.preventDefault();
-
     const {dispatch, form} = this.props;
 
-    form.validateFields((err, fieldsValue) => {
+    form.validateFields((err, formValues) => {
       if (err) return;
-      const values = {
-        ...fieldsValue,
-        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
-      };
-      this.setState({
-        formValues: values,
+      this.setState({formValues}, () => {
+        this.resetCurrentPage();
+        dispatch({
+          type: 'customerMannagement/fetch',
+          payload: {
+            ...this.page,
+            ...this.state.formValues
+          },
+          succCB: (data) => this.cacheData = data.map(item => ({...item}))//先缓存
+        });
       });
-      dispatch({
-        type: 'customerMannagement/fetch',
-        payload: values,
-        succCB: (data) => this.cacheData = data.map(item => ({...item}))//先缓存
-      });
+
     });
   };
 
@@ -273,7 +288,7 @@ export default class TableList extends PureComponent {
 
   render() {
     const {customerMannagement: {loading: ruleLoading, data,}} = this.props;
-    console.log("父级这里的data",data);
+    console.log("父级这里的data", data);
     return (
       <PageHeaderLayout>
         <Card
@@ -290,7 +305,7 @@ export default class TableList extends PureComponent {
               data={data}
               onChange={this.handleStandardTableChange}
               cacheData={this.cacheData}
-              setCacheData={cacheData=>this.cacheData = cacheData}
+              setCacheData={cacheData => this.cacheData = cacheData}
             />
           </div>
         </Card>
