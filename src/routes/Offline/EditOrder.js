@@ -10,7 +10,7 @@ import AddorderForm from './components/AddOrderForm';
 @connect(state => ({
     offline: state.offline,
 }))
-export default class ViewOrder extends PureComponent {
+export default class EditOrder extends PureComponent {
     constructor(props) {
         super(props)
         this.par = getPar(this, 'id')
@@ -29,7 +29,7 @@ export default class ViewOrder extends PureComponent {
         const { offline: { orderDetail } } = this.props;
         return (
             <PageHeaderLayout>
-                <AddorderForm isView={true} detail={orderDetail} id={this.par} readOnly={true} />
+                <AddorderForm isEdit={true} detail={orderDetail} />
             </PageHeaderLayout >
         )
     }
