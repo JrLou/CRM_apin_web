@@ -1,6 +1,7 @@
 {
   "entry": "src/index.js",
-  "outputPath": "./server/dist",
+  "outputPath": "./server/dist/admin",
+  "publicPath":"/admin/",
   "extraBabelPlugins": [
     "transform-runtime",
     "transform-decorators-legacy",

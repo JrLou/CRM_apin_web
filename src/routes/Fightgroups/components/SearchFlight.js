@@ -9,7 +9,7 @@ import LogTable from './LogTable';
 import moment from 'moment';
 import SearchFlightTable from './SearchFlightTable';
 import AddFlightForm from './AddFlightForm';
-import {formatPar} from '../../../utils/utils';
+import { formatPar } from '../../../utils/utils';
 let demandId, orderList;
 @connect(state => ({
     data: state.push,
@@ -156,7 +156,7 @@ export default class SearchFlight extends PureComponent {
             {
                 title: '订单号',
                 dataIndex: 'id',
-                render: (text, record) => <Link target="_blank" to={{ pathname: '/order/entrust/detail/' + formatPar({id:text}) }}>{text}</Link>,
+                render: (text, record) => <Link target="_blank" to={{ pathname: '/order/entrust/detail/' + formatPar({ id: text }) }}>{text}</Link>,
             },
 
             {
@@ -171,28 +171,17 @@ export default class SearchFlight extends PureComponent {
                 title: '下单时间',
                 dataIndex: 'create_time',
                 render: (text, record) => {
-                    return moment(text).format('YYYY-MM-DD');
-                }
-            },
-            {
-                title: '起飞时间',
-                dataIndex: 'dep_yyyymm',
-                render: (text, record) => {
-                    return text.toString().substring(0, 4) + "-" + text.toString().substring(4);
+                    return moment(text).format('YYYY-MM-DD HH:mm:ss');
                 }
             },
             {
                 title: '订单状态',
                 dataIndex: 'order_status',
-            },
-            {
-                title: '是否接受微调',
-                dataIndex: 'is_adjust',
                 render: (text, record) => {
-                    let innerText = ['否', ' 是']
-                    return innerText[text]
-                },
+                    return '委托中';
+                }
             },
+
             {
                 title: '订单人数',
                 dataIndex: 'adult_count',
@@ -286,9 +275,9 @@ export default class SearchFlight extends PureComponent {
                                     }],
 
                                 })(
-                                    <Input placeholder="请输入销售价格" />)
+                                    <Input style={{ width: '85%' }} placeholder="请输入销售价格" />)
                                 }
-
+                                <span style={{ marginLeft: '5px' }}>元/人</span>
                             </FormItem>
                         </Col>
                         <Col span={9}>
@@ -297,12 +286,12 @@ export default class SearchFlight extends PureComponent {
                                     rules: [{ required: true, message: '必填' },
                                     {
                                         pattern: /^\+?[1-9]\d{0,2}$/,
-                                        message: '最大不能超过999小时',
+                                        message: '请输入1到999之间的整数',
                                     }],
                                 })(
-                                    <Input placeholder="请输入方案保留时间" />)
+                                    <Input style={{ width: '85%' }} placeholder="请输入方案保留时间" />)
                                 }
-
+                                <span style={{ marginLeft: '5px' }}>小时</span>
                             </FormItem>
                         </Col>
                     </Row>
@@ -311,10 +300,7 @@ export default class SearchFlight extends PureComponent {
                             <FormItem label="折扣"  {...formItemLayout} className={styles.formItem}>
                                 {getFieldDecorator('discount', {
                                     rules: [{ required: true, message: '必填' },
-                                    {
-                                        pattern: /^[1-3]$/,
-                                        message: '请输入折扣，不可高于3折',
-                                    }],
+                                    { pattern: /^[1-3]$/, message: '请输入1到3之间的整数', }],
 
                                 })(
                                     <Input placeholder="请输入折扣，不可高于3折" />)
