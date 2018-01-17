@@ -163,10 +163,15 @@ export const getRouterData = (app) => {
     '/supplier/supplierList/price': {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Supplier/Price')),
     },
-    //冷门资源h
+    //冷门资源
     '/supplier/supplierPolicy/h5': {
       name:'冷门资源',
       component: dynamicWrapper(app, ['h5List'], () => import('../routes/Supplier/H5/H5List')),
+    },
+    //冷门资源-编辑
+    '/supplier/supplierPolicy/h5/Edit': {
+      name:'新增冷门资源',
+      component: dynamicWrapper(app, ['h5Edit'], () => import('../routes/Supplier/H5/H5Add')),
     },
     //冷门资源-新增
     '/supplier/supplierPolicy/h5/Add': {

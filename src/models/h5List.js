@@ -38,7 +38,7 @@ export default {
       if (judgment.code >= 1) {
         message.success('上架成功');
       }
-      const response = yield call(flightstockList, {p: 1, pc: 10})
+      const response = yield call(geth5, {p: 1, pc: 10})
       yield put({
         type: 'save',
         payload: response,

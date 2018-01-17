@@ -49,7 +49,7 @@ class page extends Component {
     });
   }
   render() {
-    // const {h5Add: {accurate, numbering}} = this.props;
+    // const {flightstockAdd: {accurate, numbering}} = this.props;
     return (
       <PageHeaderLayout>
         <div className={css.formWapper}>
