@@ -196,42 +196,6 @@ class AddForm extends Component {
       visible: false,
     });
   }
-
-  transshipments(ole, data) { //把选中的航线信息存入数组并且
-    let datalist = this.state.flightdata.flightstockData.voyages;
-    let datalists = this.state.flightdata.flightstockData.linenubber;
-    if (!datalist[ole] || datalist[ole] == undefined) {
-      datalist.push({numbering: ole, data: data,});
-      datalists.push(ole);
-    } else {
-      datalist[ole].data = data;
-      datalist[ole].numbering = ole;
-      datalists[ole] = ole;
-    }
-  }
-
-
-  weekCalculate(arr) {
-    let data = this.state.flightdata;
-    let selectedWeek = [];
-    let days = 0;
-    let weekdays = [];
-    let week = [];
-    if (data.transshipment == 0) {
-      week = data.selectedWeek;
-    } else {
-      days = data.days - 1;
-      weekdays = Algorithm._caculateNewDatePart(data.flightTimeWill, days);
-      week = Algorithm.getPeriodWeek(weekdays[0], weekdays[1]);
-    }
-    week.map((v, k) => {
-      if (Algorithm.toogleToWeekArr(arr).indexOf(v) != -1) {
-        selectedWeek.push(v);
-      }
-    });
-    return selectedWeek
-  }
-
   inquiries(ole, value, event) {  //查询航线详细信息
     let data = this.state.flightdata
     let {flightstockAdd, flightstockData, linenubber, flightdata} = this.state
@@ -352,23 +316,6 @@ class AddForm extends Component {
       </div>
     </Col>
   }
-
-
-  operating(ole, e, event) {
-    let data = this.state.flightdata;
-    switch (ole) {
-      case 0:
-        data.selected = e.target.value;
-        console.log(ole)
-        console.log(e)
-        break;
-    }
-    this.setState({
-      flightdata: data,
-    })
-  }
-
-
   valHeadquarters(olr, e, event) {
     let _this = this
     let data = _this.state.flightdata;
@@ -477,6 +424,9 @@ class AddForm extends Component {
         title: '操作时间',
         dataIndex: 'create_time',
         key: 'create_time',
+        render:(text,data)=>{
+          return moment(data.create_time).format("YYYY-MM-DD:hh:mm:ss");
+        }
       }, {
         title: '操作内容',
         dataIndex: 'create_content',
