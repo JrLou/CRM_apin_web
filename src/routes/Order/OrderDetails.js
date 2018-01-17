@@ -13,7 +13,7 @@ const confirm = Modal.confirm;
 const {Description} = DescriptionList;
 const certType = ['身份证', '护照', '港澳通行证', '台胞证'],
   payType = ['线下支付', '支付宝', '微信', '银联'],
-  source =  ['委托订单', '飞猪', '供应商', '东航'],
+  source = ['委托订单', '飞猪', '供应商', '东航'],
   time_slot = ['不限', '上午(6:00-12:00)', '下午(12:00-19:00)', '晚上(19:00-6:00)', '凌晨'],
   user_status = ['取消', '推送', '接受', '支付超时'],
   typeArray = ["APP", "H5", "WEB"];
@@ -372,7 +372,7 @@ export default class BasicProfile extends Component {
               <div className={styles.remarkText}>{order.ticket_fail_message || ''}</div> : null
           }
           <div className={styles.title}><Icon type="profile"/> 订单信息</div>
-          <DescriptionList size="large" style={{marginBottom: 32}} col={4}>
+          <DescriptionList size="large" style={{marginBottom: 32}} col={3}>
             <Description term="订单号">{order.id ? order.id : ''}</Description>
             <Description term="联系人">{order.contact ? order.contact : ''}</Description>
             <Description term="联系电话">{order.mobile ? order.mobile : ''}</Description>
@@ -419,10 +419,10 @@ export default class BasicProfile extends Component {
           <div className={styles.title}><Icon type="red-envelope"/> 支付信息</div>
           {
             (nameType === 'FlyingPig' && (order_status == 0 || order_status == 1)) || (nameType === 'Entrust' && order_status == 0) ?
-              <p style={{margin: '15px 0', height: 100}}>暂无用户支付信息</p> :
+              <p style={{margin: '15px 0', height: 60}}>暂无用户支付信息</p> :
               <div>
                 {
-                  nameType === 'Entrust' && (order_status == 1 || order_status == 2 || order_status == 8 || order_status == 3) ?
+                  nameType === 'Entrust' && (order_status == 1 || order_status == 2 || order_status == 8 || order_status == 3 || order_status == 7) ?
                     null :
                     <ul className={styles.infoList}>
                       <li>
