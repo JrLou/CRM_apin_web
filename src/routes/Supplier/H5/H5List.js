@@ -45,18 +45,19 @@ export default class TableList extends PureComponent {
     val.airlineStatus = 1
     const {dispatch} = this.props;
     dispatch({
-      type: 'H5List/fetch',
+      type: 'h5List/fetch',
       payload: {
         p: 1,
         pc: 10,
       },
     });
+    console.log(this.props)
   }
 
   companyname(ole, e, event) { //全局函数（根据ole作为标识可以快速查找各功能实现位置）
     switch (ole) {
       case 0: //新增政策跳转新增页面
-        this.props.history.push({pathname: 'H5List/Add'});
+        this.props.history.push({pathname: 'h5/Add'});
         break;
       case 1: //弹窗确认按钮所调函数
         this.setState({visible: false})
@@ -131,18 +132,10 @@ export default class TableList extends PureComponent {
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="去程航班号">
-              {getFieldDecorator('airLineGo', {rules: [{max: 32, message: '最长32位'}]})
+            <FormItem label="航班号">
+              {getFieldDecorator('id', {rules: [{max: 32, message: '最长32位'}]})
               (
                 <Input placeholder="请输入"/>
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="返程航班号">
-              {getFieldDecorator('airLineBack', {rules: [{max: 32, message: '最长32位'}]})
-              (
-                <Input placeholder="请输入" type="tel"/>
               )}
             </FormItem>
           </Col>
@@ -156,22 +149,6 @@ export default class TableList extends PureComponent {
                   <Option value='1' key='1'>上架</Option>
                   <Option value='0' key='0'>待上架</Option>
                 </Select>
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="机票资源号">
-              {getFieldDecorator('id', {rules: [{max: 32, message: '最长32位'}]})
-              (
-                <Input placeholder="请输入"/>
-              )}
-            </FormItem>
-          </Col>
-          <Col md={8} sm={24}>
-            <FormItem label="供应商名称">
-              {getFieldDecorator('supplierName', {rules: [{max: 32, message: '最长32位'}]})
-              (
-                <Input placeholder="请输入"/>
               )}
             </FormItem>
           </Col>
@@ -205,7 +182,7 @@ export default class TableList extends PureComponent {
     switch (ole) {
       case 0:
         this.props.history.push({
-          pathname: 'H5List/Edit',
+          pathname: 'h5List/Add',
           state: {
             data: data,
           }
