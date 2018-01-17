@@ -19,10 +19,15 @@ export default {
       if (response && response.code >=1) {
         // CookieHelp.saveUserInfo(null,response.data.token,true);
         // 保存用户名
-        const userName = Base64.encodeURI(response.data.user.account)
-        CookieHelp.saveUserInfo('_u',userName,true);
-        SetItem('refreshToken',response.data.token.refreshToken)
-        callBack()
+        try{
+          const userName = Base64.encodeURI(response.data.user.account)
+          CookieHelp.saveUserInfo('_u',userName,true);
+          const roles = Base64.encodeURI(response.data.user.roles)
+          CookieHelp.saveUserInfo('_r',roles,true);
+          SetItem('refreshToken',response.data.token.refreshToken)
+        }finally{
+          callBack()
+        }
       }
       yield put({
         type: 'changeSubmitting',
