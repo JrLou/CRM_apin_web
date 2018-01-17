@@ -30,9 +30,7 @@ export default class TableList extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      filter: {
-        airlineStatus: 1,
-      },
+      filter: {},
       visible: false,
     }
   }
@@ -40,7 +38,6 @@ export default class TableList extends PureComponent {
   componentDidMount() {
     //加载第一页
     const val = this.state.filter;
-    val.airlineStatus = 1
     const {dispatch} = this.props;
     dispatch({
       type: 'flightstock/fetch',
@@ -264,8 +261,8 @@ export default class TableList extends PureComponent {
               }}
               onChange={(pagination, filters, sorter) => {
                 let val = this.state.filter;
-                val.current = pagination.current;
-                val.pageSize = pagination.pageSize;
+                val.p = pagination.current;
+                val.pc = pagination.pageSize;
                 this.props.dispatch({
                   type: 'flightstock/fetch',
                   payload: val,
