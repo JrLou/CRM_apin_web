@@ -123,7 +123,9 @@ class StandardTable extends PureComponent {
         title: '有效期',
         dataIndex: 'start_time',
         render:(text,record,index)=>{
-          return <span>{TimeHelp.getYMDHM(record.start_time)+' - '+TimeHelp.getYMDHM(record.end_time)}</span>
+          var timestamp = new Date().getTime();
+
+          return <span style={{color:record.state == 1?record.start_time <= timestamp && timestamp <= record.end_time ? '#52c41a' : '':''}}>{TimeHelp.getYMDHM(record.start_time)+' - '+TimeHelp.getYMDHM(record.end_time)}</span>
         }
       },
       {
@@ -170,7 +172,7 @@ class StandardTable extends PureComponent {
   getBtns(text, record, index){
     return (
       <div>
-        <Button type='primary' className={styles.btn}
+        <Button type={record.state==1?'danger':'primary'} className={styles.btn}
           onClick={()=>{
             let status = record.state==1?0:1;
             this.changeStatus(record.id,status);

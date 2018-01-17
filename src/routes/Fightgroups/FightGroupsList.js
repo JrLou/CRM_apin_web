@@ -49,11 +49,7 @@ export default class TableList extends PureComponent {
     this.doLoading(true, () => {
       request("/api/demandPool/getGroupList", {method: 'POST', body: param})//todo 这里看看是否有异常情况
         .then(response => {
-          if (response instanceof Error) {
-            this.doLoading(false);
-            return;
-          }
-          if (response.code >= 1) {
+          if (response && response.code >= 1) {
             this.total = response.option.total;
             this.setState({dataList: response.data});
           }
