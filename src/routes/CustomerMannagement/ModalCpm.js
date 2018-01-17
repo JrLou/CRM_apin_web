@@ -13,30 +13,37 @@ class AddModal extends PureComponent {
     super(props);
   }
 
-  changeModalShow(showModal) {
-    const {dispatch} = this.props;
-    dispatch({
-      type: 'customerMannagement/extendAll',
-      payload: {showModal}
-    })
-  }
-
   handleSubmit = (e) => {
     e.preventDefault();
 
-    const {dispatch, form, page} = this.props;
+    const {dispatch, form, page, modalType, customerMannagement: {modalData: {data: modalData}}} = this.props;
 
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       const values = {
         ...fieldsValue,
       };
-      this.setState({
-        modalFormValues: values,
-      });
+
+      let urlLast = '';
+      let payload = {};
+      switch (modalType) {
+        case 'add':
+          urlLast = "fetchAdd";
+          payload = {...values};
+          break;
+        case 'edit':
+          urlLast = "fetchEdit";
+          payload = {...values, id: modalData.id};
+          break;
+        default :
+          urlLast = "fetchAdd";
+          payload = {...values};
+          break;
+      }
+
       dispatch({
-        type: 'customerMannagement/' + this.mapModalTypeToReqAddr(),
-        payload: values,
+        type: 'customerMannagement/' + urlLast,
+        payload: payload,
         succCB: () => {
           dispatch({
             type: "customerMannagement/fetch",
@@ -47,37 +54,6 @@ class AddModal extends PureComponent {
       });
     });
   };
-
-  mapModalTypeToReqAddr() {
-    const {modalType} = this.props;
-    let result = '';
-    switch (modalType) {
-      case 'add':
-        result = "fetchAdd";
-        break;
-      case 'edit':
-        result = "fetchEdit";
-        break;
-      case 'delete':
-        result = "fetchDelete";
-        break;
-      default :
-        result = 'fetchAdd';
-        break;
-    }
-    return result;
-  }
-
-  handleOk(e) {
-    const {dispatch} = this.props;
-    dispatch({
-      type: 'customerMannagement/fetchPlanClose',
-      payload: {//传过去的参数
-        reason: this.state.closeReason,
-        id: this.id,
-      },
-    });
-  }
 
   handleCancel(e) {
     const {dispatch} = this.props;
@@ -90,16 +66,27 @@ class AddModal extends PureComponent {
       type: 'customerMannagement/extendAll',
       payload: {
         modalData: {
-          code: '',
-          data: [],
-          msg: '',
+          data: {},
+          message: '',
         }
       }
     });
   }
 
+  getInitData = (data, key) => {
+    return data[key] || '';
+  };
+
   renderModalForm() {
-    const {form: {getFieldDecorator}, dispatch, customerMannagement: {modalFormLoading, modalConfirmLoading}} = this.props;
+    const {
+      form: {getFieldDecorator},
+      dispatch,
+      customerMannagement: {
+        modalFormLoading,
+        modalConfirmLoading,
+        modalData: {data: modalData}
+      },
+    } = this.props;
 
     const formItemLayout = {
       labelCol: {span: 4},
@@ -115,7 +102,7 @@ class AddModal extends PureComponent {
         <Form onSubmit={this.handleSubmit}>
           <FormItem {...formItemLayout} label="客户名称:">
             {getFieldDecorator('name', { //【客户名称】支持中文、英文、数字，最多50个字符；
-              initialValue: "",
+              initialValue: this.getInitData(modalData, 'name'),
               rules: [{max: 50, message: '长度不能超过50'}],
             })
             (<Input placeholder="请输入"/>)
@@ -123,7 +110,7 @@ class AddModal extends PureComponent {
           </FormItem>
           <FormItem {...formItemLayout} label="地址:">
             {getFieldDecorator('address', { //【客户名称】支持中文、英文、数字，最多50个字符；
-              initialValue: "",
+              initialValue: this.getInitData(modalData, 'address'),
               rules: [{max: 100, message: '最长100位'}],
             })
             (<Input placeholder="请输入"/>)
@@ -131,7 +118,7 @@ class AddModal extends PureComponent {
           </FormItem>
           <FormItem {...formItemLayout} label="联系人:">
             {getFieldDecorator('contacts', {//【联系人】支持中文、英文，允许输入特殊字符，小写英文自动转换为大写，最多20个字符；
-              initialValue: "",
+              initialValue: this.getInitData(modalData, 'contacts'),
               rules: [{max: 20, message: '长度不能超过20'}],
             })
             (<Input placeholder="请输入"/>)
@@ -139,7 +126,7 @@ class AddModal extends PureComponent {
           </FormItem>
           <FormItem {...formItemLayout} label="电话号码:">
             {getFieldDecorator('mobile', {//【电话号码】支持数字，允许输入特殊字符，最多50个字符；
-              initialValue: "",
+              initialValue: this.getInitData(modalData, 'mobile'),
               rules: [{max: 50, message: '最长50位'}],
             })
             (<Input placeholder="请输入"/>)
@@ -147,7 +134,7 @@ class AddModal extends PureComponent {
           </FormItem>
           <FormItem {...formItemLayout} label="微信/QQ:">
             {getFieldDecorator('wxqq', {//【微信/QQ】支持中文、英文、数字，允许输入特殊字符，小写英文自动转换为大写，最多100个字符
-              initialValue: "",
+              initialValue: this.getInitData(modalData, 'wxqq'),
               rules: [{max: 32, message: '长度不能超过32'}],
             })
             (<Input placeholder="请输入"/>)
@@ -164,7 +151,7 @@ class AddModal extends PureComponent {
             <Button
               style={{marginLeft: 8}}
               onClick={() => {
-                this.changeModalShow(false);
+                this.handleCancel();
               }}
             >
               取消
@@ -182,7 +169,7 @@ class AddModal extends PureComponent {
       <Modal
         title="请确认是否关闭拼团，关闭请输入原因："
         visible={showModal}
-        onCancel={() => this.changeModalShow(false)}
+        onCancel={() => this.handleCancel(false)}
         maskClosable={false}
         footer={null}
       >
@@ -200,7 +187,7 @@ class DeleteModal extends PureComponent {
     super(props);
   }
 
-  changeModalShow(showModal) {
+  handleCancel(showModal) {
     const {dispatch} = this.props;
     dispatch({
       type: 'customerMannagement/extendAll',
@@ -210,52 +197,40 @@ class DeleteModal extends PureComponent {
 
   handleSubmit = (e) => {
     e.preventDefault();
-
-    const {dispatch} = this.props;
-    dispatch({
-      type: 'customerMannagement/fetchDelete',
-      payload: values,
-    });
   };
 
-  handleOk(e) {
-    const {dispatch} = this.props;
-    dispatch({
-      type: 'customerMannagement/fetchPlanClose',
-      payload: {//传过去的参数
-        reason: this.state.closeReason,
-        id: this.id,
-      },
-    });
-  }
-
-  handleCancel(e) {
-    const {dispatch} = this.props;
-    dispatch({
-      type: 'customerMannagement/extendAll',
-      payload: {showModal: false},//传过去的参数
-    });
-  }
-
   render() {
-    const {showModal, modalConfirmLoading} = this.props.customerMannagement;
+    const {dispatch, customerMannagement: {modalData: {data: modalData}, showModal, modalConfirmLoading,}} = this.props;
     return (
       <Modal
         title={null}
         visible={showModal}
-        onOk={this.handleOk.bind(this)}
-        onCancel={() => this.changeModalShow(false)}
-        confirmLoading={modalConfirmLoading}
+        onCancel={() => this.handleCancel(false)}
         maskClosable={false}
         footer={null}
         width={400}
       >
         <div style={{textAlign: 'center', lineHeight: '3.5em'}}>
           <h3>是否确认删除</h3>
-          <Button style={{marginRight: 8}} type="primary">确认</Button>
+          <Button
+            style={{marginRight: 8}}
+            type="primary"
+            loading={modalConfirmLoading}
+            onClick={() => {
+              dispatch({
+                type: 'customerMannagement/fetchDelete',
+                payload: {id: modalData.id},
+                succCb: () => {
+                  debugger;
+                }
+              });
+            }}
+          >
+            确认
+          </Button>
           <Button
             style={{marginLeft: 8}}
-            onClick={() => this.changeModalShow(false)}
+            onClick={() => this.handleCancel(false)}
           >
             取消
           </Button>
@@ -270,7 +245,6 @@ const AllModal = (props) => {
   return (
     <ModalView
       {...props}
-
     />
   );
 };

@@ -190,7 +190,7 @@ export default class TableList extends PureComponent {
         payload: {showModal: true},//传过去的参数
       });
     });
-  }
+  };
 
   render() {
     const {customerMannagement: {loading, data,}, showModal} = this.props;

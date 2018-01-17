@@ -11,12 +11,13 @@ const initState = () => {
     loading: true,
 
     modalData: {
-      data: null,
+      data: {},
       message: '',
     },
     showModal: false,
     modalFormLoading: false,//模态框中的table的loading
     modalConfirmLoading: false,
+    deleteItemId:'',
   };
 };
 
@@ -82,20 +83,40 @@ export default {
     },
     * fetchEdit({payload, succCB}, {call, put}) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
       yield put({
-        type: 'changeLoading',
-        payload: true,
+        type: 'extendAll',
+        payload: {modalConfirmLoading: true},
       });
       const response = yield call(offlineCustomerEdit, payload);//offlineSupplierList,offlineCustomerList
       if (response && response.code >= 1) {
         yield put({
-          type: 'saveTableData',
-          payload: response,
+          type: 'extendAll',
+          payload: {showModal: false},
         });
-        succCB && succCB(response.data);
+        message.success(response.message);
+        succCB && succCB();
       }
       yield put({
-        type: 'changeLoading',
-        payload: false,
+        type: 'extendAll',
+        payload: {modalConfirmLoading: false},
+      });
+    },
+    * fetchDelete({payload, succCB}, {call, put}) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
+      yield put({
+        type: 'extendAll',
+        payload: {modalConfirmLoading: true},
+      });
+      const response = yield call(offlineCustomerDelete, payload);//offlineSupplierList,offlineCustomerList
+      if (response && response.code >= 1) {
+        yield put({
+          type: 'extendAll',
+          payload: {showModal: false},
+        });
+        message.success(response.message);
+        succCB && succCB();
+      }
+      yield put({
+        type: 'extendAll',
+        payload: {modalConfirmLoading: false},
       });
     },
   },

@@ -41,7 +41,7 @@ class StandardTable extends PureComponent {
       },
       {
         title: '操作人',
-        dataIndex: 'createUserName',
+        dataIndex: 'updateUserName',
       },
       {
         title: '编辑',
@@ -51,19 +51,21 @@ class StandardTable extends PureComponent {
           const {editable, isEditing} = record;
           return (
             <div className="editable-row-operations">
-              <a onClick={() => {
-                handleShowModalSwitch('edit');
-                dispatch({
-                  type: 'customerMannagement/fetchQueryOne',
-                  payload: {id: record.id}
-                })
-              }}>
+              <a
+                onClick={() => {
+                  handleShowModalSwitch('edit');
+                  dispatch({
+                    type: 'customerMannagement/fetchQueryOne',
+                    payload: {id: record.id}
+                  })
+                }}>
                 修改
               </a>
               <a
                 style={{position: "absolute", right: "20px"}}
-                onClick={() => handleShowModalSwitch('delete')}
-              >
+                onClick={() => {
+                  handleShowModalSwitch('delete');
+                }}>
                 删除
               </a>
             </div>
