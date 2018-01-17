@@ -22,6 +22,10 @@ export default class AddOrderForm extends Component {
             modalVisible: false
         }
     }
+    // componentDidMount() {
+    //     console.log(this.props);
+    // }
+
     onBlurCheck = (inputId, dataSource, value) => {
         if (dataSource.indexOf(value) == -1) {
             this.props.form.setFieldsValue({ [inputId]: '' })
@@ -270,7 +274,7 @@ export default class AddOrderForm extends Component {
             labelCol: { span: 3 },
             wrapperCol: { span: 16 },
         };
-        const { offline: { usernameData, changeInfo, schemeInfo } } = this.props;
+        const { detail, readOnly, offline: { usernameData, changeInfo, schemeInfo } } = this.props;
         return (
             <div>
                 <Form>
@@ -291,8 +295,9 @@ export default class AddOrderForm extends Component {
                                             <FormItem label="备忘录" {...formItemLayout2}>
                                                 {getFieldDecorator('remark', {
                                                     rules: [{ max: 200, message: "最多输入200字" }, { required: true, message: "必填" }],
+                                                    initialValue: detail.remark
                                                 })(
-                                                    <TextArea rows={4} />
+                                                    <TextArea readOnly={readOnly} rows={4} />
                                                     )}
                                             </FormItem>
                                         </Col>
@@ -310,7 +315,7 @@ export default class AddOrderForm extends Component {
                                         <Col span={8}>
                                             <FormItem label="客户名"  {...formItemLayout}>
                                                 {getFieldDecorator('username', {
-                                                    rules: [{ max: 30, message: "输入位数过长" }],
+                                                    rules: [{ max: 30, message: "输入位数过长" }], 
                                                 })(
                                                     <AutoComplete dataSource={usernameData} onBlur={this.onBlurCheck.bind(null, 'username', usernameData)} />
                                                     )}
@@ -321,7 +326,7 @@ export default class AddOrderForm extends Component {
                                                 {getFieldDecorator('isMatch', {
                                                     rules: [{ required: true, message: "必填" }],
                                                 })(
-                                                    <RadioGroup>
+                                                    <RadioGroup disabled={readOnly}>
                                                         <Radio value="0">是</Radio>
                                                         <Radio value="1">否</Radio>
                                                     </RadioGroup>
@@ -593,7 +598,14 @@ export default class AddOrderForm extends Component {
                         : null
                     }
                     <Card bordered={false}>
-                        <div style={{ textAlign: 'center' }}><Button type='primary'>保存</Button></div>
+                        <div style={{ textAlign: 'center' }}>
+                            {this.props.isView ?
+                                <Button type='primary'>
+                                    <Link to={"/offline/order/EditOrder/" + this.props.id}>修改</Link>
+                                </Button> :
+                                <Button type='primary'>保存</Button>
+                            }
+                        </div>
                     </Card>
                 </Form>
                 <Modal

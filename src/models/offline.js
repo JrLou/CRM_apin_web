@@ -1,5 +1,5 @@
-import { offlineList } from '../services/api';
-import moment from 'moment';
+import { offlineList, orderDetail, delOrder } from '../services/api';
+import { message } from 'antd';
 export default {
   namespace: 'offline',
   state: {
@@ -12,6 +12,7 @@ export default {
     schemeInfo: [
       { supplier: '', price: '', line: '' }
     ],
+    orderDetail: {}
   },
   effects: {
     *fetch({ payload }, { call, put }) {
@@ -29,6 +30,39 @@ export default {
         payload: false,
       });
     },
+    *fetchDetail({ payload }, { call, put }) {
+      yield put({
+        type: 'changeLoading',
+        payload: true,
+      });
+      const response = yield call(orderDetail, payload);
+      if (response.code == 1) {
+        yield put({
+          type: 'getDetail',
+          payload: response,
+        });
+      }
+      yield put({
+        type: 'changeLoading',
+        payload: false,
+      });
+    },
+    *delOrder({ payload }, { call, put }) {
+      yield put({
+        type: 'changeLoading',
+        payload: true,
+      });
+      const response = yield call(delOrder, payload);
+      if (response.code == 200) {
+        message.success('操作成功')
+      } else {
+        message.error(response.message)
+      }
+      yield put({
+        type: 'changeLoading',
+        payload: false,
+      });
+    },
   },
 
   reducers: {
@@ -36,6 +70,12 @@ export default {
       return {
         ...state,
         list: action.payload,
+      };
+    },
+    getDetail(state, action) {
+      return {
+        ...state,
+        orderDetail: action.payload.data,
       };
     },
     changeLoading(state, action) {
