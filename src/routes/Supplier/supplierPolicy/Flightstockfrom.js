@@ -70,7 +70,9 @@ class AddForm extends Component {
       list[0].FlightDeptimePlanDate = moment(list[0].departure_start).format("YYYY-MM-DD")
       list[0].FlightArrAirport = list[0].city_arr_name
       list[0].FlightArrcode = list[0].airport_arr_name
+      list[0].FlightCompany = list[0].flight_company
       list[0].FlightArrtimePlanDate = moment(list[0].departure_end).format("YYYY-MM-DD")
+      list[1].FlightCompany = list[1].flight_company
       list[1].FlightNo = list[0].flight_no
       list[1].FlightDepAirport = list[0].city_dep_name
       list[1].FlightDepcode = list[0].airport_dep_name
@@ -174,7 +176,6 @@ class AddForm extends Component {
   }
 
 
-
   handleCancel(e) { //弹框关闭回调
     let data = this.state.flightdata;
     data.selected = null;
@@ -241,6 +242,7 @@ class AddForm extends Component {
       }
       if (data.flightTimeWill) {
         flightstockData[ole] = {}
+        linenubber[ole] = null
         flightdata.selectedWeekGroup[ole] = ''
         this.setState({
           flightstockData: flightstockData,
@@ -423,7 +425,6 @@ class AddForm extends Component {
       flightdata: data,
     });
   }
-
 
 
   addDate(ole, add) {

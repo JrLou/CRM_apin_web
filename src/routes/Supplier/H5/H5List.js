@@ -90,7 +90,6 @@ export default class TableList extends PureComponent {
     });
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log(values)
         values.p = 1;
         values.pc = 10;
         let dates = {};
@@ -103,7 +102,7 @@ export default class TableList extends PureComponent {
           filter: dates,
         });
         this.props.dispatch({
-          type: 'H5List/fetch',
+          type: 'h5List/fetch',
           payload: dates,
         });
       }
@@ -171,7 +170,7 @@ export default class TableList extends PureComponent {
         title: titlea,
         onOk() {
           _this.props.dispatch({
-            type: 'H5List/changeStatus',
+            type: 'h5List/changeStatus',
             payload: data,
           });
         },
@@ -182,7 +181,7 @@ export default class TableList extends PureComponent {
     switch (ole) {
       case 0:
         this.props.history.push({
-          pathname: 'h5List/Add',
+          pathname: 'h5/Edit',
           state: {
             data: data,
           }
@@ -197,7 +196,7 @@ export default class TableList extends PureComponent {
       case 3:
         _this.setState({visible: true})
         _this.props.dispatch({
-          type: 'H5List/loglist',
+          type: 'h5List/loglist',
           payload: {
             p: 1,
             pc: 100,
@@ -212,6 +211,12 @@ export default class TableList extends PureComponent {
             data: data,
           }
         });
+        break;
+      case 5:
+        confirms({
+          airlineStatus: 0,
+          id: data.id,
+        }, "确定是否下架？");
         break;
     }
   }
@@ -240,8 +245,8 @@ export default class TableList extends PureComponent {
               {this.renderForm()}
             </div>
             <Table
-              loading={false}
-              dataSource={[]}
+              loading={loading}
+              dataSource={data}
               rowKey={'id'}
               pagination={{
                 pageSize: size ? size : 10,
@@ -252,8 +257,8 @@ export default class TableList extends PureComponent {
               }}
               onChange={(pagination, filters, sorter) => {
                 let val = this.state.filter;
-                val.current = pagination.current;
-                val.pageSize = pagination.pageSize;
+                val.p = pagination.current;
+                val.pc = pagination.pageSize;
                 this.props.dispatch({
                   type: 'H5List/fetch',
                   payload: val,
@@ -355,7 +360,7 @@ export default class TableList extends PureComponent {
                         <Divider type="vertical"/>
                         <a
                           style={{cursor: "pointer", margin: "6px"}}
-                          onClick={this.operating.bind(this, record, 4,)}>查看
+                          onClick={this.operating.bind(this, record, 5,)}>下架
                         </a>
                         <Divider type="vertical"/>
                         <a style={{cursor: "pointer", margin: "6px"}}

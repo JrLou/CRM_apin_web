@@ -107,7 +107,7 @@ class Masking extends Component {
 
                 </div>
                 <Col span={24}>
-                    <div>所属航司：{this.props.data.flightCompany}</div>
+                    <div>所属航司：{this.props.data.FlightCompany}</div>
                 </Col>
             </div>
         )
