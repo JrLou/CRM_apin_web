@@ -70,7 +70,10 @@ export default class BasicProfile extends Component {
     });
     if (isEdit) {
       if (!inputPrice) {
-        message.warning('您尚未输入实际结算价')
+        message.warning('您尚未输入实际结算价');
+        this.setState({
+          isEdit: true
+        });
       } else {
         dispatch({
           type: 'flyingpigDetail/updateSettleAmount',
@@ -162,7 +165,7 @@ export default class BasicProfile extends Component {
     this.orderData = order;
     order_status = order.status ? order.status : 0;
     let count_middle = Number(order.sell_price) / 100 * this.adult_count;
-    let count_little = inputPrice ? count_middle - inputPrice : count_middle;
+    let count_little = inputPrice ? count_middle - inputPrice : count_middle - this.price;
     //订单信息数据
     const orderColumns = [
       {title: '航班号', dataIndex: 'flight_no', key: 'flight_no',},
@@ -170,18 +173,18 @@ export default class BasicProfile extends Component {
       {title: '到达机场', dataIndex: 'airport_arr_name', key: 'airport_arr_name',},
       {
         title: '出发时间', dataIndex: 'time_dep', key: 'time_dep', render: (text) => {
-        return timeHelp.getYMDHMS(text);
-      }
+          return timeHelp.getYMDHMS(text);
+        }
       },
       {
         title: '到达时间', dataIndex: 'time_arr', key: 'time_arr', render: (text) => {
-        return timeHelp.getYMDHMS(text);
-      }
+          return timeHelp.getYMDHMS(text);
+        }
       },
       {
         title: '人数', dataIndex: '6', key: '6', render: () => {
-        return this.adult_count
-      }
+          return this.adult_count
+        }
       },
     ];
     //乘机人信息
@@ -189,13 +192,13 @@ export default class BasicProfile extends Component {
       {title: '姓名', dataIndex: 'cname', key: 'cname'},
       {
         title: '性别', dataIndex: 'gender', key: 'gender', render: (text) => {
-        return text == 1 ? '男' : text == 2 ? '女' : '';
-      }
+          return text == 1 ? '男' : text == 2 ? '女' : '';
+        }
       },
       {
         title: '证件类型', dataIndex: 'cert_type', key: 'cert_type', render: (text) => {
-        return certType[text - 1];
-      }
+          return certType[text - 1];
+        }
       },
       {title: '证件号码', dataIndex: 'cert_no', key: 'cert_no'},
       {title: '国籍', dataIndex: 'nation', key: 'nation'},
@@ -207,7 +210,6 @@ export default class BasicProfile extends Component {
         render: (text, record) => {
           if (text) {
             var ticketArr = text.split(',');
-            console.log(ticketArr)
           }
           return (<span>
             {
@@ -239,24 +241,24 @@ export default class BasicProfile extends Component {
         {title: '支付单号', dataIndex: 'id', key: 'id'},
         {
           title: '付款金额(元)', dataIndex: 'pay_amount', key: 'pay_amount', render: (text) => {
-          return Number(text) / 100
-        }
+            return Number(text) / 100
+          }
         },
         {
           title: '支付方式', dataIndex: 'pay_type', key: 'pay_type', render: (text, record) => {
-          return record.pay_amount < 0 ? '退款' : payType[text];
-        }
+            return record.pay_amount < 0 ? '退款' : payType[text];
+          }
         },
         {
           title: '支付状态', dataIndex: 'status', key: 'status', render: (text) => {
-          return <Badge status={text === 3 ? "error" : (text === 1 || text === 2) ? "success" : ''}
-                        text={text === 0 ? "待付款" : (text === 1 || text === 2) ? "成功" : text === 3 ? '失败' : ''}/>
-        }
+            return <Badge status={text === 3 ? "error" : (text === 1 || text === 2) ? "success" : ''}
+                          text={text === 0 ? "待付款" : (text === 1 || text === 2) ? "成功" : text === 3 ? '失败' : ''}/>
+          }
         },
         {
           title: '支付时间', dataIndex: 'pay_time', key: 'pay_time', render: (text) => {
-          return timeHelp.getYMDHMS(text);
-        }
+            return timeHelp.getYMDHMS(text);
+          }
         },
       ]
     ;
@@ -264,80 +266,80 @@ export default class BasicProfile extends Component {
     const groupVoyageColumns = [
       {
         title: '出发目的地', dataIndex: 'city_dep', key: 'city_dep', render: (text, record) => {
-        return `${text}-${record.city_arr}`
-      }
+          return `${text}-${record.city_arr}`
+        }
       },
       {
         title: '出行时间', dataIndex: 'dep_yyyymm', key: 'dep_yyyymm', render: (text, record) => {
-        let date1 = String(text).substr(0, 4) || '', date2 = String(text).substr(4, 2) || '', day = '';
-        switch (record.dep_dd) {
-          case 0:
-            day = '';
-            break;
-          case -1:
-            day = '上旬';
-            break;
-          case -2:
-            day = '中旬';
-            break;
-          case -3:
-            day = '下旬';
-            break;
-          default:
-            day = `${record.dep_dd}日`;
+          let date1 = String(text).substr(0, 4) || '', date2 = String(text).substr(4, 2) || '', day = '';
+          switch (record.dep_dd) {
+            case 0:
+              day = '';
+              break;
+            case -1:
+              day = '上旬';
+              break;
+            case -2:
+              day = '中旬';
+              break;
+            case -3:
+              day = '下旬';
+              break;
+            default:
+              day = `${record.dep_dd}日`;
+          }
+          return `${date1}年${date2}月${day}`;
         }
-        return `${date1}年${date2}月${day}`;
-      }
       },
       {
         title: '起飞时间', dataIndex: 'time_slot', key: 'time_slot', render: (text, record) => {
-        return time_slot[text];
-      }
+          return time_slot[text];
+        }
       },
       {
         title: '出行天数', dataIndex: 'trip_days', key: 'trip_days', render: (text) => {
-        return text < 7 ? `${text}天` : '7天及以上';
-      }
+          return text < 7 ? `${text}天` : '7天及以上';
+        }
       },
       {title: '乘机人数', dataIndex: 'adult_count', key: 'adult_count'},
       {
         title: '是否接受微调', dataIndex: 'is_adjust', key: 'is_adjust', render: (text) => {
-        return text == 0 ? '不接受' : text == 1 ? '接受' : '';
-      }
+          return text == 0 ? '不接受' : text == 1 ? '接受' : '';
+        }
       },
       {
         title: '提交时间', dataIndex: 'create_time', key: 'create_time', render: (text) => {
-        return timeHelp.getYMDHMS(text);
-      }
+          return timeHelp.getYMDHMS(text);
+        }
       },
     ];
     //推送方案
     const orderGroupColumns = [
       {
         title: '推送时间', dataIndex: 'create_time', key: 'create_time', render: (text) => {
-        return timeHelp.getYMDHMS(text)
-      }
+          return timeHelp.getYMDHMS(text)
+        }
       },
       {title: '航班号', dataIndex: 'flight_no', key: 'flight_no',},
       {
         title: '起飞日期', dataIndex: 'date_dep', key: 'date_dep', render: (text, record) => {
-        return timeHelp.getYMDHMS(text)
-      }
+          return timeHelp.getYMDHMS(text)
+        }
       },
       {
         title: '返回日期', dataIndex: 'date_ret', key: 'date_ret', render: (text) => {
-        return timeHelp.getYMDHMS(text)
-      }
+          return timeHelp.getYMDHMS(text)
+        }
       },
       {
         title: '销售价', dataIndex: 'sell_price', key: 'sell_price', render: (text) => {
-        return Number(text) / 100
-      }
+          return Number(text) / 100
+        }
       },
       {
         title: '用户反馈', dataIndex: 'status', key: 'status', render: (text) => {
-        return user_status[text]
-      }
+          return user_status[text]
+        }
       },
       {title: '原因', dataIndex: 'remark', key: 'remark',},
     ];
@@ -385,7 +387,7 @@ export default class BasicProfile extends Component {
               term={nameType === 'FlyingPig' ? '订单来源' : ''}>{nameType === 'FlyingPig' ? typeArray[order.source] : ''}</Description>
           </DescriptionList>
           {
-            (nameType === 'Entrust' && (order_status == 4 || order_status == 5 || order_status == 6 )) || nameType === 'FlyingPig' ?
+            (nameType === 'Entrust' && (order_status == 4 || order_status == 5 || order_status == 6)) || nameType === 'FlyingPig' ?
               <div>
                 <div className={styles.myTable}>
                   <Table
@@ -440,7 +442,7 @@ export default class BasicProfile extends Component {
                             <Input value={inputPrice} className={styles.inputPrice} min={1} type="number"
                                    onChange={::this.inputPrice}/>
                             :
-                            <span className={styles.inputPrice}>{inputPrice ? inputPrice + '元' : ''}</span>
+                            <span className={styles.inputPrice}>{inputPrice ? inputPrice : this.price}元</span>
                         }
                               <Button type='primary' onClick={::this.isEdit}>{isEdit ? '保存' : '修改'}</Button></span>
                           </li>
@@ -482,7 +484,7 @@ export default class BasicProfile extends Component {
           }
 
           {
-            (nameType === 'Entrust' && (order_status == 0 || order_status == 1) ) || nameType === 'FlyingPig' ?
+            (nameType === 'Entrust' && (order_status == 0 || order_status == 1)) || nameType === 'FlyingPig' ?
               null :
               <div>
                 <Divider style={{marginBottom: 32}}/>
