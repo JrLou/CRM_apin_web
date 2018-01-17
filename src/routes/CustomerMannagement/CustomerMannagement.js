@@ -169,7 +169,7 @@ export default class TableList extends PureComponent {
         </Row>
         <Row>
           <Col span={12}>
-            <Button type="primary" onClick={this.handleshowModal.bind(this, 'add')}>新增客户</Button>
+            <Button type="primary" onClick={() => this.handleShowModalSwitch('add')}>新增客户</Button>
           </Col>
           <Col span={12} style={{textAlign: 'right'}}>
             <FormItem>
@@ -182,37 +182,18 @@ export default class TableList extends PureComponent {
     );
   }
 
-  // switchModalView() {
-  //   const {showModal, modalConfirmLoading} = this.props.customerMannagement;
-  //   let ModalView = null;
-  //   switch (this.state.modalType) {
-  //     case 'add':
-  //     case 'edit':
-  //       ModalView = <AllModal modalType={this.state.modalType}/>;
-  //       break;
-  //     case 'delete':
-  //       ModalView = this.getDeleteModal(showModal, modalConfirmLoading);
-  //       break;
-  //     default:
-  //       ModalView = null;
-  //       break;
-  //   }
-  //   return ModalView;
-  // }
-
-  handleshowModal(modalType) {
-    this.setState({modalType}, () => {
-
-    });
+  handleShowModalSwitch= (modalType) => {
     const {dispatch} = this.props;
-    dispatch({
-      type: 'customerMannagement/extendAll',//modalConfirmLoading
-      payload: {showModal: true},//传过去的参数
+    this.setState({modalType}, () => {
+      dispatch({
+        type: 'customerMannagement/extendAll',//modalConfirmLoading
+        payload: {showModal: true},//传过去的参数
+      });
     });
   }
 
   render() {
-    const {customerMannagement: {loading: ruleLoading, data,}, showModal} = this.props;
+    const {customerMannagement: {loading, data,}, showModal} = this.props;
     console.log("父级这里的data", data);
     return (
       <PageHeaderLayout>
@@ -224,52 +205,21 @@ export default class TableList extends PureComponent {
             <div className={styles.tableListForm}>
               {this.renderForm()}
             </div>
-            <p>共搜索到{data.option.total}条数据</p>
+            <p>共搜索到{data.option}条数据</p>
             <StandardTable
-              loading={ruleLoading}
+              loading={loading}
               data={data}
               onChange={this.handleStandardTableChange}
+              handleShowModalSwitch={this.handleShowModalSwitch}
+              page={this.page}
             />
           </div>
         </Card>
-        <AllModal modalType={this.state.modalType}/>
+        <AllModal
+          modalType={this.state.modalType}
+          page={this.page}
+        />
       </PageHeaderLayout>
     );
   }
 }
-
-// class OperationModal extends PureComponent {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       visible: false,
-//     }
-//   }
-//
-//   render() {
-//     let title = '';
-//     switch (props.type) {
-//       case 'add':
-//         title = '新增客户';
-//         break;
-//       case 'edit':
-//         title = '修改客户';
-//         break;
-//       case 'delete':
-//         title = '修改客户';
-//         break;
-//
-//     }
-//
-//     return <Modal
-//       title={title}
-//       visible={props.visible}
-//       onOk={props.handleOk}
-//       onCancel={props.handleCancel}
-//     >
-//       {this.renderModalForm()}
-//     </Modal>
-//   }
-// };
-
-

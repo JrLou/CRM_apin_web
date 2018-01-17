@@ -365,8 +365,15 @@ export async function orderDetail(params) {
 
 //线下 客户管理
 export async function offlineCustomerList(params) {
-  return request('/offline/customer/list', { method: 'POST', body: params });
+  return request('/java/offline/customer/list', { method: 'POST', body: params });
 }
 export async function offlineCustomerAdd(params) {
-  return request('/offline/customer/create', { method: 'POST', body: params });
+  return request('/java/offline/customer/create', { method: 'POST', body: params });
+}
+//线下 供应商管理
+export async function offlineSupplierList(params) {
+  return request('/java/offline/supplier/v1.0/list', { method: 'POST', body: params });
+}
+export async function offlineSupplierAdd(params) {
+  return request('/java/offline/supplier/v1.0/create', { method: 'POST', body: params });
 }

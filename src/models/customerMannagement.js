@@ -1,21 +1,21 @@
-import {offlineCustomerList,offlineCustomerAdd} from '../services/api';
+import {offlineCustomerList, offlineCustomerAdd, offlineSupplierList, offlineSupplierAdd} from '../services/api';
+import {message} from 'antd';
 
 const initState = () => {
   return {
     data: {
       data: [],
-      msg: '',
-      option: {},//这里面会有分页器需要的信息： current、 pageSize、total，但需要转换
+      message: '',
+      option: 0,//这里面会有分页器需要的信息： current、 pageSize、total，但需要转换
     },
     loading: true,
 
     modalData: {
-      code: '',
-      data: [],
-      msg: '',
+      data: null,
+      message: '',
     },
     showModal: false,
-    modalTableLoading: false,//模态框中的table的loading
+    modalFormLoading: false,//模态框中的table的loading
     modalConfirmLoading: false,
   };
 };
@@ -30,8 +30,8 @@ export default {
         type: 'changeLoading',
         payload: true,
       });
-      const response = yield call(offlineCustomerList, payload);
-      if (response && response.code >= 1) {//todo 这里应该这样写，其他文件记得也参考这里
+      const response = yield call(offlineCustomerList, payload);//offlineSupplierList,offlineCustomerList
+      if (response && response.code >= 1) {
         yield put({
           type: 'save',
           payload: response,
@@ -44,22 +44,22 @@ export default {
       });
     },
     * fetchAdd({payload, succCB}, {call, put}) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
-      debugger;
       yield put({
-        type: 'changeLoading',
-        payload: true,
+        type: 'extendAll',
+        payload: {modalConfirmLoading: true},
       });
-      const response = yield call(offlineCustomerAdd, payload);
+      const response = yield call(offlineCustomerAdd, payload);//offlineSupplierAdd,offlineCustomerAdd
       if (response && response.code >= 1) {
         yield put({
-          type: 'save',
-          payload: response,
+          type: 'extendAll',
+          payload: {showModal: false},
         });
-        succCB && succCB(response.data);
+        message.success(response.message);
+        succCB && succCB();
       }
       yield put({
-        type: 'changeLoading',
-        payload: false,
+        type: 'extendAll',
+        payload: {modalConfirmLoading: false},
       });
     },
   },

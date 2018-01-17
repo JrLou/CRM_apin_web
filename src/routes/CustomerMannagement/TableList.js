@@ -13,44 +13,50 @@ class StandardTable extends PureComponent {
   };
 
   render() {
-    const {customerMannagement: {loading, data: {data, option},}} = this.props;
+    const {customerMannagement: {loading, data: {data, option},}, handleShowModalSwitch, page} = this.props;
     const columns = [
       {
-        title: '微信昵称',
+        title: '供应商名称',
         dataIndex: 'name',
       },
       {
-        title: '头像',
-        dataIndex: 'avatar',
+        title: '地址',
+        dataIndex: 'address',
       },
       {
-        title: '绑定手机号',
+        title: '联系人',
+        dataIndex: 'contacts',
+      },
+      {
+        title: '电话号码',
         dataIndex: 'mobile',
       },
       {
-        title: '注册时间',
-        dataIndex: 'created_time',
+        title: '微信/QQ',
+        dataIndex: 'wxqq',
       },
       {
-        title: '最近打开时间',
-        dataIndex: 'last_open_time',
+        title: '新增日期',
+        dataIndex: 'createTime',
       },
       {
-        title: '操作',
+        title: '操作人',
+        dataIndex: 'createUserName',
+      },
+      {
+        title: '编辑',
         dataIndex: 'operation',
         width: '140px',
         render: (text, record) => {
           const {editable, isEditing} = record;
           return (
             <div className="editable-row-operations">
-              <a onClick={() => {}}>
+              <a onClick={() => handleShowModalSwitch('edit')}>
                 修改
               </a>
               <a
-                style={{position: "absolute",right: "20px"}}
-                onClick={()=>{
-
-                }}
+                style={{position: "absolute", right: "20px"}}
+                onClick={() => handleShowModalSwitch('delete')}
               >
                 删除
               </a>
@@ -59,16 +65,13 @@ class StandardTable extends PureComponent {
         }
       },
     ];
-    const page = {
-      current: option.current,
-      pageSize: option.size,
-      total: option.total,
-    };
     const paginationProps = {
       showSizeChanger: true,
       showQuickJumper: true,
       ...page,
+      total:option,
     };
+    console.log("page",page);
     return (
       <div className={styles.standardTable}>
         <Table

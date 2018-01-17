@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'dva';
-import {Modal, Form, Input, Button} from 'antd';
+import {Modal, Form, Input, Button, Spin} from 'antd';
 
 const FormItem = Form.Item;
 
@@ -24,7 +24,7 @@ class AddModal extends PureComponent {
   handleSubmit = (e) => {
     e.preventDefault();
 
-    const {dispatch, form} = this.props;
+    const {dispatch, form, page} = this.props;
 
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -34,13 +34,16 @@ class AddModal extends PureComponent {
       this.setState({
         modalFormValues: values,
       });
-      console.log("'customerMannagement/' + this.mapModalTypeToReqAddr()", 'customerMannagement/' + this.mapModalTypeToReqAddr());
       dispatch({
         type: 'customerMannagement/' + this.mapModalTypeToReqAddr(),
         payload: values,
-      });
-      dispatch({
-        type: 'customerMannagement/fetch',
+        succCB: () => {
+          dispatch({
+            type: "customerMannagement/fetch",
+            payload: {...page}
+          });
+          form.resetFields();
+        }
       });
     });
   };
@@ -96,7 +99,7 @@ class AddModal extends PureComponent {
   }
 
   renderModalForm() {
-    const {form: {getFieldDecorator}, dispatch} = this.props;
+    const {form: {getFieldDecorator}, dispatch, customerMannagement: {modalFormLoading, modalConfirmLoading}} = this.props;
 
     const formItemLayout = {
       labelCol: {span: 4},
@@ -108,67 +111,68 @@ class AddModal extends PureComponent {
     };
 
     return (
-      <Form onSubmit={this.handleSubmit}>
-        <FormItem {...formItemLayout} label="客户名称:">
-          {getFieldDecorator('name', { //【客户名称】支持中文、英文、数字，最多50个字符；
-            initialValue: "",
-            rules: [{max: 50, message: '长度不能超过50'}],
-          })
-          (<Input placeholder="请输入"/>)
-          }
-        </FormItem>
-        <FormItem {...formItemLayout} label="地址:">
-          {getFieldDecorator('address', { //【客户名称】支持中文、英文、数字，最多50个字符；
-            initialValue: "",
-            rules: [{max: 100, message: '最长100位'}],
-          })
-          (<Input placeholder="请输入"/>)
-          }
-        </FormItem>
-        <FormItem {...formItemLayout} label="联系人:">
-          {getFieldDecorator('contacts', {//【联系人】支持中文、英文，允许输入特殊字符，小写英文自动转换为大写，最多20个字符；
-            initialValue: "",
-            rules: [{max: 20, message: '长度不能超过20'}],
-          })
-          (<Input placeholder="请输入"/>)
-          }
-        </FormItem>
-        <FormItem {...formItemLayout} label="手机号:">
-          {getFieldDecorator('mobile', {//【电话号码】支持数字，允许输入特殊字符，最多50个字符；
-            initialValue: "",
-            rules: [{
-              pattern: /^\d{0,20}$/,
-              message: '请输入正确的手机号'
-            }],
-          })
-          (<Input placeholder="请输入"/>)
-          }
-        </FormItem>
-        <FormItem {...formItemLayout} label="微信/QQ:">
-          {getFieldDecorator('wxqq', {//【微信/QQ】支持中文、英文、数字，允许输入特殊字符，小写英文自动转换为大写，最多100个字符
-            initialValue: "",
-            rules: [{max: 32, message: '长度不能超过32'}],
-          })
-          (<Input placeholder="请输入"/>)
-          }
-        </FormItem>
-        <FormItem {...formTailLayout}>
-          <Button
-            type="primary"
-            htmlType="submit"
-          >
-            确认1
-          </Button>
-          <Button
-            style={{marginLeft: 8}}
-            onClick={() => {
-              this.changeModalShow(false);
-            }}
-          >
-            取消
-          </Button>
-        </FormItem>
-      </Form>
+      <Spin spinning={modalFormLoading}>
+        <Form onSubmit={this.handleSubmit}>
+          <FormItem {...formItemLayout} label="客户名称:">
+            {getFieldDecorator('name', { //【客户名称】支持中文、英文、数字，最多50个字符；
+              initialValue: "",
+              rules: [{max: 50, message: '长度不能超过50'}],
+            })
+            (<Input placeholder="请输入"/>)
+            }
+          </FormItem>
+          <FormItem {...formItemLayout} label="地址:">
+            {getFieldDecorator('address', { //【客户名称】支持中文、英文、数字，最多50个字符；
+              initialValue: "",
+              rules: [{max: 100, message: '最长100位'}],
+            })
+            (<Input placeholder="请输入"/>)
+            }
+          </FormItem>
+          <FormItem {...formItemLayout} label="联系人:">
+            {getFieldDecorator('contacts', {//【联系人】支持中文、英文，允许输入特殊字符，小写英文自动转换为大写，最多20个字符；
+              initialValue: "",
+              rules: [{max: 20, message: '长度不能超过20'}],
+            })
+            (<Input placeholder="请输入"/>)
+            }
+          </FormItem>
+          <FormItem {...formItemLayout} label="电话号码:">
+            {getFieldDecorator('mobile', {//【电话号码】支持数字，允许输入特殊字符，最多50个字符；
+              initialValue: "",
+              rules: [{max: 50, message: '最长50位'}],
+            })
+            (<Input placeholder="请输入"/>)
+            }
+          </FormItem>
+          <FormItem {...formItemLayout} label="微信/QQ:">
+            {getFieldDecorator('wxqq', {//【微信/QQ】支持中文、英文、数字，允许输入特殊字符，小写英文自动转换为大写，最多100个字符
+              initialValue: "",
+              rules: [{max: 32, message: '长度不能超过32'}],
+            })
+            (<Input placeholder="请输入"/>)
+            }
+          </FormItem>
+          <FormItem {...formTailLayout}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={modalConfirmLoading}
+            >
+              确认
+            </Button>
+            <Button
+              style={{marginLeft: 8}}
+              onClick={() => {
+                this.changeModalShow(false);
+              }}
+            >
+              取消
+            </Button>
+          </FormItem>
+        </Form>
+      </Spin>
+
     );
   }
 
@@ -262,7 +266,7 @@ class DeleteModal extends PureComponent {
 }
 
 const AllModal = (props) => {
-  const ModalView = props.modalType === 'delete' ? DeleteModal : DeleteModal;
+  const ModalView = props.modalType === 'delete' ? DeleteModal : AddModal;
   return (
     <ModalView
       {...props}
