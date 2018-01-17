@@ -12,11 +12,16 @@ class StandardTable extends PureComponent {
     this.props.onChange(pagination, filters, sorter);
   };
 
+  getPageName = () =>{
+    const {customerMannagement:{pageType}} = this.props;
+    return pageType === 's' ? '供应商':'客户';
+  };
+
   render() {
-    const {customerMannagement: {loading, data: {data, option},}, handleShowModalSwitch, page, dispatch} = this.props;
+    const {customerMannagement: {loading, data: {data, option},deleteItemId}, handleShowModalSwitch, page, dispatch,  } = this.props;
     const columns = [
       {
-        title: '旅行社名称',
+        title: `${this.getPageName()}名称`,
         dataIndex: 'name',
       },
       {
@@ -68,7 +73,8 @@ class StandardTable extends PureComponent {
                   dispatch({
                     type: 'customerMannagement/extendAll',
                     payload: {deleteItemId: record.id}
-                  })
+                  });
+                  console.log("id:",record.id);
                 }}>
                 删除
               </a>
@@ -83,7 +89,6 @@ class StandardTable extends PureComponent {
       ...page,
       total: option,
     };
-    console.log("page", page);
     return (
       <div className={styles.standardTable}>
         <Table

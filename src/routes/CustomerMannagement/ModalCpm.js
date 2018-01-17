@@ -13,6 +13,11 @@ class AddModal extends PureComponent {
     super(props);
   }
 
+  getPageName = () =>{
+    const {customerMannagement:{pageType}} = this.props;
+    return pageType === 's' ? '供应商':'客户';
+  };
+
   handleSubmit = (e) => {
     e.preventDefault();
 
@@ -56,12 +61,13 @@ class AddModal extends PureComponent {
   };
 
   handleCancel(e) {
-    const {dispatch} = this.props;
+    const {dispatch, form} = this.props;
     dispatch({
       type: 'customerMannagement/extendAll',
       payload: {showModal: false},//传过去的参数
     });
     //关闭的时候，清除modalData以防报错
+    form.resetFields();
     dispatch({
       type: 'customerMannagement/extendAll',
       payload: {
@@ -74,6 +80,7 @@ class AddModal extends PureComponent {
   }
 
   getInitData = (data, key) => {
+    if (!data) return;
     return data[key] || '';
   };
 
@@ -89,23 +96,23 @@ class AddModal extends PureComponent {
     } = this.props;
 
     const formItemLayout = {
-      labelCol: {span: 4},
-      wrapperCol: {span: 20},
+      labelCol: {span: 5},
+      wrapperCol: {span: 17},
     };
     const formTailLayout = {
-      labelCol: {span: 4},
-      wrapperCol: {span: 20, offset: 4},
+      labelCol: {span: 5},
+      wrapperCol: {span: 17, offset: 5},
     };
 
     return (
       <Spin spinning={modalFormLoading}>
         <Form onSubmit={this.handleSubmit}>
-          <FormItem {...formItemLayout} label="客户名称:">
+          <FormItem {...formItemLayout} label={`${this.getPageName()}名称`}>
             {getFieldDecorator('name', { //【客户名称】支持中文、英文、数字，最多50个字符；
               initialValue: this.getInitData(modalData, 'name'),
               rules: [
                 {max: 20, message: '最长20位'},
-                {required: true, message: '请输入客户名称'}
+                {required: true, message: `请输入${this.getPageName()}名称`}
               ],
             })
             (<Input placeholder="请输入"/>)
@@ -170,7 +177,7 @@ class AddModal extends PureComponent {
     const {customerMannagement: {showModal, modalConfirmLoading}, modalType} = this.props;
     return (
       <Modal
-        title={modalType === 'add' ? '新增客户' : '修改客户'}
+        title={modalType === 'add' ? `新增${this.getPageName()}` : `修改${this.getPageName()}`}
         visible={showModal}
         onCancel={() => this.handleCancel(false)}
         maskClosable={false}
@@ -229,6 +236,7 @@ class DeleteModal extends PureComponent {
             type="primary"
             loading={modalConfirmLoading}
             onClick={() => {
+              console.log("deleteItemId:",deleteItemId);
               dispatch({
                 type: 'customerMannagement/fetchDelete',
                 payload: {id: deleteItemId},

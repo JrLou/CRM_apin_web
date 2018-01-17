@@ -1,8 +1,67 @@
-import {offlineCustomerList, offlineCustomerAdd, offlineCustomerQuery, offlineCustomerEdit, offlineCustomerDelete} from '../services/api';//offlineSupplierList, offlineSupplierAdd
+import {
+  //客户管理
+  offlineCustomerList,
+  offlineCustomerAdd,
+  offlineCustomerQuery,
+  offlineCustomerEdit,
+  offlineCustomerDelete,
+
+  //供应商管理
+  offlineSupporterList,
+  offlineSupporterAdd,
+  offlineSupporterQuery,
+  offlineSupporterEdit,
+  offlineSupporterDelete,
+
+} from '../services/api';//offlineSupporterList, offlineSupplierAdd
 import {message} from 'antd';
+
+// const
+const transferRes = (pageType, methodName) => {
+  let response = null;
+  if (pageType === 'c') {
+    switch (methodName) {
+      case 'list':
+        response = offlineCustomerList;
+        break;
+      case 'add':
+        response = offlineCustomerAdd;
+        break;
+      case 'query':
+        response = offlineCustomerQuery;
+        break;
+      case 'edit':
+        response = offlineCustomerEdit;
+        break;
+      case 'delete':
+        response = offlineCustomerDelete;
+        break;
+    }
+  } else {
+    switch (methodName) {
+      case 'list':
+        response = offlineSupporterList;
+        break;
+      case 'add':
+        response = offlineSupporterAdd;
+        break;
+      case 'query':
+        response = offlineSupporterQuery;
+        break;
+      case 'edit':
+        response = offlineSupporterEdit;
+        break;
+      case 'delete':
+        response = offlineSupporterDelete;
+        break;
+    }
+  }
+  return response;
+};
 
 const initState = () => {
   return {
+    pageType: 'c',//c=>客户 s=>供应商
     data: {
       data: [],
       message: '',
@@ -17,7 +76,7 @@ const initState = () => {
     showModal: false,
     modalFormLoading: false,//模态框中的table的loading
     modalConfirmLoading: false,
-    deleteItemId:'',//点击删除的时候存储该值
+    deleteItemId: '',//点击删除的时候存储该值
   };
 };
 
@@ -26,12 +85,13 @@ export default {
 
   state: initState(),
   effects: {
-    * fetch({payload, succCB}, {call, put}) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
+    * fetch({payload, succCB}, {call, put, select}) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
       yield put({
         type: 'changeLoading',
         payload: true,
       });
-      const response = yield call(offlineCustomerList, payload);//offlineSupplierList,offlineCustomerList
+      const pageType = yield select(state => state.customerMannagement.pageType);
+      const response = yield call(transferRes(pageType, 'list'), payload);//offlineSupporterList,offlineCustomerList
       if (response && response.code >= 1) {
         yield put({
           type: 'saveTableData',
@@ -44,12 +104,13 @@ export default {
         payload: false,
       });
     },
-    * fetchAdd({payload, succCB}, {call, put}) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
+    * fetchAdd({payload, succCB}, {call, put, select}) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
       yield put({
         type: 'extendAll',
         payload: {modalConfirmLoading: true},
       });
-      const response = yield call(offlineCustomerAdd, payload);//offlineSupplierAdd,offlineCustomerAdd
+      const pageType = yield select(state => state.customerMannagement.pageType);
+      const response = yield call(transferRes(pageType, 'add'), payload);//offlineSupporterAdd,offlineCustomerAdd
       if (response && response.code >= 1) {
         yield put({
           type: 'extendAll',
@@ -63,30 +124,32 @@ export default {
         payload: {modalConfirmLoading: false},
       });
     },
-    * fetchQueryOne({payload, succCB}, {call, put}) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
+    * fetchQueryOne({payload, succCB}, {call, put, select}) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
       yield put({
         type: 'extendAll',
         payload: {modalFormLoading: true},
       });
-      const response = yield call(offlineCustomerQuery, payload);//offlineSupplierList,offlineCustomerList
+      const pageType = yield select(state => state.customerMannagement.pageType);
+      const response = yield call(transferRes(pageType, 'query'), payload);//offlineSupporterList,offlineCustomerList
       if (response && response.code >= 1) {
         yield put({
           type: 'extendAll',
-          payload: {modalData:response},
+          payload: {modalData: response},
         });
         succCB && succCB(response.data);
       }
       yield put({
         type: 'extendAll',
-        payload: {modalFormLoading:false},
+        payload: {modalFormLoading: false},
       });
     },
-    * fetchEdit({payload, succCB}, {call, put}) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
+    * fetchEdit({payload, succCB}, {call, put, select}) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
       yield put({
         type: 'extendAll',
         payload: {modalConfirmLoading: true},
       });
-      const response = yield call(offlineCustomerEdit, payload);//offlineSupplierList,offlineCustomerList
+      const pageType = yield select(state => state.customerMannagement.pageType);
+      const response = yield call(transferRes(pageType, 'edit'), payload);//offlineSupporterList,offlineCustomerList
       if (response && response.code >= 1) {
         yield put({
           type: 'extendAll',
@@ -100,12 +163,13 @@ export default {
         payload: {modalConfirmLoading: false},
       });
     },
-    * fetchDelete({payload, succCB}, {call, put}) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
+    * fetchDelete({payload, succCB}, {call, put, select}) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
       yield put({
         type: 'extendAll',
         payload: {modalConfirmLoading: true},
       });
-      const response = yield call(offlineCustomerDelete, payload);//offlineSupplierList,offlineCustomerList
+      const pageType = yield select(state => state.customerMannagement.pageType);
+      const response = yield call(transferRes(pageType, 'delete'), payload);//offlineSupporterList,offlineCustomerList
       if (response && response.code >= 1) {
         yield put({
           type: 'extendAll',

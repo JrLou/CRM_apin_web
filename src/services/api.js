@@ -436,9 +436,18 @@ export async function offlineCustomerDelete(params) {
   return request('/java/offline/customer/delete', { method: 'POST', body: params });
 }
 //线下 供应商管理
-export async function offlineSupplierList(params) {
+export async function offlineSupporterList(params) {
   return request('/java/offline/supplier/v1.0/list', { method: 'POST', body: params });
 }
-export async function offlineSupplierAdd(params) {
+export async function offlineSupporterAdd(params) {
   return request('/java/offline/supplier/v1.0/create', { method: 'POST', body: params });
+}
+export async function offlineSupporterQuery(params) {
+  return request('/java/offline/supplier/v1.0/query', { method: 'POST', body: params });
+}
+export async function offlineSupporterEdit(params) {
+  return request('/java/offline/supplier/v1.0/update', { method: 'POST', body: params });
+}
+export async function offlineSupporterDelete(params) {
+  return request('/java/offline/supplier/v1.0/delete', { method: 'POST', body: params });
 }
