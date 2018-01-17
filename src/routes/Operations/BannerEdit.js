@@ -153,8 +153,9 @@ class BannerEdit extends PureComponent {
             <Row>
               <Col md={16} sm={24}>
                 <FormItem label="上传图片:" {...formItemLayout}>
-                  <PicturesWall />
+                  <PicturesWall /><span>(690px*332px)</span>
                 </FormItem>
+
               </Col>
             </Row>
             <Row>
