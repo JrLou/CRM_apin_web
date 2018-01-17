@@ -16,7 +16,7 @@ class StandardTable extends PureComponent {
     const {customerMannagement: {loading, data: {data, option},}, handleShowModalSwitch, page, dispatch} = this.props;
     const columns = [
       {
-        title: '供应商名称',
+        title: '旅行社名称',
         dataIndex: 'name',
       },
       {
@@ -65,6 +65,10 @@ class StandardTable extends PureComponent {
                 style={{position: "absolute", right: "20px"}}
                 onClick={() => {
                   handleShowModalSwitch('delete');
+                  dispatch({
+                    type: 'customerMannagement/extendAll',
+                    payload: {deleteItemId: record.id}
+                  })
                 }}>
                 删除
               </a>

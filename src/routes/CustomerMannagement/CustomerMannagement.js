@@ -127,7 +127,7 @@ export default class TableList extends PureComponent {
             <FormItem label="客户名称:">
               {getFieldDecorator('name', { //【客户名称】支持中文、英文、数字，最多50个字符；
                 initialValue: "",
-                rules: [{max: 50, message: '最长50位'}],
+                rules: [{max: 20, message: '最长20位'}],
               })
               (<Input placeholder="请输入"/>)
               }
@@ -137,20 +137,17 @@ export default class TableList extends PureComponent {
             <FormItem label="联系人:">
               {getFieldDecorator('contacts', {//【联系人】支持中文、英文，允许输入特殊字符，小写英文自动转换为大写，最多20个字符；
                 initialValue: "",
-                rules: [{max: 20, message: '长度不能超过20'}],
+                rules: [{max: 20, message: '最长20位'}],
               })
               (<Input placeholder="请输入"/>)
               }
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="手机号:">
+            <FormItem label="电话号码:">
               {getFieldDecorator('mobile', {//【电话号码】支持数字，允许输入特殊字符，最多50个字符；
                 initialValue: "",
-                rules: [{
-                  pattern: /^\d{0,20}$/,
-                  message: '请输入正确的手机号'
-                }],
+                rules: [{max: 50, message: '最长50位'}],
               })
               (<Input placeholder="请输入"/>)
               }
@@ -160,7 +157,7 @@ export default class TableList extends PureComponent {
             <FormItem label="微信/QQ:">
               {getFieldDecorator('wxqq', {//【微信/QQ】支持中文、英文、数字，允许输入特殊字符，小写英文自动转换为大写，最多100个字符
                 initialValue: "",
-                rules: [{max: 32, message: '长度不能超过32'}],
+                rules: [{max: 100, message: '最长100位'}],
               })
               (<Input placeholder="请输入"/>)
               }
@@ -182,7 +179,7 @@ export default class TableList extends PureComponent {
     );
   }
 
-  handleShowModalSwitch= (modalType) => {
+  handleShowModalSwitch = (modalType) => {
     const {dispatch} = this.props;
     this.setState({modalType}, () => {
       dispatch({

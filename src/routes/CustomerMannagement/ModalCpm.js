@@ -103,7 +103,10 @@ class AddModal extends PureComponent {
           <FormItem {...formItemLayout} label="客户名称:">
             {getFieldDecorator('name', { //【客户名称】支持中文、英文、数字，最多50个字符；
               initialValue: this.getInitData(modalData, 'name'),
-              rules: [{max: 50, message: '长度不能超过50'}],
+              rules: [
+                {max: 20, message: '最长20位'},
+                {required: true, message: '请输入客户名称'}
+              ],
             })
             (<Input placeholder="请输入"/>)
             }
@@ -119,7 +122,7 @@ class AddModal extends PureComponent {
           <FormItem {...formItemLayout} label="联系人:">
             {getFieldDecorator('contacts', {//【联系人】支持中文、英文，允许输入特殊字符，小写英文自动转换为大写，最多20个字符；
               initialValue: this.getInitData(modalData, 'contacts'),
-              rules: [{max: 20, message: '长度不能超过20'}],
+              rules: [{max: 20, message: '最长20位'}],
             })
             (<Input placeholder="请输入"/>)
             }
@@ -135,7 +138,7 @@ class AddModal extends PureComponent {
           <FormItem {...formItemLayout} label="微信/QQ:">
             {getFieldDecorator('wxqq', {//【微信/QQ】支持中文、英文、数字，允许输入特殊字符，小写英文自动转换为大写，最多100个字符
               initialValue: this.getInitData(modalData, 'wxqq'),
-              rules: [{max: 32, message: '长度不能超过32'}],
+              rules: [{max: 100, message: '最长100位'}],
             })
             (<Input placeholder="请输入"/>)
             }
@@ -164,10 +167,10 @@ class AddModal extends PureComponent {
   }
 
   render() {
-    const {showModal, modalConfirmLoading} = this.props.customerMannagement;
+    const {customerMannagement: {showModal, modalConfirmLoading}, modalType} = this.props;
     return (
       <Modal
-        title="请确认是否关闭拼团，关闭请输入原因："
+        title={modalType === 'add' ? '新增客户' : '修改客户'}
         visible={showModal}
         onCancel={() => this.handleCancel(false)}
         maskClosable={false}
@@ -200,7 +203,16 @@ class DeleteModal extends PureComponent {
   };
 
   render() {
-    const {dispatch, customerMannagement: {modalData: {data: modalData}, showModal, modalConfirmLoading,}} = this.props;
+    const {
+      dispatch,
+      customerMannagement: {
+        modalData: {data: modalData},
+        showModal,
+        modalConfirmLoading,
+        deleteItemId,
+      },
+      page,
+    } = this.props;
     return (
       <Modal
         title={null}
@@ -219,9 +231,12 @@ class DeleteModal extends PureComponent {
             onClick={() => {
               dispatch({
                 type: 'customerMannagement/fetchDelete',
-                payload: {id: modalData.id},
-                succCb: () => {
-                  debugger;
+                payload: {id: deleteItemId},
+                succCB: () => {
+                  dispatch({
+                    type: "customerMannagement/fetch",
+                    payload: {...page}
+                  });
                 }
               });
             }}

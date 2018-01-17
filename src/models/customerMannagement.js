@@ -6,7 +6,7 @@ const initState = () => {
     data: {
       data: [],
       message: '',
-      option: 0,//这里面会有分页器需要的信息： current、 pageSize、total，但需要转换
+      option: 0,
     },
     loading: true,
 
@@ -17,7 +17,7 @@ const initState = () => {
     showModal: false,
     modalFormLoading: false,//模态框中的table的loading
     modalConfirmLoading: false,
-    deleteItemId:'',
+    deleteItemId:'',//点击删除的时候存储该值
   };
 };
 
