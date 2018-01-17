@@ -13,9 +13,10 @@ const confirm = Modal.confirm;
 const {Description} = DescriptionList;
 const certType = ['身份证', '护照', '港澳通行证', '台胞证'],
   payType = ['线下支付', '支付宝', '微信', '银联'],
-  source = ['飞猪', '供应商'],
+  source =  ['委托订单', '飞猪', '供应商', '东航'],
   time_slot = ['不限', '上午(6:00-12:00)', '下午(12:00-19:00)', '晚上(19:00-6:00)', '凌晨'],
-  user_status = ['取消', '推送', '接受', '支付超时'];
+  user_status = ['取消', '推送', '接受', '支付超时'],
+  typeArray = ["APP", "H5", "WEB"];
 let order_status;
 @connect(state => ({
   flyingpigDetail: state.flyingpigDetail,
@@ -53,8 +54,8 @@ export default class BasicProfile extends Component {
   }
 
   inputPrice(e) {
-    let val = e.target.value,reg= /^\+?[1-9]\d{0,7}$/ ;
-    if(reg.test(val)||!val){
+    let val = e.target.value, reg = /^\+?[1-9]\d{0,7}$/;
+    if (reg.test(val) || !val) {
       this.setState({
         inputPrice: val
       })
@@ -68,12 +69,12 @@ export default class BasicProfile extends Component {
       isEdit: !isEdit
     });
     if (isEdit) {
-      if(!inputPrice){
+      if (!inputPrice) {
         message.warning('您尚未输入实际结算价')
-      }else{
+      } else {
         dispatch({
           type: 'flyingpigDetail/updateSettleAmount',
-          payload: {order_id: this.orderData.id, settlement_amount: Number(inputPrice)*100},
+          payload: {order_id: this.orderData.id, settlement_amount: Number(inputPrice) * 100},
           callback: (res) => {
             if (res.code >= 1) {
               message.success('修改成功');
@@ -156,12 +157,12 @@ export default class BasicProfile extends Component {
     const {inputPrice, isEdit} = this.state;
     let {flyingpigDetail: {log, order, passenger, payrecord, loading, groupVoyage, orderGroup}, nameType} = this.props;
     this.adult_count = order.adult_count ? order.adult_count : 1;
-    this.price = order.settlement_amount/100;
+    this.price = order.settlement_amount / 100;
     this.passengerData = passenger;
     this.orderData = order;
     order_status = order.status ? order.status : 0;
-    let count_middle= Number(order.sell_price) / 100 * this.adult_count;
-    let count_little=inputPrice?count_middle-inputPrice:count_middle;
+    let count_middle = Number(order.sell_price) / 100 * this.adult_count;
+    let count_little = inputPrice ? count_middle - inputPrice : count_middle;
     //订单信息数据
     const orderColumns = [
       {title: '航班号', dataIndex: 'flight_no', key: 'flight_no',},
@@ -224,8 +225,8 @@ export default class BasicProfile extends Component {
                 :
                 (nameType == 'FlyingPig' && order_status == 3) || (nameType == 'Entrust' && order_status == 5) ?
                   <span>去 <span
-                    className={styles.showTicket}>{ticketArr && ticketArr[0]!="undefined"  ? ticketArr[0] : '无'}</span> 返 <span
-                    className={styles.showTicket}>{ticketArr && ticketArr[1]!="undefined" ? ticketArr[1] : '无'}</span></span>
+                    className={styles.showTicket}>{ticketArr && ticketArr[0] != "undefined" ? ticketArr[0] : '无'}</span> 返 <span
+                    className={styles.showTicket}>{ticketArr && ticketArr[1] != "undefined" ? ticketArr[1] : '无'}</span></span>
                   : null
             }
         </span>
@@ -236,9 +237,11 @@ export default class BasicProfile extends Component {
     //支付信息
     const payColumns = [
         {title: '支付单号', dataIndex: 'id', key: 'id'},
-        {title: '付款金额(元)', dataIndex: 'pay_amount', key: 'pay_amount',render:(text)=>{
-          return Number(text)/100
-        }},
+        {
+          title: '付款金额(元)', dataIndex: 'pay_amount', key: 'pay_amount', render: (text) => {
+          return Number(text) / 100
+        }
+        },
         {
           title: '支付方式', dataIndex: 'pay_type', key: 'pay_type', render: (text, record) => {
           return record.pay_amount < 0 ? '退款' : payType[text];
@@ -326,9 +329,11 @@ export default class BasicProfile extends Component {
         return timeHelp.getYMDHMS(text)
       }
       },
-      {title: '销售价', dataIndex: 'sell_price', key: 'sell_price',render:(text)=>{
-        return Number(text)/100
-      }},
+      {
+        title: '销售价', dataIndex: 'sell_price', key: 'sell_price', render: (text) => {
+        return Number(text) / 100
+      }
+      },
       {
         title: '用户反馈', dataIndex: 'status', key: 'status', render: (text) => {
         return user_status[text]
@@ -373,9 +378,11 @@ export default class BasicProfile extends Component {
             <Description term="联系电话">{order.mobile ? order.mobile : ''}</Description>
             <Description term="微信昵称">{order.member_name ? order.member_name : ''}</Description>
             <Description
-              term={nameType === 'FlyingPig' ? '订单来源' : ''}>{nameType === 'FlyingPig' ? source[order.group_type - 1] : ''}</Description>
+              term={nameType === 'FlyingPig' ? '资源来源' : ''}>{nameType === 'FlyingPig' ? source[order.group_type] : ''}</Description>
             <Description
               term={nameType === 'FlyingPig' ? '资源ID' : ''}>{nameType === 'FlyingPig' ? order.flight_id : ''}</Description>
+            <Description
+              term={nameType === 'FlyingPig' ? '订单来源' : ''}>{nameType === 'FlyingPig' ? typeArray[order.source] : ''}</Description>
           </DescriptionList>
           {
             (nameType === 'Entrust' && (order_status == 4 || order_status == 5 || order_status == 6 )) || nameType === 'FlyingPig' ?
@@ -421,7 +428,7 @@ export default class BasicProfile extends Component {
                       <li>
                         <span className={styles.titleDesc}>机票销售价</span>
                         <span
-                          className={styles.priceDesc}>{count_middle}={Number(order.sell_price)/100}元(成人价)*{this.adult_count}</span>
+                          className={styles.priceDesc}>{count_middle}={Number(order.sell_price) / 100}元(成人价)*{this.adult_count}</span>
                       </li>
                       {
                         (nameType === 'Entrust' && order_status == 6) || (nameType === 'FlyingPig' && order_status == 4) ? null :
@@ -431,9 +438,9 @@ export default class BasicProfile extends Component {
                         {
                           isEdit ?
                             <Input value={inputPrice} className={styles.inputPrice} min={1} type="number"
-                                   onChange={::this.inputPrice} />
+                                   onChange={::this.inputPrice}/>
                             :
-                            <span className={styles.inputPrice}>{inputPrice?inputPrice+'元':''}</span>
+                            <span className={styles.inputPrice}>{inputPrice ? inputPrice + '元' : ''}</span>
                         }
                               <Button type='primary' onClick={::this.isEdit}>{isEdit ? '保存' : '修改'}</Button></span>
                           </li>

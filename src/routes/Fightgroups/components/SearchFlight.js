@@ -9,7 +9,7 @@ import LogTable from './LogTable';
 import moment from 'moment';
 import SearchFlightTable from './SearchFlightTable';
 import AddFlightForm from './AddFlightForm';
-import {formatPar} from '../../../utils/utils';
+import { formatPar } from '../../../utils/utils';
 let demandId, orderList;
 @connect(state => ({
     data: state.push,
@@ -156,7 +156,7 @@ export default class SearchFlight extends PureComponent {
             {
                 title: '订单号',
                 dataIndex: 'id',
-                render: (text, record) => <Link target="_blank" to={{ pathname: '/order/entrust/detail/' + formatPar({id:text}) }}>{text}</Link>,
+                render: (text, record) => <Link target="_blank" to={{ pathname: '/order/entrust/detail/' + formatPar({ id: text }) }}>{text}</Link>,
             },
 
             {
@@ -175,24 +175,13 @@ export default class SearchFlight extends PureComponent {
                 }
             },
             {
-                title: '起飞时间',
-                dataIndex: 'dep_yyyymm',
-                render: (text, record) => {
-                    return text.toString().substring(0, 4) + "-" + text.toString().substring(4);
-                }
-            },
-            {
                 title: '订单状态',
                 dataIndex: 'order_status',
-            },
-            {
-                title: '是否接受微调',
-                dataIndex: 'is_adjust',
                 render: (text, record) => {
-                    let innerText = ['否', ' 是']
-                    return innerText[text]
-                },
+                    return '委托中';
+                }
             },
+
             {
                 title: '订单人数',
                 dataIndex: 'adult_count',
@@ -302,7 +291,7 @@ export default class SearchFlight extends PureComponent {
                                 })(
                                     <Input placeholder="请输入方案保留时间" />)
                                 }
-
+                                <span style={{ marginLeft: '5px' }}>小时</span>
                             </FormItem>
                         </Col>
                     </Row>

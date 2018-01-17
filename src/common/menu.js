@@ -23,6 +23,9 @@ const menuData = [{
     //   name: '编辑',
     //   path: 'supplier/supplierPolicy/flightstockEdit',
     // }],
+  },{
+    name: '冷门资源',
+    path: 'supplier/supplierPolicy/h5',
   }, {
     name: '飞猪资源',
     path: 'supplier/flyPigList',
