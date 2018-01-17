@@ -291,14 +291,32 @@ export default class Choose extends PureComponent {
         title: '下单时间',
         dataIndex: 'create_time',
         render: (text, record) => {
-          return moment(text).format('YYYY-MM-DD');
+          return moment(text).format('YYYY-MM-DD HH:mm:ss');
         }
       },
       {
         title: '起飞时间',
         dataIndex: 'dep_yyyymm',
         render: (text, record) => {
-          return text.toString().substring(0, 4) + "-" + text.toString().substring(4);
+          let dd = '';
+          switch (record.dep_dd) {
+            case 0:
+              dd = ''
+              break;
+            case -1:
+              dd = '上旬'
+              break;
+            case -2:
+              dd = '中旬'
+              break;
+            case -3:
+              dd = '下旬'
+              break;
+            default:
+              dd = record.dep_dd + '日'
+              break;
+          }
+          return text.toString().substring(0, 4) + "年" + text.toString().substring(4) + '月' + dd;
         }
       },
       {
