@@ -1,4 +1,4 @@
-import {offlineCustomerList, offlineCustomerAdd, offlineSupplierList, offlineSupplierAdd} from '../services/api';
+import {offlineCustomerList, offlineCustomerAdd, offlineCustomerQuery, offlineCustomerEdit, offlineCustomerDelete} from '../services/api';//offlineSupplierList, offlineSupplierAdd
 import {message} from 'antd';
 
 const initState = () => {
@@ -33,7 +33,7 @@ export default {
       const response = yield call(offlineCustomerList, payload);//offlineSupplierList,offlineCustomerList
       if (response && response.code >= 1) {
         yield put({
-          type: 'save',
+          type: 'saveTableData',
           payload: response,
         });
         succCB && succCB(response.data);
@@ -62,9 +62,45 @@ export default {
         payload: {modalConfirmLoading: false},
       });
     },
+    * fetchQueryOne({payload, succCB}, {call, put}) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
+      yield put({
+        type: 'extendAll',
+        payload: {modalFormLoading: true},
+      });
+      const response = yield call(offlineCustomerQuery, payload);//offlineSupplierList,offlineCustomerList
+      if (response && response.code >= 1) {
+        yield put({
+          type: 'extendAll',
+          payload: {modalData:response},
+        });
+        succCB && succCB(response.data);
+      }
+      yield put({
+        type: 'extendAll',
+        payload: {modalFormLoading:false},
+      });
+    },
+    * fetchEdit({payload, succCB}, {call, put}) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
+      yield put({
+        type: 'changeLoading',
+        payload: true,
+      });
+      const response = yield call(offlineCustomerEdit, payload);//offlineSupplierList,offlineCustomerList
+      if (response && response.code >= 1) {
+        yield put({
+          type: 'saveTableData',
+          payload: response,
+        });
+        succCB && succCB(response.data);
+      }
+      yield put({
+        type: 'changeLoading',
+        payload: false,
+      });
+    },
   },
   reducers: {
-    save(state, action) {
+    saveTableData(state, action) {
       return {
         ...state,
         data: {

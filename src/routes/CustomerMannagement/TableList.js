@@ -13,7 +13,7 @@ class StandardTable extends PureComponent {
   };
 
   render() {
-    const {customerMannagement: {loading, data: {data, option},}, handleShowModalSwitch, page} = this.props;
+    const {customerMannagement: {loading, data: {data, option},}, handleShowModalSwitch, page, dispatch} = this.props;
     const columns = [
       {
         title: '供应商名称',
@@ -51,7 +51,13 @@ class StandardTable extends PureComponent {
           const {editable, isEditing} = record;
           return (
             <div className="editable-row-operations">
-              <a onClick={() => handleShowModalSwitch('edit')}>
+              <a onClick={() => {
+                handleShowModalSwitch('edit');
+                dispatch({
+                  type: 'customerMannagement/fetchQueryOne',
+                  payload: {id: record.id}
+                })
+              }}>
                 修改
               </a>
               <a
@@ -69,9 +75,9 @@ class StandardTable extends PureComponent {
       showSizeChanger: true,
       showQuickJumper: true,
       ...page,
-      total:option,
+      total: option,
     };
-    console.log("page",page);
+    console.log("page", page);
     return (
       <div className={styles.standardTable}>
         <Table

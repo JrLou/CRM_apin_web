@@ -370,6 +370,15 @@ export async function offlineCustomerList(params) {
 export async function offlineCustomerAdd(params) {
   return request('/java/offline/customer/create', { method: 'POST', body: params });
 }
+export async function offlineCustomerQuery(params) {
+  return request('/java/offline/customer/query', { method: 'POST', body: params });
+}
+export async function offlineCustomerEdit(params) {
+  return request('/java/offline/customer/update', { method: 'POST', body: params });
+}
+export async function offlineCustomerDelete(params) {
+  return request('/java/offline/customer/delete', { method: 'POST', body: params });
+}
 //线下 供应商管理
 export async function offlineSupplierList(params) {
   return request('/java/offline/supplier/v1.0/list', { method: 'POST', body: params });
