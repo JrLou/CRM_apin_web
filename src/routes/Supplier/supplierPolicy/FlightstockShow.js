@@ -19,7 +19,7 @@ class page extends Component {
       <div className={css.flightList} onClick={this.props.routeSelection.bind(this,accurate)}>
         <Row>
           <Col span={24}>
-              <Col span={2} className={css.selectbContent}>
+              <Col span={24} className={css.selectbContent}>
                 <Col span={24}>
                   <Col span={24} style={{fontSize: '20px', color: "rgb(0, 0, 0)"}}>{accurate.FlightNo}</Col>
                 </Col>

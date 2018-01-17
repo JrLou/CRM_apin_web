@@ -46,8 +46,7 @@ class AddForm extends Component {
       flightNumbering: '',
       flightNumsdbdsdering: true,
       visible: false,
-      h5Add: props.h5Add ? props.h5Add : {},
-      h5Edit: props.h5Edit ? props.h5Edit : {details: []},
+      h5Add: props.h5Add ? props.h5Add : {details: []},
       baioshi: false,
       competencese: false,
       numbering: null,
@@ -57,12 +56,11 @@ class AddForm extends Component {
   componentWillReceiveProps(nextProps) {
     let {flightdata} = this.state
     this.setState({
-      h5Add: nextProps.h5Add ? nextProps.h5Add : {},
-      h5Edit: nextProps.h5Edit ? nextProps.h5Edit : {details: []},
+      h5Add: nextProps.h5Add ? nextProps.h5Add : {details: []},
     });
 
-    if (nextProps.h5Edit && nextProps.h5Edit.details.length > 0) {
-      let list = nextProps.h5Edit.details;
+    if (nextProps.h5Add && nextProps.h5Add.details.length > 0) {
+      let list = nextProps.h5Add.details;
       list[0].seat_type == 0 ? list[0].seat_type = "硬切" : list[0].seat_type = "代销"
       list[0].FlightNo = list[0].flight_no
       list[0].FlightDepAirport = list[0].city_dep_name
@@ -77,15 +75,6 @@ class AddForm extends Component {
         flightstockData: [list[0]],
         linenubber: [0]
       });
-      if (nextProps.h5Edit && nextProps.h5Edit.ajaxJudgment && this.state.baioshi) {
-        this.props.away()
-      }
-      if (nextProps.h5Edit && nextProps.h5Edit.ajaxJudgment) {
-        this.props.addPost('h5Edit/ajaxJu', {ajaxJudgment: false},);
-        this.setState({
-          visible: false,
-        });
-      }
       this.setState({
         flightdata: flightdata,
       });
@@ -93,6 +82,9 @@ class AddForm extends Component {
     if (nextProps.h5Add && nextProps.h5Add.judgment) {
       this.props.away()
       this.props.addPost('h5Add/judgmentesd', {judgmentes: false},);
+      this.setState({
+        visible: false,
+      });
     }
   }
 
@@ -134,7 +126,7 @@ class AddForm extends Component {
         });
         if (_this.props.id) {
           values.id = _this.props.id
-          _this.props.addPost('h5Edit/geteditAirlines', values);
+          _this.props.addPost('h5Add/geteditAirlines', values);
         } else {
           _this.props.addPost('h5Add/getaddtit', values);
         }
@@ -143,8 +135,6 @@ class AddForm extends Component {
   }
 
   onChange(value, selectedOptions) {  //日期选择器结果输出
-    console.log(value)
-    console.log(selectedOptions)
     let data = this.state.flightdata;
     data.flightTimeWill = value;
     this.setState({flightdata: data});
@@ -163,16 +153,17 @@ class AddForm extends Component {
       visible: false,
     },);
   }
+
   inquiries(ole, value, event) {  //查询航线详细信息
     let data = this.state.flightdata
-    let {flightstockData, flightdata,linenubber} = this.state
+    let {flightstockData, flightdata, linenubber} = this.state
     if (!value) {
       message.warning('请填写要查询的航班');
       return;
     }
     if (data.flightTimeWill) {
       flightstockData[ole] = {}
-      // linenubber[ole] = null
+      linenubber[ole] = null
       flightdata.selectedWeekGroup[ole] = ''
       this.setState({
         flightstockData: flightstockData,
@@ -251,9 +242,7 @@ class AddForm extends Component {
         break;
       case "手工录入":
         flightdata.entry = true;
-        flightdata.visible = true;
         flightdata.flightNumsdbdsdering = false;
-        flightdata.remarks = false;
         flightdata.ok = "录入";
         this.setState({
           flightNumsdbdsdering: false,
@@ -261,7 +250,6 @@ class AddForm extends Component {
         });
         break;
       case "录入":
-        flightdata.remarks = false;
         flightdata.flightNumsdbdsdering = false;
         break;
     }
@@ -271,16 +259,11 @@ class AddForm extends Component {
     let data = this.state.flightstockData[ole];
     return <Col style={{width: '100%', marginTop: '10px'}} span={24}>
       <div style={{width: '100%'}}>
-        <FlightstockPlugin
-          data={data}
-          // week={Algorithm.toogleToWeekArr(this.state.flightdata.selectedWeekGroup[ole])}
-          weekSelect={this.weekSelect.bind(this)}
-          disabledadd={this.state.flightdata.competence}
-          kyes={1}
-        />
+        <FlightstockPlugin data={data} h5={true} kyes={ole}/>
       </div>
     </Col>
   }
+
   weekSelect(week, ole) {
     let data = this.state.flightdata;
     data.selectedWeekGroup[ole] = Algorithm.toogleToWeekStr(week);
@@ -288,6 +271,7 @@ class AddForm extends Component {
       flightdata: data,
     });
   }
+
   addDate(ole, add) {
     let _this = this;
     const {form} = _this.props;
@@ -300,17 +284,18 @@ class AddForm extends Component {
         break;
     }
   }
+
   render() {
     const {getFieldDecorator, getFieldProps, getFieldsValue, getFieldValue} = this.props.form;
     const formItemLayout = {
       labelCol: {span: 3},
       wrapperCol: {span: 21},
     };
-    const {flightstockData, h5Add, h5Edit, visible} = this.state
+    const {flightstockData, h5Add, visible} = this.state
     const requiredText = "请填写此选项"
-    if (h5Edit && h5Edit.details.length > 0) {
-      for (let i = 0; i < h5Edit.details.length; i++) {
-        getFieldDecorator('names-' + i, {initialValue: h5Edit.details[i].flight_no});
+    if (h5Add && h5Add.details.length > 0) {
+      for (let i = 0; i < h5Add.details.length; i++) {
+        getFieldDecorator('names-' + i, {initialValue: h5Add.details[i].flight_no});
       }
       console.log(getFieldsValue())
     }
@@ -353,7 +338,7 @@ class AddForm extends Component {
         </Col>
       )
     });
-    let rangeValue = h5Edit.details[0] ? moment(h5Edit.details[0].departure_start) : '';
+    let rangeValue = h5Add.details[0] ? moment(h5Add.details[0].departure_start) : '';
     return (
       <div className={css.AgenciesView_box}>
         <Tabs type="card">
@@ -396,11 +381,11 @@ class AddForm extends Component {
                           max: 6,
                           message: "最多6位"
                         }],
-                        initialValue: h5Edit.details.length > 0 ? (h5Edit.details[0].settlement_price / 100).toString() : '',
+                        initialValue: h5Add.details.length > 0 ? (h5Add.details[0].settlement_price / 100).toString() : '',
 
                       })
                       (< Input placeholder="请填写"
-                               style={{width: '260px', marginRight: '10px'}}/>)}
+                               style={{width: '410px', marginRight: '10px'}}/>)}
                       <span>元/人</span>
                     </FormItem>
                   </Col>
@@ -420,10 +405,10 @@ class AddForm extends Component {
                           max: 6,
                           message: "最多6位"
                         }],
-                        initialValue: h5Edit.details.length > 0 ? h5Edit.details[0].discount : '',
+                        initialValue: h5Add.details.length > 0 ? h5Add.details[0].discount : '',
                       })
                       (< Input placeholder="请填写"
-                               style={{width: '260px', marginRight: '10px'}}/>)}
+                               style={{width: '450px', marginRight: '10px'}}/>)}
                     </FormItem>
                   </Col>
                   <Col span={24}>
