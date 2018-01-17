@@ -78,6 +78,12 @@ export default {
         },
         getFlights(state, action) {
             // 判断是不是查到了航班，如果是空数组则跳出手动添加按钮。
+            // 添加假的id防止点一条选2条
+            if (action.payload.data && action.payload.data.length > 0) {
+                action.payload.data.map((v, k) => {
+                    v._id = k;
+                });
+            }
             let data = action.payload.data && action.payload.data.length > 0 ?
                 {
                     ...state,
