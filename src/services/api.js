@@ -360,5 +360,5 @@ export async function delOrder(params) {
 }
 // 线下订单
 export async function orderDetail(params) {
-  return request('/crm/offline/orderDetail', { method: 'POST', body: params });
+  return request('/java/offline/order/query', { method: 'POST', body: params });
 }
