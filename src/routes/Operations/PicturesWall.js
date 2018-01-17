@@ -20,7 +20,7 @@ class PicturesWall extends React.Component {
     let image_base64;
     if (file) {
       if (!/image\/\w+/.test(file.type)) {
-        message.warning("请确保文件为图像类型");
+        message.warning("图片格式仅支持jpg、jpeg和png");
         return false;
       }
       if (file.size >= 1024000) {

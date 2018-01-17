@@ -7,7 +7,7 @@ const config = require('./config.js')
 var proxy = require('http-proxy-middleware');
 app.use(express.static(path.join(__dirname, 'dist')));
 app.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+  res.sendFile(path.join(__dirname, 'dist/admin', 'index.html'));
 });
 // app.use('/api',async (req, res) => {
 //   const requrl = url.api + req.originalUrl
@@ -15,7 +15,6 @@ app.get('/', function (req, res) {
 //   res.send(body)
 // })
 app.use('/api', proxy({target:config.api, changeOrigin: true}));
-
 // app.use('/api',(req, res) => {
 //   const requrl = url.api + req.originalUrl
 //   // req.pipe(request(requrl)).pipe(res);

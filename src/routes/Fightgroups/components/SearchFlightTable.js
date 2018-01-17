@@ -13,7 +13,7 @@ class FlightList extends Component {
         this.state = {};
     }
     selectThisRow(selectedRows) {
-        this.onSelectChange([selectedRows.FlightNo], [selectedRows])
+        this.onSelectChange([selectedRows._id], [selectedRows])
     }
     onSelectChange(selectedRowKeys, selectedRows) {
         this.setState({ selectedRowKeys, selectedRows });
@@ -41,7 +41,7 @@ class FlightList extends Component {
                     pagination={false}
                     showHeader={false}
                     dataSource={this.props.tableData}
-                    rowKey={record => record.FlightNo}
+                    rowKey={record => record._id}
                     rowSelection={rowSelection}
                     onRowClick={this.selectThisRow.bind(this)}
                 >

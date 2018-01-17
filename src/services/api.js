@@ -243,6 +243,62 @@ export async function getadd(params) {
     body: params,
   });
 }
+//批量修改团期价格
+export async function getmodifyPrice(params) {
+  return request('/api/resource/modifyPrice',{
+    method: 'POST',
+    body: params,
+  });
+}
+//批量修改团期库存
+export async function getmodifyInventory(params) {
+  return request('/api/resource/modifyInventory',{
+    method: 'POST',
+    body: params,
+  });
+}
+//批量修改清位时间
+  export async function getmodifyDays(params) {
+  return request('/api/resource/modifyDays',{
+    method: 'POST',
+    body: params,
+  });
+}
+//批量修改价格
+  export async function getimportFile(params) {
+  return request('/api/resource/importFile',{
+    method: 'POST',
+    body: params,
+  });
+}
+//批量修改价格
+  export async function geteditAirline(params) {
+  return request('/api/resource/editAirline',{
+    method: 'POST',
+    body: params,
+  });
+}
+//添加日志
+  export async function getLogAirLine(params) {
+  return request('/api/resource/LogAirLine',{
+    method: 'POST',
+    body: params,
+  });
+}
+//冷门资源列表
+  export async function geth5(params) {
+  return request('/api/resource/getAirLinesRare',{
+    method: 'POST',
+    body: params,
+  });
+}
+//冷门资源列表
+  export async function geth5Add(params) {
+  return request('/api/resource/addAirLinesRare',{
+    method: 'POST',
+    body: params,
+  });
+}
 
 export async function AccountLogin(params) {
   const newparams = Object.assign({}, { account: params.account, type: 0 })
@@ -360,7 +416,7 @@ export async function delOrder(params) {
 }
 // 线下订单
 export async function orderDetail(params) {
-  return request('/crm/offline/orderDetail', { method: 'POST', body: params });
+  return request('/java/offline/order/query', { method: 'POST', body: params });
 }
 
 //线下 客户管理

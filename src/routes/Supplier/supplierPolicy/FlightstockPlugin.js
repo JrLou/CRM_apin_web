@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 import {Checkbox, message, Col, Button} from 'antd'
+import moment from 'moment';
 
 const CheckboxGroup = Checkbox.Group;
-// import HttpTool from '../../../http/HttpTool.js';
 import css from './Flightstock.less';
 
 class Masking extends Component {
@@ -33,12 +33,11 @@ class Masking extends Component {
 
     weeks(checkedValues) {
         let data = this.state.flightdata;
-        let kyes = this.props.kyes;
         data.week = checkedValues;
         this.setState({
             flightdata: data,
         });
-        this.props.weekSelect(checkedValues, kyes)
+        this.props.weekSelect(checkedValues, 0)
     }
 
     componentWillReceiveProps(nextProps) {
@@ -73,7 +72,7 @@ class Masking extends Component {
                         <Col span={24}>
                             {this.props.data.FlightDepcode}
                         </Col>
-                        <Col span={24}>{this.props.data.FlightDeptimePlanDate}</Col>
+                        <Col span={24}>{moment(this.props.data.FlightDeptimePlanDate).format("HH-mm")}</Col>
                     </Col>
                       {this.props.data.stopFlag &&
                     <Col span={2} style={{fontSize: '16px'}}>
@@ -87,7 +86,7 @@ class Masking extends Component {
                         <Col span={24}>
                             {this.props.data.FlightArrcode}
                         </Col>
-                        <Col span={24}>{this.props.data.FlightArrtimePlanDate}</Col>
+                        <Col span={24}>{moment(this.props.data.FlightArrtimePlanDate).format("HH:mm:ss")}</Col>
                     </Col>
                     {this.props.kyes == 0 &&
                     <Col span={24} className={css.flightArrWeek}>
@@ -101,7 +100,6 @@ class Masking extends Component {
                                 options={this.state.optionsWithDisabled} value={this.state.flightdata.week}
                                 onChange={this.weeks.bind(this)}
                                 disabled={this.props.disabledadd}
-
                             />
                         </div>
                     </Col>

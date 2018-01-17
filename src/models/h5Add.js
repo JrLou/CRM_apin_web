@@ -1,8 +1,8 @@
-import {getaddAirLine, getadd} from '../services/api';
+import {getaddAirLine, geth5Add} from '../services/api';
 import {message} from 'antd';
 
 export default {
-  namespace: 'flightstockAdd',
+  namespace: 'h5Add',
   state: {
     accurate: {},//飞常准数据
     numbering: null,
@@ -55,7 +55,7 @@ export default {
       })
     },
     * getaddtit({payload}, {call, put}) {
-      const response = yield call(getadd, payload)
+      const response = yield call(geth5Add, payload)
       if (response.code > 1) {
         message.success('操作成功')
         yield put({
@@ -63,6 +63,12 @@ export default {
           payload: {judgmentes:true},
         })
       }
+    },
+    * judgmentesd({payload}, {call, put}) {
+        yield put({
+          type: 'judgmentes',
+          payload: payload,
+        })
     }
 
   },

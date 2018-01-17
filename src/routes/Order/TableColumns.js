@@ -39,7 +39,8 @@ export default class TableList extends PureComponent {
       ['待付款', '订单关闭', '待出票', '已出票', '出票失败']
       :
       ['待付款', '委托中', '方案选择中', '待付尾款', '待出票', '已出票', '出票失败', '委托过期', '委托关闭',];
-    this.source = ['飞猪', '供应商'];
+    this.source = ['委托订单', '飞猪', '供应商', '东航'];
+    this.typeArray = ["APP", "H5"];
   }
 
   componentDidMount() {
@@ -86,16 +87,15 @@ export default class TableList extends PureComponent {
           'start_time': timeArr[0] || '',
           'end_time': timeArr[1] || '',
         };
-        if (backpath === 'Entrust') {
-          values.group_type = 0;
-        }
-        values.group_type = Number(values.group_type);
+        values.group_type = backpath === 'Entrust' ? 0 : 12;
         for (let item in values) {
           if (values[item] === undefined) {
             values[item] = '';
           }
         }
-        values.order_status = typeof values.order_status == 'string' ? '' : Number(values.order_status);
+        values.order_status = typeof values.order_status === 'string' ? '' : Number(values.order_status);
+        values.supplier_type = values.supplier_type ? Number(values.supplier_type) : '';
+        values.source = typeof values.source === 'string' ? '' : Number(values.source);
         this.setState({
           formValues: values,
         });
@@ -117,22 +117,26 @@ export default class TableList extends PureComponent {
         <Row gutter={layoutForm}>
           <Col md={8} sm={24}>
             <FormItem label="订单号">
-              {getFieldDecorator('id')(
-                <Input placeholder="请输入" maxLength={32}/>
-              )}
+              {getFieldDecorator('id',
+                {
+                  rules: [{max: 32, message: "最长32位"}],
+                  initialValue: ""
+                })
+              (<Input placeholder="请输入"/>)
+              }
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="出发城市">
-              {getFieldDecorator('city_dep')(
-                <Input placeholder="请输入" maxLength={32}/>
+              {getFieldDecorator('city_dep', {rules: [{max: 32, message: "最长32位"}], initialValue: ""})(
+                <Input placeholder="请输入"/>
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="到达城市">
-              {getFieldDecorator('city_arr')(
-                <Input placeholder="请输入" maxLength={32}/>
+              {getFieldDecorator('city_arr', {rules: [{max: 32, message: "最长32位"}], initialValue: ""})(
+                <Input placeholder="请输入"/>
               )}
             </FormItem>
           </Col>
@@ -155,15 +159,15 @@ export default class TableList extends PureComponent {
           {
             backpath !== 'FlyingPig' ? null :
               <Col md={8} sm={24}>
-                <FormItem label="订单来源">
-                  {getFieldDecorator('group_type', {
-                    initialValue: '12'
+                <FormItem label="资源来源">
+                  {getFieldDecorator('supplier_type', {
+                    initialValue: ''
                   })(
                     <Select placeholder="请选择" style={{width: '100%'}}>
-                      <Option value="12" key='12'>全部</Option>
-                      {
-                        this.source.map((item, index) => <Option value={index + 1} key={index + 1}>{item}</Option>)
-                      }
+                      <Option value="" key=''>全部</Option>
+                      <Option value='1' key='1'>飞猪</Option>
+                      <Option value='2' key='2'>供应商</Option>
+                      <Option value='3' key='3'>东航</Option>
                     </Select>
                   )}
                 </FormItem>
@@ -173,24 +177,46 @@ export default class TableList extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem label="下单时间">
               {getFieldDecorator('start_time')(
-                <RangePicker style={{width: '100%'}} onChange={::this.selectTime}/>
+                <RangePicker style={{width: '100%'}} onChange={::this.selectTime} disabledDate={(current) => {
+                  return current.valueOf() > Date.now()
+                }}/>
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="联系人">
-              {getFieldDecorator('contact')(
-                <Input placeholder="请输入" maxLength={32}/>
+              {getFieldDecorator('contact', {rules: [{max: 32, message: "最长32位"}], initialValue: ""})(
+                <Input placeholder="请输入"/>
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="联系电话">
-              {getFieldDecorator('mobile')(
-                <Input placeholder="请输入" type="tel" maxLength={32}/>
+              {getFieldDecorator('mobile', {
+                rules: [{max: 32, message: "最长32位"}],
+                initialValue: ""
+              })(
+                <Input placeholder="请输入"/>
               )}
             </FormItem>
           </Col>
+          {
+            backpath !== 'FlyingPig' ? null :
+              <Col md={8} sm={24}>
+                <FormItem label="订单来源">
+                  {getFieldDecorator('source', {
+                    initialValue: ''
+                  })(
+                    <Select placeholder="请选择" style={{width: '100%'}}>
+                      <Option value="" key=''>全部</Option>
+                      {
+                        this.typeArray.map((item, index) => <Option value={index} key={index}>{item}</Option>)
+                      }
+                    </Select>
+                  )}
+                </FormItem>
+              </Col>
+          }
         </Row>
         <div style={{overflow: 'hidden'}}>
           <span style={{float: 'right', marginBottom: 24}}>
@@ -253,12 +279,17 @@ export default class TableList extends PureComponent {
       {title: '人数', dataIndex: 'adult_count',},
       {
         title: '已付金额', dataIndex: 'payAmount', render: (text) => {
-        return '￥' + text;
+        return '￥' + Number(text) / 100;
       }
       },
       {
-        title: '订单来源', dataIndex: 'group_type', render: (text) => {
-        return this.source[text - 1];
+        title: '资源来源', dataIndex: 'group_type', render: (text) => {
+        return this.source[text];
+      }
+      },
+      {
+        title: '订单来源', dataIndex: 'source', render: (text) => {
+        return this.typeArray[text];
       },
       }, {
         title: '下单时间', dataIndex: 'create_time', render: (text) => {

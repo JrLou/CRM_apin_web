@@ -18,7 +18,7 @@ export default {
         payload: true,
       });
       const response = yield call(queryCustomerList, payload);
-      if (response && response.code >= 1) {//todo 这里应该这样写，其他文件记得也参考这里
+      if (response && response.code >= 1) {
         yield put({
           type: 'save',
           payload: response,

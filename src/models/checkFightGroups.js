@@ -68,17 +68,19 @@ export default {
         payload: {groupsInfoLoading: true},
       });
       const response = yield call(queryOrderInfo, payload);
-      yield put({
-        type: 'save',
-        payload: response,
-        key: "groupsInfoData",
-      });
+      if (response && response.code >= 1) {
+        yield put({
+          type: 'save',
+          payload: response,
+          key: "groupsInfoData",
+        });
+      }
       yield put({
         type: 'extendAll',
         payload: {groupsInfoLoading: false},
       });
     },
-    * fetchPlanClose({payload}, {call, put}) {// 关闭拼团
+    * fetchPlanClose({payload, succCB}, {call, put}) {// 关闭拼团
       yield put({
         type: 'extendAll',
         payload: {modalConfirmLoading: true},
@@ -93,12 +95,14 @@ export default {
             showModal: false,
           },
         });
-        yield put({
-          type: 'fetchGroupsInfo',
-          payload: payload
-        });
+        succCB && succCB();
       } else {
-        message.error("保存失败");
+        yield put({
+          type: 'extendAll',
+          payload: {
+            modalConfirmLoading: false,
+          },
+        });
       }
     },
 
@@ -108,11 +112,13 @@ export default {
         payload: {groupOrdersLoading: true},
       });
       const response = yield call(queryGroupOrders, payload);
-      yield put({
-        type: 'save',
-        payload: response,
-        key: "groupOrdersData",
-      });
+      if (response && response.code >= 1) {
+        yield put({
+          type: 'save',
+          payload: response,
+          key: "groupOrdersData",
+        });
+      }
       yield put({
         type: 'extendAll',
         payload: {groupOrdersLoading: false},
@@ -124,12 +130,13 @@ export default {
         payload: {modalTableLoading: true},
       });
       const response = yield call(queryPaidMember, payload);
-      console.log("queryPaidMember__response", response);
-      yield put({
-        type: 'save',
-        payload: response,
-        key: "modalData",
-      });
+      if (response && response.code >= 1) {
+        yield put({
+          type: 'save',
+          payload: response,
+          key: "modalData",
+        });
+      }
       yield put({
         type: 'extendAll',
         payload: {modalTableLoading: false},
@@ -138,7 +145,7 @@ export default {
     * fetchExportPassenger({payload, cb}, {call}) {// 导出乘机人信息（已付款的）
       const response = yield call(loadExportPassenger, payload);
       if (response.code) {
-        message.error(response.msg);
+        // message.error(response.msg);
         return;
       }
       cb && cb(response);
@@ -150,11 +157,13 @@ export default {
         payload: {modalTableLoading: true},
       });
       const response = yield call(queryPublishLogs, payload);
-      yield put({
-        type: 'save',
-        payload: response,
-        key: "modalData",
-      });
+      if (response && response.code >= 1) {
+        yield put({
+          type: 'save',
+          payload: response,
+          key: "modalData",
+        });
+      }
       yield put({
         type: 'extendAll',
         payload: {modalTableLoading: false},
@@ -167,11 +176,13 @@ export default {
         payload: {detailGroupVoyageLoading: true},
       });
       const response = yield call(queryDetailGroupVoyage, payload);
-      yield put({
-        type: 'save',
-        payload: response,
-        key: "detailGroupVoyage",
-      });
+      if (response && response.code >= 1) {
+        yield put({
+          type: 'save',
+          payload: response,
+          key: "detailGroupVoyage",
+        });
+      }
       yield put({
         type: 'extendAll',
         payload: {detailGroupVoyageLoading: false},
@@ -184,11 +195,13 @@ export default {
         payload: {groupLogsLoading: true},
       });
       const response = yield call(queryGroupLogs, payload);
-      yield put({
-        type: 'save',
-        payload: response,
-        key: "groupLogs",
-      });
+      if (response && response.code >= 1) {
+        yield put({
+          type: 'save',
+          payload: response,
+          key: "groupLogs",
+        });
+      }
       yield put({
         type: 'extendAll',
         payload: {groupLogsLoading: false},
@@ -248,7 +261,7 @@ export default {
         ...state,
         modalData: {
           ...state.modalData,
-          data:payload,
+          data: payload,
         },
       }
     },

@@ -8,11 +8,11 @@ import {
 } from 'antd';
 import {connect, Link} from 'dva';
 import css from './Flightstock.less';
-import Flightstockfrom from './FlightstockfromView.js';
+import Flightstockfrom from './H5from.js';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 
 @connect(state => ({
-  flightstockView: state.flightstockView,
+  h5Add: state.h5Add,
 }))
 class page extends Component {
 
@@ -23,13 +23,12 @@ class page extends Component {
       data: {},
     };
   }
+  // componentWillReceiveProps(nextProps){
+  //   console.log('nextPropsde ((&(*&(*');
+  //   console.log(nextProps);
+  // }
   componentDidMount() {
-    if (this.props.location.state) {
-      this.addPost('flightstockView/addtailAirLine', {id: this.props.location.state.data.id});
-      this.setState({
-        data: this.props.location.state.data,
-      });
-    }
+
   }
 
   showLoad(loading) {
@@ -37,13 +36,20 @@ class page extends Component {
       loading: loading,
     });
   }
+
   addPost(url, data) {
     this.props.dispatch({
       type: url,
       payload: data,
     });
   }
+  away(){
+    this.props.history.push({
+      pathname: '/supplier/supplierPolicy/h5',
+    });
+  }
   render() {
+    // const {h5Add: {accurate, numbering}} = this.props;
     return (
       <PageHeaderLayout>
         <div className={css.formWapper}>
@@ -51,8 +57,7 @@ class page extends Component {
             <WrappedAddForm
               showLoad={this.showLoad.bind(this)}
               addPost={this.addPost.bind(this)}
-              id={this.state.data.id}
-              information={this.state.data}
+              away={this.away.bind(this)}
               {...this.props}
             />
           </Spin>

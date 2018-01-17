@@ -1,15 +1,15 @@
-import {flightstockList, stateAirLine, getAirLineLogs, getaddAirLine,getdetailAirLine} from '../services/api';
+import {geth5, stateAirLine, getAirLineLogs,} from '../services/api';
 import {message} from 'antd';
 
 export default {
-  namespace: 'flightstock',
+  namespace: 'h5List',
   state: {
     list: {
       data: [],
       option: {},
     },
     loading: true,
-      logs: {},
+    logs: {},
   },
   effects: {
     * fetch({payload}, {call, put}) {
@@ -17,7 +17,7 @@ export default {
         type: 'changeLoading',
         payload: true,
       });
-      const response = yield call(flightstockList, payload);
+      const response = yield call(geth5, payload);
       console.log(response)
       yield put({
         type: 'save',

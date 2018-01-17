@@ -44,7 +44,7 @@ class CloseReasonModal extends Component {
           //TODO 这里的placeholder需要产品确认
         }
         <TextArea
-          placeholder="请输入关闭拼团原因，最多100个字"
+          placeholder="请输入内容"
           autosize={{minRows: 2, maxRows: 4}}
           value={closeReason}
           onChange={(e) => {
@@ -75,7 +75,7 @@ class SendLogModal extends Component {
       let txt = '';
       switch (status) {//状态（0取消，1推送，2接受，3支付超时）
         case 0:
-          txt = '取消';
+          txt = '不接受';
           break;
         case 1:
           txt = '推送';
@@ -89,12 +89,12 @@ class SendLogModal extends Component {
       }
       return txt;
     };
-    console.log("data~~~~~~~~~~~",data);
     return data.map(item => {
       const depFlightInfo = item.flightInfo? item.flightInfo.filter(oneFlight => oneFlight.trip_index === 0)[0]: {};
       const arrFlightInfo = item.flightInfo? item.flightInfo.filter(oneFlight => oneFlight.trip_index === 1)[0]: {};
       return {
         ...item,
+        create_time: formatDate(item.create_time, 'YYYY-MM-DD HH:mm:ss'),//2017-12-31 12:00:00
         flight_no: depFlightInfo.flight_no + '/' + arrFlightInfo.flight_no,
         flight_dep: formatDate(depFlightInfo.time_dep, 'YYYY-MM-DD'),
         flight_arr: formatDate(arrFlightInfo.time_dep, 'YYYY-MM-DD'),
@@ -319,7 +319,7 @@ class ExportPassengerModal extends Component {
           } else {
             //不符合要求时，fileList值为空
             fileList = [];
-            message.error(file.response.msg);
+            message.error("导入失败，"+file.response.msg);//todo 我这里没有走request，所以就没有错误消息啦
           }
         } else if (file.status === 'error') {
           message.error(`${file.name} 上传失败`);

@@ -173,7 +173,7 @@ class BannerEdit extends PureComponent {
             <Row>
               <Col md={16} sm={24}>
                 <FormItem label="指向地址:" {...formItemLayout}>
-                  {getFieldDecorator('link_url', { initialValue: data.link_url ? data.link_url : '',rules: [{ required: false, message: '请输入指向地址' }]})
+                  {getFieldDecorator('link_url', { initialValue: data.link_url ? data.link_url : '',rules: [{type:'url',message:'请输入正确的url地址'},{ max: 128, message: '指向地址长度不能超过128' }]})
                     (<Input placeholder="请输入…" />)
                   }
                 </FormItem>
@@ -185,7 +185,7 @@ class BannerEdit extends PureComponent {
                   <FormItem label="图片有效期:" {...formItemLayout}>
                     {getFieldDecorator('validityTime', { initialValue: validityTime, rules: [{ required: true, message: '请选择图片有效期' }], })
                       (
-                      <RangePicker style={{width:'100%'}} format="YYYY-MM-DD HH:mm" />
+                        <RangePicker showTime format="YYYY-MM-DD HH:mm" style={{width:'100%'}} />
                       )
                     }
                   </FormItem>

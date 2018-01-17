@@ -54,8 +54,10 @@ export default class GlobalHeader extends PureComponent {
   // }
   handleMenuClick = ({ key }) => {
     if (key === 'logout') {
+      const pathname = this.props.location.pathname
       this.props.dispatch({
         type: 'login/logout',
+        payload: pathname
       });
     }
   }

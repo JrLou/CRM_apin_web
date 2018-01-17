@@ -23,6 +23,16 @@ const menuData = [{
     //   name: '编辑',
     //   path: 'supplier/supplierPolicy/flightstockEdit',
     // }],
+  },{
+    name: '冷门资源',
+    path: 'supplier/supplierPolicy/h5',
+    // children: [{
+    //   name: '新增',
+    //   path: 'supplier/supplierPolicy/flightstockAdd',
+    // }, {
+    //   name: '编辑',
+    //   path: 'supplier/supplierPolicy/flightstockEdit',
+    // }],
   }, {
     name: '飞猪资源',
     path: 'supplier/flyPigList',
@@ -62,7 +72,7 @@ const menuData = [{
   icon: 'profile',
   path: 'order',
   children: [{
-    name: '飞猪&供应商订单',
+    name: '代销订单',
     path: 'order/flyingpig',
     // children:[{
     //   name:'飞猪&供应商订单详情',

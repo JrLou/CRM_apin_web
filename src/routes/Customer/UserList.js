@@ -5,7 +5,8 @@ import {
   Form,
   Input,
   Button,
-  message
+  Row,
+  Col
 } from 'antd';
 import StandardTable from './TableList';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
@@ -20,34 +21,25 @@ const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
 }))
 @Form.create()
 export default class TableList extends PureComponent {
-  state = {
-    selectedRows: [],
-    formValues: {},
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedRows: [],
+      formValues: {},
+    };
+    this.page = {
+      p: 1,
+      pc: 10,
+    };
+  }
 
   componentDidMount() {
     this.props.dispatch({
-      type: 'userList/fetch'
+      type: 'userList/fetch',
+      payload: {...this.page}
     });
   }
 
-  // getList(){
-  //   const values = this.props.form.getFieldsValue();
-  //   for (let item in values) {
-  //     if (values[item] === undefined) {
-  //       values[item] = '';
-  //     }
-  //   }
-  //   this.setState({
-  //     formValues:values,
-  //   });
-  //   let {page}=this.state;
-  //   let params = Object.assign(page, values);
-  //   this.props.dispatch({
-  //     type: 'userList/fetch',
-  //     payload: params,
-  //   });
-  // }
   handleStandardTableChange = (pagination, filtersArg, sorter) => {//分页、排序、筛选变化时触发
     console.log("pagination", pagination);
     const {dispatch} = this.props;
@@ -59,9 +51,13 @@ export default class TableList extends PureComponent {
       return newObj;
     }, {});
 
-    const params = {
+    this.page = {
       p: pagination.current,
       pc: pagination.pageSize,
+    };
+
+    const params = {
+      ...this.page,
       ...formValues,
       ...filters,
     };
@@ -75,12 +71,29 @@ export default class TableList extends PureComponent {
     });
 
   };
+
+  //当【查询】or 【重置】时，都应该从第一页从新请求
+  resetCurrentPage = () => {
+    this.page = {
+      ...this.page,
+      p:1,
+    }
+  };
+
   handleFormReset = () => {
     const {form, dispatch} = this.props;
     form.resetFields();
+    form.validateFields((err, formValues) => {
+        if (err) {
+          return;
+        }
+        this.setState({formValues});
+      }
+    );
+    this.resetCurrentPage();
     dispatch({
       type: 'userList/fetch',
-      payload: {},
+      payload: {...this.page},
     });
   };
 
@@ -92,21 +105,18 @@ export default class TableList extends PureComponent {
 
   handleSearch = (e) => {
     e.preventDefault();
-
     const {dispatch, form} = this.props;
-
-    form.validateFields((err, fieldsValue) => {
+    form.validateFields((err, formValues) => {
       if (err) return;
-      const values = {
-        ...fieldsValue,
-        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
-      };
-      this.setState({
-        formValues: values,
-      });
-      dispatch({
-        type: 'userList/fetch',
-        payload: values,
+      this.setState({formValues}, () => {
+        this.resetCurrentPage();
+        dispatch({
+          type: 'userList/fetch',
+          payload: {
+            ...this.state.formValues,
+            ...this.page,
+          },
+        });
       });
     });
   };
@@ -114,37 +124,48 @@ export default class TableList extends PureComponent {
   renderForm() {
     const {getFieldDecorator} = this.props.form;
     const formItemStyle = {
-      width: "350px",
-      display: "inline-block"
+      // width: "350px",
+      // display: "inline-block"
     };
     const inputStyle = {
-      width: "220px",
+      // width: "220px",
     };
+
+    const layoutForm = {md: 8, lg: 24, xl: 48};
+
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
-        <FormItem label="微信昵称:" style={formItemStyle}>
-          {getFieldDecorator('name', {
-            initialValue: "",
-            rules: [{max: 30, message: '长度不能超过30'}],
-          })
-          (<Input placeholder="请输入" style={inputStyle}/>)
-          }
-        </FormItem>
-        <FormItem label="手机号:" style={formItemStyle}>
-          {getFieldDecorator('mobile', {
-            initialValue: "",
-            rules: [{
-              pattern: /^\d{0,11}$/,
-              message: '请输入正确的手机号'
-            }],
-          })
-          (<Input placeholder="请输入" style={inputStyle}/>)
-          }
-        </FormItem>
-        <FormItem style={formItemStyle}>
-          <Button type="primary" htmlType="submit">查询</Button>
-          <Button style={{marginLeft: 8}} onClick={this.handleFormReset}>重置</Button>
-        </FormItem>
+        <Row gutter={layoutForm}>
+          <Col md={8} sm={24}>
+            <FormItem label="微信昵称:" style={formItemStyle}>
+              {getFieldDecorator('name', {
+                initialValue: "",
+                rules: [{max: 32, message: '最长32位'}],
+              })
+              (<Input placeholder="请输入" style={inputStyle}/>)
+              }
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="手机号:" style={formItemStyle}>
+              {getFieldDecorator('mobile', {
+                initialValue: "",
+                rules: [{
+                  pattern: /^\d{0,11}$/,
+                  message: '请输入正确的手机号'
+                }],
+              })
+              (<Input placeholder="请输入" style={inputStyle}/>)
+              }
+            </FormItem>
+          </Col>
+          <div style={{textAlign: 'right', marginBottom: 24}}>
+            <FormItem style={formItemStyle}>
+              <Button type="primary" htmlType="submit">查询</Button>
+              <Button style={{marginLeft: 8}} onClick={this.handleFormReset}>重置</Button>
+            </FormItem>
+          </div>
+        </Row>
       </Form>
     );
   }
