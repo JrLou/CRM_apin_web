@@ -12,7 +12,18 @@ class PicturesWall extends React.Component {
 
   getBase64 = (img, callback) => {
     const reader = new FileReader();
-    reader.addEventListener('load', () => callback(reader.result));
+    const that=this
+    reader.addEventListener('load', () => {
+      const imageUrl = reader.result
+      // that.img.src = imageUrl
+      var imgtemp = new Image();//创建一个image对象
+      imgtemp.src = imageUrl
+      imgtemp.onload =function(){
+        console.log(imgtemp.width)
+        debugger
+        callback(imageUrl)
+      }
+    });
     reader.readAsDataURL(img);
   }
 
@@ -33,7 +44,7 @@ class PicturesWall extends React.Component {
       loading: false,
     }, () => {
       let image = this.state.imageUrl;
-      const { dispatch } = this.props;
+        const { dispatch } = this.props;
       dispatch({
         type: 'bannerList/baseImg',
         payload: { image }
@@ -80,17 +91,17 @@ class PicturesWall extends React.Component {
     const { bannerList: { uploadSuccess, banner_url } } = this.props;
     // const imageUrl = this.state.imageUrl;
     return (
-      <Upload
-        name="avatar"
-        listType="picture-card"
-        className="avatar-uploader"
-        showUploadList={false}
-        action=""
-        beforeUpload={this.beforeUpload.bind(this)}
-        onChange={this.handleChange.bind(this)}
-      >
-        {banner_url && uploadSuccess ? <img style={{ width: '100px', height: '60px' }} src={banner_url} alt="" /> : uploadButton}
-      </Upload>
+        <Upload
+          name="avatar"
+          listType="picture-card"
+          className="avatar-uploader"
+          showUploadList={false}
+          action=""
+          beforeUpload={this.beforeUpload.bind(this)}
+          onChange={this.handleChange.bind(this)}
+        >
+          {banner_url && uploadSuccess ? <img style={{ width: '100px', height: '60px' }} src={banner_url} alt="" /> : uploadButton}
+        </Upload>
     );
   }
 }
