@@ -19,13 +19,14 @@ import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import DescriptionList from '../../components/DescriptionList';
 import styles from './TableList.less';
 import {formatPar} from '../../utils/utils';
+
 const {Description} = DescriptionList;
 const {RangePicker} = DatePicker;
 const FormItem = Form.Item;
 const {Option} = Select;
 const confirm = Modal.confirm;
 const {TextArea} = Input;
-const refundStatus = ['挂起', '未退款', '退款成功', '退款中', '退款失败', '部分成功'];
+const refundStatus = ['退款成功', '退款中', '退款失败'];
 @connect(state => ({
   refund: state.refund,
 }))
@@ -116,15 +117,21 @@ export default class TableList extends PureComponent {
         <Row gutter={layoutForm}>
           <Col md={8} sm={24}>
             <FormItem label="退款单号">
-              {getFieldDecorator('id')(
-                <Input placeholder="请输入" maxLength={32}/>
+              {getFieldDecorator('id', {
+                rules: [{max: 32, message: "最长32位"}],
+                initialValue: ""
+              })(
+                <Input placeholder="请输入"/>
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="订单号">
-              {getFieldDecorator('order_id')(
-                <Input placeholder="请输入" maxLength={32}/>
+              {getFieldDecorator('order_id', {
+                rules: [{max: 32, message: "最长32位"}],
+                initialValue: ""
+              })(
+                <Input placeholder="请输入"/>
               )}
             </FormItem>
           </Col>
@@ -137,7 +144,7 @@ export default class TableList extends PureComponent {
                   <Option value=''>全部</Option>
                   {
                     refundStatus.map((item, index) => {
-                      return <Option value={index - 1} key={index}>{item}</Option>
+                      return <Option value={index + 1} key={index + 1}>{item}</Option>
                     })
                   }
                 </Select>
@@ -176,10 +183,10 @@ export default class TableList extends PureComponent {
           payload: {order_id: id},
         });
         if (retryResponse.code > 0) {
-          message.success('操作成功');
+          message.success('重新退款提交成功');
           this.handleSearch();
         } else {
-          message.error('操作失败');
+          message.error('重新退款提交失败');
         }
       },
       onCancel() {
@@ -194,10 +201,10 @@ export default class TableList extends PureComponent {
       payload: {...params},
     });
     if (offlineResponse.code > 0) {
-      message.success('操作成功');
+      message.success('线下退款提交成功');
       this.handleSearch();
     } else {
-      message.error('操作失败');
+      message.error('线下退款提交失败');
     }
   }
 
@@ -207,24 +214,25 @@ export default class TableList extends PureComponent {
       {title: '退款单号', dataIndex: 'id',},
       {
         title: '退款状态', dataIndex: 'refund_status', render: (text) => {
-        return refundStatus[text + 1];
+        return refundStatus[text - 1];
       },
       },
       {
         title: '退款金额', dataIndex: 'amount', render: (text) => {
-        return '￥' + text;
+        text = text ? String(text).substr(1) : '';
+        return Number(text)/100;
       }
       },
       {
         title: '订单号', dataIndex: 'order_id', render: (text, record) => {
-        let Url = record.group_type == 0 ? '/order/entrust/detail/':'/order/flyingpig/detail/';
+        let Url = record.group_type == 0 ? '/order/entrust/detail/' : '/order/flyingpig/detail/';
         return <Link
           to={Url + formatPar({id: record.order_id})}>
           {text}</Link>
       }
       },
       {
-        title: '退款时间', dataIndex: 'audit_time', render: (text) => {
+        title: '退款时间', dataIndex: 'pay_time', render: (text) => {
         return text ? timeHelp.getYMDHMS(text) : ''
       }
       },
@@ -289,7 +297,7 @@ class RefundModal extends React.Component {
     });
   };
 
-  getContent(label, desc, isShow) {
+  getContent(label, desc, isShow, txt) {
     return <Row style={{margin: '15px 0'}}>
       <Col span={6} style={{textAlign: 'right'}}>
         {
@@ -297,23 +305,26 @@ class RefundModal extends React.Component {
         }
         {label}：
       </Col>
-      <Col span={12}>{desc}</Col>
+      <Col span={12}>{desc}{txt}</Col>
     </Row>
   }
 
   render() {
     let {visible, data} = this.state;
+    let price = data.amount ? String(data.amount).substr(1) : null;
+    let priceRel=Number(price)/100;
     return (
       <Modal
         title="退款申请"
         visible={visible}
         onCancel={::this.hideModal}
         footer={null}
+        key={new Date().getTime().toString()}
       >
         <div>
           {this.getContent('订单号', data.order_id || '', false)}
           {this.getContent('退款单号', data.id || '', false)}
-          {this.getContent('退款金额', data.amount || '', true)}
+          {this.getContent('退款金额', priceRel, true, '元')}
           {this.getContent('处理客服', data.audit_user || '', true)}
           {this.getContent('备注', data.refund_reason || '', false)}
         </div>
@@ -352,8 +363,12 @@ class OfflineModal extends React.Component {
 
   handleOk() {
     let {data, failReason} = this.props, {textAreaValue} = this.state;
-    failReason({'message': textAreaValue, 'order_id': data.order_id, 'pay_id': data.id});
-    this.hideModal();
+    if (textAreaValue.length < 32) {
+      failReason({'message': textAreaValue, 'order_id': data.order_id, 'pay_id': data.id});
+      this.hideModal();
+    } else {
+      message.warning('线下退款的原因最多32个字')
+    }
   }
 
   render() {
@@ -366,13 +381,14 @@ class OfflineModal extends React.Component {
           visible={visible}
           onCancel={::this.hideModal}
           footer={[
-            <span key="tip" style={{marginRight: 10}}>提交后,将直接退款</span>,
             <Button key="submit" type="primary" onClick={::this.handleOk}>
               提交
             </Button>,
           ]}
         >
           <TextArea rows={4} placeholder="请输入线下退款的原因（非必填）" onChange={::this.textAreaChange} value={textAreaValue}/>
+          <span style={{float: 'right'}}><span
+            style={{color: textAreaValue.length > 32 ? '#f00' : ''}}>{textAreaValue.length || 0}</span>/32</span>
         </Modal>
       </div>
     );

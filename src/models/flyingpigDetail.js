@@ -11,10 +11,6 @@ export default {
     passenger: [],//乘机人信息
     payrecord: [],//支付信息
     loading: true,
-    ticketLoading: true,
-    ticketResponse: {},
-    amountResponse:{},
-    failResponse:{},
   },
 
   effects: {
@@ -33,26 +29,23 @@ export default {
         payload: false,
       });
     },
-    * addTicket({payload}, {call, put}) {
+    * addTicket({payload,callback}, {call, put}) {
       const response = yield call(flyDetailAddTicket, payload);
-      yield put({
-        type: 'ticket',
-        payload: response,
-      });
+      if (callback) {
+        callback(response);
+      }
     },
-    * updateSettleAmount({payload}, {call, put}) {
+    * updateSettleAmount({payload,callback}, {call, put}) {
       const response = yield call(updateSettleAmount, payload);
-      yield put({
-        type: 'settleAmount',
-        payload: response,
-      });
+      if (callback) {
+        callback(response);
+      }
     },
-    * ticketFail({payload}, {call, put}) {
+    * ticketFail({payload,callback}, {call, put}) {
       const response = yield call(addTicketFail, payload);
-      yield put({
-        type: 'fail',
-        payload: response,
-      });
+      if (callback) {
+        callback(response);
+      }
     }
   },
 
@@ -75,34 +68,10 @@ export default {
         payrecord: payload.data.payrecord || [],//支付信息
       };
     },
-    ticket(state, {payload}) {
-      return {
-        ...state,
-        ticketResponse: payload
-      };
-    },
-    settleAmount(state,{payload}){
-      return {
-        ...state,
-        amountResponse:payload
-      }
-    },
-    fail(state,{payload}){
-      return {
-        ...state,
-        failResponse:payload
-      }
-    },
     changeLoading(state, {payload}) {
       return {
         ...state,
         loading: payload,
-      };
-    },
-    ticketLoading(state, {payload}) {
-      return {
-        ...state,
-        ticketLoading: payload,
       };
     },
   },

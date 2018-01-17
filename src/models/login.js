@@ -10,7 +10,7 @@ export default {
   },
 
   effects: {
-    *login({ payload }, { call, put }) {
+    *login({ payload,callBack}, { call, put }) {
       yield put({
         type: 'changeSubmitting',
         payload: true,
@@ -21,18 +21,18 @@ export default {
         // 保存用户名
         const userName = Base64.encodeURI(response.data.user.account)
         CookieHelp.saveUserInfo('_u',userName,true);
-        console.log(response.data.token.refreshToken)
         SetItem('refreshToken',response.data.token.refreshToken)
-        yield put(routerRedux.push('/'));
+        callBack()
       }
       yield put({
         type: 'changeSubmitting',
         payload: false,
       });
     },
-    *logout(_, { put }) {
+    *logout({payload}, { put }) {
       CookieHelp.clearCookie()
-      yield put(routerRedux.push('/user/login'));
+      window.location.reload()
+      yield put(routerRedux.push('/user/login'+'?from='+encodeURIComponent(payload)));
     },
   },
 

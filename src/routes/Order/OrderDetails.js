@@ -13,9 +13,10 @@ const confirm = Modal.confirm;
 const {Description} = DescriptionList;
 const certType = ['身份证', '护照', '港澳通行证', '台胞证'],
   payType = ['线下支付', '支付宝', '微信', '银联'],
-  source = ['飞猪', '供应商'],
+  source =  ['委托订单', '飞猪', '供应商', '东航'],
   time_slot = ['不限', '上午(6:00-12:00)', '下午(12:00-19:00)', '晚上(19:00-6:00)', '凌晨'],
-  user_status = ['取消', '推送', '接受', '支付超时'];
+  user_status = ['取消', '推送', '接受', '支付超时'],
+  typeArray = ["APP", "H5", "WEB"];
 let order_status;
 @connect(state => ({
   flyingpigDetail: state.flyingpigDetail,
@@ -24,7 +25,7 @@ export default class BasicProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      inputPrice: this.price || 0,
+      inputPrice: this.price,
       isEdit: false,
     };
     this.par = getPar(this, 'params');
@@ -36,6 +37,10 @@ export default class BasicProfile extends Component {
 
 
   componentWillMount() {
+    this.getDetail();
+  }
+
+  getDetail() {
     const {dispatch, backpath} = this.props;
     if (!this.par.id) {
       let url = backpath === 'FlyingPig' ? '/order/flyingpig' : '/order/entrust';
@@ -44,84 +49,107 @@ export default class BasicProfile extends Component {
       dispatch({
         type: 'flyingpigDetail/getDetail',
         payload: {id: this.par.id},
-        callBack: (response) => {
-          if (response.code < 0) {
-            message.error('请求失败')
-          }
-        }
       });
     }
   }
 
   inputPrice(e) {
-    this.setState({
-      inputPrice: e.target.value
-    })
+    let val = e.target.value, reg = /^\+?[1-9]\d{0,7}$/;
+    if (reg.test(val) || !val) {
+      this.setState({
+        inputPrice: val
+      })
+    }
   }
 
   isEdit() {
     let {isEdit, inputPrice} = this.state;
-    const {dispatch, flyingpigDetail: {amountResponse}} = this.props;
+    const {dispatch} = this.props;
     this.setState({
       isEdit: !isEdit
     });
     if (isEdit) {
-      dispatch({
-        type: 'flyingpigDetail/updateSettleAmount',
-        payload: {order_id: this.orderData.id, settlement_amount: Number(inputPrice)}
-      });
-      if (amountResponse.code > 0) {
-        message.success('修改成功');
+      if (!inputPrice) {
+        message.warning('您尚未输入实际结算价')
       } else {
-        message.error('修改失败');
-        this.setState({
-          inputPrice: this.orderData.settlement_amount
-        })
+        dispatch({
+          type: 'flyingpigDetail/updateSettleAmount',
+          payload: {order_id: this.orderData.id, settlement_amount: Number(inputPrice) * 100},
+          callback: (res) => {
+            if (res.code >= 1) {
+              message.success('修改成功');
+            } else {
+              message.error('修改失败');
+              this.setState({
+                inputPrice: this.price
+              })
+            }
+          }
+        });
       }
     }
   }
 
   ticketConfirm() {
-    let ticketInfo = [], {dispatch, flyingpigDetail: {ticketResponse}} = this.props;
-    for (let i = 0; i < this.passengerData.length; i++) {
-      let user = this.passengerData[i], ticket = user.ticketDep + ',' + user.ticketArr;
-      ticketInfo.push({id: user.id, ticket: ticket})
+    let ticketInfo = [], {dispatch} = this.props;
+    let _this = this;
+    if (this.passengerData && this.passengerData.length > 0) {
+      for (let i = 0; i < this.passengerData.length; i++) {
+        let user = this.passengerData[i], ticket = user.ticketDep + ',' + user.ticketArr;
+        ticketInfo.push({id: user.id, ticket: ticket})
+      }
+      let params = {
+        group_id: this.orderData.group_id,
+        order_id: this.orderData.id,
+        ticketInfo: ticketInfo,
+      };
+      confirm({
+        title: '是否确认出票?',
+        content: '出票后，将无法修改',
+        onOk() {
+          dispatch({
+            type: 'flyingpigDetail/addTicket',
+            payload: {ticketObj: params},
+            callback: (res) => {
+              if (res.code >= 1) {
+                message.success('出票成功');
+                _this.getDetail();
+              } else {
+                message.error('出票失败');
+              }
+            }
+          });
+        },
+        onCancel() {
+        },
+      });
+    } else {
+      message.warning('没有乘机人不能出票');
     }
-    let params = {
-      group_id: this.orderData.group_id,
-      order_id: this.orderData.id,
-      ticketInfo: ticketInfo,
-    };
-    confirm({
-      title: '是否确认出票?',
-      content: '出票后，将无法修改',
-      onOk() {
-        dispatch({
-          type: 'flyingpigDetail/addTicket',
-          payload: {ticketObj: params}
-        });
-        if (ticketResponse.code > 0) {
-          message.success('出票成功');
-          dispatch(routerRedux.push('/order/flyingpig'));
-        } else {
-          message.error('出票失败');
-        }
-      },
-      onCancel() {
-      },
-    });
+
   }
 
   failReason(reason) {
-    const {dispatch, flyingpigDetail: {failResponse}} = this.props;
+    const {dispatch} = this.props;
     dispatch({
       type: 'flyingpigDetail/ticketFail',
-      payload: {order_id: this.orderData.id, message: reason}
+      payload: {order_id: this.orderData.id, message: reason},
+      callback: (res) => {
+        if (res.code >= 1) {
+          message.success('提交成功');
+          this.getDetail();
+        } else {
+          message.error('提交失败');
+        }
+      }
     });
-    if (failResponse.code > 0) {
-      message.success('修改成功');
+  }
+
+  ticketChange(e, record, type) {
+    if (e.target.value.length < 32) {
+      record[type] = e.target.value;
     } else {
-      message.error('修改失败');
+      record[type] = e.target.value.slice(0, 32);
     }
   }
 
@@ -129,10 +157,12 @@ export default class BasicProfile extends Component {
     const {inputPrice, isEdit} = this.state;
     let {flyingpigDetail: {log, order, passenger, payrecord, loading, groupVoyage, orderGroup}, nameType} = this.props;
     this.adult_count = order.adult_count ? order.adult_count : 1;
-    this.price = order.settlement_amount;
+    this.price = order.settlement_amount / 100;
     this.passengerData = passenger;
     this.orderData = order;
     order_status = order.status ? order.status : 0;
+    let count_middle = Number(order.sell_price) / 100 * this.adult_count;
+    let count_little = inputPrice ? count_middle - inputPrice : count_middle;
     //订单信息数据
     const orderColumns = [
       {title: '航班号', dataIndex: 'flight_no', key: 'flight_no',},
@@ -169,13 +199,7 @@ export default class BasicProfile extends Component {
       },
       {title: '证件号码', dataIndex: 'cert_no', key: 'cert_no'},
       {title: '国籍', dataIndex: 'nation', key: 'nation'},
-      {
-        title: '出生日期', dataIndex: 'birthday', key: 'birthday', render: (text) => {
-        let date1 = String(text).substr(0, 4) || '', date2 = String(text).substr(4, 2) || '',
-          date3 = String(text).substr(6, 2) || '';
-        return date1 + '-' + date2 + '-' + date3
-      }
-      },
+      {title: '出生日期', dataIndex: 'birthday', key: 'birthday'},
       {title: '证件有效期', dataIndex: 'expire_time', key: 'expire_time'},
       {title: '联系电话', dataIndex: 'phone', key: 'phone'},
       {
@@ -183,26 +207,26 @@ export default class BasicProfile extends Component {
         render: (text, record) => {
           if (text) {
             var ticketArr = text.split(',');
+            console.log(ticketArr)
           }
           return (<span>
             {
               (nameType == 'FlyingPig' && order_status == 2) || (nameType == 'Entrust' && order_status == 4) ?
                 <span>
                   去
-                  <Input className={styles.inputTicket} maxLength={32} onChange={(e) => {
-                    record['ticketDep'] = e.target.value;
-                  }
-                  }/>
+                  <Input className={styles.inputTicket} onChange={(e) => {
+                    this.ticketChange(e, record, 'ticketDep')
+                  }}/>
                   返
-                  <Input className={styles.inputTicket} maxLength={32} onChange={(e) => {
-                    record["ticketArr"] = e.target.value;
+                  <Input className={styles.inputTicket} onChange={(e) => {
+                    this.ticketChange(e, record, 'ticketArr')
                   }}/>
                 </span>
                 :
                 (nameType == 'FlyingPig' && order_status == 3) || (nameType == 'Entrust' && order_status == 5) ?
                   <span>去 <span
-                    className={styles.showTicket}>{ticketArr && ticketArr[0] ? ticketArr[0] : '无'}</span> 返 <span
-                    className={styles.showTicket}>{ticketArr && ticketArr[1] ? ticketArr[1] : '无'}</span></span>
+                    className={styles.showTicket}>{ticketArr && ticketArr[0] != "undefined" ? ticketArr[0] : '无'}</span> 返 <span
+                    className={styles.showTicket}>{ticketArr && ticketArr[1] != "undefined" ? ticketArr[1] : '无'}</span></span>
                   : null
             }
         </span>
@@ -213,7 +237,11 @@ export default class BasicProfile extends Component {
     //支付信息
     const payColumns = [
         {title: '支付单号', dataIndex: 'id', key: 'id'},
-        {title: '付款金额(元)', dataIndex: 'pay_amount', key: 'pay_amount'},
+        {
+          title: '付款金额(元)', dataIndex: 'pay_amount', key: 'pay_amount', render: (text) => {
+          return Number(text) / 100
+        }
+        },
         {
           title: '支付方式', dataIndex: 'pay_type', key: 'pay_type', render: (text, record) => {
           return record.pay_amount < 0 ? '退款' : payType[text];
@@ -301,7 +329,11 @@ export default class BasicProfile extends Component {
         return timeHelp.getYMDHMS(text)
       }
       },
-      {title: '销售价', dataIndex: 'sell_price', key: 'sell_price'},
+      {
+        title: '销售价', dataIndex: 'sell_price', key: 'sell_price', render: (text) => {
+        return Number(text) / 100
+      }
+      },
       {
         title: '用户反馈', dataIndex: 'status', key: 'status', render: (text) => {
         return user_status[text]
@@ -330,7 +362,7 @@ export default class BasicProfile extends Component {
           <div className={styles.statusTitle}>
             {this.status[order_status] || ''}
             {
-              (nameType === 'FlyingPig' && order_status == 4) || (nameType === 'Entrust' && order_status == 6) ?
+              (nameType === 'FlyingPig' && order_status == 2) || (nameType === 'Entrust' && order_status == 4) ?
                 <FailModal failReason={::this.failReason}/>
                 : null
             }
@@ -346,9 +378,11 @@ export default class BasicProfile extends Component {
             <Description term="联系电话">{order.mobile ? order.mobile : ''}</Description>
             <Description term="微信昵称">{order.member_name ? order.member_name : ''}</Description>
             <Description
-              term={nameType === 'FlyingPig' ? '订单来源' : ''}>{nameType === 'FlyingPig' ? source[order.group_type - 1] : ''}</Description>
+              term={nameType === 'FlyingPig' ? '资源来源' : ''}>{nameType === 'FlyingPig' ? source[order.group_type] : ''}</Description>
             <Description
               term={nameType === 'FlyingPig' ? '资源ID' : ''}>{nameType === 'FlyingPig' ? order.flight_id : ''}</Description>
+            <Description
+              term={nameType === 'FlyingPig' ? '订单来源' : ''}>{nameType === 'FlyingPig' ? typeArray[order.source] : ''}</Description>
           </DescriptionList>
           {
             (nameType === 'Entrust' && (order_status == 4 || order_status == 5 || order_status == 6 )) || nameType === 'FlyingPig' ?
@@ -394,7 +428,7 @@ export default class BasicProfile extends Component {
                       <li>
                         <span className={styles.titleDesc}>机票销售价</span>
                         <span
-                          className={styles.priceDesc}>{order.sell_price * this.adult_count}={order.sell_price}元(成人价)*{this.adult_count}</span>
+                          className={styles.priceDesc}>{count_middle}={Number(order.sell_price) / 100}元(成人价)*{this.adult_count}</span>
                       </li>
                       {
                         (nameType === 'Entrust' && order_status == 6) || (nameType === 'FlyingPig' && order_status == 4) ? null :
@@ -403,10 +437,10 @@ export default class BasicProfile extends Component {
                             <span className={styles.priceDesc}>
                         {
                           isEdit ?
-                            <Input value={inputPrice} className={styles.inputPrice} min={0} type="number"
-                                   onChange={::this.inputPrice} maxLength={32}/>
+                            <Input value={inputPrice} className={styles.inputPrice} min={1} type="number"
+                                   onChange={::this.inputPrice}/>
                             :
-                            <span className={styles.inputPrice}>{inputPrice}元</span>
+                            <span className={styles.inputPrice}>{inputPrice ? inputPrice + '元' : ''}</span>
                         }
                               <Button type='primary' onClick={::this.isEdit}>{isEdit ? '保存' : '修改'}</Button></span>
                           </li>
@@ -416,7 +450,7 @@ export default class BasicProfile extends Component {
                           <li>
                             <span className={styles.titleDesc}>差额</span>
                             <span className={styles.priceDesc}
-                                  style={{color: (order.sell_price * this.adult_count - inputPrice) > 0 ? '#f00' : ''}}>{order.sell_price * this.adult_count - inputPrice}</span>
+                                  style={{color: count_little > 0 ? '#f00' : ''}}>{count_little}</span>
                           </li>
                       }
                     </ul>
@@ -509,8 +543,13 @@ class FailModal extends React.Component {
   }
 
   handleOk() {
-    this.props.failReason(this.state.textAreaValue);
-    this.hideModal();
+    let {textAreaValue} = this.state;
+    if (textAreaValue.length < 32) {
+      this.props.failReason(textAreaValue);
+      this.hideModal();
+    } else {
+      message.warning('出票失败的原因最多32个字')
+    }
   }
 
   render() {
@@ -529,7 +568,10 @@ class FailModal extends React.Component {
             </Button>,
           ]}
         >
+
           <TextArea rows={4} placeholder="请输入出票失败的原因(非必填)" onChange={::this.textAreaChange} value={textAreaValue}/>
+          <span style={{float: 'right'}}><span
+            style={{color: textAreaValue.length > 32 ? '#f00' : ''}}>{textAreaValue.length || 0}</span>/32</span>
         </Modal>
       </div>
     );

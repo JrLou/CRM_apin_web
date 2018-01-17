@@ -24,43 +24,16 @@ class HorizontalLoginForm extends Component {
             fcategory: '',
         };
     }
-
-    manual(data) {
-        data.flights = Algorithm.toogleToWeekStr(data.flights);
-        data.stopFlag = 0;
-        data = JSON.stringify(data);
-        // let datas =this.state.flightdata;
-        HttpTool.post(APILXF.api_addFlight,
-            (code, msg, json, option) => {
-                if (code == 200) {
-                    message.success(msg);
-                    this.props.open(true);
-                    // datas.visible=false;
-                    // this.setState({
-                    //     flightdata: data,
-                    // });
-                } else {
-                    message.warning(msg);
-                }
-            },
-            (code, msg, option) => {
-                message.warning(msg);
-            }, data
-        )
-    }
-
     handleSubmit(e) {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
                 // values.fcategory=this.state.fcategory,
-                this.manual(values);
+                this.props.open(values);
                 // console.log('Received values of form: ', values);
             }
         });
     }
-
-
     valHeadquarters(checkedValue) {
         console.log(checkedValue);
     }
@@ -96,7 +69,7 @@ class HorizontalLoginForm extends Component {
                     {...formItemLayout}
                     style={{marginBottom: "20px"}}
                 >
-                    {getFieldDecorator('flightNo', {
+                    {getFieldDecorator('FlightNo', {
                         rules: [{
                             required: true,
                             message: requiredText
@@ -110,7 +83,7 @@ class HorizontalLoginForm extends Component {
                     {...formItemLayout}
                     style={{marginBottom: "20px"}}
                 >
-                    {getFieldDecorator('flightCompany', {
+                    {getFieldDecorator('FlightCompany', {
                         rules: [{
                             required: true,
                             message: requiredText
@@ -118,26 +91,6 @@ class HorizontalLoginForm extends Component {
                         // initialValue: this.state.account.csCharger
                     })
                     (< Input placeholder="请填写" style={{width: '300px'}}/>)}
-                </FormItem>
-                <FormItem
-                    label="航班属性"
-                    {...formItemLayout}
-                    style={{marginBottom: "20px"}}
-                >
-                    {getFieldDecorator('fcategory', {
-                        rules: [{
-                            required: true,
-                            message: requiredText
-                        }],
-                        // initialValue: this.state.account.csCharger
-                    })
-                    (<Select style={{width: 120}} onChange={this.handleChange.bind(this)}>
-                        <Option value='0'>国内-国内</Option>
-                        <Option value='1'>国内-国际</Option>
-                        <Option value='2'>国内-地区</Option>
-                        <Option value='3'>地区-国际</Option>
-                        <Option value='4'>国际-国际</Option>
-                    </Select>)}
                 </FormItem>
                 <span style={{marginLeft: '140px'}}>起飞</span>
                 <span style={{marginLeft: '125px'}}>到达</span>
@@ -147,7 +100,7 @@ class HorizontalLoginForm extends Component {
                             label="时间"
                             {...formItemLayout}
                         >
-                            {getFieldDecorator('flightDeptimePlanDate', {
+                            {getFieldDecorator('FlightDeptimePlanDate', {
                                 rules: [{
                                     required: true,
                                     message: requiredText
@@ -161,7 +114,7 @@ class HorizontalLoginForm extends Component {
                         <FormItem
                             {...formItemLayout}
                         >
-                            {getFieldDecorator('flightArrtimePlanDate', {
+                            {getFieldDecorator('FlightArrtimePlanDate', {
                                 rules: [{
                                     required: true,
                                     message: requiredText
@@ -177,7 +130,7 @@ class HorizontalLoginForm extends Component {
                             label="城市名称"
                             {...formItemLayout}
                         >
-                            {getFieldDecorator('flightDep', {
+                            {getFieldDecorator('FlightDep', {
                                 rules: [{
                                     required: true,
                                     message: requiredText
@@ -192,7 +145,7 @@ class HorizontalLoginForm extends Component {
                             // label="城市名称"
                             {...formItemLayout}
                         >
-                            {getFieldDecorator('flightArr', {
+                            {getFieldDecorator('FlightArr', {
                                 rules: [{
                                     required: true,
                                     message: requiredText
@@ -206,26 +159,26 @@ class HorizontalLoginForm extends Component {
                             label="机场三字码"
                             {...formItemLayout}
                         >
-                            {getFieldDecorator('flightDepcode', {
+                            {getFieldDecorator('FlightDepcode', {
                                 rules: [{
                                     required: true,
                                     message: requiredText
                                 }, {max: 3, message: '只能输入三位'}],
                             })
-                            (<Input placeholder="请输入机场三字码" style={{width: '100%'}}/>)}
+                            (<Input placeholder="机场三字码" style={{width: '100%'}}/>)}
                         </FormItem>
                     </Col>
                     <Col span={12} style={{marginLeft: '-100px'}}>
                         <FormItem
                             {...formItemLayout}
                         >
-                            {getFieldDecorator('flightArrcode', {
+                            {getFieldDecorator('FlightArrcode', {
                                 rules: [{
                                     required: true,
                                     message: requiredText
                                 }, {max: 3, message: '只能输入三位'}],
                             })
-                            (<Input placeholder="请输入机场三字码" style={{width: '100%'}}/>)}
+                            (<Input placeholder="机场三字码" style={{width: '100%'}}/>)}
                         </FormItem>
                     </Col>
                 </Row>

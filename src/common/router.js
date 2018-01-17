@@ -53,7 +53,7 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, ['flyingpig'], () => import('../routes/Order/Flyingpig.js')),
     },
     '/order/flyingpig/detail/:params': {
-      name: "飞猪&供应商订单详情",
+      name: "代销订单详情",
       component: dynamicWrapper(app, ['flyingpigDetail'], () => import('../routes/Order/FlyingpigDetail.js')),
     },
     '/order/entrust': {
@@ -162,6 +162,10 @@ export const getRouterData = (app) => {
     //航班库存价格
     '/supplier/supplierList/price': {
       component: dynamicWrapper(app, ['rule'], () => import('../routes/Supplier/Price')),
+    },
+    //冷门资源h
+    '/supplier/supplierPolicy/h5': {
+      component: dynamicWrapper(app, ['h5List'], () => import('../routes/Supplier/H5/H5List')),
     },
     //运营管理
     '/operations/banner': {

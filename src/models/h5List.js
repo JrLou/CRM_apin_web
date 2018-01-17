@@ -1,15 +1,15 @@
-import {flightstockList, stateAirLine, getAirLineLogs, getaddAirLine,getdetailAirLine} from '../services/api';
+import {flightstockList, stateAirLine, getAirLineLogs, getaddAirLine, getdetailAirLine} from '../services/api';
 import {message} from 'antd';
 
 export default {
-  namespace: 'flightstock',
+  namespace: 'h5List',
   state: {
     list: {
       data: [],
       option: {},
     },
     loading: true,
-      logs: {},
+    logs: {},
   },
   effects: {
     * fetch({payload}, {call, put}) {

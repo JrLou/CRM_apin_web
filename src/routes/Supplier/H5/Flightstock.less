@@ -1,6 +1,9 @@
 @import "~antd/lib/style/themes/default.less";
-@import "../../utils/utils.less";
+@import "../../../utils/utils.less";
 
+.lastCol {
+  text-align: center !important;
+}
 .tableList {
   .tableListOperator {
     margin-bottom: 16px;
@@ -9,7 +12,6 @@
     }
   }
 }
-
 .tableListForm {
   :global {
     .ant-form-item {
@@ -36,14 +38,29 @@
   }
 }
 
-@media screen and (max-width: @screen-lg) {
-  .tableListForm :global(.ant-form-item) {
-    margin-right: 24px;
+.formsw {
+  padding: 30px 30px 20px 30px;
+  background-color: #FFFFFF;
+  margin-bottom: 10px;
+}
+
+.btnBox {
+  button {
+    margin-right: 15px;
   }
 }
 
-@media screen and (max-width: @screen-md) {
-  .tableListForm :global(.ant-form-item) {
-    margin-right: 8px;
-  }
+.deleting {
+  margin-left: 20px;
+  top: -37px;
+  cursor: pointer;
+  position: relative;
+  font-size: 24px;
+  color: rgb(206, 204, 204);
+  transition: all .3s;
+  font-weight: 300;
+}
+
+.updates {
+  float: right;
 }

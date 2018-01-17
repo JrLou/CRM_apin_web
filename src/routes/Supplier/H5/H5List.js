@@ -17,20 +17,24 @@ import {
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import moment from 'moment';
 import css from './Flightstock.less';
+
 const confirm = Modal.confirm;
 const {Column,} = Table;
+
 const {RangePicker} = DatePicker;
 const FormItem = Form.Item;
 const {Option} = Select;
 @connect(state => ({
-  flightstock: state.flightstock,
+  h5List: state.h5List,
 }))
 @Form.create()
 export default class TableList extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      filter: {},
+      filter: {
+        airlineStatus: 1,
+      },
       visible: false,
     }
   }
@@ -38,9 +42,10 @@ export default class TableList extends PureComponent {
   componentDidMount() {
     //加载第一页
     const val = this.state.filter;
+    val.airlineStatus = 1
     const {dispatch} = this.props;
     dispatch({
-      type: 'flightstock/fetch',
+      type: 'H5List/fetch',
       payload: {
         p: 1,
         pc: 10,
@@ -51,15 +56,24 @@ export default class TableList extends PureComponent {
   companyname(ole, e, event) { //全局函数（根据ole作为标识可以快速查找各功能实现位置）
     switch (ole) {
       case 0: //新增政策跳转新增页面
-        this.props.history.push({pathname: 'flightstock/Add'});
+        this.props.history.push({pathname: 'H5List/Add'});
         break;
       case 1: //弹窗确认按钮所调函数
         this.setState({visible: false})
     }
   }
-
   handleFormReset() {
     this.props.form.resetFields();
+    // const param = this.props.form.getFieldsValue();
+    // this.setState({
+    //   formValues: param,
+    //   pagination: {
+    //     p: 1,
+    //     pc: 10,
+    //   }
+    // }, () => {
+    //   this.handleSearch();
+    // });
   };
 
   selectTime(date, dateString) {
@@ -88,7 +102,7 @@ export default class TableList extends PureComponent {
           filter: dates,
         });
         this.props.dispatch({
-          type: 'flightstock/fetch',
+          type: 'H5List/fetch',
           payload: dates,
         });
       }
@@ -180,7 +194,7 @@ export default class TableList extends PureComponent {
         title: titlea,
         onOk() {
           _this.props.dispatch({
-            type: 'flightstock/changeStatus',
+            type: 'H5List/changeStatus',
             payload: data,
           });
         },
@@ -191,7 +205,7 @@ export default class TableList extends PureComponent {
     switch (ole) {
       case 0:
         this.props.history.push({
-          pathname: 'flightstock/Edit',
+          pathname: 'H5List/Edit',
           state: {
             data: data,
           }
@@ -206,7 +220,7 @@ export default class TableList extends PureComponent {
       case 3:
         _this.setState({visible: true})
         _this.props.dispatch({
-          type: 'flightstock/loglist',
+          type: 'H5List/loglist',
           payload: {
             p: 1,
             pc: 100,
@@ -216,7 +230,7 @@ export default class TableList extends PureComponent {
         break;
       case 4:
         _this.props.history.push({
-          pathname: 'flightstock/View',
+          pathname: 'H5List/View',
           state: {
             data: data,
           }
@@ -226,7 +240,7 @@ export default class TableList extends PureComponent {
   }
 
   render() {
-    const {flightstock: {loading, list: {data, option: {current, size, total}}, logs: {data: datalis, option}}} = this.props;
+    const {h5List: {loading, list: {data, option: {current, size, total}}, logs: {data: datalis, option}}} = this.props;
     const columns = [
       {
         title: '操作人',
@@ -249,8 +263,8 @@ export default class TableList extends PureComponent {
               {this.renderForm()}
             </div>
             <Table
-              loading={loading}
-              dataSource={data}
+              loading={false}
+              dataSource={[]}
               rowKey={'id'}
               pagination={{
                 pageSize: size ? size : 10,
@@ -261,10 +275,10 @@ export default class TableList extends PureComponent {
               }}
               onChange={(pagination, filters, sorter) => {
                 let val = this.state.filter;
-                val.p = pagination.current;
-                val.pc = pagination.pageSize;
+                val.current = pagination.current;
+                val.pageSize = pagination.pageSize;
                 this.props.dispatch({
-                  type: 'flightstock/fetch',
+                  type: 'H5List/fetch',
                   payload: val,
                 });
               }}
