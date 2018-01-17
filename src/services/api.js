@@ -285,6 +285,20 @@ export async function getmodifyInventory(params) {
     body: params,
   });
 }
+//冷门资源列表
+  export async function geth5(params) {
+  return request('/api/resource/getAirLinesRare',{
+    method: 'POST',
+    body: params,
+  });
+}
+//冷门资源列表
+  export async function geth5Add(params) {
+  return request('/api/resource/addAirLinesRare',{
+    method: 'POST',
+    body: params,
+  });
+}
 
 export async function AccountLogin(params) {
   const newparams = Object.assign({}, { account: params.account, type: 0 })

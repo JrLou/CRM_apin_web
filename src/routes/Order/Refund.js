@@ -26,7 +26,7 @@ const FormItem = Form.Item;
 const {Option} = Select;
 const confirm = Modal.confirm;
 const {TextArea} = Input;
-const refundStatus = ['退款成功', '退款中', '退款失败'];
+const refundStatus = ['已退款', '退款中', '退款失败'];
 @connect(state => ({
   refund: state.refund,
 }))
@@ -325,7 +325,7 @@ class RefundModal extends React.Component {
           {this.getContent('订单号', data.order_id || '', false)}
           {this.getContent('退款单号', data.id || '', false)}
           {this.getContent('退款金额', priceRel, true, '元')}
-          {this.getContent('处理客服', data.audit_user || '', true)}
+          {this.getContent('处理客服', data.creator_name || '', true)}
           {this.getContent('备注', data.refund_reason || '', false)}
         </div>
       </Modal>

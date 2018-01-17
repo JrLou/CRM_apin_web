@@ -165,7 +165,13 @@ export const getRouterData = (app) => {
     },
     //冷门资源h
     '/supplier/supplierPolicy/h5': {
+      name:'冷门资源',
       component: dynamicWrapper(app, ['h5List'], () => import('../routes/Supplier/H5/H5List')),
+    },
+    //冷门资源-新增
+    '/supplier/supplierPolicy/h5/Add': {
+      name:'新增冷门资源',
+      component: dynamicWrapper(app, ['h5Add'], () => import('../routes/Supplier/H5/H5Add')),
     },
     //运营管理
     '/operations/banner': {

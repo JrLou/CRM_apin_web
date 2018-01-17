@@ -5,6 +5,7 @@ import { Link, routerRedux } from 'dva/router';
 import { Card, Table, Spin } from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './TableList.less';
+import moment from 'moment';
 import { getPar, formatPar } from '../../utils/utils';
 
 @connect(state => ({
@@ -38,8 +39,10 @@ export default class View extends PureComponent {
 
   handleTableChange = (pagination) => {
     const { dispatch } = this.props;
+    const { cityArr, cityDep } = this.par;
     const params = {
       ...this.page,
+      cityDep: cityDep, cityArr: cityArr,
       p: pagination.current,
       pc: pagination.pageSize,
     };
@@ -57,36 +60,50 @@ export default class View extends PureComponent {
       dataIndex: 'id',
     }, {
       title: '状态',
-      dataIndex: 'status',
+      dataIndex: 'group_status',
       render: (text) => {
-        const status = ['拼团中', '拼团成功', '拼团完成', '拼团关闭'];
+        const status = ['拼团关闭', '拼团中', '已完成', '拼团成功'];
         return status[text];
       },
     }, {
       title: '推送时间',
-      dataIndex: 'createTime',
+      dataIndex: 'create_time',
+      render: (text) => {
+        return moment(text).format('YYY-MM-DD HH:mm:ss');
+      },
     }, {
       title: '出发机场',
-      dataIndex: 'depAirport',
+      render: (text, record) => {
+        let obj = record.airPortInfo[0] ? record.airPortInfo[0] : {};
+        return obj.airport_dep_name;
+      },
     }, {
       title: '到达机场',
-      dataIndex: 'arrAirport',
+      render: (text, record) => {
+        let obj = record.airPortInfo[0] ? record.airPortInfo[0] : {};
+        return obj.airport_arr_name;
+      },
     }, {
       title: '航班号',
-      dataIndex: 'flightNo',
+      render: (text, record) => {
+        let obj1 = record.airPortInfo[0] ? record.airPortInfo[0] : {};
+        let obj2 = record.airPortInfo[1] ? record.airPortInfo[1] : {};
+        return obj1.flight_no && obj2.flight_no ? obj1.flight_no + '/' + obj2.flight_no : '';
+      },
     }, {
-      title: '成交人数',
-      dataIndex: 'groupCount',
+      title: '拼团人数',
+      dataIndex: 'paidMan',
     }, {
       title: '销售价格',
-      dataIndex: 'price',
+      dataIndex: 'sell_price',
     }, {
       title: '是否成团',
-      dataIndex: 'is',
-      render: (text, record) => text ? '是' : '否',
+      render: (text, record) => {
+        return record.group_status == 3 ? '是' : '否';
+      },
     }, {
       title: '操作',
-      render: (text, record) => <Link to={'/fightgroups/demand/result/' + record.id}>查看</Link>,
+      render: (text, record) => <Link to={'/fightgroups/demand/checkFightGroups/' + record.id}>查看</Link>,
     }];
     const { line } = this.par;
     const { view: { tableData, loading } } = this.props;

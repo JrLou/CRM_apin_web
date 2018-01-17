@@ -171,7 +171,7 @@ export default class SearchFlight extends PureComponent {
                 title: '下单时间',
                 dataIndex: 'create_time',
                 render: (text, record) => {
-                    return moment(text).format('YYYY-MM-DD');
+                    return moment(text).format('YYYY-MM-DD HH:mm:ss');
                 }
             },
             {
@@ -275,9 +275,9 @@ export default class SearchFlight extends PureComponent {
                                     }],
 
                                 })(
-                                    <Input placeholder="请输入销售价格" />)
+                                    <Input style={{ width: '85%' }} placeholder="请输入销售价格" />)
                                 }
-
+                                <span style={{ marginLeft: '5px' }}>元/人</span>
                             </FormItem>
                         </Col>
                         <Col span={9}>
@@ -286,10 +286,10 @@ export default class SearchFlight extends PureComponent {
                                     rules: [{ required: true, message: '必填' },
                                     {
                                         pattern: /^\+?[1-9]\d{0,2}$/,
-                                        message: '最大不能超过999小时',
+                                        message: '请输入1到999之间的整数',
                                     }],
                                 })(
-                                    <Input placeholder="请输入方案保留时间" />)
+                                    <Input style={{ width: '85%' }} placeholder="请输入方案保留时间" />)
                                 }
                                 <span style={{ marginLeft: '5px' }}>小时</span>
                             </FormItem>
@@ -300,10 +300,7 @@ export default class SearchFlight extends PureComponent {
                             <FormItem label="折扣"  {...formItemLayout} className={styles.formItem}>
                                 {getFieldDecorator('discount', {
                                     rules: [{ required: true, message: '必填' },
-                                    {
-                                        pattern: /^[1-3]$/,
-                                        message: '请输入折扣，不可高于3折',
-                                    }],
+                                    { pattern: /^[1-3]$/, message: '请输入1到3之间的整数', }],
 
                                 })(
                                     <Input placeholder="请输入折扣，不可高于3折" />)
