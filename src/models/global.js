@@ -11,7 +11,7 @@ export default {
     env: true, // 控制进入每一个进入页面的权限
     menus: [],
     routerdata: [],
-    routerPath: [{ path: 'welcome', url: "welcome" }, { url: 'supplier/supplierPolicy/flightstock/Edit' }],  //在这里添加路由可以无视 权限
+    routerPath: [{path: 'welcome', url: "welcome"}],  //在这里添加路由可以无视 权限
     authlist: {
       "customer/userList": {},
       "supplier/supplierPolicy/flightstock": {},

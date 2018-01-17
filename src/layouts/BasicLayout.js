@@ -122,6 +122,7 @@ class BasicLayout extends React.PureComponent {
           <GlobalHeader
             currentUser={currentUser}
             collapsed={collapsed}
+            location={location}
             dispatch={dispatch}
           />
           <Content style={{ margin: '24px 24px 0', height: '100%' }}>
@@ -132,6 +133,7 @@ class BasicLayout extends React.PureComponent {
                     <Redirect key={item.from} exact from={item.from} to={item.to} />
                   )
                 }
+                   <Redirect exact from="/" to="/welcome" />
                 {
                   getRoutes(match.path, routerData).map(Item => (
                     <Route
@@ -142,7 +144,6 @@ class BasicLayout extends React.PureComponent {
                     />
                   ))
                 }
-                <Redirect exact from="/" to="/welcome" />
                 <Route render={NotFound} />
               </Switch>
             </div>

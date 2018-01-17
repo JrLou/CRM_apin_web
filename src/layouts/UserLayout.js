@@ -6,8 +6,8 @@ import GlobalFooter from '../components/GlobalFooter';
 import styles from './UserLayout.less';
 import logo from '../assets/logo.png';
 import { getRoutes } from '../utils/utils';
-
-const copyright = <div style={{color:"white",fontSize:'12px'}}>Copyright <Icon type="copyright" />爱拼机版权所有</div>;
+import NotFound from '../routes/Exception/404';
+const copyright = <div style={{color:"white",fontSize:'12px'}}>Copyright <Icon type="copyright" /> 爱拼机版权所有</div>;
 
 class UserLayout extends React.PureComponent {
   getPageTitle() {
@@ -28,7 +28,7 @@ class UserLayout extends React.PureComponent {
             <div className={styles.header}>
               {/* <Link to="/"> */}
                 {/* <img alt="logo" className={styles.logo} src={logo} /> */}
-                <span className={styles.title}>后台运营管理系统</span>
+                <span className={styles.title}>爱拼运营管理系统</span>
               {/* </Link> */}
             </div>
             {/* <div className={styles.desc}>爱拼后台运营管理系统登录页面</div> */}
@@ -41,13 +41,13 @@ class UserLayout extends React.PureComponent {
                     key={item.key}
                     path={item.path}
                     component={item.component}
-                    exact={item.exact}
+                    exact={false}
                   />
                 )
               )
             }
             <Redirect exact from="/user" to="/user/login" />
-            {/* <Route render={NotFound} /> */}
+            <Route render={NotFound} />
           </Switch>
           <GlobalFooter className={styles.footer} copyright={copyright} />
         </div>

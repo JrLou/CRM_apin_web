@@ -8,11 +8,11 @@ import {
 } from 'antd';
 import {connect, Link} from 'dva';
 import css from './Flightstock.less';
-import Flightstockfrom from './Flightstockfrom.js';
+import Flightstockfrom from './FlightstockfromView.js';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 
 @connect(state => ({
-  flightstockEdit: state.flightstockEdit,
+  flightstockView: state.flightstockView,
 }))
 class page extends Component {
 
@@ -23,10 +23,9 @@ class page extends Component {
       data: {},
     };
   }
-
   componentDidMount() {
     if (this.props.location.state) {
-      this.addPost('flightstockEdit/addtailAirLine', {id: this.props.location.state.data.id});
+      this.addPost('flightstockView/addtailAirLine', {id: this.props.location.state.data.id});
       this.setState({
         data: this.props.location.state.data,
       });
@@ -38,16 +37,13 @@ class page extends Component {
       loading: loading,
     });
   }
-
   addPost(url, data) {
     this.props.dispatch({
       type: url,
       payload: data,
     });
   }
-
   render() {
-    const {flightstockEdit: {accurate, details}} = this.props;
     return (
       <PageHeaderLayout>
         <div className={css.formWapper}>
@@ -57,7 +53,7 @@ class page extends Component {
               addPost={this.addPost.bind(this)}
               id={this.state.data.id}
               information={this.state.data}
-              details={details}
+              {...this.props}
             />
           </Spin>
         </div>

@@ -43,6 +43,11 @@ class page extends Component {
       payload: data,
     });
   }
+  away(){
+    this.props.history.push({
+      pathname: '/supplier/supplierPolicy/flightstock',
+    });
+  }
   render() {
     // const {flightstockAdd: {accurate, numbering}} = this.props;
     return (
@@ -52,6 +57,7 @@ class page extends Component {
             <WrappedAddForm
               showLoad={this.showLoad.bind(this)}
               addPost={this.addPost.bind(this)}
+              away={this.away.bind(this)}
               {...this.props}
             />
           </Spin>

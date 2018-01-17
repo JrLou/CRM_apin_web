@@ -45,9 +45,12 @@ class page extends Component {
       payload: data,
     });
   }
-
+  away(){
+    this.props.history.push({
+      pathname: '/supplier/supplierPolicy/flightstock',
+    });
+  }
   render() {
-    const {flightstockEdit: {accurate, details}} = this.props;
     return (
       <PageHeaderLayout>
         <div className={css.formWapper}>
@@ -55,9 +58,9 @@ class page extends Component {
             <WrappedAddForm
               showLoad={this.showLoad.bind(this)}
               addPost={this.addPost.bind(this)}
-              id={this.state.data.id}
-              information={this.state.data}
-              details={details}
+              id={this.props.location.state ? this.props.location.state.data.id : ''}
+              information={this.props.location.state ? this.props.location.state.data : {}}
+              away={this.away.bind(this)}
               accurate={{}}
               {...this.props}
             />
@@ -67,5 +70,6 @@ class page extends Component {
     )
   }
 }
+
 const WrappedAddForm = Form.create()(Flightstockfrom);
 module.exports = page;

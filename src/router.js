@@ -28,7 +28,21 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
         // return Loadmenu(<Component {...props} />)
         return Loadmenu(<Component {...props} />)
       } else {
-        return <Redirect to={{ pathname: '/user/login', state: {from: rest.location}}} />;
+        return <Redirect to={{ pathname: '/user/login', state: { from: rest.location } }} />;
+      }
+    }
+    }
+    />
+  );
+};
+const UserRoute = ({ component: Component, ...rest }) => {
+  return (
+    <Route path={rest.path} render={(props) => {
+      if (!fakeAuth()) {
+        // return Loadmenu(<Component {...props} />)
+        return <Component {...props} />
+      } else {
+        return <Redirect to={{ pathname: '/' }} />;
       }
     }
     }
@@ -45,7 +59,7 @@ function RouterConfig({ history, app }) {
     <LocaleProvider locale={zhCN}>
       <Router history={history}>
         <Switch>
-          <Route path="/user" render={props => <UserLayout {...props} />} />
+          <UserRoute path="/user" component={UserLayout} />
           <PrivateRoute path="/" component={BasicLayout} />
         </Switch>
       </Router>

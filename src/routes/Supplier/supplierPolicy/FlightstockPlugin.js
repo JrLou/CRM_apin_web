@@ -33,12 +33,11 @@ class Masking extends Component {
 
     weeks(checkedValues) {
         let data = this.state.flightdata;
-        let kyes = this.props.kyes;
         data.week = checkedValues;
         this.setState({
             flightdata: data,
         });
-        this.props.weekSelect(checkedValues, kyes)
+        this.props.weekSelect(checkedValues, 0)
     }
 
     componentWillReceiveProps(nextProps) {
@@ -101,7 +100,6 @@ class Masking extends Component {
                                 options={this.state.optionsWithDisabled} value={this.state.flightdata.week}
                                 onChange={this.weeks.bind(this)}
                                 disabled={this.props.disabledadd}
-
                             />
                         </div>
                     </Col>
