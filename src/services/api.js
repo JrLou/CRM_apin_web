@@ -353,10 +353,10 @@ export async function continueAdd(params) {
 }
 // 线下订单
 export async function offlineList(params) {
-  return request('/offline/order/list', { method: 'POST', body: params });
+  return request('/java/offline/order/list', { method: 'POST', body: params });
 }
 export async function delOrder(params) {
-  return request('/offline/order/delete', { method: 'POST', body: params });
+  return request('/java/offline/order/delete', { method: 'POST', body: params });
 }
 // 线下订单
 export async function orderDetail(params) {
