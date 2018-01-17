@@ -232,7 +232,7 @@ export default class TableList extends PureComponent {
       }
       },
       {
-        title: '退款时间', dataIndex: 'audit_time', render: (text) => {
+        title: '退款时间', dataIndex: 'pay_time', render: (text) => {
         return text ? timeHelp.getYMDHMS(text) : ''
       }
       },
