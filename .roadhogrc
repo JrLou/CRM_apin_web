@@ -1,7 +1,6 @@
 {
   "entry": "src/index.js",
-  "outputPath": "./server/dist/admin",
-  "publicPath":"/admin/",
+  "outputPath": "./server/dist",
   "extraBabelPlugins": [
     "transform-runtime",
     "transform-decorators-legacy",
@@ -22,7 +21,7 @@
   },
   "proxy": {
     "/api": {
-    "target": "http://192.168.0.32:9712/",
+    "target": "http://192.168.0.180:6040/",
     "changeOrigin": true,
     "pathRewrite": { "^/api" : "/api" }
     }
