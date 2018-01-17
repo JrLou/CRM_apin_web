@@ -7,6 +7,7 @@ import {
   Row,
 } from 'antd';
 import css from './Flightstock.less';
+import moment from 'moment';
 class page extends Component {
   constructor(props) {
     super(props);
@@ -18,7 +19,7 @@ class page extends Component {
       <div className={css.flightList} onClick={this.props.routeSelection.bind(this,accurate)}>
         <Row>
           <Col span={24}>
-              <Col span={21} className={css.selectbContent}>
+              <Col span={24} className={css.selectbContent}>
                 <Col span={24}>
                   <Col span={24} style={{fontSize: '20px', color: "rgb(0, 0, 0)"}}>{accurate.FlightNo}</Col>
                 </Col>
@@ -26,7 +27,7 @@ class page extends Component {
                   <Col style={{fontSize: '20px', color: "rgb(0, 0, 0)"}} span={24}>{accurate.FlightDep}</Col>
                   <Col span={24}>{accurate.FlightDepAirport}</Col>
                   <Col span={24}>{accurate.FlightDepcode}</Col>
-                  <Col span={24}>{accurate.FlightDeptimePlanDate}</Col>
+                  <Col span={24}>{moment(accurate.FlightDeptimePlanDate).format("HH:mm:ss")}</Col>
                 </Col>
                 {accurate.stopFlag &&
                 <Col span={2} style={{fontSize: '16px'}}>
@@ -37,7 +38,7 @@ class page extends Component {
                   <Col style={{fontSize: '20px', color: "rgb(0, 0, 0)"}} span={24}>{accurate.FlightArr}</Col>
                   <Col span={24}>{accurate.FlightArrAirport}</Col>
                   <Col span={24}>{accurate.FlightArrcode}</Col>
-                  <Col span={24}>{accurate.FlightArrtimePlanDate}</Col>
+                  <Col span={24}>{moment(accurate.FlightArrtimePlanDate).format('HH:mm:ss')}</Col>
                 </Col>
               </Col>
           </Col>
