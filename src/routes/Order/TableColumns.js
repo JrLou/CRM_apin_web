@@ -40,7 +40,7 @@ export default class TableList extends PureComponent {
       :
       ['待付款', '委托中', '方案选择中', '待付尾款', '待出票', '已出票', '出票失败', '委托过期', '委托关闭',];
     this.source = ['委托订单', '飞猪', '供应商', '东航'];
-    this.typeArray = ["APP", "H5", "WEB"];
+    this.typeArray = ["APP", "H5"];
   }
 
   componentDidMount() {
