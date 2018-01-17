@@ -4,12 +4,65 @@
 .lastCol {
   text-align: center !important;
 }
+
 .tableList {
   .tableListOperator {
     margin-bottom: 16px;
     button {
       margin-right: 8px;
     }
+  }
+}
+
+.AgenciesView_box_list {
+  font-size: 14px;
+  width: 100%;
+  display: inline-block;
+  background-color: #fff;
+  margin-top: -16px;
+  padding: 10px;
+  li {
+    width: 50%;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+
+  p {
+    float: left;
+    margin-left: 40px;
+    margin-top: -40px;
+    word-spacing: 50px;
+  }
+  .AgenciesView_box_list_decorate {
+    width: 10px;
+    height: 10px;
+    border: 2px solid #F15311;
+    border-radius: 23px;
+  }
+
+  .AgenciesView_box_list_decorateb {
+    width: 1px;
+    height: 30px;
+    background-color: #BFBFBF;
+    margin-left: 5px;
+  }
+}
+.selectbBox {
+  width: 100%;
+
+  :global {
+    .ant-radio {
+      float: left;
+      margin-top: 5px;
+      position: relative;
+      margin-left: 10px;
+      top: 85px;
+    }
+  }
+
+  .selectbContent {
+    width: 100%;
+    margin-top: -66px;
   }
 }
 .tableListForm {
@@ -22,9 +75,9 @@
         width: auto;
         line-height: 32px;
         padding-right: 8px;
-        label{
-          width:80px;
-          display:inline-block;
+        label {
+          width: 80px;
+          display: inline-block;
         }
       }
     }
