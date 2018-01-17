@@ -19,5 +19,4 @@ npm-debug.log*
 
 /coverage
 ._roadhogrc
-/server/dist
-/server/admin
+/server/node_modules

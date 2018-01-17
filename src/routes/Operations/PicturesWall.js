@@ -19,7 +19,7 @@ class PicturesWall extends React.Component {
   beforeUpload = (file, filest) => {
     let image_base64;
     if (file) {
-      if (!/\.(jpg|jpeg|png)$/.test(file.type)) {
+      if (!/.+(.JPEG|.jpeg|.JPG|.jpg|.PNG|.png)$/.test(file.type)) {
         message.warning("图片格式仅支持jpg、jpeg和png");
         return false;
       }
