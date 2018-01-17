@@ -14,13 +14,14 @@ class PicturesWall extends React.Component {
     const reader = new FileReader();
     const that=this
     reader.addEventListener('load', () => {
-      const imageUrl = reader.result
-      // that.img.src = imageUrl
+      const imageUrl = reader.result;
       var imgtemp = new Image();//创建一个image对象
-      imgtemp.src = imageUrl
+      imgtemp.src = imageUrl;
       imgtemp.onload =function(){
-        console.log(imgtemp.width)
-        debugger
+        if(imgtemp.width/imgtemp.height != 345/166){
+          message.warning("图片上传像素错误");
+          return false;
+        }
         callback(imageUrl)
       }
     });
