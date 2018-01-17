@@ -365,8 +365,8 @@ export default class CheckFightGroups extends Component {
     const sell_price = ( (groupsInfoDataData.sell_price) / 100 ).toFixed(2, 10);
     const goFlightInfo = data.filter(currV => currV.trip_index === 0)[0] || {};
     const backFlightInfo = data.filter(currV => currV.trip_index === 1)[0] || {};
-    const time_dep = formatDate(goFlightInfo.time_dep, 'YYYY-MM-DD');
-    const time_arr = formatDate(backFlightInfo.time_dep, 'YYYY-MM-DD');
+    const time_dep = formatDate(groupsInfoDataData.date_dep, 'YYYY-MM-DD');
+    const time_arr = formatDate(groupsInfoDataData.date_ret, 'YYYY-MM-DD');
 
     return (
       <div>
