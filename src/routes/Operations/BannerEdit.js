@@ -155,6 +155,7 @@ class BannerEdit extends PureComponent {
                 <FormItem label="上传图片:" {...formItemLayout}>
                   <PicturesWall />
                 </FormItem>
+                <span className={styles.imgText}>(上传690*332像素的图片)</span>
               </Col>
             </Row>
             <Row>

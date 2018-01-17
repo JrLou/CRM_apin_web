@@ -12,14 +12,26 @@ class PicturesWall extends React.Component {
 
   getBase64 = (img, callback) => {
     const reader = new FileReader();
-    reader.addEventListener('load', () => callback(reader.result));
+    const that=this
+    reader.addEventListener('load', () => {
+      const imageUrl = reader.result;
+      var imgtemp = new Image();//创建一个image对象
+      imgtemp.src = imageUrl;
+      imgtemp.onload =function(){
+        if(imgtemp.width/imgtemp.height != 345/166){
+          message.warning("图片上传像素错误");
+          return false;
+        }
+        callback(imageUrl)
+      }
+    });
     reader.readAsDataURL(img);
   }
 
   beforeUpload = (file, filest) => {
     let image_base64;
     if (file) {
-      if (/\.(jpg|jpeg|png)$/.test(file.type)) {
+      if (!/.+(.JPEG|.jpeg|.JPG|.jpg|.PNG|.png)$/.test(file.type)) {
         message.warning("图片格式仅支持jpg、jpeg和png");
         return false;
       }
@@ -33,7 +45,7 @@ class PicturesWall extends React.Component {
       loading: false,
     }, () => {
       let image = this.state.imageUrl;
-      const { dispatch } = this.props;
+        const { dispatch } = this.props;
       dispatch({
         type: 'bannerList/baseImg',
         payload: { image }
@@ -80,17 +92,17 @@ class PicturesWall extends React.Component {
     const { bannerList: { uploadSuccess, banner_url } } = this.props;
     // const imageUrl = this.state.imageUrl;
     return (
-      <Upload
-        name="avatar"
-        listType="picture-card"
-        className="avatar-uploader"
-        showUploadList={false}
-        action=""
-        beforeUpload={this.beforeUpload.bind(this)}
-        onChange={this.handleChange.bind(this)}
-      >
-        {banner_url && uploadSuccess ? <img style={{ width: '100px', height: '60px' }} src={banner_url} alt="" /> : uploadButton}
-      </Upload>
+        <Upload
+          name="avatar"
+          listType="picture-card"
+          className="avatar-uploader"
+          showUploadList={false}
+          action=""
+          beforeUpload={this.beforeUpload.bind(this)}
+          onChange={this.handleChange.bind(this)}
+        >
+          {banner_url && uploadSuccess ? <img style={{ width: '100px', height: '60px' }} src={banner_url} alt="" /> : uploadButton}
+        </Upload>
     );
   }
 }

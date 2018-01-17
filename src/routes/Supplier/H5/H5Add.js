@@ -23,12 +23,18 @@ class page extends Component {
       data: {},
     };
   }
+
   // componentWillReceiveProps(nextProps){
   //   console.log('nextPropsde ((&(*&(*');
   //   console.log(nextProps);
   // }
   componentDidMount() {
-
+    if (this.props.location.state) {
+      this.addPost('h5Add/addtailAirLine', {id: this.props.location.state.data.id});
+      this.setState({
+        data: this.props.location.state.data,
+      });
+    }
   }
 
   showLoad(loading) {
@@ -43,11 +49,13 @@ class page extends Component {
       payload: data,
     });
   }
-  away(){
+
+  away() {
     this.props.history.push({
       pathname: '/supplier/supplierPolicy/h5',
     });
   }
+
   render() {
     // const {flightstockAdd: {accurate, numbering}} = this.props;
     return (
@@ -58,6 +66,8 @@ class page extends Component {
               showLoad={this.showLoad.bind(this)}
               addPost={this.addPost.bind(this)}
               away={this.away.bind(this)}
+              id={this.props.location.state ? this.props.location.state.data.id : null}
+              information={this.props.location.state ? this.props.location.state.data : {}}
               {...this.props}
             />
           </Spin>
@@ -66,5 +76,6 @@ class page extends Component {
     )
   }
 }
+
 const WrappedAddForm = Form.create()(Flightstockfrom);
 module.exports = page;

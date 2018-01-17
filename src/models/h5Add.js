@@ -1,4 +1,4 @@
-import {getaddAirLine, geth5Add} from '../services/api';
+import {getaddAirLine, geth5Add,getdetailAirLine,geth5Edit} from '../services/api';
 import {message} from 'antd';
 
 export default {
@@ -8,7 +8,8 @@ export default {
     numbering: null,
     visible: false,
     ok: '',
-    judgment:false
+    judgment:false,
+    details: [],//编辑回显数据
   },
   effects: {
     //飞常准查询
@@ -41,6 +42,27 @@ export default {
         type: 'visibles',
         payload: {visible: true},
       })
+    },
+    //编辑回显数据
+    * addtailAirLine({payload}, {call, put}) {
+      const response = yield call(getdetailAirLine, payload)
+      if (response.code >= 1) {
+        yield put({
+          type: 'detail',
+          payload: response,
+        })
+      }
+    },
+    //编辑
+    * geteditAirlines({payload}, {call, put}) {
+      const response = yield call(geth5Edit, payload)
+      if (response.code > 0) {
+        message.success('操作成功')
+        yield put({
+          type: 'judgmentes',
+          payload: {judgmentes:true},
+        })
+      }
     },
     * visiblebs({payload}, {call, put}) {
       yield put({
@@ -77,6 +99,12 @@ export default {
       return {
         ...state,
         numbering: action.payload.numbering,
+      }
+    },
+    detail(state, action) {
+      return {
+        ...state,
+        details: action.payload.data,
       }
     },
     oktxt(state, action) {
