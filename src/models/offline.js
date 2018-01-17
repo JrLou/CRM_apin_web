@@ -10,7 +10,7 @@ export default {
     changeInfo: [
     ],
     schemeInfo: [
-      { supplier: '', price: '', line: '' }
+      { supplierName: '', unitprice: '', flight: '' }
     ],
     orderDetail: {}
   },
@@ -113,7 +113,7 @@ export default {
       };
     },
     addOneScheme(state, action) {
-      state.schemeInfo.push({ supplier: '', price: '', line: '' });
+      state.schemeInfo.push({ supplierName: '', unitprice: '', flight: '' });
       let newSchemeInfo = state.schemeInfo;
       return {
         ...state,
