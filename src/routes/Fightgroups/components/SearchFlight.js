@@ -49,6 +49,7 @@ export default class SearchFlight extends PureComponent {
                 })
                 values.startDate = moment(values.startDate).format('YYYY-MM-DD');
                 values.endDate = moment(values.endDate).format('YYYY-MM-DD');
+                values.sellPrice = values.sellPrice * 100;
                 this.props.dispatch({
                     type: 'push/fetch',
                     payload: { ...values, goAirLine: [depData], backAirLine: [arrData], idString: idString.join(',') },
