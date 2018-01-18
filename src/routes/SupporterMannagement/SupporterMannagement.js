@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'dva';
-import Page from './Template';
+import Page from '../CustomerMannagement/Template';
 
 @connect(state => ({
   customerMannagement: state.customerMannagement,
@@ -10,12 +10,12 @@ export default class TableList extends PureComponent {
     const {dispatch} = this.props;
     dispatch({
       type:'customerMannagement/extendAll',
-      payload: {pageType: 'c'}
+      payload: {pageType: 's'}
     })
   }
   render() {
     return (
-      <Page/>
+        <Page/>
     );
   }
 }
