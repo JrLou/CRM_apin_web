@@ -79,10 +79,13 @@ export default class BasicProfile extends Component {
           type: 'flyingpigDetail/updateSettleAmount',
           payload: {order_id: this.orderData.id, settlement_amount: Number(inputPrice) * 100},
           callback: (res) => {
-            if (res.code >= 1) {
+            if (res && res.code >= 1) {
               message.success('修改成功');
+            } else if (!res) {
+              message.error('系统异常');
             } else {
-              message.error('修改失败');
+              let msg = res.msg ? res.msg : '修改失败';
+              message.error(msg);
               this.setState({
                 inputPrice: this.price
               })
@@ -114,11 +117,14 @@ export default class BasicProfile extends Component {
             type: 'flyingpigDetail/addTicket',
             payload: {ticketObj: params},
             callback: (res) => {
-              if (res.code >= 1) {
+              if (res && res.code >= 1) {
                 message.success('出票成功');
                 _this.getDetail();
+              } else if (!res) {
+                message.error('系统异常,票款无法自动退回,请线下操作退款');
               } else {
-                message.error('出票失败');
+                let msg = res.msg ? res.msg : '出票失败';
+                message.error(msg);
               }
             }
           });
@@ -138,11 +144,14 @@ export default class BasicProfile extends Component {
       type: 'flyingpigDetail/ticketFail',
       payload: {order_id: this.orderData.id, message: reason},
       callback: (res) => {
-        if (res.code >= 1) {
+        if (res && res.code >= 1) {
           message.success('提交成功');
           this.getDetail();
+        } else if (!res) {
+          message.error('系统异常');
         } else {
-          message.error('提交失败');
+          let msg = res.msg ? res.msg : '提交失败';
+          message.error(msg);
         }
       }
     });
