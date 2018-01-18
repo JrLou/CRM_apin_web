@@ -22,7 +22,6 @@ import moment from 'moment';
 import FlightstockPlugin from '../supplierPolicy/FlightstockPlugin.js';
 import Algorithm from '../supplierPolicy/FlightstockAlgorithm.js';
 import Manual from '../supplierPolicy/FlightstockManual.js';
-import FlightstockCalendar from '../supplierPolicy/FlightstockCalendar.js';
 import FlightstockShow from '../supplierPolicy/FlightstockShow.js';
 
 const {TextArea} = Input;
@@ -58,8 +57,9 @@ class AddForm extends Component {
     this.setState({
       h5Add: nextProps.h5Add ? nextProps.h5Add : {details: []},
     });
-
-    if (nextProps.h5Add && nextProps.h5Add.details.length > 0) {
+    console.log('kankanweisha ')
+    console.log(nextProps)
+    if (nextProps.h5Add && nextProps.h5Add.details && nextProps.h5Add.details.length > 0) {
       let list = nextProps.h5Add.details;
       list[0].seat_type == 0 ? list[0].seat_type = "硬切" : list[0].seat_type = "代销"
       list[0].FlightNo = list[0].flight_no
@@ -73,9 +73,7 @@ class AddForm extends Component {
       flightdata.selectedWeekGroup[0] = list[0].week_flights
       this.setState({
         flightstockData: [list[0]],
-        linenubber: [0]
-      });
-      this.setState({
+        linenubber: [0],
         flightdata: flightdata,
       });
     }
@@ -90,10 +88,13 @@ class AddForm extends Component {
 
   componentDidMount() {
     let data = this.state.flightdata;
+    console.log('iiopipipipoi')
+    console.log(this.props)
     data.competenceEdit = true
     data.competence = false
     data.selectedWeekGroup = ['', '']
     if (this.props.id) {
+      this.addPost('h5Add/addtailAirLine', {id: this.props.id});
       data.competence = true
       data.competenceEdit = false
     }
@@ -101,6 +102,13 @@ class AddForm extends Component {
       flightdata: data,
     });
     this.addDate(1);
+  }
+
+  addPost(url, data) {
+    this.props.dispatch({
+      type: url,
+      payload: data,
+    });
   }
 
   handleSubmit(e, event) {  //提交时数据格式整理，数据校验
@@ -115,14 +123,14 @@ class AddForm extends Component {
             return
           }
         }
-        if(_this.props.id){
-          flightstockData[0].FlightDepcode=flightstockData[0].airport_dep_code
-          flightstockData[0].FlightArrcode=flightstockData[0].airport_arr_code
-          flightstockData[0].FlightCompany=flightstockData[0].flight_company
-          flightstockData[0].FlightDep=flightstockData[0].city_dep_name
-          flightstockData[0].FlightArr=flightstockData[0].city_arr_name
-          flightstockData[0].FlightDeptimePlanDate=moment(flightstockData[0].time_dep).format("YYYY-MM-DD HH:mm:ss")
-          flightstockData[0].FlightArrtimePlanDate=moment(flightstockData[0].time_arr).format("YYYY-MM-DD HH:mm:ss")
+        if (_this.props.id) {
+          flightstockData[0].FlightDepcode = flightstockData[0].airport_dep_code
+          flightstockData[0].FlightArrcode = flightstockData[0].airport_arr_code
+          flightstockData[0].FlightCompany = flightstockData[0].flight_company
+          flightstockData[0].FlightDep = flightstockData[0].city_dep_name
+          flightstockData[0].FlightArr = flightstockData[0].city_arr_name
+          flightstockData[0].FlightDeptimePlanDate = moment(flightstockData[0].time_dep).format("YYYY-MM-DD HH:mm:ss")
+          flightstockData[0].FlightArrtimePlanDate = moment(flightstockData[0].time_arr).format("YYYY-MM-DD HH:mm:ss")
         }
         values.sellPrice = values.sellPrice * 100
         values.goAirLine = JSON.stringify([flightstockData[0]])

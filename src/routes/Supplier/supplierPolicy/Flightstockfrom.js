@@ -61,7 +61,7 @@ class AddForm extends Component {
       flightstockEdit: nextProps.flightstockEdit ? nextProps.flightstockEdit : {details: []},
     });
 
-    if (nextProps.flightstockEdit && nextProps.flightstockEdit.details.length > 0) {
+    if (nextProps.flightstockEdit && nextProps.flightstockEdit.details.length == 2) {
       let list = nextProps.flightstockEdit.details;
       list[0].seat_type == 0 ? list[0].seat_type = "硬切" : list[0].seat_type = "代销"
       list[0].FlightNo = list[0].flight_no
@@ -233,7 +233,7 @@ class AddForm extends Component {
     let options = []
     const {flightstockAdd} = this.state;
     if (flightstockAdd && flightstockAdd.accurate.data && flightstockAdd.accurate.data.length > 0) {
-      flightstockAdd.accurate.datva.map((v, k) => {
+      flightstockAdd.accurate.data.map((v, k) => {
         options.push(
           <Radio value={k} key={v} className={css.selectbBox}>
             <FlightstockShow accurate={v} routeSelection={this.routeSelection.bind(this)}/>
@@ -373,6 +373,7 @@ class AddForm extends Component {
         break;
     }
   }
+
   weekSelect(week, ole) {
     let data = this.state.flightdata;
     data.selectedWeekGroup[ole] = Algorithm.toogleToWeekStr(week);
@@ -380,6 +381,7 @@ class AddForm extends Component {
       flightdata: data,
     });
   }
+
   addDate(ole, add) {
     let _this = this;
     const {form} = _this.props;
@@ -392,9 +394,11 @@ class AddForm extends Component {
         break;
     }
   }
-  dome(e){
+
+  dome(e) {
     console.log(e.target.value)
   }
+
   shelves() {
     console.log(this.props)
     let _this = this

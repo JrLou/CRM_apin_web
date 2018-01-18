@@ -56,10 +56,10 @@ export default {
     //编辑
     * geteditAirlines({payload}, {call, put}) {
       const response = yield call(geth5Edit, payload)
-      if (response && response.code > 0) {
+      if (response && response.code >= 1) {
         message.success('操作成功')
         yield put({
-          type: 'judgmentes',
+          type: 'judgme',
           payload: {judgmentes: true},
         })
       }
@@ -78,17 +78,17 @@ export default {
     },
     * getaddtit({payload}, {call, put}) {
       const response = yield call(geth5Add, payload)
-      if (response && response.code > 1) {
+      if (response && response.code >= 1) {
         message.success('操作成功')
         yield put({
-          type: 'judgmentes',
+          type: 'judgme',
           payload: {judgmentes: true},
         })
       }
     },
     * judgmentesd({payload}, {call, put}) {
       yield put({
-        type: 'judgmentes',
+        type: 'judgme',
         payload: payload,
       })
     }
@@ -132,10 +132,10 @@ export default {
         visible: action.payload.visible,
       }
     },
-    judgmentes(state, action) {
+    judgme(state, action) {
       return {
         ...state,
-        judgment: action.payload.judgmentes,
+          judgment: action.payload.judgmentes,
       }
     },
   },
