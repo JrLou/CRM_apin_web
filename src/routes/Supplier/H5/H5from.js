@@ -117,8 +117,8 @@ class AddForm extends Component {
         }
         values.sellPrice = values.sellPrice * 100
         values.goAirLine = JSON.stringify([flightstockData[0]])
-        values.cityArr = flightstockData[0].FlightArr
-        values.cityDep = flightstockData[0].FlightDep
+        values.cityArr = flightstockData[0].city_arr_name
+        values.cityDep = flightstockData[0].city_dep_name
         values.startDate = moment(flightdata.flightTimeWill).format("YYYY-MM-DD")
         values.flightNumber = flightstockData[0].FlightNo + '-' + flightstockData[0].FlightNo
         this.setState({

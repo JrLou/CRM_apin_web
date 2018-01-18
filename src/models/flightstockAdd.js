@@ -18,7 +18,7 @@ export default {
         payload: payload,
       })
       const response = yield call(getaddAirLine, payload)
-      if (response.code >= 1 && response.data) {
+      if (response && response.code >= 1 && response.data) {
         yield put({
           type: 'accurates',
           payload: response,
@@ -56,7 +56,7 @@ export default {
     },
     * getaddtit({payload}, {call, put}) {
       const response = yield call(getadd, payload)
-      if (response.code > 1) {
+      if (response && response.code >= 1) {
         message.success('操作成功')
         yield put({
           type: 'judgmentes',
@@ -64,7 +64,7 @@ export default {
         })
       }
     },
-    * judgmentes({payload}, {call, put}) {
+    * judgmentesdobj({payload}, {call, put}) {
       yield put({
         type: 'judgmentes',
         payload: payload,

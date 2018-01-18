@@ -108,7 +108,7 @@ class AddForm extends Component {
       });
     }
     if (nextProps.flightstockAdd && nextProps.flightstockAdd.judgment) {
-      this.props.addPost('flightstockAdd/judgmentes', {judgmentes: false},);
+      this.props.addPost('flightstockAdd/judgmentesdobj', {judgmentes: false},);
       this.props.away()
     }
   }
@@ -343,6 +343,10 @@ class AddForm extends Component {
         });
         break;
       case 8:
+        if(e.target.value==''){
+          message.warning('请填写备注');
+          return;
+        }
         data.content = e.target.value
         _this.setState({
           flightdata: data,
@@ -596,7 +600,7 @@ class AddForm extends Component {
                         rules: [{
                           required: true,
                           message: requiredText,
-                        }, {pattern: /^[1-9]\d{0,4}$/, message: "请填写小于6位的正整数"}],
+                        }, {pattern: /^[1-9]\d{0,5}$/, message: "请填写最多6位的正整数"}],
                         initialValue: flightstockEdit.details.length > 0 ? flightstockEdit.details[0].seat_count : '',
                       })
                       (< Input placeholder="请填写"
@@ -614,10 +618,7 @@ class AddForm extends Component {
                         rules: [{
                           required: true,
                           message: requiredText,
-                        }, {
-                          pattern: /^[1-9][0-9]*(\.[0-9][0-9])?$|^[1-9][0-9]*(\.[0-9])?$|^[0]\.([1-9])$|^[0]\.([0-9][1-9])$/,
-                          message: "成人价需大于0，且最多两位小数"
-                        }, {
+                        },{pattern: /^[1-9]\d{0,5}$/, message: "请填写最多6位的正整数"}, {
                           max: 6,
                           message: "最多6位"
                         }],
@@ -640,10 +641,7 @@ class AddForm extends Component {
                         rules: [{
                           required: true,
                           message: requiredText,
-                        }, {
-                          pattern: /^[1-9][0-9]*(\.[0-9][0-9])?$|^[1-9][0-9]*(\.[0-9])?$|^[0]\.([1-9])$|^[0]\.([0-9][1-9])$/,
-                          message: "儿童价需大于0，且最多两位小数"
-                        }, {
+                        },{pattern: /^[1-9]\d{0,5}$/, message: "请填写最多6位的正整数"}, {
                           max: 6,
                           message: "最多6位"
                         }],
@@ -666,7 +664,7 @@ class AddForm extends Component {
                           message: requiredText,
                         }, {
                           pattern: /^[1-9][0-9]*(\.[0-9][0-9])?$|^[1-9][0-9]*(\.[0-9])?$|^[0]\.([1-9])$|^[0]\.([0-9][1-9])$/,
-                          message: "成人价需大于0，且最多两位小数"
+                          message: "折扣需大于0，且最多两位小数"
                         }, {
                           max: 6,
                           message: "最多6位"
@@ -689,7 +687,7 @@ class AddForm extends Component {
                           rules: [{
                             required: true,
                             message: requiredText,
-                          }, , {pattern: /^[1-9]\d{0,4}$/, message: "请填写小于6位的正整数"}],
+                          }, , {pattern: /^[1-9]\d{0,4}$/, message: "请填写最多6位的正整数"}],
                           initialValue: flightstockEdit.details.length > 0 ? flightstockEdit.details[0].free_bag : '',
 
                         })
