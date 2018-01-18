@@ -99,6 +99,7 @@ class AddForm extends Component {
       }
       if (nextProps.flightstockEdit && nextProps.flightstockEdit.ajaxJudgment) {
         this.props.addPost('flightstockEdit/ajaxJu', {ajaxJudgment: false},);
+        flightdata.content = ''
         this.setState({
           visible: false,
         });
@@ -258,7 +259,6 @@ class AddForm extends Component {
   }
 
   mokecopen(ole) { //手动录入成功回调函数
-    console.log(ole)
     let {linenubber, flightdata, flightstockData, flightstockAdd, numbering} = this.state
     flightstockAdd.visible = false;
     flightstockData[numbering] = ole
@@ -360,7 +360,7 @@ class AddForm extends Component {
         });
         break;
       case 10:
-        if(!this.state.flightdata.content){
+        if (!this.state.flightdata.content) {
           message.warning('请填写备注');
           return;
         }
@@ -579,7 +579,7 @@ class AddForm extends Component {
                         rules: [{
                           required: true,
                           message: requiredText,
-                        }, {pattern: /^[1-9]\d{0,5}$/, message: "请填写小于6位的正整数"}],
+                        }, {pattern: /^[1-9]\d{0,5}$/, message: "请填写最多6位的正整数"}],
                         initialValue: flightstockEdit.details.length > 0 ? flightstockEdit.details[0].days : '',
                       })
                       (< Input placeholder="请填写出行天数"
@@ -618,7 +618,7 @@ class AddForm extends Component {
                         rules: [{
                           required: true,
                           message: requiredText,
-                        },{pattern: /^[1-9]\d{0,5}$/, message: "请填写最多6位的正整数"}, {
+                        }, {pattern: /^[1-9]\d{0,5}$/, message: "请填写最多6位的正整数"}, {
                           max: 6,
                           message: "最多6位"
                         }],
@@ -641,7 +641,7 @@ class AddForm extends Component {
                         rules: [{
                           required: true,
                           message: requiredText,
-                        },{pattern: /^[1-9]\d{0,5}$/, message: "请填写最多6位的正整数"}, {
+                        }, {pattern: /^[1-9]\d{0,5}$/, message: "请填写最多6位的正整数"}, {
                           max: 6,
                           message: "最多6位"
                         }],
@@ -820,7 +820,7 @@ class AddForm extends Component {
             footer={null}
           >
             {flightstockAdd.accurate && flightstockAdd.accurate.data &&
-            <RadioGroup >
+            <RadioGroup>
               {this.reviewerLists()}
             </RadioGroup>}
             {!flightstockAdd.accurate.data &&
