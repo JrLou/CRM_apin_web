@@ -8,7 +8,7 @@ export default {
     numbering: null,
     visible: false,
     ok: '',
-    judgment:false
+    judgment: false
   },
   effects: {
     //飞常准查询
@@ -60,11 +60,16 @@ export default {
         message.success('操作成功')
         yield put({
           type: 'judgmentes',
-          payload: {judgmentes:true},
+          payload: {judgmentes: true},
         })
       }
+    },
+    * judgmentes({payload}, {call, put}) {
+      yield put({
+        type: 'judgmentes',
+        payload: payload,
+      })
     }
-
   },
   reducers: {
     numbering(state, action) {

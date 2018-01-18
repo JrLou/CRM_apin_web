@@ -108,6 +108,7 @@ class AddForm extends Component {
       });
     }
     if (nextProps.flightstockAdd && nextProps.flightstockAdd.judgment) {
+      this.props.addPost('flightstockAdd/judgmentes', {judgmentes: false},);
       this.props.away()
     }
   }
@@ -196,6 +197,7 @@ class AddForm extends Component {
       visible: false,
     });
   }
+
   inquiries(ole, value, event) {  //查询航线详细信息
     let data = this.state.flightdata
     let {flightstockAdd, flightstockData, linenubber, flightdata} = this.state
@@ -245,7 +247,7 @@ class AddForm extends Component {
     let {flightstockAdd, flightstockData, linenubber, flightdata} = this.state
     flightstockData[flightstockAdd.numbering] = arr
     linenubber[flightstockAdd.numbering] = flightstockAdd.numbering
-    flightdata.selected = flightstockAdd.accurate;
+    flightdata.selected = flightstockAdd.numbering;
     flightdata.selectedWeekGroup[flightstockAdd.numbering] = flightstockAdd.accurate.option.mixedFlights
     flightdata.selected = flightstockAdd.numbering;
     this.setState({
@@ -316,6 +318,7 @@ class AddForm extends Component {
       </div>
     </Col>
   }
+
   valHeadquarters(olr, e, event) {
     let _this = this
     let data = _this.state.flightdata;
@@ -424,7 +427,7 @@ class AddForm extends Component {
         title: '操作时间',
         dataIndex: 'create_time',
         key: 'create_time',
-        render:(text,data)=>{
+        render: (text, data) => {
           return moment(data.create_time).format("YYYY-MM-DD:hh:mm:ss");
         }
       }, {
@@ -819,7 +822,7 @@ class AddForm extends Component {
             footer={null}
           >
             {flightstockAdd.accurate && flightstockAdd.accurate.data &&
-            <RadioGroup value={this.state.flightdata.selected}>
+            <RadioGroup >
               {this.reviewerLists()}
             </RadioGroup>}
             {!flightstockAdd.accurate.data &&
