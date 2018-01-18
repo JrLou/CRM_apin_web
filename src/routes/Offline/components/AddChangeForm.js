@@ -48,12 +48,12 @@ export default class AddFlightForm extends Component {
                     <Col span={10}>
                         <FormItem label="类型" {...formItemLayout}>
                             {getFieldDecorator('type', {
-                                rules: [{ required: true, message: "必填" }],
-                                initialValue: '1'
+                                rules: [],
+                                initialValue: 1
                             })(
                                 <Select placeholder="请选择">
-                                    <Option value="1">改签</Option>
-                                    <Option value="2">退票</Option>
+                                    <Option value={1}>改签</Option>
+                                    <Option value={2}>退票</Option>
                                 </Select>
                                 )}
                         </FormItem>
@@ -63,7 +63,7 @@ export default class AddFlightForm extends Component {
                     <Col span={10}>
                         <FormItem label="发生费用"  {...formItemLayout}>
                             {getFieldDecorator('fee', {
-                                rules: [{ required: true, message: "必填" }, { max: 30, message: "输入位数过长" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入不大于99999的整数" }],
+                                rules: [{ required: true, message: "必填" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入不大于99999的整数" }],
                                 initialValue: ''
                             })(
                                 <Input />
@@ -73,7 +73,7 @@ export default class AddFlightForm extends Component {
                     <Col span={10}>
                         <FormItem label="退改利润"  {...formItemLayout}>
                             {getFieldDecorator('profit', {
-                                rules: [{ required: true, message: "必填" }, { max: 30, message: "输入位数过长" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入不大于99999的整数" }],
+                                rules: [{ required: true, message: "必填" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入不大于99999的整数" }],
                                 initialValue: ''
                             })(
                                 <Input />

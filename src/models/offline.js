@@ -1,4 +1,4 @@
-import { offlineList, orderDetail, delOrder, addOrder, addChange, searchCustomer, searchSupplier, updateOrder, delSchemeWithid, outExcel } from '../services/api';
+import { offlineList, orderDetail, delOrder, addOrder, addChange, searchCustomer, searchSupplier, updateOrder, delSchemeWithid, outExcel, searchCity } from '../services/api';
 import { message } from 'antd';
 import moment from 'moment';
 import { routerRedux } from 'dva/router';
@@ -8,6 +8,7 @@ export default {
     list: {},
     usernameData: [],
     supplierData: [],
+    cityData: [],
     loading: false,
     isDill: false,
     changeInfo: [
@@ -153,7 +154,7 @@ export default {
     },
     *searchSupplier({ payload }, { call, put }) {
       const response = yield call(searchSupplier, payload);
-      if (response.code == 200) {
+      if (response && response.code == 200) {
         yield put({
           type: 'getSupplier',
           payload: response.data ? response.data : [],
@@ -162,10 +163,19 @@ export default {
         message.error(response.message);
       }
     },
+    *searchCity({ payload }, { call, put }) {
+      const response = yield call(searchCity, payload);
+      if (response && response.code == 200) {
+        yield put({
+          type: 'getCity',
+          payload: response.data ? response.data : [],
+        });
+      }
+    },
     *delOneSchemeWithid({ payload }, { call, put }) {
       const response = yield call(delSchemeWithid, { id: payload.id });
 
-      if (response.code == 200) {
+      if (response && response.code == 200) {
         yield put({
           type: 'delOneScheme',
           payload: payload.index,
@@ -248,6 +258,12 @@ export default {
       return {
         ...state,
         usernameData: action.payload
+      };
+    },
+    getCity(state, action) {
+      return {
+        ...state,
+        cityData: action.payload
       };
     },
     getSupplier(state, action) {

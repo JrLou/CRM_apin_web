@@ -472,3 +472,7 @@ export async function offlineSupporterEdit(params) {
 export async function offlineSupporterDelete(params) {
   return request_java('/java/offline/supplier/v1.0/delete', { method: 'POST', body: params });
 }
+
+export async function searchCity(params) {
+  return request('/api/airportCity/fuzzy/query', { method: 'POST', body: params });
+}

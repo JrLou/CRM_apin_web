@@ -54,28 +54,18 @@ function checkCode(json) {
   //   13: '访问频繁'
   //   14: '登录密码错误'
   // };
-  if (json.code && json.code * 1 < 1 && json.code * 1 > -100) {
+  if (json.code && json.code != 200) {
     // const errortext = codeMessage[json.code * -1];
     notification.error({
       message: `提示`,
       description: json.msg || "",
     });
-    if (json.code == -2 || json.code == -8 || json.code == -4 || json.code == -11 || json.code == -12) {
+    if (json.code == 422 || json.code == 411) {
       Cookies.clearCookie()
       setTimeout(() => {
         location.reload()
       }, 1000)
     }
-  } else if (json.code && json.code * 1 <= -100 && json.code * 1 >= -199) {
-    notification.error({
-      message: "用户输入信息校验错误",
-      description: json.msg || "",
-    });
-  } else if (json.code && json.code * 1 <= -200 && json.code * 1 >= -299) {
-    notification.error({
-      message: "后端业务提交错误",
-      description: json.msg || "",
-    });
   }
   return json
 }

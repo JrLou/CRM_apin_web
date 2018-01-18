@@ -189,7 +189,7 @@ export default class AddOrderForm extends Component {
                         <Col span={8}>
                             <FormItem label="类型" {...formItemLayout}>
                                 {getFieldDecorator('type' + k, {
-                                    rules: [{ required: true, message: "必填" }],
+                                    rules: [],
                                     initialValue: v.type
                                 })(
                                     <Select
@@ -197,7 +197,7 @@ export default class AddOrderForm extends Component {
                                         placeholder="请选择"
                                         onChange={this.saveChange.bind(null, k, 'type')}
                                     >
-                                        <Option value={0}>退票</Option>
+                                        <Option value={2}>退票</Option>
                                         <Option value={1}>改签</Option>
                                     </Select>
                                     )}
@@ -208,7 +208,7 @@ export default class AddOrderForm extends Component {
                         <Col span={8}>
                             <FormItem label="发生费用"  {...formItemLayout}>
                                 {getFieldDecorator('fee' + k, {
-                                    rules: [{ max: 30, message: "输入位数过长" }],
+                                    rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入不大于99999的整数" }],
                                     initialValue: v.fee
                                 })(
                                     <Input disabled={isDisabled} onChange={this.saveChange.bind(null, k, 'fee')} />
@@ -218,7 +218,7 @@ export default class AddOrderForm extends Component {
                         <Col span={8}>
                             <FormItem label="退改利润"  {...formItemLayout}>
                                 {getFieldDecorator('profit' + k, {
-                                    rules: [{ max: 30, message: "输入位数过长" }],
+                                    rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入不大于99999的整数" }],
                                     initialValue: v.profit
                                 })(
                                     <Input disabled={isDisabled} onChange={this.saveChange.bind(null, k, 'profit')} />
@@ -242,7 +242,7 @@ export default class AddOrderForm extends Component {
                         <Col span={8}>
                             <FormItem label="操作日期"  {...formItemLayout}>
                                 {getFieldDecorator('handle_date' + k, {
-                                    rules: [{ max: 30, message: "输入位数过长" }],
+                                    rules: [],
                                     initialValue: v.handle_date
                                 })(
                                     <DatePicker disabled={isDisabled} onChange={this.saveChange.bind(null, k, 'handle_date')} />
@@ -289,7 +289,7 @@ export default class AddOrderForm extends Component {
         newChangeInfo[k][inputId] = e.target ? e.target.value : e;
         dispatch({
             type: 'offline/changeChangeInfo',
-            payload: newSchemeInfo,
+            payload: newChangeInfo,
         })
     }
     setChangeValue = () => {
@@ -403,6 +403,12 @@ export default class AddOrderForm extends Component {
                     payload: { name: value },
                 });
                 break;
+            case 'cityData':
+                dispatch({
+                    type: 'offline/searchCity',
+                    payload: { name: value },
+                });
+                break;
             default:
                 break;
         }
@@ -418,7 +424,7 @@ export default class AddOrderForm extends Component {
             labelCol: { span: 3 },
             wrapperCol: { span: 16 },
         };
-        const { readOnly, offline: { usernameData, supplierData, changeInfo, schemeInfo } } = this.props;
+        const { readOnly, offline: { usernameData, supplierData, cityData, changeInfo, schemeInfo } } = this.props;
         let detail = this.props.detail ? this.props.detail : {};
         schemeInfo.map((v, k) => {
             if (v.selected == 1) {
@@ -427,7 +433,9 @@ export default class AddOrderForm extends Component {
         })
         // 判断是否没修改过快递
         let specialFlag;
-        if (detail.isPrint == 1 && !this.props.isLeader) {
+        if (this.props.isView) {
+            specialFlag = true;
+        } else if (detail.isPrint == 1 && !this.props.isLeader) {//已出票，不是领导
             specialFlag = true
         }
         return (
@@ -505,7 +513,11 @@ export default class AddOrderForm extends Component {
                                                     rules: [],
                                                     initialValue: detail.cityDep
                                                 })(
-                                                    <AutoComplete disabled={readOnly} dataSource={usernameData} onBlur={this.onBlurCheck.bind(null, 'cityDep', usernameData)} />
+                                                    <AutoComplete
+                                                        disabled={readOnly}
+                                                        onSearch={this.autoCompSearch.bind(null, 'cityData')}
+                                                        dataSource={cityData}
+                                                        onBlur={this.onBlurCheck.bind(null, 'cityDep', cityData)} />
                                                     )}
                                             </FormItem>
                                         </Col>
@@ -713,7 +725,7 @@ export default class AddOrderForm extends Component {
                                                         valuePropName: 'checked',
                                                         initialValue: detail.isPayoff == 1 ? true : false
                                                     })(
-                                                        <Checkbox disabled={specialFlag && detail.isPayoff == 1}>是</Checkbox>
+                                                        <Checkbox disabled={this.props.isView ? true : specialFlag && detail.isPayoff == 1}>是</Checkbox>
                                                         )}
                                                 </FormItem>
                                             </Col>
@@ -727,7 +739,7 @@ export default class AddOrderForm extends Component {
                                                         valuePropName: 'checked',
                                                         initialValue: detail.isSendoff == 1 ? true : false
                                                     })(
-                                                        <Checkbox disabled={specialFlag && detail.isSendoff == 1}>
+                                                        <Checkbox disabled={this.props.isView ? true : specialFlag && detail.isSendoff == 1}>
                                                             是
                                                     </Checkbox>
                                                         )}
@@ -736,18 +748,20 @@ export default class AddOrderForm extends Component {
                                             <Col span={8}>
                                                 <FormItem label="快递公司" {...formItemLayout}>
                                                     {getFieldDecorator('express', {
+                                                        rules: [{ max: 30, message: "最大输入30位" }],
                                                         initialValue: detail.express
                                                     })(
-                                                        <Input disabled={specialFlag && detail.isSendoff == 1} />
+                                                        <Input disabled={this.props.isView ? true : specialFlag && detail.isSendoff == 1} />
                                                         )}
                                                 </FormItem>
                                             </Col>
                                             <Col span={8}>
                                                 <FormItem label="快递单号" {...formItemLayout}>
                                                     {getFieldDecorator('waybill', {
+                                                        rules: [{ max: 30, message: "最大输入30位" }],
                                                         initialValue: detail.waybill
                                                     })(
-                                                        <Input disabled={specialFlag && detail.isSendoff == 1} />
+                                                        <Input disabled={this.props.isView ? true : specialFlag && detail.isSendoff == 1} />
                                                         )}
                                                 </FormItem>
                                             </Col>

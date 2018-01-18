@@ -327,7 +327,7 @@ export default class OfflineList extends PureComponent {
           <div className={styles.tableListForm}>
             {this.renderForm()}
           </div>
-          <div className={styles.btnGroup}><Button type={'default'}><Link to='/offline/order/addOrder'>新增订单</Link></Button></div>
+          <div className={styles.btnGroup}><Button type={'primary'}><Link to='/offline/order/addOrder'>新增订单</Link></Button></div>
           <div className={styles.titleGroup}>共搜索到{list.option}条数据</div>
           <Table
             dataSource={list && list.data}
@@ -336,7 +336,7 @@ export default class OfflineList extends PureComponent {
             loading={loading}
             rowKey="id"
           />
-          <Button type="primary" onClick={this.outExcel}>导出EXCEL表格</Button>
+          <Button type="primary" style={{marginTop:'10px'}} onClick={this.outExcel}>导出EXCEL表格</Button>
         </Card>
       </PageHeaderLayout>
     );
