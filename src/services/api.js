@@ -1,5 +1,6 @@
 import { stringify } from 'qs';
 import request from '../utils/request';
+import request_java from '../utils/request_java';
 import md5 from 'md5'
 
 export async function queryProjectNotice() {
@@ -245,56 +246,56 @@ export async function getadd(params) {
 }
 //批量修改团期价格
 export async function getmodifyPrice(params) {
-  return request('/api/resource/modifyPrice',{
+  return request('/api/resource/modifyPrice', {
     method: 'POST',
     body: params,
   });
 }
 //批量修改团期库存
 export async function getmodifyInventory(params) {
-  return request('/api/resource/modifyInventory',{
+  return request('/api/resource/modifyInventory', {
     method: 'POST',
     body: params,
   });
 }
 //批量修改清位时间
-  export async function getmodifyDays(params) {
-  return request('/api/resource/modifyDays',{
+export async function getmodifyDays(params) {
+  return request('/api/resource/modifyDays', {
     method: 'POST',
     body: params,
   });
 }
 //批量修改价格
-  export async function getimportFile(params) {
-  return request('/api/resource/importFile',{
+export async function getimportFile(params) {
+  return request('/api/resource/importFile', {
     method: 'POST',
     body: params,
   });
 }
 //批量修改价格
-  export async function geteditAirline(params) {
-  return request('/api/resource/editAirline',{
+export async function geteditAirline(params) {
+  return request('/api/resource/editAirline', {
     method: 'POST',
     body: params,
   });
 }
 //添加日志
-  export async function getLogAirLine(params) {
-  return request('/api/resource/LogAirLine',{
+export async function getLogAirLine(params) {
+  return request('/api/resource/LogAirLine', {
     method: 'POST',
     body: params,
   });
 }
 //冷门资源列表
-  export async function geth5(params) {
-  return request('/api/resource/getAirLinesRare',{
+export async function geth5(params) {
+  return request('/api/resource/getAirLinesRare', {
     method: 'POST',
     body: params,
   });
 }
 //冷门资源列表
-  export async function geth5Add(params) {
-  return request('/api/resource/addAirLinesRare',{
+export async function geth5Add(params) {
+  return request('/api/resource/addAirLinesRare', {
     method: 'POST',
     body: params,
   });
@@ -409,45 +410,65 @@ export async function continueAdd(params) {
 }
 // 线下订单
 export async function offlineList(params) {
-  return request('/java/offline/order/list', { method: 'POST', body: params });
+  return request_java('/java/offline/order/list', { method: 'POST', body: params });
 }
 export async function delOrder(params) {
-  return request('/java/offline/order/delete', { method: 'POST', body: params });
+  return request_java('/java/offline/order/delete', { method: 'POST', body: params });
 }
 // 线下订单
 export async function orderDetail(params) {
-  return request('/java/offline/order/query', { method: 'POST', body: params });
+  return request_java('/java/offline/order/query', { method: 'POST', body: params });
 }
-
+export async function addOrder(params) {
+  return request_java('/java/offline/order/create', { method: 'POST', body: params });
+}
+export async function addChange(params) {
+  return request_java('/java/offline/order/endorseCreate', { method: 'POST', body: params });
+}
+export async function searchCustomer(params) {
+  return request_java('/java/offline/customer/queryCustomerNames', { method: 'POST', body: params });
+}
+export async function searchSupplier(params) {
+  return request_java('/java/offline/supplier/querySupplierNames', { method: 'POST', body: params });
+}
+export async function updateOrder(params) {
+  return request_java('/java/offline/order/update', { method: 'POST', body: params });
+}
+export async function delSchemeWithid(params) {
+  return request_java('/java/offline/order/planDelete', { method: 'POST', body: params });
+}
+export async function outExcel(params) {
+  return request_java('/java/offline/order/export', { method: 'POST', body: params });
+}
 //线下 客户管理
 export async function offlineCustomerList(params) {
-  return request('/java/offline/customer/list', { method: 'POST', body: params });
+  return request_java('/java/offline/customer/list', { method: 'POST', body: params });
 }
 export async function offlineCustomerAdd(params) {
-  return request('/java/offline/customer/create', { method: 'POST', body: params });
+  return request_java('/java/offline/customer/create', { method: 'POST', body: params });
 }
 export async function offlineCustomerQuery(params) {
-  return request('/java/offline/customer/query', { method: 'POST', body: params });
+  return request_java('/java/offline/customer/query', { method: 'POST', body: params });
 }
 export async function offlineCustomerEdit(params) {
-  return request('/java/offline/customer/update', { method: 'POST', body: params });
+  return request_java('/java/offline/customer/update', { method: 'POST', body: params });
 }
 export async function offlineCustomerDelete(params) {
-  return request('/java/offline/customer/delete', { method: 'POST', body: params });
+  return request_java('/java/offline/customer/delete', { method: 'POST', body: params });
 }
 //线下 供应商管理
 export async function offlineSupporterList(params) {
-  return request('/java/offline/supplier/v1.0/list', { method: 'POST', body: params });
+  return request_java('/java/offline/supplier/v1.0/list', { method: 'POST', body: params });
 }
 export async function offlineSupporterAdd(params) {
-  return request('/java/offline/supplier/v1.0/create', { method: 'POST', body: params });
+  return request_java('/java/offline/supplier/v1.0/create', { method: 'POST', body: params });
 }
 export async function offlineSupporterQuery(params) {
-  return request('/java/offline/supplier/v1.0/query', { method: 'POST', body: params });
+  return request_java('/java/offline/supplier/v1.0/query', { method: 'POST', body: params });
 }
 export async function offlineSupporterEdit(params) {
-  return request('/java/offline/supplier/v1.0/update', { method: 'POST', body: params });
+  return request_java('/java/offline/supplier/v1.0/update', { method: 'POST', body: params });
 }
 export async function offlineSupporterDelete(params) {
-  return request('/java/offline/supplier/v1.0/delete', { method: 'POST', body: params });
+  return request_java('/java/offline/supplier/v1.0/delete', { method: 'POST', body: params });
 }

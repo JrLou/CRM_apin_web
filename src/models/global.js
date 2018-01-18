@@ -7,8 +7,8 @@ export default {
   namespace: 'global',
   state: {
     collapsed: false,
-    menusload: false,  //控制导航数据
-    env: false, // 控制进入每一个进入页面的权限
+    menusload: true,  //控制导航数据
+    env: true, // 控制进入每一个进入页面的权限
     menus: [],
     routerdata: [],
     routerPath: [{path: 'welcome', url: "welcome"}],  //在这里添加路由可以无视 权限

@@ -24,12 +24,22 @@ export default class ViewOrder extends PureComponent {
             });
         }
     }
-
+    _toMoment = (values, strArr) => {
+        strArr.map((v, k) => {
+            if (values[v]) {
+                values[v] = moment(values[v], 'YYYY-MM-DD');
+            }
+        })
+        return values;
+    }
     render() {
         const { offline: { orderDetail } } = this.props;
+        let changedDetail = orderDetail;
+        changedDetail = changedDetail.order ? changedDetail.order : {};
+        changedDetail = this._toMoment(changedDetail, ['arrDate', 'depDate', 'inquiryDate', 'printDate']);
         return (
             <PageHeaderLayout>
-                <AddorderForm isView={true} detail={orderDetail} id={this.par} readOnly={true} />
+                <AddorderForm isView={true} detail={changedDetail} id={this.par} readOnly={true} />
             </PageHeaderLayout >
         )
     }

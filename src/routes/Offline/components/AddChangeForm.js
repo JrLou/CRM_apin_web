@@ -19,13 +19,14 @@ export default class AddFlightForm extends Component {
         super(props);
     }
     handleSubmit = (e) => {
-        const { dispatch } = this.props;
+        const { dispatch, offline: { currentOrder } } = this.props;
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
+                values.handle_date = moment(values.handle_date).format('YYYY-MM-DD');
                 dispatch({
                     type: 'offline/addOneChange',
-                    payload: values,
+                    payload: { ...values, orderId: currentOrder },
                 });
             }
         });
@@ -62,7 +63,7 @@ export default class AddFlightForm extends Component {
                     <Col span={10}>
                         <FormItem label="发生费用"  {...formItemLayout}>
                             {getFieldDecorator('fee', {
-                                rules: [{ required: true, message: "必填" }, { max: 30, message: "输入位数过长" }],
+                                rules: [{ required: true, message: "必填" }, { max: 30, message: "输入位数过长" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入不大于99999的整数" }],
                                 initialValue: ''
                             })(
                                 <Input />
@@ -72,7 +73,7 @@ export default class AddFlightForm extends Component {
                     <Col span={10}>
                         <FormItem label="退改利润"  {...formItemLayout}>
                             {getFieldDecorator('profit', {
-                                rules: [{ required: true, message: "必填" }, { max: 30, message: "输入位数过长" }],
+                                rules: [{ required: true, message: "必填" }, { max: 30, message: "输入位数过长" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入不大于99999的整数" }],
                                 initialValue: ''
                             })(
                                 <Input />
@@ -95,7 +96,7 @@ export default class AddFlightForm extends Component {
                 <Row gutter={20}>
                     <Col span={10}>
                         <FormItem label="操作日期"  {...formItemLayout}>
-                            {getFieldDecorator('handleDate', {
+                            {getFieldDecorator('handle_date', {
                                 rules: [{ required: true, message: "必填" }],
                             })(
                                 <DatePicker />
