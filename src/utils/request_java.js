@@ -58,14 +58,14 @@ function checkCode(json) {
     // const errortext = codeMessage[json.code * -1];
     notification.error({
       message: `提示`,
-      description: json.msg || "",
+      description: json.msg || json.message || "",
     });
-    if (json.code == 422 || json.code == 411) {
-      Cookies.clearCookie()
-      setTimeout(() => {
-        location.reload()
-      }, 1000)
-    }
+    // if (json.code == 422 || json.code == 411) {
+    //   Cookies.clearCookie()
+    //   setTimeout(() => {
+    //     location.reload()
+    //   }, 1000)
+    // }
   }
   return json
 }

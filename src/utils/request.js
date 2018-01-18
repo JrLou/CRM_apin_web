@@ -115,7 +115,6 @@ export default function request(url, options) {
     newOptions.headers = {
       Accept: 'application/json',
       'Content-Type': options.formData ? 'application/x-www-form-urlencoded; charset=utf-8' : 'application/json; charset=utf-8',
-      'Authorization':'eyJpZCI6Ijk4OGIzNWJiOGYxZjRkZmM5YjU5Mzg0NDQ0YTk5ZDNmIiwidXNlcklkIjoiMTU1YTU0NDY5ZWViNDRkMmI3MGFkZDkwYWFjMGIzNGEiLCJ1c2VyTmFtZSI6IuWPmOaAgeeuoeeQhuWRmCIsInNlY3JldCI6ImY0ZGUzZTYzM2MxZDQ5NGFhMGY5NTE1Nzk4NDA0OTM0In0=',
       ...newOptions.headers,
     };
     if (options.formData) {
