@@ -256,5 +256,24 @@ export default {
         supplierData: action.payload
       };
     },
+    resetPlansAndEndorse(state, action) {
+      return {
+        ...state,
+        schemeInfo: [{ supplierName: '', unitprice: '', flight: '' }],
+        changeInfo: [],
+      };
+    },
+    changeSelected(state, action) {
+      let newschemeInfo = state.schemeInfo.map((v, k) => {
+        if (action.payload == k) {
+          v.selected = 1;
+        }
+        return v;
+      });
+      return {
+        ...state,
+        schemeInfo: newschemeInfo,
+      };
+    },
   }
 };

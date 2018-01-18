@@ -14,6 +14,15 @@ export default class AddOrder extends PureComponent {
     constructor() {
         super()
     }
+    componentDidMount() {
+        // 初始化之后清空保存的方案和退改信息
+        const { dispatch } = this.props;
+        dispatch({
+            type: 'offline/resetPlansAndEndorse',
+            payload: '',
+        });
+    }
+
     render() {
         return (
             <PageHeaderLayout>

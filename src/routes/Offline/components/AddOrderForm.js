@@ -95,6 +95,11 @@ export default class AddOrderForm extends Component {
                     })(
                         <Input type='hidden' />
                         )}
+                    {getFieldDecorator('selected' + k, {
+                        initialValue: v.selected
+                    })(
+                        <Input type='hidden' />
+                        )}
                 </Row>
             </div>)
         })
@@ -321,10 +326,8 @@ export default class AddOrderForm extends Component {
         for (let i = 0; i < schemeInfo.length; i++) {
             let midObj = {}
             strArr.map((v, k) => {
-                if (values.hasOwnProperty(v + i)) {
-                    midObj[v] = values[v + i]
-                    delete values[v + i]
-                }
+                midObj[v] = values[v + i]
+                delete values[v + i]
             })
             plan.push(midObj)
         }
@@ -337,7 +340,7 @@ export default class AddOrderForm extends Component {
         form.validateFields((err, values) => {
             if (!err) {
                 values = this._changeToDatestr(values, ['arrDate', 'depDate', 'inquiryDate', 'printDate'])
-                values = this._changePlanValues(values, ['supplierName', 'unitprice', 'flight', 'id', 'orderId'])
+                values = this._changePlanValues(values, ['supplierName', 'unitprice', 'flight', 'id', 'orderId', 'selected'])
                 values.isPayoff = values.isPayoff ? '1' : '0';
                 values.isSendoff = values.isSendoff ? '1' : '0';
                 console.log('将要提交的参数'); console.log(values);
@@ -359,6 +362,7 @@ export default class AddOrderForm extends Component {
         });
     };
     changeScheme = (value) => {
+        const { dispatch } = this.props;
         // 人数  结算价  卖价;
         if (value !== '') {
             let counts = +this.props.form.getFieldValue('numbers');
@@ -377,6 +381,11 @@ export default class AddOrderForm extends Component {
                     profit: (sellPrice - finalPrice) * counts
                 })
             }
+            // 选择的方案要添加 selected
+            dispatch({
+                type: 'offline/changeSelected',
+                payload: value,
+            });
         }
     }
     autoCompSearch = (which, value) => {
@@ -433,7 +442,7 @@ export default class AddOrderForm extends Component {
                                             <div className={styles.btnGroup}>
                                                 <Button
                                                     type="primary"
-                                                    disabled={detail.isPayoff !== 1}
+                                                    disabled={detail.isPrint !== 1}
                                                     onClick={this.handleModalVisible.bind(null, true)}
                                                 >新增退改</Button>
                                             </div> : null
@@ -569,7 +578,7 @@ export default class AddOrderForm extends Component {
                                             <FormItem label="" {...formItemLayout}>
                                                 {getFieldDecorator('isPrint', {
                                                     rules: [{ required: true, message: "必填" }],
-                                                    initialValue: detail.isPrint
+                                                    initialValue: detail.isPrint || 0
                                                 })(
                                                     <RadioGroup onChange={this.isShowTabs} disabled={readOnly}>
                                                         <Radio value={0}>未出票</Radio>
@@ -578,7 +587,7 @@ export default class AddOrderForm extends Component {
                                                     )}
                                             </FormItem>
                                         </Col>
-                                        {this.props.form.getFieldValue('isPrint') == '0' ?
+                                        {this.props.form.getFieldValue('isPrint') == 0 ?
                                             <Col span={8}>
                                                 <FormItem label="原因" {...formItemLayout}>
                                                     {getFieldDecorator('nodealReason', {
@@ -586,11 +595,14 @@ export default class AddOrderForm extends Component {
                                                         initialValue: detail.nodealReason
                                                     })(
                                                         <Select placeholder="请选择" disabled={readOnly}>
-                                                            <Option value={0}>询参考价</Option>
-                                                            <Option value={1}>客人预算低</Option>
-                                                            <Option value={2}>供应商报价高</Option>
-                                                            <Option value={3}>行程不可靠</Option>
-                                                            <Option value={4}>待客人确认</Option>
+                                                            <Option value={0}>比价询单采购意愿低</Option>
+                                                            <Option value={1}>账期结算</Option>
+                                                            <Option value={2}>跟踪周期较长待客人确认</Option>
+                                                            <Option value={3}>团期较远无资源匹配</Option>
+                                                            <Option value={4}>客人预算不足</Option>
+                                                            <Option value={5}>供应商价格高</Option>
+                                                            <Option value={6}>线路资源缺乏无匹配</Option>
+                                                            <Option value={7}>有供应但无位置</Option>
                                                         </Select>
                                                         )}
                                                 </FormItem>
@@ -602,7 +614,7 @@ export default class AddOrderForm extends Component {
                             </Tabs>
                         </Card>
                     </div>
-                    {this.props.form.getFieldValue('isPrint') == '1' ?
+                    {this.props.form.getFieldValue('isPrint') == 1 ?
                         <div className={styles.module}>
                             <Card bordered={false}>
                                 <Tabs type="card">
