@@ -99,6 +99,7 @@ class AddForm extends Component {
       }
       if (nextProps.flightstockEdit && nextProps.flightstockEdit.ajaxJudgment) {
         this.props.addPost('flightstockEdit/ajaxJu', {ajaxJudgment: false},);
+        flightdata.content = ''
         this.setState({
           visible: false,
         });
@@ -232,9 +233,9 @@ class AddForm extends Component {
     let options = []
     const {flightstockAdd} = this.state;
     if (flightstockAdd && flightstockAdd.accurate.data && flightstockAdd.accurate.data.length > 0) {
-      flightstockAdd.accurate.data.map((v, k) => {
+      flightstockAdd.accurate.datva.map((v, k) => {
         options.push(
-          <Radio value={k} key={k} className={css.selectbBox}>
+          <Radio value={k} key={v} className={css.selectbBox}>
             <FlightstockShow accurate={v} routeSelection={this.routeSelection.bind(this)}/>
           </Radio>
         )
@@ -258,7 +259,6 @@ class AddForm extends Component {
   }
 
   mokecopen(ole) { //手动录入成功回调函数
-    console.log(ole)
     let {linenubber, flightdata, flightstockData, flightstockAdd, numbering} = this.state
     flightstockAdd.visible = false;
     flightstockData[numbering] = ole
@@ -360,8 +360,10 @@ class AddForm extends Component {
         });
         break;
       case 10:
-        if(!this.state.flightdata.content){
-          message.warning('请填写备注');
+        if (!this.state.flightdata.content) {
+          _this.setState({
+            visible: false,
+          });
           return;
         }
         _this.props.addPost('flightstockEdit/LogAirLine', {
@@ -371,7 +373,6 @@ class AddForm extends Component {
         break;
     }
   }
-
   weekSelect(week, ole) {
     let data = this.state.flightdata;
     data.selectedWeekGroup[ole] = Algorithm.toogleToWeekStr(week);
@@ -379,8 +380,6 @@ class AddForm extends Component {
       flightdata: data,
     });
   }
-
-
   addDate(ole, add) {
     let _this = this;
     const {form} = _this.props;
@@ -393,7 +392,9 @@ class AddForm extends Component {
         break;
     }
   }
-
+  dome(e){
+    console.log(e.target.value)
+  }
   shelves() {
     console.log(this.props)
     let _this = this
@@ -579,7 +580,7 @@ class AddForm extends Component {
                         rules: [{
                           required: true,
                           message: requiredText,
-                        }, {pattern: /^[1-9]\d{0,5}$/, message: "请填写小于6位的正整数"}],
+                        }, {pattern: /^[1-9]\d{0,5}$/, message: "请填写最多6位的正整数"}],
                         initialValue: flightstockEdit.details.length > 0 ? flightstockEdit.details[0].days : '',
                       })
                       (< Input placeholder="请填写出行天数"
@@ -618,7 +619,7 @@ class AddForm extends Component {
                         rules: [{
                           required: true,
                           message: requiredText,
-                        },{pattern: /^[1-9]\d{0,5}$/, message: "请填写最多6位的正整数"}, {
+                        }, {pattern: /^[1-9]\d{0,5}$/, message: "请填写最多6位的正整数"}, {
                           max: 6,
                           message: "最多6位"
                         }],
@@ -641,7 +642,7 @@ class AddForm extends Component {
                         rules: [{
                           required: true,
                           message: requiredText,
-                        },{pattern: /^[1-9]\d{0,5}$/, message: "请填写最多6位的正整数"}, {
+                        }, {pattern: /^[1-9]\d{0,5}$/, message: "请填写最多6位的正整数"}, {
                           max: 6,
                           message: "最多6位"
                         }],
@@ -820,7 +821,7 @@ class AddForm extends Component {
             footer={null}
           >
             {flightstockAdd.accurate && flightstockAdd.accurate.data &&
-            <RadioGroup >
+            <RadioGroup onChange={this.dome.bind(this)}>
               {this.reviewerLists()}
             </RadioGroup>}
             {!flightstockAdd.accurate.data &&

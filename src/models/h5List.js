@@ -35,7 +35,7 @@ export default {
         payload: true,
       });
       const judgment = yield call(stateAirLine, payload);
-      if (judgment.code >= 1) {
+      if (judgment&&judgment.code >= 1) {
         message.success('上架成功');
       }
       const response = yield call(geth5, {p: 1, pc: 10})

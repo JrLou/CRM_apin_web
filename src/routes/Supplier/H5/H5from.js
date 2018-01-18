@@ -115,21 +115,26 @@ class AddForm extends Component {
             return
           }
         }
-        flightstockData[0].FlightDepcode=flightstockData[0].airport_dep_code
-        flightstockData[0].FlightArrcode=flightstockData[0].airport_arr_code
-        flightstockData[0].FlightCompany=flightstockData[0].flight_company
-        flightstockData[0].FlightDep=flightstockData[0].city_dep_name
-        flightstockData[0].FlightArr=flightstockData[0].city_arr_name
-        flightstockData[0].FlightDeptimePlanDate=flightstockData[0].departure_start
+        if(_this.props.id){
+          flightstockData[0].FlightDepcode=flightstockData[0].airport_dep_code
+          flightstockData[0].FlightArrcode=flightstockData[0].airport_arr_code
+          flightstockData[0].FlightCompany=flightstockData[0].flight_company
+          flightstockData[0].FlightDep=flightstockData[0].city_dep_name
+          flightstockData[0].FlightArr=flightstockData[0].city_arr_name
+          flightstockData[0].FlightDeptimePlanDate=moment(flightstockData[0].time_dep).format("YYYY-MM-DD HH:mm:ss")
+          flightstockData[0].FlightArrtimePlanDate=moment(flightstockData[0].time_arr).format("YYYY-MM-DD HH:mm:ss")
+        }
         values.sellPrice = values.sellPrice * 100
         values.goAirLine = JSON.stringify([flightstockData[0]])
-        values.cityArr = flightstockData[0].city_arr_name
-        values.cityDep = flightstockData[0].city_dep_name
+        values.cityArr = flightstockData[0].FlightArr
+        values.cityDep = flightstockData[0].FlightDep
         values.startDate = moment(flightdata.flightTimeWill).format("YYYY-MM-DD")
         values.flightNumber = flightstockData[0].FlightNo + '-' + flightstockData[0].FlightNo
         this.setState({
           baioshi: true,
         });
+        console.log(values)
+        console.log(flightstockData)
         if (_this.props.id) {
           values.id = _this.props.id
           _this.props.addPost('h5Add/geteditAirlines', values);
@@ -322,11 +327,6 @@ class AddForm extends Component {
                 {
                   max: 6,
                   message: "航班号最长六位"
-                },
-
-                {
-                  pattern: /^[1-9]\d{0,4}$/,
-                  message: "请填写正确航班号"
                 }
               ],
             })(
