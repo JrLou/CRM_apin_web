@@ -130,7 +130,7 @@ class HorizontalLoginForm extends Component {
                             label="城市名称"
                             {...formItemLayout}
                         >
-                            {getFieldDecorator('FlightDepAirport', {
+                            {getFieldDecorator('FlightDep', {
                                 rules: [{
                                     required: true,
                                     message: requiredText
@@ -145,7 +145,7 @@ class HorizontalLoginForm extends Component {
                             // label="城市名称"
                             {...formItemLayout}
                         >
-                            {getFieldDecorator('FlightArrAirport', {
+                            {getFieldDecorator('FlightArr', {
                                 rules: [{
                                     required: true,
                                     message: requiredText
