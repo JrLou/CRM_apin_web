@@ -217,14 +217,6 @@ export default {
       if (response && response.code >= 1) {
         succCallback && succCallback(response);
         yield put({
-          type: 'save',
-          payload: response,
-        });
-        yield put({
-          type: 'save',
-          payload: response.data,
-        });
-        yield put({
           type: 'extendAll',
           payload: {
             modalConfirmLoading: false,
