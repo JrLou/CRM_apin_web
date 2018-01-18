@@ -115,6 +115,7 @@ class AddForm extends Component {
             return
           }
         }
+        console.log(values)
         flightstockData[0].FlightDepcode=flightstockData[0].airport_dep_code
         flightstockData[0].FlightArrcode=flightstockData[0].airport_arr_code
         flightstockData[0].FlightCompany=flightstockData[0].flight_company
@@ -322,11 +323,6 @@ class AddForm extends Component {
                 {
                   max: 6,
                   message: "航班号最长六位"
-                },
-
-                {
-                  pattern: /^[1-9]\d{0,4}$/,
-                  message: "请填写正确航班号"
                 }
               ],
             })(
