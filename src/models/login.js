@@ -17,9 +17,9 @@ export default {
       });
       const response = yield call(AccountLogin, payload);
       if (response && response.code >=1) {
-        // CookieHelp.saveUserInfo(null,response.data.token,true);
-        // 保存用户名
         try{
+           CookieHelp.saveUserInfo(null,response.data.token,true);
+          //保存用户名
           const userName = Base64.encodeURI(response.data.user.account)
           CookieHelp.saveUserInfo('_u',userName,true);
           const roles = Base64.encodeURI(response.data.user.roles)
