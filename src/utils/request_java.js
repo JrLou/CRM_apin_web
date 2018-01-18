@@ -2,7 +2,7 @@
 
 import fetch from 'dva/fetch';
 import { notification } from 'antd';
-import Cookies from './cookies.js'
+import Cookies from './cookies.js';
 const codeMessage = {
   200: '服务器成功返回请求的数据',
   201: '新建或修改数据成功。',
@@ -60,11 +60,11 @@ function checkCode(json) {
       message: `提示`,
       description: json.msg || "",
     });
-    if (json.code == -2 || json.code == -8 || json.code == -4 || json.code== -11|| json.code== -12) {
+    if (json.code == -2 || json.code == -8 || json.code == -4 || json.code == -11 || json.code == -12) {
       Cookies.clearCookie()
-      setTimeout(()=>{
+      setTimeout(() => {
         location.reload()
-      },1000)
+      }, 1000)
     }
   } else if (json.code && json.code * 1 <= -100 && json.code * 1 >= -199) {
     notification.error({
@@ -79,9 +79,9 @@ function checkCode(json) {
   }
   return json
 }
-const _fetch = (requestPromise, timeout=5000) => {
+const _fetch = (requestPromise, timeout = 5000) => {
   let timeoutAction = null;
-  const fun = ()=>{
+  const fun = () => {
     notification.error({
       message: `提示`,
       description: '请求超时',
@@ -92,10 +92,10 @@ const _fetch = (requestPromise, timeout=5000) => {
       reject(fun);
     }
   })
-  setTimeout(()=>{
+  setTimeout(() => {
     timeoutAction()
   }, timeout)
-  return Promise.race([requestPromise,timerPromise]);
+  return Promise.race([requestPromise, timerPromise]);
 }
 export default function request(url, options) {
   const defaultOptions = {
@@ -112,10 +112,14 @@ export default function request(url, options) {
   // } catch (e) {
   // }
   if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
+    let Authorization = decodeURIComponent(Cookies.getCookieInfo('USERINFOADMIN_ARM'));
+    if (Authorization.indexOf('{') > -1) {
+      Authorization = JSON.parse(Authorization).accessToken;
+    }
     newOptions.headers = {
       Accept: 'application/json',
       'Content-Type': options.formData ? 'application/x-www-form-urlencoded; charset=utf-8' : 'application/json; charset=utf-8',
-      'Authorization':'eyJpZCI6Ijk4OGIzNWJiOGYxZjRkZmM5YjU5Mzg0NDQ0YTk5ZDNmIiwidXNlcklkIjoiMTU1YTU0NDY5ZWViNDRkMmI3MGFkZDkwYWFjMGIzNGEiLCJ1c2VyTmFtZSI6IuWPmOaAgeeuoeeQhuWRmCIsInNlY3JldCI6ImY0ZGUzZTYzM2MxZDQ5NGFhMGY5NTE1Nzk4NDA0OTM0In0=',
+      'Authorization': Authorization,
       ...newOptions.headers,
     };
     if (options.formData) {
@@ -135,7 +139,7 @@ export default function request(url, options) {
   return _fetch(fetch(url, newOptions))
     .then(checkStatus)
     .then((response) => {
-      if(response.headers.get('Content-Type')=='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
+      if (response.headers.get('Content-Type') == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
         // const b = response.blob()
         // const a = window.URL.createObjectURL(response.blob());
         return response.blob();
@@ -144,12 +148,12 @@ export default function request(url, options) {
         return response.text();
       }
       return response.json();
-    }).then(checkCode).catch((fun)=>{
-      if(typeof fun ==='function'){
+    }).then(checkCode).catch((fun) => {
+      if (typeof fun === 'function') {
         fun()
       }
     }
-  )
+    )
 }
 
 
