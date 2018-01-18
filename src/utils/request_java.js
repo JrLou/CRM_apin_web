@@ -35,32 +35,32 @@ function checkStatus(response) {
   throw error;
 }
 function checkCode(json) {
-  // >=1 操作成功
-  // -1 ~ -99 固定错误编码，需要特殊处理
-  // -199 ~ -100  用户输入信息校验错误
-  // -299 ~ -200  后端业务提交错误
-  // const codeMessage = {
-  //   1: '系统未捕获异常',
-  //   2: '未登录',
-  //   3: '没有权限访问',
-  //   4: '用户被禁用',
-  //   6: '接口不存在',
-  //   7: '非法请求',
-  //   8: '凭证过期',
-  //   9: '用户不存在',
-  //   10: '未授权的功能',
-  //   11: '用户失效',
-  //   12: '过期凭证',
-  //   13: '访问频繁'
-  //   14: '登录密码错误'
+  // 200 请求成功
+  // 400  请求失败
+  // 403  未授权
+  // 410  此账户在线人数超出上线
+  // 411  非法的账户名
+  // 412  用户已存在
+  // 413  账户被禁止     ****************
+  // 414  用户不存在
+  // 420  密码错误
+  // 421  无效凭证        ****************
+  // 422  凭证过期，需刷新 ****************
+  // 423  验证码错误
+  // 430  无效参数
+  // 431  手机格式不正确
+  // 432  邮箱格式不正确
+  // 490  您请求过于频繁，请稍后重试！
+  // 500  服务器繁忙
+  //
   // };
   if (json.code && json.code != 200) {
     // const errortext = codeMessage[json.code * -1];
     notification.error({
       message: `提示`,
-      description: json.msg || "",
+      description: json.message || "",
     });
-    if (json.code == 422 || json.code == 411) {
+    if (json.code == 422 || json.code == 411 || json.code == 413) {
       Cookies.clearCookie()
       setTimeout(() => {
         location.reload()

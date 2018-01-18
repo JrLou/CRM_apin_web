@@ -92,7 +92,7 @@ export default {
       });
       const pageType = yield select(state => state.customerMannagement.pageType);
       const response = yield call(transferRes(pageType, 'list'), payload);//offlineSupporterList,offlineCustomerList
-      if (response && response.code >= 1) {
+      if (response && response.code === 200) {
         yield put({
           type: 'saveTableData',
           payload: response,
@@ -111,7 +111,7 @@ export default {
       });
       const pageType = yield select(state => state.customerMannagement.pageType);
       const response = yield call(transferRes(pageType, 'add'), payload);//offlineSupporterAdd,offlineCustomerAdd
-      if (response && response.code >= 1) {
+      if (response && response.code === 200) {
         yield put({
           type: 'extendAll',
           payload: {showModal: false},
@@ -131,7 +131,7 @@ export default {
       });
       const pageType = yield select(state => state.customerMannagement.pageType);
       const response = yield call(transferRes(pageType, 'query'), payload);//offlineSupporterList,offlineCustomerList
-      if (response && response.code >= 1) {
+      if (response && response.code === 200) {
         yield put({
           type: 'extendAll',
           payload: {modalData: response},
@@ -150,7 +150,7 @@ export default {
       });
       const pageType = yield select(state => state.customerMannagement.pageType);
       const response = yield call(transferRes(pageType, 'edit'), payload);//offlineSupporterList,offlineCustomerList
-      if (response && response.code >= 1) {
+      if (response && response.code === 200) {
         yield put({
           type: 'extendAll',
           payload: {showModal: false},
@@ -170,7 +170,7 @@ export default {
       });
       const pageType = yield select(state => state.customerMannagement.pageType);
       const response = yield call(transferRes(pageType, 'delete'), payload);//offlineSupporterList,offlineCustomerList
-      if (response && response.code >= 1) {
+      if (response && response.code === 200) {
         yield put({
           type: 'extendAll',
           payload: {showModal: false},
