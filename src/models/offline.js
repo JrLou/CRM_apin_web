@@ -1,10 +1,13 @@
-import { offlineList, orderDetail, delOrder } from '../services/api';
+import { offlineList, orderDetail, delOrder, addOrder, addChange, searchCustomer, searchSupplier, updateOrder, delSchemeWithid, outExcel } from '../services/api';
 import { message } from 'antd';
+import moment from 'moment';
+import { routerRedux } from 'dva/router';
 export default {
   namespace: 'offline',
   state: {
     list: {},
-    usernameData: ['a', 'b', 'c', 'd', 'e'],
+    usernameData: [],
+    supplierData: [],
     loading: false,
     isDill: false,
     changeInfo: [
@@ -12,7 +15,9 @@ export default {
     schemeInfo: [
       { supplierName: '', unitprice: '', flight: '' }
     ],
-    orderDetail: {}
+    originalPlans: [],
+    orderDetail: {},
+    currentOrder: ''
   },
   effects: {
     *fetch({ payload }, { call, put }) {
@@ -36,10 +41,10 @@ export default {
         payload: true,
       });
       const response = yield call(orderDetail, payload);
-      if (response.code == 200) {
+      if (response && response.code == 200) {
         yield put({
           type: 'getDetail',
-          payload: response,
+          payload: { ...response, curId: payload.id },
         });
       }
       yield put({
@@ -63,6 +68,112 @@ export default {
         payload: false,
       });
     },
+    *addOrder({ payload }, { call, put }) {
+      yield put({
+        type: 'changeLoading',
+        payload: true,
+      });
+      const response = yield call(addOrder, payload);
+      if (response.code == 200) {
+        message.success('操作成功');
+        yield put(routerRedux.push('/offline/order'));
+      } else {
+        message.error(response.message)
+      }
+      yield put({
+        type: 'changeLoading',
+        payload: false,
+      });
+    },
+    *updateOrder({ payload }, { call, put }) {
+      yield put({
+        type: 'changeLoading',
+        payload: true,
+      });
+      const response = yield call(updateOrder, payload);
+      if (response.code == 200) {
+        message.success('修改成功');
+        yield put(routerRedux.push('/offline/order'));
+      } else {
+        message.error(response.message)
+      }
+      yield put({
+        type: 'changeLoading',
+        payload: false,
+      });
+    },
+    *addOneChange({ payload }, { call, put }) {
+      yield put({
+        type: 'changeLoading',
+        payload: true,
+      });
+      const response = yield call(addChange, payload);
+      if (response.code == 200) {
+        message.success('操作成功');
+        yield put({
+          type: 'getOneChange',
+          payload: payload,
+        });
+
+      } else {
+        message.error(response.message)
+      }
+      yield put({
+        type: 'changeLoading',
+        payload: false,
+      });
+    },
+    *outExcel({ payload }, { call, put }) {
+      yield put({
+        type: 'changeLoading',
+        payload: true,
+      });
+      const response = yield call(outExcel, payload);
+      if (response.code == 200) {
+        message.success('操作成功');
+        window.open(response.data.url);
+      } else {
+        message.error(response.message)
+      }
+      yield put({
+        type: 'changeLoading',
+        payload: false,
+      });
+    },
+    *searchCustomer({ payload }, { call, put }) {
+      const response = yield call(searchCustomer, payload);
+      if (response.code == 200) {
+        yield put({
+          type: 'getCustomers',
+          payload: response.data ? response.data : [],
+        });
+      } else {
+        message.error(response.message);
+      }
+    },
+    *searchSupplier({ payload }, { call, put }) {
+      const response = yield call(searchSupplier, payload);
+      if (response.code == 200) {
+        yield put({
+          type: 'getSupplier',
+          payload: response.data ? response.data : [],
+        });
+      } else {
+        message.error(response.message);
+      }
+    },
+    *delOneSchemeWithid({ payload }, { call, put }) {
+      const response = yield call(delSchemeWithid, { id: payload.id });
+
+      if (response.code == 200) {
+        yield put({
+          type: 'delOneScheme',
+          payload: payload.index,
+        });
+      } else {
+        message.error(response.message);
+      }
+    },
   },
 
   reducers: {
@@ -76,18 +187,16 @@ export default {
       return {
         ...state,
         orderDetail: action.payload.data,
+        schemeInfo: action.payload.data.plans.length > 0 ? action.payload.data.plans : [{ supplierName: '', unitprice: '', flight: '' }],
+        changeInfo: action.payload.data.endorse,
+        currentOrder: action.payload.curId,
+        originalPlans: action.payload.data.plans
       };
     },
     changeLoading(state, action) {
       return {
         ...state,
         loading: action.payload,
-      };
-    },
-    changeIsdill(state, action) {
-      return {
-        ...state,
-        isDill: action.payload == '1' ? true : false,
       };
     },
     delOneChange(state, action) {
@@ -98,7 +207,8 @@ export default {
         changeInfo: newChangeInfo
       };
     },
-    addOneChange(state, action) {
+    getOneChange(state, action) {
+      action.payload.handle_date = moment(action.payload.handle_date, 'YYYY-MM-DD');
       state.changeInfo.push(action.payload);
       let newChangeInfo = state.changeInfo;
       return {
@@ -134,5 +244,17 @@ export default {
         schemeInfo: newSchemeInfo
       };
     },
-  },
+    getCustomers(state, action) {
+      return {
+        ...state,
+        usernameData: action.payload
+      };
+    },
+    getSupplier(state, action) {
+      return {
+        ...state,
+        supplierData: action.payload
+      };
+    },
+  }
 };

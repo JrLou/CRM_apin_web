@@ -7,6 +7,8 @@ import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from './Offline.less';
 import moment from 'moment';
 import { getPar, formatPar } from '../../utils/utils';
+import CookieHelp from '../../utils/cookies';
+import { Base64 } from 'js-base64'
 const FormItem = Form.Item;
 const confirm = Modal.confirm;
 const { Option } = Select;
@@ -24,6 +26,7 @@ export default class OfflineList extends PureComponent {
     }
     this.searchValues = {
     }
+    this.currentUser = CookieHelp.getCookieInfo('_r') ? Base64.decode(CookieHelp.getCookieInfo('_r')) : null;
   }
   componentDidMount() {
     this.handleSearch();
@@ -187,7 +190,7 @@ export default class OfflineList extends PureComponent {
             <FormItem label="询价日期">
               {getFieldDecorator('inquiryDate', {
               })(
-                <RangePicker />
+                <RangePicker allowClear={false} />
                 )}
             </FormItem>
           </Col>
@@ -195,7 +198,7 @@ export default class OfflineList extends PureComponent {
             <FormItem label="出票日期">
               {getFieldDecorator('printDate', {
               })(
-                <RangePicker />
+                <RangePicker allowClear={false} />
                 )}
             </FormItem>
           </Col>
@@ -203,7 +206,7 @@ export default class OfflineList extends PureComponent {
             <FormItem label="退改日期">
               {getFieldDecorator('endorseDate', {
               })(
-                <RangePicker />
+                <RangePicker allowClear={false} />
                 )}
             </FormItem>
           </Col>
@@ -219,6 +222,13 @@ export default class OfflineList extends PureComponent {
   }
   pageChange(page, pageSize) {
     this.handleSearch(page, pageSize);
+  }
+  outExcel = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'offline/outExcel',
+      payload: this.searchValues,
+    });
   }
   render() {
     const { offline: { list, loading } } = this.props;
@@ -247,7 +257,7 @@ export default class OfflineList extends PureComponent {
       {
         title: '订单号',
         dataIndex: 'serialNo',
-        render: (text, record) => <Link to={"/offline/order/ViewOrder/" + text}>{text}</Link>,
+        render: (text, record) => <Link to={"/offline/order/ViewOrder/" + record.id}>{text}</Link>,
       },
 
       {
@@ -293,7 +303,6 @@ export default class OfflineList extends PureComponent {
       {
         title: '利润',
         dataIndex: 'profit',
-
       },
       {
         title: '供应商',
@@ -303,14 +312,15 @@ export default class OfflineList extends PureComponent {
         title: '操作',
         render: (text, record) => {
           return <div className={styles.handleBtn}>
-            <Button type='primary'><Link to={"/offline/order/ViewOrder/" + record.serialNo}>查看</Link></Button>
-            <Button type='primary'><Link to={"/offline/order/EditOrder/" + record.serialNo}>修改</Link></Button>
-            <Button type='primary' onClick={this.delOrder.bind(this, record.serialNo)}>删除</Button>
+            <Button type='primary'><Link to={"/offline/order/ViewOrder/" + record.id}>查看</Link></Button>
+            <Button type='primary'><Link to={"/offline/order/EditOrder/" + record.id}>修改</Link></Button>
+            <Button type='primary' disabled={!isLeader} onClick={this.delOrder.bind(this, record.id)}>删除</Button>
           </div>
         }
       },
     ];
-
+    let isLeader = this.currentUser.split(',').indexOf('716103936e1a461ab79dcb7283a979b8') !== -1;
+    console.log('总监？', isLeader);
     return (
       <PageHeaderLayout>
         <Card bordered={false}>
@@ -324,8 +334,9 @@ export default class OfflineList extends PureComponent {
             columns={columns}
             pagination={pagination}
             loading={loading}
-            rowKey="serialNo"
+            rowKey="id"
           />
+          <Button type="primary" onClick={this.outExcel}>导出EXCEL表格</Button>
         </Card>
       </PageHeaderLayout>
     );
