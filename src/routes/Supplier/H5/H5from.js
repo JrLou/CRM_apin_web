@@ -115,6 +115,15 @@ class AddForm extends Component {
             return
           }
         }
+        if(_this.props.id){
+          flightstockData[0].FlightDepcode=flightstockData[0].airport_dep_code
+          flightstockData[0].FlightArrcode=flightstockData[0].airport_arr_code
+          flightstockData[0].FlightCompany=flightstockData[0].flight_company
+          flightstockData[0].FlightDep=flightstockData[0].city_dep_name
+          flightstockData[0].FlightArr=flightstockData[0].city_arr_name
+          flightstockData[0].FlightDeptimePlanDate=moment(flightstockData[0].time_dep).format("YYYY-MM-DD HH:mm:ss")
+          flightstockData[0].FlightArrtimePlanDate=moment(flightstockData[0].time_arr).format("YYYY-MM-DD HH:mm:ss")
+        }
         values.sellPrice = values.sellPrice * 100
         values.goAirLine = JSON.stringify([flightstockData[0]])
         values.cityArr = flightstockData[0].FlightArr
@@ -124,6 +133,8 @@ class AddForm extends Component {
         this.setState({
           baioshi: true,
         });
+        console.log(values)
+        console.log(flightstockData)
         if (_this.props.id) {
           values.id = _this.props.id
           _this.props.addPost('h5Add/geteditAirlines', values);
@@ -212,7 +223,6 @@ class AddForm extends Component {
   }
 
   mokecopen(ole) { //手动录入成功回调函数
-    console.log(ole)
     let {linenubber, flightdata, flightstockData, h5Add, numbering} = this.state
     h5Add.visible = false;
     flightstockData[numbering] = ole
@@ -245,6 +255,7 @@ class AddForm extends Component {
         flightdata.flightNumsdbdsdering = false;
         flightdata.ok = "录入";
         this.setState({
+          flightdata: flightdata,
           flightNumsdbdsdering: false,
           flightNumbering: "手工录入航班"
         });
@@ -291,13 +302,12 @@ class AddForm extends Component {
       labelCol: {span: 3},
       wrapperCol: {span: 21},
     };
-    const {flightstockData, h5Add, visible} = this.state
+    const {h5Add} = this.state
     const requiredText = "请填写此选项"
     if (h5Add && h5Add.details.length > 0) {
       for (let i = 0; i < h5Add.details.length; i++) {
         getFieldDecorator('names-' + i, {initialValue: h5Add.details[i].flight_no});
       }
-      console.log(getFieldsValue())
     }
     getFieldDecorator('keys', {initialValue: []});
     const keys = getFieldValue('keys');
@@ -317,11 +327,6 @@ class AddForm extends Component {
                 {
                   max: 6,
                   message: "航班号最长六位"
-                },
-
-                {
-                  pattern: /^([a-zA-Z][0-9a-zA-Z]|[0-9a-zA-Z][a-zA-Z])([0-9]{1,4})$/,
-                  message: "请填写正确航班号"
                 }
               ],
             })(
@@ -435,7 +440,7 @@ class AddForm extends Component {
             footer={null}
           >
             {h5Add.accurate && h5Add.accurate.data &&
-            <RadioGroup value={this.state.flightdata.selected}>
+            <RadioGroup>
               {this.reviewerLists()}
             </RadioGroup>}
             {!h5Add.accurate.data &&

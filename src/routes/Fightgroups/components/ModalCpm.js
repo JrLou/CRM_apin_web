@@ -90,8 +90,8 @@ class SendLogModal extends Component {
       return txt;
     };
     return data.map(item => {
-      const depFlightInfo = item.flightInfo? item.flightInfo.filter(oneFlight => oneFlight.trip_index === 0)[0]: {};
-      const arrFlightInfo = item.flightInfo? item.flightInfo.filter(oneFlight => oneFlight.trip_index === 1)[0]: {};
+      const depFlightInfo = item.flightInfo ? item.flightInfo.filter(oneFlight => oneFlight.trip_index === 0)[0] : {};
+      const arrFlightInfo = item.flightInfo ? item.flightInfo.filter(oneFlight => oneFlight.trip_index === 1)[0] : {};
       return {
         ...item,
         create_time: formatDate(item.create_time, 'YYYY-MM-DD HH:mm:ss'),//2017-12-31 12:00:00
@@ -160,20 +160,20 @@ class ExportPassengerModal extends Component {
   constructor() {
     super();
     this.state = {
-      flieList: [],
+      fileList: [],
     };
-    this.serverTicketsData = [];//导出乘机人=>确认提交票号的时候使用
-  }
-
-  componentWillUnmount() {
-    //此模态框即将消失的时候
-    this.setState({flieList: []});
-
+    this.serverTicketsData = null;//导出乘机人=>确认提交票号的时候使用
   }
 
   handleCancel = () => {
     this.props.changeVisible && this.props.changeVisible();
+    this.initUploadData();
   };
+
+  initUploadData() {
+    this.setState({fileList: []});
+    this.serverTicketsData = null;
+  }
 
   getColumns() {
     const {groupsInfoData: {data: {abroad}}} = this.props.checkFightGroups;
@@ -254,27 +254,32 @@ class ExportPassengerModal extends Component {
   }
 
   /**
-   * 传入table的data,插入票号那一栏
+   * 传入table的后台返回的excel的内容数组,取出出去第一行标题开始ticket中的字段，然后往data中插入{ticket: xxx}
    * @param {[{},{}]} data
-   * @returns {Array}
+   * @returns {[{}]} 返回处理后的data
    */
-  insertTickets(data, abroad) {
+  getPaidMemberAfterInsertTickets(newData, oldData, abroad) {
     /**
-     [
-     ["订单号", "乘机人", "乘机人类型", "证件号码", "出生年月日", "性别", "证件有效期", "国籍", "票号"]
-     ["201801122029488197", "姓名", "成人", "123", "2017-01-01", "女", "2018-02-28", "中国", 110, null, null, null,…]
-     ]
+     * 返回的代码如下
+     * [
+     * ["订单号", "乘机人", "乘机人类型", "证件号码", "出生年月日", "性别", "证件有效期", "国籍", "票号"]
+     * ["201801122029488197", "姓名", "成人", "123", "2017-01-01", "女", "2018-02-28", "中国", 110, null, null, null,…]
+     * ]
      */
-    if (!this.serverTicketsData[0]) {
-      return data;
+    if (!newData[0]) {
+      return oldData;
     }
-    let resultArr = data.map((currV, index) => {
+    let resultArr = oldData.map((currV, index) => {
       return {
         ...currV,
-        ticket: this.serverTicketsData[index + 1][abroad === 0 ? 4 : 8],
+        ticket: newData[index + 1][abroad === 0 ? 4 : 8].toString(),
       }
     });
     return resultArr;
+  }
+
+  isTicketChange(newData, oldData) {
+    return oldData.some((currV, index) => currV.ticket !== newData[index].ticket);
   }
 
   render() {
@@ -305,29 +310,39 @@ class ExportPassengerModal extends Component {
         return isXlsx;
       },
       onChange: ({file, fileList, event,}) => {
-        if (file.status !== 'uploading') { }
+        let isTicketChange = false;
+        if (file.status !== 'uploading') {
+        }
         if (file.status === 'done') {
           //文件上传成功后，有两种情况，通过code码判断，如果为200 通过，否则，弹出msg错误消息
           if (file.response.code === 200) {
-            this.serverTicketsData = file.response.data;
-            //处理页面上的table，插入票号数据
-            dispatch({
-              type: 'checkFightGroups/insertTickets',
-              payload: this.insertTickets(data, abroad),
-            });
-            message.success('导入票号成功');
+            const paidMemberAfterInsertTicket = this.getPaidMemberAfterInsertTickets(file.response.data, data, abroad);
+            isTicketChange = this.isTicketChange(paidMemberAfterInsertTicket, data);
+            if (isTicketChange) {
+              dispatch({
+                type: 'checkFightGroups/insertTickets',
+                payload: paidMemberAfterInsertTicket,
+              });
+              this.serverTicketsData = file.response.data;
+              message.success('导入票号成功');
+            } else {
+              fileList = [];
+              message.warning('票号导入重复');
+            }
           } else {
-            //不符合要求时，fileList值为空
             fileList = [];
-            message.error("导入失败，"+file.response.msg);//todo 我这里没有走request，所以就没有错误消息啦
+            message.error("导入失败，" + file.response.msg);//todo 我这里没有走request，所以就没有错误消息啦
           }
         } else if (file.status === 'error') {
           message.error(`${file.name} 上传失败`);
           console.log("如果出现了此文字，请检查此处代码", file.response);
         }
         //仅仅取fileList中的最新的一个
+        if (file.status !== 'done' || !isTicketChange) {
+          this.serverTicketsData = null;
+        }
         fileList = fileList.slice(-1);
-        this.setState({ fileList });
+        this.setState({fileList});
       },
     };
 
@@ -395,6 +410,7 @@ class ExportPassengerModal extends Component {
                   if (response.code == 200) {
                     message.success("操作成功");
                     console.log(response);
+                    this.initUploadData();
                   } else {
                     message.success("操作失败");
                     console.log('error');

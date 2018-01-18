@@ -143,18 +143,20 @@ export default class CheckFightGroups extends Component {
           </Button>
         </div>
         <Spin spinning={groupsInfoLoading}>
-          <DescriptionList size="large" style={{marginBottom: 32}} col={4}>
-            <Description term="拼团单号">{this.id}</Description>
-            <Description term="拼团状态">{group_status}</Description>
-            <Description term="出发城市">{city_dep}</Description>
-            <Description term="到达城市">{city_arr}</Description>
-            <Description term="起飞日期">{date_dep}</Description>
-            <Description term="返回日期">{date_ret}</Description>
-            <Description term="方案提交时间">{create_time}</Description>
-            <Description term="方案过期时间">{expired_time}</Description>
-            <Description term="支付人数">{paidMan}人</Description>
-            <Description term="处理客服">{creator_name}</Description>
-          </DescriptionList>
+          <div className={styles.fightGropuInfoContainer}>
+            <DescriptionList size="large" style={{marginBottom: 32}} col={4}>
+              <Description term="拼团单号">{this.id}</Description>
+              <Description term="拼团状态">{group_status}</Description>
+              <Description term="出发城市">{city_dep}</Description>
+              <Description term="到达城市">{city_arr}</Description>
+              <Description term="起飞日期">{date_dep}</Description>
+              <Description term="返回日期">{date_ret}</Description>
+              <Description term="方案提交时间">{create_time}</Description>
+              <Description term="方案过期时间">{expired_time}</Description>
+              <Description term="支付人数">{paidMan}人</Description>
+              <Description term="处理客服">{creator_name}</Description>
+            </DescriptionList>
+          </div>
         </Spin>
       </div>
     );
@@ -552,7 +554,7 @@ const SingleFightView = (props) => {
   const time_dep = formatDate(props.data.time_dep, 'HH : mm') || "未知时间";
   const time_arr = formatDate(props.data.time_arr, 'HH : mm') || "未知时间";
 
-  return (//todo 往返航班的各自的  出发时间  到达时间
+  return (
     <div>
       <p>{props.data.flight_no}</p>
       <Row>
