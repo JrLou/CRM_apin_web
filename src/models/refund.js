@@ -1,13 +1,11 @@
 import { getRefundList,offlineRefund,retryRefund } from '../services/api';
-
+import {message} from 'antd';
 export default {
   namespace: "refund",
   state: {
     loading: true,
     list: [],
     total: 0,
-    offlineResponse:{},
-    retryResponse:{},
   },
   effects: {
     *getList({ payload }, { call, put }) {
@@ -16,10 +14,17 @@ export default {
         payload: true,
       });
       const response = yield call(getRefundList, payload);
-      yield put({
-        type: 'save',
-        payload: response,
-      });
+      if (response && response.code >= 1) {
+        yield put({
+          type: 'save',
+          payload: response,
+        });
+      } else if (!response) {
+        message.error('系统异常')
+      } else {
+        let msg = response.msg ? response.msg : '请求有误';
+        message.error(msg)
+      }
       yield put({
         type: 'changeLoading',
         payload: false,
@@ -27,17 +32,15 @@ export default {
     },
     *offlineRefund({ payload,callback }, { call, put }) {
       const response = yield call(offlineRefund, payload);
-      yield put({
-        type: 'offline',
-        payload: response,
-      });
+      if (callback) {
+        callback(response);
+      }
     },
     *retryRefund({ payload,callback }, { call, put }) {
       const response = yield call(retryRefund, payload);
-      yield put({
-        type: 'retry',
-        payload: response,
-      });
+      if (callback) {
+        callback(response);
+      }
     },
   },
   reducers: {
@@ -46,18 +49,6 @@ export default {
         ...state,
         list: payload.data||[],
         total: payload.option.total||0,
-      };
-    },
-    offline(state, { payload }) {
-      return {
-        ...state,
-        offlineResponse:payload
-      };
-    },
-    retry(state, { payload }) {
-      return {
-        ...state,
-        retryResponse:payload
       };
     },
     changeLoading(state, { payload }) {

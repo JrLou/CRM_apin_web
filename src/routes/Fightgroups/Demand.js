@@ -114,7 +114,7 @@ export default class Demand extends PureComponent {
     const pagination = {
       pageSize: this.page.pageSize,
       current: this.page.page,
-      total: list.option && list.option.total,
+      total: list && list.option && list.option.total,
       onChange: ((page, pageSize) => {
         this.page = {
           page: page,

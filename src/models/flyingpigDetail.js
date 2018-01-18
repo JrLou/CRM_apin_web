@@ -1,5 +1,5 @@
 import {getFlyDetail, flyDetailAddTicket,updateSettleAmount,addTicketFail} from '../services/api';
-
+import {message} from "antd/lib/index";
 export default {
   namespace: 'flyingpigDetail',
 
@@ -20,10 +20,17 @@ export default {
         payload: true,
       });
       const response = yield call(getFlyDetail, payload);
-      yield put({
-        type: 'show',
-        payload: response,
-      });
+      if (response && response.code >= 1) {
+        yield put({
+          type: 'show',
+          payload: response,
+        });
+      } else if (!response) {
+        message.error('系统异常')
+      } else {
+        let msg = response.msg ? response.msg : '请求有误';
+        message.error(msg)
+      }
       yield put({
         type: 'changeLoading',
         payload: false,
