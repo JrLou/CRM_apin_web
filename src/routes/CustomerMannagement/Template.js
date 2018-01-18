@@ -2,7 +2,6 @@ import React, {PureComponent} from 'react';
 import {connect} from 'dva';
 import {
   Card,
-  Modal,
   Form,
   Input,
   Button,
@@ -13,7 +12,7 @@ import StandardTable from './TableList';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import AllModal from './ModalCpm'
 
-import styles from './CustomerMannagement.less';
+import styles from './Template.less';
 
 const FormItem = Form.Item;
 
