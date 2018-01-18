@@ -170,7 +170,7 @@ export const getRouterData = (app) => {
     },
     //冷门资源-编辑
     '/supplier/supplierPolicy/h5/Edit': {
-      name:'新增冷门资源',
+      name:'编辑冷门资源',
       component: dynamicWrapper(app, ['h5List'], () => import('../routes/Supplier/H5/H5Add')),
     },
     //冷门资源-新增
