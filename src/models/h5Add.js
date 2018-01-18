@@ -1,4 +1,4 @@
-import {getaddAirLine, geth5Add,getdetailAirLine,geth5Edit} from '../services/api';
+import {getaddAirLine, geth5Add, getdetailAirLine, geth5Edit} from '../services/api';
 import {message} from 'antd';
 
 export default {
@@ -8,7 +8,7 @@ export default {
     numbering: null,
     visible: false,
     ok: '',
-    judgment:false,
+    judgment: false,
     details: [],//编辑回显数据
   },
   effects: {
@@ -19,7 +19,7 @@ export default {
         payload: payload,
       })
       const response = yield call(getaddAirLine, payload)
-      if (response.code >= 1 && response.data) {
+      if (response && response.code >= 1 && response.data) {
         yield put({
           type: 'accurates',
           payload: response,
@@ -46,7 +46,7 @@ export default {
     //编辑回显数据
     * addtailAirLine({payload}, {call, put}) {
       const response = yield call(getdetailAirLine, payload)
-      if (response.code >= 1) {
+      if (response && response.code >= 1) {
         yield put({
           type: 'detail',
           payload: response,
@@ -56,11 +56,11 @@ export default {
     //编辑
     * geteditAirlines({payload}, {call, put}) {
       const response = yield call(geth5Edit, payload)
-      if (response.code > 0) {
+      if (response && response.code >= 1) {
         message.success('操作成功')
         yield put({
-          type: 'judgmentes',
-          payload: {judgmentes:true},
+          type: 'judgme',
+          payload: {judgmentes: true},
         })
       }
     },
@@ -78,19 +78,25 @@ export default {
     },
     * getaddtit({payload}, {call, put}) {
       const response = yield call(geth5Add, payload)
-      if (response.code > 1) {
+      if (response && response.code >= 1) {
         message.success('操作成功')
         yield put({
-          type: 'judgmentes',
-          payload: {judgmentes:true},
+          type: 'judgme',
+          payload: {judgmentes: true},
         })
       }
     },
     * judgmentesd({payload}, {call, put}) {
-        yield put({
-          type: 'judgmentes',
-          payload: payload,
-        })
+      yield put({
+        type: 'judgme',
+        payload: payload,
+      })
+    },
+  * detailsadd({payload}, {call, put}) {
+      yield put({
+        type: 'detailsadder',
+        payload: payload,
+      })
     }
 
   },
@@ -105,6 +111,12 @@ export default {
       return {
         ...state,
         details: action.payload.data,
+      }
+    },
+    detailsadder(state, action) {
+      return {
+        ...state,
+        details: [],
       }
     },
     oktxt(state, action) {
@@ -132,10 +144,10 @@ export default {
         visible: action.payload.visible,
       }
     },
-    judgmentes(state, action) {
+    judgme(state, action) {
       return {
         ...state,
-        judgment: action.payload.judgmentes,
+          judgment: action.payload.judgmentes,
       }
     },
   },

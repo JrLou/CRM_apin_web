@@ -1,4 +1,4 @@
-import {flightstockList, stateAirLine, getAirLineLogs, getaddAirLine,getdetailAirLine} from '../services/api';
+import {flightstockList, stateAirLine, getAirLineLogs, getaddAirLine, getdetailAirLine} from '../services/api';
 import {message} from 'antd';
 
 export default {
@@ -9,7 +9,7 @@ export default {
       option: {},
     },
     loading: true,
-      logs: {},
+    logs: {},
   },
   effects: {
     * fetch({payload}, {call, put}) {
@@ -18,15 +18,16 @@ export default {
         payload: true,
       });
       const response = yield call(flightstockList, payload);
-      console.log(response)
-      yield put({
-        type: 'save',
-        payload: response,
-      });
-      yield put({
-        type: 'changeLoading',
-        payload: false,
-      });
+      if(response && response.code >= 1){
+        yield put({
+          type: 'save',
+          payload: response,
+        });
+        yield put({
+          type: 'changeLoading',
+          payload: false,
+        });
+      }
     },
     * changeStatus({payload}, {call, put}) {
       //列表页，改变上架下架状态
@@ -35,26 +36,37 @@ export default {
         payload: true,
       });
       const judgment = yield call(stateAirLine, payload);
-      if (judgment.code >= 1) {
+      if (judgment && judgment.code >= 1) {
         message.success('上架成功');
       }
       const response = yield call(flightstockList, {p: 1, pc: 10})
-      yield put({
-        type: 'save',
-        payload: response,
-      });
-      yield put({
-        type: 'changeLoading',
-        payload: false,
-      });
+      if(response && response.code >= 1){
+        yield put({
+          type: 'save',
+          payload: response,
+        });
+        yield put({
+          type: 'changeLoading',
+          payload: false,
+        });
+      } else {
+        message.warning(payload.msg);
+        return
+      }
+
     },
     * loglist({payload}, {call, put}) {
       //日志
       const response = yield call(getAirLineLogs, payload)
-      yield put({
-        type: 'log',
-        payload: response,
-      });
+      if (response && response.code >= 1) {
+        yield put({
+          type: 'log',
+          payload: response,
+        });
+      } else {
+        message.warning(payload.msg);
+        return
+      }
     },
 
   },
