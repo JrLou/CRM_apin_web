@@ -26,6 +26,13 @@ const menuData = [{
   },{
     name: '冷门资源',
     path: 'supplier/supplierPolicy/h5',
+    // children: [{
+    //   name: '新增',
+    //   path: 'supplier/supplierPolicy/flightstockAdd',
+    // }, {
+    //   name: '编辑',
+    //   path: 'supplier/supplierPolicy/flightstockEdit',
+    // }],
   }, {
     name: '飞猪资源',
     path: 'supplier/flyPigList',
@@ -108,6 +115,9 @@ const menuData = [{
     },{
       name: '客户（旅行社）管理',
       path: '/offline/customerMannagement',
+    },{
+      name: '供应商管理',
+      path: '/offline/supporterMannagement',
     }],
   },
   // {

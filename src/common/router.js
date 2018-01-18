@@ -165,7 +165,13 @@ export const getRouterData = (app) => {
     },
     //冷门资源h
     '/supplier/supplierPolicy/h5': {
+      name:'冷门资源',
       component: dynamicWrapper(app, ['h5List'], () => import('../routes/Supplier/H5/H5List')),
+    },
+    //冷门资源-新增
+    '/supplier/supplierPolicy/h5/Add': {
+      name:'新增冷门资源',
+      component: dynamicWrapper(app, ['h5Add'], () => import('../routes/Supplier/H5/H5Add')),
     },
     //运营管理
     '/operations/banner': {
@@ -202,6 +208,10 @@ export const getRouterData = (app) => {
     '/offline/customerMannagement': {
       name: '客户（旅行社）管理',
       component: dynamicWrapper(app, ['customerMannagement'], () => import('../routes/CustomerMannagement/CustomerMannagement.js')),
+    },
+    '/offline/supporterMannagement': {
+      name: '客户（旅行社）管理',
+      component: dynamicWrapper(app, ['customerMannagement'], () => import('../routes/SupporterMannagement/SupporterMannagement.js')),
     },
   };
   // Get name from ./menu.js or just set it in the router data.

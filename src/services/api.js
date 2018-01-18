@@ -285,6 +285,20 @@ export async function getmodifyInventory(params) {
     body: params,
   });
 }
+//冷门资源列表
+  export async function geth5(params) {
+  return request('/api/resource/getAirLinesRare',{
+    method: 'POST',
+    body: params,
+  });
+}
+//冷门资源列表
+  export async function geth5Add(params) {
+  return request('/api/resource/addAirLinesRare',{
+    method: 'POST',
+    body: params,
+  });
+}
 
 export async function AccountLogin(params) {
   const newparams = Object.assign({}, { account: params.account, type: 0 })
@@ -402,5 +416,38 @@ export async function delOrder(params) {
 }
 // 线下订单
 export async function orderDetail(params) {
-  return request('/crm/offline/orderDetail', { method: 'POST', body: params });
+  return request('/java/offline/order/query', { method: 'POST', body: params });
+}
+
+//线下 客户管理
+export async function offlineCustomerList(params) {
+  return request('/java/offline/customer/list', { method: 'POST', body: params });
+}
+export async function offlineCustomerAdd(params) {
+  return request('/java/offline/customer/create', { method: 'POST', body: params });
+}
+export async function offlineCustomerQuery(params) {
+  return request('/java/offline/customer/query', { method: 'POST', body: params });
+}
+export async function offlineCustomerEdit(params) {
+  return request('/java/offline/customer/update', { method: 'POST', body: params });
+}
+export async function offlineCustomerDelete(params) {
+  return request('/java/offline/customer/delete', { method: 'POST', body: params });
+}
+//线下 供应商管理
+export async function offlineSupporterList(params) {
+  return request('/java/offline/supplier/v1.0/list', { method: 'POST', body: params });
+}
+export async function offlineSupporterAdd(params) {
+  return request('/java/offline/supplier/v1.0/create', { method: 'POST', body: params });
+}
+export async function offlineSupporterQuery(params) {
+  return request('/java/offline/supplier/v1.0/query', { method: 'POST', body: params });
+}
+export async function offlineSupporterEdit(params) {
+  return request('/java/offline/supplier/v1.0/update', { method: 'POST', body: params });
+}
+export async function offlineSupporterDelete(params) {
+  return request('/java/offline/supplier/v1.0/delete', { method: 'POST', body: params });
 }

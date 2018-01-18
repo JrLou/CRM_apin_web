@@ -202,7 +202,7 @@ export default class Choose extends PureComponent {
     };
     const { continueFlag } = this.par;
     return (
-      <Form>
+      <Form onSubmit={this.handleSearch.bind(this)}>
         <Row gutter={20}>
           <Col span={8}>
             <FormItem label="起飞时间" {...formItemLayout}>
@@ -254,7 +254,7 @@ export default class Choose extends PureComponent {
 
         <div style={{ overflow: 'hidden' }}>
           <span style={{ float: 'right', marginBottom: 24 }} className={styles.btnBox}>
-            <Button type="primary" htmlType="submit" onClick={this.handleSearch.bind(this)}>查询</Button>
+            <Button type="primary" htmlType="submit" >查询</Button>
             <Button type="default" onClick={this.resetSearch.bind(this)}>重置</Button>
             <Button type="primary" onClick={this.pushScheme.bind(this)}>{continueFlag ? '推送当前方案' : '推送方案'}</Button>
           </span>
@@ -291,14 +291,32 @@ export default class Choose extends PureComponent {
         title: '下单时间',
         dataIndex: 'create_time',
         render: (text, record) => {
-          return moment(text).format('YYYY-MM-DD');
+          return moment(text).format('YYYY-MM-DD HH:mm:ss');
         }
       },
       {
         title: '起飞时间',
         dataIndex: 'dep_yyyymm',
         render: (text, record) => {
-          return text.toString().substring(0, 4) + "-" + text.toString().substring(4);
+          let dd = '';
+          switch (record.dep_dd) {
+            case 0:
+              dd = ''
+              break;
+            case -1:
+              dd = '上旬'
+              break;
+            case -2:
+              dd = '中旬'
+              break;
+            case -3:
+              dd = '下旬'
+              break;
+            default:
+              dd = record.dep_dd + '日'
+              break;
+          }
+          return text.toString().substring(0, 4) + "年" + text.toString().substring(4) + '月' + dd;
         }
       },
       {

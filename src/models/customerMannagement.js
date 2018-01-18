@@ -1,26 +1,100 @@
-import {queryCustomerList} from '../services/api';
+import {
+  //客户管理
+  offlineCustomerList,
+  offlineCustomerAdd,
+  offlineCustomerQuery,
+  offlineCustomerEdit,
+  offlineCustomerDelete,
+
+  //供应商管理
+  offlineSupporterList,
+  offlineSupporterAdd,
+  offlineSupporterQuery,
+  offlineSupporterEdit,
+  offlineSupporterDelete,
+
+} from '../services/api';//offlineSupporterList, offlineSupplierAdd
+import {message} from 'antd';
+
+// const
+const transferRes = (pageType, methodName) => {
+  let response = null;
+  if (pageType === 'c') {
+    switch (methodName) {
+      case 'list':
+        response = offlineCustomerList;
+        break;
+      case 'add':
+        response = offlineCustomerAdd;
+        break;
+      case 'query':
+        response = offlineCustomerQuery;
+        break;
+      case 'edit':
+        response = offlineCustomerEdit;
+        break;
+      case 'delete':
+        response = offlineCustomerDelete;
+        break;
+    }
+  } else {
+    switch (methodName) {
+      case 'list':
+        response = offlineSupporterList;
+        break;
+      case 'add':
+        response = offlineSupporterAdd;
+        break;
+      case 'query':
+        response = offlineSupporterQuery;
+        break;
+      case 'edit':
+        response = offlineSupporterEdit;
+        break;
+      case 'delete':
+        response = offlineSupporterDelete;
+        break;
+    }
+  }
+  return response;
+};
+
+const initState = () => {
+  return {
+    pageType: 'c',//c=>客户 s=>供应商
+    data: {
+      data: [],
+      message: '',
+      option: 0,
+    },
+    loading: true,
+
+    modalData: {
+      data: {},
+      message: '',
+    },
+    showModal: false,
+    modalFormLoading: false,//模态框中的table的loading
+    modalConfirmLoading: false,
+    deleteItemId: '',//点击删除的时候存储该值
+  };
+};
 
 export default {
   namespace: 'customerMannagement',
 
-  state: {
-    data: {
-      data: [],
-      msg: '',
-      option: {},//这里面会有分页器需要的信息： current、 pageSize、total，但需要转换
-    },
-    loading: true,
-  },
+  state: initState(),
   effects: {
-    * fetch({payload, succCB}, {call, put}) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
+    * fetch({payload, succCB}, {call, put, select}) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
       yield put({
         type: 'changeLoading',
         payload: true,
       });
-      const response = yield call(queryCustomerList, payload);
-      if (response && response.code >= 1) {//todo 这里应该这样写，其他文件记得也参考这里
+      const pageType = yield select(state => state.customerMannagement.pageType);
+      const response = yield call(transferRes(pageType, 'list'), payload);//offlineSupporterList,offlineCustomerList
+      if (response && response.code >= 1) {
         yield put({
-          type: 'save',
+          type: 'saveTableData',
           payload: response,
         });
         succCB && succCB(response.data);
@@ -30,9 +104,88 @@ export default {
         payload: false,
       });
     },
+    * fetchAdd({payload, succCB}, {call, put, select}) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
+      yield put({
+        type: 'extendAll',
+        payload: {modalConfirmLoading: true},
+      });
+      const pageType = yield select(state => state.customerMannagement.pageType);
+      const response = yield call(transferRes(pageType, 'add'), payload);//offlineSupporterAdd,offlineCustomerAdd
+      if (response && response.code >= 1) {
+        yield put({
+          type: 'extendAll',
+          payload: {showModal: false},
+        });
+        message.success(response.message);
+        succCB && succCB();
+      }
+      yield put({
+        type: 'extendAll',
+        payload: {modalConfirmLoading: false},
+      });
+    },
+    * fetchQueryOne({payload, succCB}, {call, put, select}) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
+      yield put({
+        type: 'extendAll',
+        payload: {modalFormLoading: true},
+      });
+      const pageType = yield select(state => state.customerMannagement.pageType);
+      const response = yield call(transferRes(pageType, 'query'), payload);//offlineSupporterList,offlineCustomerList
+      if (response && response.code >= 1) {
+        yield put({
+          type: 'extendAll',
+          payload: {modalData: response},
+        });
+        succCB && succCB(response.data);
+      }
+      yield put({
+        type: 'extendAll',
+        payload: {modalFormLoading: false},
+      });
+    },
+    * fetchEdit({payload, succCB}, {call, put, select}) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
+      yield put({
+        type: 'extendAll',
+        payload: {modalConfirmLoading: true},
+      });
+      const pageType = yield select(state => state.customerMannagement.pageType);
+      const response = yield call(transferRes(pageType, 'edit'), payload);//offlineSupporterList,offlineCustomerList
+      if (response && response.code >= 1) {
+        yield put({
+          type: 'extendAll',
+          payload: {showModal: false},
+        });
+        message.success(response.message);
+        succCB && succCB();
+      }
+      yield put({
+        type: 'extendAll',
+        payload: {modalConfirmLoading: false},
+      });
+    },
+    * fetchDelete({payload, succCB}, {call, put, select}) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
+      yield put({
+        type: 'extendAll',
+        payload: {modalConfirmLoading: true},
+      });
+      const pageType = yield select(state => state.customerMannagement.pageType);
+      const response = yield call(transferRes(pageType, 'delete'), payload);//offlineSupporterList,offlineCustomerList
+      if (response && response.code >= 1) {
+        yield put({
+          type: 'extendAll',
+          payload: {showModal: false},
+        });
+        message.success(response.message);
+        succCB && succCB();
+      }
+      yield put({
+        type: 'extendAll',
+        payload: {modalConfirmLoading: false},
+      });
+    },
   },
   reducers: {
-    save(state, action) {
+    saveTableData(state, action) {
       return {
         ...state,
         data: {
@@ -47,14 +200,21 @@ export default {
         loading: action.payload,
       };
     },
-    setStatereducer(state, {payload}) {
+    /**
+     * 展开所有传过来的属性
+     * 把上面重复了的几个函数都提取成这个
+     * @param state
+     * @param payload
+     * @returns {{}}
+     */
+    extendAll(state, {payload}) {
       return {
         ...state,
-        data: {
-          ...state.data,
-          ...payload
-        },
+        ...payload,
       };
+    },
+    clear() {//页面卸载时重置
+      return initState();
     }
   },
 };
