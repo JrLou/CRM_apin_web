@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Layout, Menu, Icon, Spin, Tag, Dropdown, Avatar, message } from 'antd';
 import moment from 'moment';
 import groupBy from 'lodash/groupBy';
-import avatar from '../../assets/avatar.png'
+import avatar from '../../assets/logo.png'
 import Debounce from 'lodash-decorators/debounce';
 import NoticeIcon from '../../components/NoticeIcon';
 import HeaderSearch from '../../components/HeaderSearch';
@@ -95,7 +95,7 @@ export default class GlobalHeader extends PureComponent {
         <div className={styles.right}>
             <Dropdown overlay={menu}>
               <span className={`${styles.action} ${styles.account}`}>
-                <Avatar size="small" className={styles.avatar} src={avatar} />
+              {/* <Avatar size="small" className={styles.avatar} src={avatar} /> */}
                 {currentUser?currentUser:'设置'}
               </span>
             </Dropdown>

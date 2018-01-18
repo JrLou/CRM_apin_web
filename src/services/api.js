@@ -293,9 +293,16 @@ export async function geth5(params) {
     body: params,
   });
 }
-//冷门资源列表
-export async function geth5Add(params) {
-  return request('/api/resource/addAirLinesRare', {
+//冷门资源-新增
+  export async function geth5Add(params) {
+  return request('/api/resource/addAirLinesRare',{
+    method: 'POST',
+    body: params,
+  });
+}
+//冷门资源-编辑
+  export async function geth5Edit(params) {
+  return request('/api/resource/editAirLinesRare',{
     method: 'POST',
     body: params,
   });

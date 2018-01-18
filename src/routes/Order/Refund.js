@@ -172,7 +172,7 @@ export default class TableList extends PureComponent {
   }
 
   afreshRefund(id) {
-    const {dispatch, refund: {retryResponse}} = this.props;
+    const {dispatch} = this.props;
     confirm({
       title: '请确认是否重新退款?',
       okText: '是',
@@ -181,13 +181,18 @@ export default class TableList extends PureComponent {
         dispatch({
           type: 'refund/retryRefund',
           payload: {order_id: id},
+          callback:(res)=>{
+            if (res && res.code >= 1) {
+              message.success('重新退款提交成功');
+              this.handleSearch();
+            } else if (!res) {
+              message.error('系统异常');
+            } else {
+              let msg = res.msg ? res.msg : '重新退款提交失败';
+              message.error(msg);
+            }
+          }
         });
-        if (retryResponse.code > 0) {
-          message.success('重新退款提交成功');
-          this.handleSearch();
-        } else {
-          message.error('重新退款提交失败');
-        }
       },
       onCancel() {
       },
@@ -195,17 +200,22 @@ export default class TableList extends PureComponent {
   }
 
   failReason(params) {
-    const {dispatch, refund: {offlineResponse}} = this.props;
+    const {dispatch} = this.props;
     dispatch({
       type: 'refund/offlineRefund',
       payload: {...params},
-    });
-    if (offlineResponse.code > 0) {
-      message.success('线下退款提交成功');
-      this.handleSearch();
-    } else {
-      message.error('线下退款提交失败');
-    }
+      callback: (res) => {
+        if (res && res.code >= 1) {
+          message.success('线下退款提交成功');
+          this.handleSearch();
+        } else if (!res) {
+          message.error('系统异常');
+        } else {
+          let msg = res.msg ? res.msg : '线下退款提交失败';
+          message.error(msg);
+        }
+      }
+    })
   }
 
   render() {
@@ -214,31 +224,31 @@ export default class TableList extends PureComponent {
       {title: '退款单号', dataIndex: 'id',},
       {
         title: '退款状态', dataIndex: 'refund_status', render: (text) => {
-        return refundStatus[text - 1];
-      },
+          return refundStatus[text - 1];
+        },
       },
       {
         title: '退款金额', dataIndex: 'amount', render: (text) => {
-        text = text ? String(text).substr(1) : '';
-        return Number(text)/100;
-      }
+          text = text ? String(text).substr(1) : '';
+          return Number(text) / 100;
+        }
       },
       {
         title: '订单号', dataIndex: 'order_id', render: (text, record) => {
-        let Url = record.group_type == 0 ? '/order/entrust/detail/' : '/order/flyingpig/detail/';
-        return <Link
-          to={Url + formatPar({id: record.order_id})}>
-          {text}</Link>
-      }
+          let Url = record.group_type == 0 ? '/order/entrust/detail/' : '/order/flyingpig/detail/';
+          return <Link
+            to={Url + formatPar({id: record.order_id})}>
+            {text}</Link>
+        }
       },
       {
         title: '退款时间', dataIndex: 'pay_time', render: (text) => {
-        return text ? timeHelp.getYMDHMS(text) : ''
-      }
+          return text ? timeHelp.getYMDHMS(text) : ''
+        }
       },
       {
         title: '操作', render: (text, record) => {
-        return <span>
+          return <span>
           {
             record.refund_status != 3 ? null :
               <span>
@@ -247,12 +257,12 @@ export default class TableList extends PureComponent {
               </span>
           }
 
-          <a onClick={() => {
-            this.refundModal.showModal(true, record);
-          }}>查看</a>
+            <a onClick={() => {
+              this.refundModal.showModal(true, record);
+            }}>查看</a>
 
         </span>
-      }
+        }
       }];
 
     return (
@@ -312,7 +322,7 @@ class RefundModal extends React.Component {
   render() {
     let {visible, data} = this.state;
     let price = data.amount ? String(data.amount).substr(1) : null;
-    let priceRel=Number(price)/100;
+    let priceRel = Number(price) / 100;
     return (
       <Modal
         title="退款申请"

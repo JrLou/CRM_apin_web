@@ -1,5 +1,4 @@
 import React, {PureComponent} from 'react';
-import moment from 'moment';
 import {connect} from 'dva';
 import {Card, List, Spin} from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
@@ -8,8 +7,8 @@ import GroupSearchForm from './autoForm/GroupSearchForm';
 import {formatDate} from '../../utils/utils';
 import request from '../../utils/request';
 import less from './FightGroupsList.less';
+import styles from './Demand.less';
 
-// @Form.create()  不需要这个装饰器，
 @connect(state => ({//目前还没用上这个，后期重构再使用，可以参考自己写的客户列表页
   fightGroupsList: state.fightGroupsList,
 }))
@@ -22,7 +21,7 @@ export default class TableList extends PureComponent {
     };
     this.reset();//todo 这里耦合太高，记得重构
     this.current = 1;
-    this.pageSize = 10;
+    this.pageSize = 12;
     this.total = 0;
   }
 
@@ -49,11 +48,7 @@ export default class TableList extends PureComponent {
     this.doLoading(true, () => {
       request("/api/demandPool/getGroupList", {method: 'POST', body: param})//todo 这里看看是否有异常情况
         .then(response => {
-          if (response instanceof Error) {
-            this.doLoading(false);
-            return;
-          }
-          if (response.code >= 1) {
+          if (response && response.code >= 1) {
             this.total = response.option.total;
             this.setState({dataList: response.data});
           }
@@ -116,20 +111,10 @@ export default class TableList extends PureComponent {
     };
     const obj = this.mapGroupStateToTxt(group_status);
     return (
-      <span>
+      <span className={styles.titleBox}>
         <span style={{...styleProp, backgroundColor: obj.backgroundColor}}></span>
         <span>{obj.txt}</span>
       </span>
-    );
-  }
-
-  getCardHeader(item) {
-    const totalPeople = item.paidPeople + item.waitPeople;
-    return (
-      <div>
-        <span style={{float: 'right'}}>{totalPeople}人</span>
-        <div style={{textAlign: 'center'}}>{this.getGroupState(item.group_status)}</div>
-      </div>
     );
   }
 
@@ -159,15 +144,6 @@ export default class TableList extends PureComponent {
     );
   }
 
-  getCardFooter(item) {
-    return <div>
-      <Link to={'/fightgroups/demand/checkFightGroups/' + item.id}>
-        <span style={{float: 'right'}} href="#">查看</span>
-      </Link>
-      <span>处理客服：{item.creator_name}</span>
-    </div>;
-  }
-
   //生成form内容
   renderForm() {
     return (
@@ -195,7 +171,7 @@ export default class TableList extends PureComponent {
       current: this.current,
       pageSize: this.pageSize,
       total: this.total,
-      // pageSizeOptions: ['8', '16', '20', '40'],
+      pageSizeOptions: ['12', '16', '24', '40'],
       onChange: (page, pageSize) => {//页码改变的回调，参数是改变后的页码及每页条数
         this.pageSize = pageSize;
         this.current = page;
@@ -212,36 +188,41 @@ export default class TableList extends PureComponent {
         <p>共有{this.total}个拼团</p>
         <div className={less.listParCon}>{/*这个div是less用的*/}
           <List
-            grid={{gutter: 24, span: 4}}
+            grid={{gutter: 24, lg: 4, md: 2, sm: 1, xs: 1}}
             dataSource={dataList}
-            // loading={loading}
             pagination={paginationProps}
-            className={less.groupCardContainer}
             renderItem={item => {
-              const headerContent = this.getCardHeader(item);
-              const bodyContent = this.getCardBody(item);
-              const footerContent = this.getCardFooter(item);
               return (
                 <List.Item key={item.id}>
-                  <div className={less.groupCard}>
-                    <div className={less.groupCard_header}>{headerContent}</div>
-                    <div className={less.groupCard_body}>{bodyContent}</div>
-                    <div className={less.groupCard_footer}>{footerContent}</div>
-                  </div>
+                  <Card
+                    className={styles.card}
+                    title={this.getGroupState(item.group_status)}
+                    extra={item.paidPeople + item.waitPeople + '人'}
+                    actions={[
+                      <span>处理客服：{item.creator_name}</span>,
+                      <Link to={'/fightgroups/demand/checkFightGroups/' + item.id}>
+                        <span
+                          style={{color: '#1890ff'}}>查看</span>
+                      </Link>
+                    ]}
+                  >
+                    <Card.Meta description={<div className={less.groupCard_body}>{this.getCardBody(item)}</div>}/>
+                  </Card>
                 </List.Item>
               )
             }}
           />
         </div>
       </Spin>
-    );
+    )
+      ;
   }
 
   render() {
     return (
       <PageHeaderLayout>
         <div className={less.page}>
-          <Card bordered={false}>
+          <Card bordered={false} className="poolListBox">
             {this.renderForm()}
             {this.renderGroupCard()}
           </Card>

@@ -17,6 +17,7 @@ import {
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import moment from 'moment';
 import css from './Flightstock.less';
+
 const confirm = Modal.confirm;
 const {Column,} = Table;
 const {RangePicker} = DatePicker;
@@ -164,9 +165,9 @@ export default class TableList extends PureComponent {
         </Row>
         <div style={{overflow: 'hidden'}}>
           <span style={{float: 'right', marginBottom: 24}}>
+             <Button style={{marginRight: 8}} type="primary" onClick={this.companyname.bind(this, 0)}>新增政策</Button>
              <Button type="primary" htmlType="submit">查询</Button>
             <Button style={{marginLeft: 8}} onClick={::this.handleFormReset}>重置</Button>
-            <Button style={{marginLeft: 8}} type="primary" onClick={this.companyname.bind(this, 0)}>新增政策</Button>
           </span>
         </div>
       </Form>
@@ -236,6 +237,9 @@ export default class TableList extends PureComponent {
         title: '操作时间',
         dataIndex: 'create_time',
         key: 'create_time',
+        render: (text, data) => {
+          return moment(data.create_time).format("YYYY-MM-DD:hh:mm:ss");
+        }
       }, {
         title: '操作内容',
         dataIndex: 'create_content',
@@ -320,7 +324,7 @@ export default class TableList extends PureComponent {
                       return <div>待上架</div>
                       break;
                     case 1:
-                      return <div>已上架</div>
+                      return <div>上架</div>
                       break;
                   }
                 }}

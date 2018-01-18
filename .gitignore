@@ -18,4 +18,5 @@ _roadhog-api-doc
 npm-debug.log*
 
 /coverage
+._roadhogrc
 /server/node_modules
