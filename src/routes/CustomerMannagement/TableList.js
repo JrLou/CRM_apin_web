@@ -1,6 +1,5 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'dva';
-import PropTypes from 'prop-types';
 import {Table, Input, Popconfirm} from 'antd';
 import styles from './TableList.less';
 
@@ -12,13 +11,13 @@ class StandardTable extends PureComponent {
     this.props.onChange(pagination, filters, sorter);
   };
 
-  getPageName = () =>{
-    const {customerMannagement:{pageType}} = this.props;
-    return pageType === 's' ? '供应商':'客户';
+  getPageName = () => {
+    const {customerMannagement: {pageType}} = this.props;
+    return pageType === 's' ? '供应商' : '客户';
   };
 
   render() {
-    const {customerMannagement: {loading, data: {data, option},deleteItemId}, handleShowModalSwitch, page, dispatch,  } = this.props;
+    const {customerMannagement: {loading, data: {data, option}}, handleShowModalSwitch, page, dispatch} = this.props;
     const columns = [
       {
         title: `${this.getPageName()}名称`,
@@ -41,8 +40,9 @@ class StandardTable extends PureComponent {
         dataIndex: 'wxqq',
       },
       {
-        title: '新增日期',
-        dataIndex: 'createTime',
+        title: '操作日期',
+        dataIndex: 'updateTime',
+        render: text => typeof text === 'string' && text.substring(0, 10)
       },
       {
         title: '操作人',
@@ -51,11 +51,10 @@ class StandardTable extends PureComponent {
       {
         title: '编辑',
         dataIndex: 'operation',
-        width: '140px',
         render: (text, record) => {
           const {editable, isEditing} = record;
           return (
-            <div className="editable-row-operations">
+            <div style={{whiteSpace: "nowrap"}}>
               <a
                 onClick={() => {
                   handleShowModalSwitch('edit');
@@ -66,15 +65,14 @@ class StandardTable extends PureComponent {
                 }}>
                 修改
               </a>
+              &nbsp;&nbsp;&nbsp;
               <a
-                style={{position: "absolute", right: "20px"}}
                 onClick={() => {
                   handleShowModalSwitch('delete');
                   dispatch({
                     type: 'customerMannagement/extendAll',
                     payload: {deleteItemId: record.id}
                   });
-                  console.log("id:",record.id);
                 }}>
                 删除
               </a>

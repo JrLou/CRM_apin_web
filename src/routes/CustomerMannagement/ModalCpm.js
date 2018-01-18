@@ -8,7 +8,7 @@ const FormItem = Form.Item;
   customerMannagement: state.customerMannagement,
 }))
 @Form.create()
-class AddModal extends PureComponent {
+class AddEditModal extends PureComponent {
   constructor(props) {
     super(props);
   }
@@ -264,7 +264,7 @@ class DeleteModal extends PureComponent {
 }
 
 const AllModal = (props) => {
-  const ModalView = props.modalType === 'delete' ? DeleteModal : AddModal;
+  const ModalView = props.modalType === 'delete' ? DeleteModal : AddEditModal;
   return (
     <ModalView
       {...props}
