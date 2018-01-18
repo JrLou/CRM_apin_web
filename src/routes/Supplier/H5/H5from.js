@@ -116,7 +116,11 @@ class AddForm extends Component {
           }
         }
         flightstockData[0].FlightDepcode=flightstockData[0].airport_dep_code
-        flightstockData[0].FlightDepcode=flightstockData[0].airport_dep_code
+        flightstockData[0].FlightArrcode=flightstockData[0].airport_arr_code
+        flightstockData[0].FlightCompany=flightstockData[0].flight_company
+        flightstockData[0].FlightDep=flightstockData[0].city_dep_name
+        flightstockData[0].FlightArr=flightstockData[0].city_arr_name
+        flightstockData[0].FlightDeptimePlanDate=flightstockData[0].departure_start
         values.sellPrice = values.sellPrice * 100
         values.goAirLine = JSON.stringify([flightstockData[0]])
         values.cityArr = flightstockData[0].city_arr_name
@@ -321,7 +325,7 @@ class AddForm extends Component {
                 },
 
                 {
-                  pattern: /^([a-zA-Z][0-9a-zA-Z]|[0-9a-zA-Z][a-zA-Z])([0-9]{1,4})$/,
+                  pattern: /^[1-9]\d{0,4}$/,
                   message: "请填写正确航班号"
                 }
               ],
@@ -436,7 +440,7 @@ class AddForm extends Component {
             footer={null}
           >
             {h5Add.accurate && h5Add.accurate.data &&
-            <RadioGroup value={this.state.flightdata.selected}>
+            <RadioGroup>
               {this.reviewerLists()}
             </RadioGroup>}
             {!h5Add.accurate.data &&

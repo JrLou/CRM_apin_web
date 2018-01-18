@@ -343,10 +343,6 @@ class AddForm extends Component {
         });
         break;
       case 8:
-        if(e.target.value==''){
-          message.warning('请填写备注');
-          return;
-        }
         data.content = e.target.value
         _this.setState({
           flightdata: data,
@@ -364,6 +360,10 @@ class AddForm extends Component {
         });
         break;
       case 10:
+        if(!this.state.flightdata.content){
+          message.warning('请填写备注');
+          return;
+        }
         _this.props.addPost('flightstockEdit/LogAirLine', {
           content: this.state.flightdata.content,
           id: this.props.id,
@@ -579,7 +579,7 @@ class AddForm extends Component {
                         rules: [{
                           required: true,
                           message: requiredText,
-                        }, {pattern: /^[1-9]\d{0,4}$/, message: "请填写小于6位的正整数"}],
+                        }, {pattern: /^[1-9]\d{0,5}$/, message: "请填写小于6位的正整数"}],
                         initialValue: flightstockEdit.details.length > 0 ? flightstockEdit.details[0].days : '',
                       })
                       (< Input placeholder="请填写出行天数"
