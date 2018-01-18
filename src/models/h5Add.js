@@ -91,6 +91,12 @@ export default {
         type: 'judgme',
         payload: payload,
       })
+    },
+  * detailsadd({payload}, {call, put}) {
+      yield put({
+        type: 'detailsadder',
+        payload: payload,
+      })
     }
 
   },
@@ -105,6 +111,12 @@ export default {
       return {
         ...state,
         details: action.payload.data,
+      }
+    },
+    detailsadder(state, action) {
+      return {
+        ...state,
+        details: [],
       }
     },
     oktxt(state, action) {

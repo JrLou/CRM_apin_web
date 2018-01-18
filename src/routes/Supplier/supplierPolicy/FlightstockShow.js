@@ -16,7 +16,7 @@ class page extends Component {
   render() {
     const {accurate} = this.props;
     return (
-      <div className={css.flightList} onClick={this.props.routeSelection.bind(this,accurate)}>
+      <div className={css.flightList}>
         <Row>
           <Col span={24}>
               <Col span={24} className={css.selectbContent}>

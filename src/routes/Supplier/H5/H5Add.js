@@ -29,6 +29,8 @@ class page extends Component {
       this.setState({
         data: this.props.location.state.data,
       });
+    } else {
+      this.addPost('h5Add/detailsadd', {});
     }
   }
 

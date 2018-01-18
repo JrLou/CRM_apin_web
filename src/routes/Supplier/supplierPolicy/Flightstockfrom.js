@@ -235,7 +235,7 @@ class AddForm extends Component {
     if (flightstockAdd && flightstockAdd.accurate.data && flightstockAdd.accurate.data.length > 0) {
       flightstockAdd.accurate.data.map((v, k) => {
         options.push(
-          <Radio value={k} key={v} className={css.selectbBox}>
+          <Radio value={v} key={v} className={css.selectbBox}>
             <FlightstockShow accurate={v} routeSelection={this.routeSelection.bind(this)}/>
           </Radio>
         )
@@ -244,9 +244,9 @@ class AddForm extends Component {
     }
   }
 
-  routeSelection(arr) { //查询航线结果选中
+  routeSelection(e) { //查询航线结果选中
     let {flightstockAdd, flightstockData, linenubber, flightdata} = this.state
-    flightstockData[flightstockAdd.numbering] = arr
+    flightstockData[flightstockAdd.numbering] = e.target.value
     linenubber[flightstockAdd.numbering] = flightstockAdd.numbering
     flightdata.selected = flightstockAdd.numbering;
     flightdata.selectedWeekGroup[flightstockAdd.numbering] = flightstockAdd.accurate.option.mixedFlights
@@ -396,6 +396,7 @@ class AddForm extends Component {
   }
 
   dome(e) {
+    console.log('这是外层的')
     console.log(e.target.value)
   }
 
@@ -825,7 +826,7 @@ class AddForm extends Component {
             footer={null}
           >
             {flightstockAdd.accurate && flightstockAdd.accurate.data &&
-            <RadioGroup onChange={this.dome.bind(this)}>
+            <RadioGroup onChange={this.routeSelection.bind(this)}>
               {this.reviewerLists()}
             </RadioGroup>}
             {!flightstockAdd.accurate.data &&
