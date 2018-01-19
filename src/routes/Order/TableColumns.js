@@ -39,7 +39,7 @@ export default class TableList extends PureComponent {
       ['待付款', '订单关闭', '待出票', '已出票', '出票失败']
       :
       ['待付款', '委托中', '方案选择中', '待付尾款', '待出票', '已出票', '出票失败', '委托过期', '委托关闭',];
-    this.source = ['供应商','飞猪','东航'];
+    this.source = ['委托订单', '飞猪', '供应商', '东航'];
     this.typeArray = ["APP", "H5"];
   }
 
@@ -181,7 +181,6 @@ export default class TableList extends PureComponent {
                       <Option value="" key=''>全部</Option>
                       <Option value='0' key='0'> 供应商</Option>
                       <Option value='1' key='1'>飞猪</Option>
-
                       <Option value='2' key='2'>东航</Option>
                     </Select>
                   )}
