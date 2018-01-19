@@ -23,6 +23,27 @@ export default class AddOrderForm extends Component {
             modalVisible: false
         }
     }
+    componentDidMount() {
+        const { dispatch } = this.props;
+        // 获取默认的三个自动补全数组 
+        dispatch({
+            type: 'offline/searchCustomer',
+            payload: { name: '' },
+        });
+        dispatch({
+            type: 'offline/searchSupplier',
+            payload: { name: '' },
+        });
+        dispatch({
+            type: 'offline/searchCity',
+            payload: { condition: '' },
+        });
+        dispatch({
+            type: 'offline/searchCity',
+            payload: { condition: '', arrFlag: true },
+        });
+    }
+
     onBlurCheck = (inputId, dataSource, value) => {
         if (dataSource.indexOf(value) == -1) {
             this.props.form.setFieldsValue({ [inputId]: '' })
@@ -336,7 +357,8 @@ export default class AddOrderForm extends Component {
         values.plans = plan;
         return values;
     }
-    handleSearch = () => {
+    handleSearch = (e) => {
+        e.preventDefault();
         const { dispatch, form } = this.props;
         const { offline: { changeInfo } } = this.props;
         form.validateFields((err, values) => {

@@ -295,14 +295,23 @@ export default class OfflineList extends PureComponent {
       {
         title: '卖价总价',
         dataIndex: 'totalPrice',
+        render: (text, record) => {
+          return +text / 100
+        },
       },
       {
         title: '结算总价',
         dataIndex: 'settlePrice',
+        render: (text, record) => {
+          return +text / 100
+        },
       },
       {
         title: '利润',
         dataIndex: 'profit',
+        render: (text, record) => {
+          return +text / 100
+        },
       },
       {
         title: '供应商',
@@ -312,8 +321,8 @@ export default class OfflineList extends PureComponent {
         title: '操作',
         render: (text, record) => {
           return <div className={styles.handleBtn}>
-            <Button type='primary'><Link to={"/offline/order/ViewOrder/" + record.id}>查看</Link></Button>
-            <Button type='primary'><Link to={"/offline/order/EditOrder/" + record.id}>修改</Link></Button>
+            <Link to={"/offline/order/ViewOrder/" + record.id}><Button type='primary'>查看</Button></Link>
+            <Link to={"/offline/order/EditOrder/" + record.id}><Button type='primary'>修改</Button></Link>
             <Button type='primary' disabled={!isLeader} onClick={this.delOrder.bind(this, record.id)}>删除</Button>
           </div>
         }
