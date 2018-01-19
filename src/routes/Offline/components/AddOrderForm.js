@@ -231,7 +231,7 @@ export default class AddOrderForm extends Component {
                         <Col span={8}>
                             <FormItem label="发生费用"  {...formItemLayout}>
                                 {getFieldDecorator('fee' + k, {
-                                    rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入不大于99999的整数" }],
+                                    rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
                                     initialValue: v.fee
                                 })(
                                     <Input disabled={isDisabled} onChange={this.saveChange.bind(null, k, 'fee')} />
@@ -241,7 +241,7 @@ export default class AddOrderForm extends Component {
                         <Col span={8}>
                             <FormItem label="退改利润"  {...formItemLayout}>
                                 {getFieldDecorator('profit' + k, {
-                                    rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入不大于99999的整数" }],
+                                    rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
                                     initialValue: v.profit
                                 })(
                                     <Input disabled={isDisabled} onChange={this.saveChange.bind(null, k, 'profit')} />
@@ -598,7 +598,7 @@ export default class AddOrderForm extends Component {
                                         <Col span={8}>
                                             <FormItem label="人数"  {...formItemLayout}>
                                                 {getFieldDecorator('numbers', {
-                                                    rules: [{ pattern: /^[1-9][0-9]{0,2}$/, message: "请输入不大于999的整数" }],
+                                                    rules: [{ pattern: /^[1-9][0-9]{0,2}$/, message: "请输入1-999的整数" }],
                                                     initialValue: detail.numbers
                                                 })(
                                                     <Input onBlur={this.changeCaulator} disabled={readOnly} style={{ width: '50%', marginRight: '5px' }} />
@@ -710,7 +710,7 @@ export default class AddOrderForm extends Component {
                                             <Col span={8}>
                                                 <FormItem label="卖价" {...formItemLayout}>
                                                     {getFieldDecorator('sellPrice', {
-                                                        rules: [{ required: true, message: "必填" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入不大于99999的整数" }],
+                                                        rules: [{ required: true, message: "必填" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
                                                         initialValue: detail.sellPrice
                                                     })(
                                                         <Input onBlur={this.changeCaulator} disabled={readOnly} style={{ width: '70%', marginRight: "6px" }} />

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'dva';
-import {Modal, Table, Input, Button, message, Upload, Icon} from 'antd';
+import {Modal, Table, Input, Button, message, Upload, Icon, Spin, notification} from 'antd';
 import less from './ModalCpm.less'
 import {formatDate} from "../../../utils/utils";
 import {checkCode} from "../../../utils/request";
@@ -166,9 +166,14 @@ class ExportPassengerModal extends Component {
     super();
     this.state = {
       fileList: [],
+      ticketLoading: false,
     };
     this.serverTicketsData = null;//导出乘机人=>确认提交票号的时候使用
   }
+
+  setTicketLoading = (ticketLoading, cb) => {
+    this.setState({ticketLoading}, cb)
+  };
 
   handleCancel = () => {
     this.props.changeVisible && this.props.changeVisible();
@@ -201,6 +206,7 @@ class ExportPassengerModal extends Component {
         }, {
           title: '票号',
           dataIndex: 'ticket',
+          render: text => <Spin spinning={this.state.ticketLoading}>{text}</Spin>
         }
       ];
     } else {
@@ -236,6 +242,7 @@ class ExportPassengerModal extends Component {
         }, {
           title: '票号',
           dataIndex: 'ticket',
+          render: text => <Spin spinning={this.state.ticketLoading}>{text}</Spin>
         }
       ];
     }
@@ -243,39 +250,23 @@ class ExportPassengerModal extends Component {
   }
 
   /**
-   * 创建一个不可见的iframe，通过加载它的src指向，实现下载，这样即使地址有问题，也不会影响页面；
-   * @param url 一个可下载的url
-   */
-  downloadFile(url) {
-    const bodyNode = document.querySelector('body');
-    if (document.querySelector('iframe[name=forDownload]')) {
-      bodyNode.removeChild(document.querySelector('iframe[name=forDownload]'));
-    }
-    const ifr = document.createElement('iframe');
-    ifr.setAttribute('src', url);
-    ifr.setAttribute('name', "forDownload");
-    ifr.setAttribute("style", "display:none");
-    bodyNode.appendChild(ifr);
-  }
-
-  /**
-   * 传入table的后台返回的excel的内容数组,取出出去第一行标题开始ticket中的字段，然后往data中插入{ticket: xxx}
+   * 传入table的后台返回的excel的内容数组,取出去除第一行标题开始ticket中的字段，然后往data中插入{ticket: xxx}
+   *
+   * ↓↓↓↓↓↓↓↓传入的代码如下↓↓↓↓↓↓
+   * [
+   * ["订单号", "乘机人", "乘机人类型", "证件号码", "出生年月日", "性别", "证件有效期", "国籍", "票号"],
+   * ["201801122029488197", "姓名", "成人", "123", "2017-01-01", "女", "2018-02-28", "中国", 110, null, null, null,…]
+   * ]
+   * ↑↑↑↑↑↑↑↑传入的代码如上↑↑↑↑↑↑
+   *
    * @param {[{},{}]} data
-   * @returns {[{}]} 返回处理后的data
+   * @returns {[{}]} 返回处理后的table用的data
    */
   getPaidMemberAfterInsertTickets(newData, oldData, abroad) {
-    /**
-     * 返回的代码如下
-     * [
-     * ["订单号", "乘机人", "乘机人类型", "证件号码", "出生年月日", "性别", "证件有效期", "国籍", "票号"]
-     * ["201801122029488197", "姓名", "成人", "123", "2017-01-01", "女", "2018-02-28", "中国", 110, null, null, null,…]
-     * ]
-     */
     if (!newData[0]) {
       return oldData;
     }
-    let resultArr = oldData.map((currV, index) => {
-      console.log({ticket: newData[index + 1] && newData[index + 1][abroad === 0 ? 4 : 8] && newData[index + 1][abroad === 0 ? 4 : 8].toString()});
+    const resultArr = oldData.map((currV, index) => {
       return {
         ...currV,
         ticket: newData[index + 1] && newData[index + 1][abroad === 0 ? 4 : 8] && newData[index + 1][abroad === 0 ? 4 : 8].toString(),
@@ -285,7 +276,7 @@ class ExportPassengerModal extends Component {
   }
 
   isTicketChange(newData, oldData) {
-    return oldData.some((currV, index) => currV.ticket != newData[index].ticket);
+    return oldData.some((currV, index) => currV.ticket != newData[index].ticket);//为了匹配defined == null，所以不能用【全等】
   }
 
   render() {
@@ -316,44 +307,40 @@ class ExportPassengerModal extends Component {
         return isXlsx;
       },
       onChange: ({file, fileList, event,}) => {
-        let isTicketChange = false;
-        let paidMemberAfterInsertTicket = [];
-        if (file.status !== 'uploading') {
-        }
-        if (file.status === 'done') {
-          checkCode(file.response);//todo 最好把他变成promise,使用then的语法,目前太confuse,这里还有bug
-          //文件上传成功后，有两种情况，通过code码判断，如果为200 通过，否则，弹出msg错误消息
-          if (file.response.code >= 1) {
-            paidMemberAfterInsertTicket = this.getPaidMemberAfterInsertTickets(file.response.data, data, abroad);
-            isTicketChange = this.isTicketChange(paidMemberAfterInsertTicket, data);
-            if (isTicketChange) {
-              dispatch({
-                type: 'checkFightGroups/insertTickets',
-                payload: paidMemberAfterInsertTicket,
-              });
-              this.serverTicketsData = file.response.data;
-              message.success('导入票号成功');
-            } else {
-              fileList = [];
-              message.error('票号导入重复');
+        this.setTicketLoading(true, () => {
+
+          let isTicketChange = false;
+          let paidMemberAfterInsertTicket = [];
+          if (file.status === 'done') {
+            checkCode(file.response);//todo 最好把他变成promise,使用then的语法,目前太confuse,这里还有bug
+            if (file.response.code >= 1) {
+              paidMemberAfterInsertTicket = this.getPaidMemberAfterInsertTickets(file.response.data, data, abroad);
+              isTicketChange = this.isTicketChange(paidMemberAfterInsertTicket, data);
+              if (isTicketChange) {
+                dispatch({
+                  type: 'checkFightGroups/insertTickets',
+                  payload: paidMemberAfterInsertTicket,
+                });
+                this.serverTicketsData = file.response.data;
+                message.success('导入票号成功');
+              } else {
+                notification.error({
+                  message: `提示`,
+                  description: '票号导入重复',
+                });
+              }
             }
-          } else {
-            fileList = [];
-            // message.error("导入失败，" + file.response.msg);
+          } else if (file.status === 'error') {
+            message.error(`${file.name} 上传失败`);
+            console.log("如果出现了此文字，可能请检查此处代码", file.response);
           }
-        } else if (file.status === 'error') {
-          message.error(`${file.name} 上传失败`);
-          console.log("如果出现了此文字，请检查此处代码", file.response);
-        }
-        //仅仅取fileList中的最新的一个
-        // if (file.status !== 'done' || !isTicketChange) {
-        //   this.serverTicketsData = null;
-        // }
-        if (fileList.length === 0) {
-          this.serverTicketsData = null;
-        }
-        fileList = fileList.slice(-1);
-        this.setState({fileList});
+
+          this.setState({fileList});//页面不需要它,但是上传需要它，所以不能省
+          if (file.status === 'done' || file.status === 'error') {
+            this.setState({ticketLoading: false});
+          }
+
+        });
       },
     };
 
@@ -401,11 +388,13 @@ class ExportPassengerModal extends Component {
           >
             <Icon type="download"/>导出乘机人信息
           </Button>
-          <Upload {...uploadProps}>
-            <Button type='primary'>
-              <Icon type="upload"/>导入票号信息
-            </Button>
-          </Upload>
+          <span className={less.uploadContainer}>
+            <Upload {...uploadProps}>
+              <Button type='primary'>
+                <Icon type="upload"/>导入票号信息
+              </Button>
+            </Upload>
+          </span>
           <Button
             type='primary'
             loading={modalConfirmLoading}
@@ -434,8 +423,7 @@ class ExportPassengerModal extends Component {
           </Button>
         </div>
       </Modal>
-    )
-      ;
+    );
   }
 }
 
