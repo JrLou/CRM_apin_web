@@ -49,16 +49,17 @@ class AddForm extends Component {
       baioshi: false,
       competencese: false,
       numbering: null,
-      flightTimeWill:''
+      flightTimeWill: '',
+      identification: false
     };
   }
 
   componentWillReceiveProps(nextProps) {
-    let {flightdata} = this.state
+    let {flightdata, identification} = this.state
     this.setState({
       h5Add: nextProps.h5Add ? nextProps.h5Add : {details: []},
     });
-    if (nextProps.h5Add && nextProps.h5Add.details && nextProps.h5Add.details.length > 0) {
+    if (nextProps.h5Add && nextProps.h5Add.details && nextProps.h5Add.details.length > 0 && !identification) {
       let list = nextProps.h5Add.details;
       list[0].FlightNo = list[0].flight_no
       list[0].FlightDep = list[0].city_dep_name
@@ -72,6 +73,7 @@ class AddForm extends Component {
         flightstockData: [list[0]],
         linenubber: [0],
         flightdata: flightdata,
+        flightTimeWill: moment(list[0].departure_start)
       });
     }
     if (nextProps.h5Add && nextProps.h5Add.judgment) {
@@ -102,7 +104,7 @@ class AddForm extends Component {
 
   handleSubmit(e, event) {  //提交时数据格式整理，数据校验
     let _this = this
-    let {flightstockData, flightdata} = _this.state
+    let {flightstockData, flightdata, identification} = _this.state
     e.preventDefault();
     _this.props.form.validateFields((err, values) => {
       if (!err) {
@@ -112,7 +114,7 @@ class AddForm extends Component {
             return
           }
         }
-        if (_this.props.id) {
+        if (_this.props.id && !identification) {
           flightstockData[0].FlightDepcode = flightstockData[0].airport_dep_code
           flightstockData[0].FlightArrcode = flightstockData[0].airport_arr_code
           flightstockData[0].FlightCompany = flightstockData[0].flight_company
@@ -127,6 +129,7 @@ class AddForm extends Component {
         values.cityDep = flightstockData[0].FlightDep
         values.startDate = moment(flightdata.flightTimeWill).format("YYYY-MM-DD")
         values.flightNumber = flightstockData[0].FlightNo + '-' + flightstockData[0].FlightNo
+        console.log(flightstockData)
         this.setState({
           baioshi: true,
         });
@@ -138,6 +141,14 @@ class AddForm extends Component {
         }
       }
     });
+  }
+
+  dome(obj){
+    this.obj=obj
+    this.domes(obj)
+  }
+  domes(){
+    this.dome()
   }
 
   onChange(value, selectedOptions) {  //日期选择器结果输出
@@ -170,6 +181,11 @@ class AddForm extends Component {
     if (data.flightTimeWill) {
       flightstockData[ole] = {}
       linenubber[ole] = null
+      if (this.props.id) {
+        this.setState({
+          identification: true,
+        });
+      }
       this.setState({
         flightstockData: flightstockData,
         flightNumbering: '航班号为：' + value + '的所有的航班',
@@ -293,7 +309,7 @@ class AddForm extends Component {
     };
     const {h5Add} = this.state
     const requiredText = "请填写此选项"
-    if (h5Add && h5Add.details.length > 0) {
+    if (this.props.id && h5Add && h5Add.details.length > 0) {
       for (let i = 0; i < h5Add.details.length; i++) {
         getFieldDecorator('names-' + i, {initialValue: h5Add.details[i].flight_no});
       }
@@ -332,8 +348,6 @@ class AddForm extends Component {
         </Col>
       )
     });
-    // let rangeValue = this.props.id ? moment(h5Add.details[0].departure_start) : '';
-    let rangeValue = '';
     return (
       <div className={css.AgenciesView_box}>
         <Tabs type="card">
@@ -394,8 +408,8 @@ class AddForm extends Component {
                           required: true,
                           message: requiredText,
                         }, {
-                          pattern: /^[1-9][0-9]*(\.[0-9][0-9])?$|^[1-9][0-9]*(\.[0-9])?$|^[0]\.([1-9])$|^[0]\.([0-9][1-9])$/,
-                          message: "成人价需大于0，且最多两位小数"
+                          pattern: /^[1-9](\.\d{1})?$|^(10)(\.0)?$|^[0](\.[1-9]{1}){1}$/,
+                          message: "折扣需大于0，且最多一位小数"
                         }, {
                           max: 6,
                           message: "最多6位"
