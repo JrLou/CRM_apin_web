@@ -173,8 +173,9 @@
 }
 
 .handleBtn {
-  button {
-    margin: 8px 5px;
+  a {
+    display: inline-block;
+    margin: 3px;
   }
 }
 
@@ -195,10 +196,32 @@
 .changeInfoBox {
   border-bottom: 1px dashed #666;
   padding-top: 30px;
-  }
-.btnBox{
+}
+
+.btnBox {
   text-align: right;
-  button{
+
+  button {
     margin-right: 15px;
+  }
+}
+
+.tableOutter {
+  td {
+
+    font-size: 12px;
+  }
+}
+
+.schemeBox {
+  margin-bottom: 10px;
+}
+
+.addOrderForm {
+  :global {
+    .ant-calendar-picker {
+      width: 100%;
+    }
+
   }
 }

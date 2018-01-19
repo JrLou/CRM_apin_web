@@ -478,7 +478,7 @@ export default class AddOrderForm extends Component {
         }
         return (
             <div>
-                <Form onSubmit={this.handleSearch}>
+                <Form onSubmit={this.handleSearch} className={styles.addOrderForm}>
                     <div className={styles.module}>
                         <Card bordered={false}>
                             <Tabs type="card">
@@ -626,6 +626,11 @@ export default class AddOrderForm extends Component {
                                     </Row>
                                     <div className={styles.schemeBox}>
                                         {this.createScheme()}
+                                        <Row gutter={20}>
+                                            <Col span={6} offset={15}>
+                                                {schemeInfo.length == 3 ? null : <Button type='primary' disabled={readOnly} onClick={this.addScheme}>增加方案</Button>}
+                                            </Col>
+                                        </Row>
                                     </div>
                                     <Row gutter={20}>
                                         <Col span={6}>
@@ -662,7 +667,7 @@ export default class AddOrderForm extends Component {
                                                 </FormItem>
                                             </Col>
                                             : null}
-                                        {schemeInfo.length == 3 ? null : <Button type='primary' disabled={readOnly} onClick={this.addScheme}>增加方案</Button>}
+
                                     </Row>
                                 </TabPane>
                             </Tabs>
@@ -775,7 +780,7 @@ export default class AddOrderForm extends Component {
                                     </TabPane>
                                     <TabPane tab="发票/行程单" key="3">
                                         <Row gutter={20}>
-                                            <Col span={5}>
+                                            <Col span={8}>
                                                 <FormItem label="是否邮寄" {...formItemLayout}>
                                                     {getFieldDecorator('isSendoff', {
                                                         valuePropName: 'checked',

@@ -41,7 +41,10 @@ export default class OfflineList extends PureComponent {
     })
     return values
   }
-  handleSearch() {
+  handleSearch(e) {
+    if (e) {
+      e.preventDefault();
+    }
     const { dispatch, form } = this.props;
     form.validateFields((err, values) => {
       if (!err) {
@@ -257,11 +260,13 @@ export default class OfflineList extends PureComponent {
       {
         title: '订单号',
         dataIndex: 'serialNo',
+        width: 150,
         render: (text, record) => <Link to={"/offline/order/ViewOrder/" + record.id}>{text}</Link>,
       },
 
       {
         title: '客户',
+        width: 120,
         dataIndex: 'customerName',
       },
       {
@@ -271,6 +276,7 @@ export default class OfflineList extends PureComponent {
       {
         title: '航线',
         dataIndex: 'flight',
+        width: 150
       },
       {
         title: '询价日期',
@@ -316,14 +322,15 @@ export default class OfflineList extends PureComponent {
       {
         title: '供应商',
         dataIndex: 'supplierName',
+        width: 130
       },
       {
         title: '操作',
         render: (text, record) => {
           return <div className={styles.handleBtn}>
-            <Link to={"/offline/order/ViewOrder/" + record.id}><Button type='primary'>查看</Button></Link>
-            <Link to={"/offline/order/EditOrder/" + record.id}><Button type='primary'>修改</Button></Link>
-            <Button type='primary' disabled={!isLeader} onClick={this.delOrder.bind(this, record.id)}>删除</Button>
+            <Link to={"/offline/order/ViewOrder/" + record.id}><a href="javascript:;" type='primary'>查看</a></Link>
+            <Link to={"/offline/order/EditOrder/" + record.id}><a href="javascript:;" type='primary'>修改</a></Link>
+            <a href="javascript:;" type='primary' disabled={!isLeader} onClick={this.delOrder.bind(this, record.id)}>删除</a>
           </div>
         }
       },
@@ -339,6 +346,7 @@ export default class OfflineList extends PureComponent {
           <div className={styles.btnGroup}><Button type={'primary'}><Link to='/offline/order/addOrder'>新增订单</Link></Button></div>
           <div className={styles.titleGroup}>共搜索到{list && list.option}条数据</div>
           <Table
+            className={styles.tableOutter}
             dataSource={list && list.data}
             columns={columns}
             pagination={pagination}
