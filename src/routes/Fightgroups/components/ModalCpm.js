@@ -191,6 +191,16 @@ class ExportPassengerModal extends Component {
     this.initUploadData();
   };
 
+  isTicketsAllNull() {
+    const {groupsInfoData: {data: {abroad}}} = this.props.checkFightGroups;
+    return this.serverTicketsData.every((item, index) => {
+      if (index !== 0 && !!item[abroad === 0 ? 4 : 8]) {
+        return false;
+      }
+      return true;
+    });
+  }
+
   getColumns() {
     const {groupsInfoData: {data: {abroad}}} = this.props.checkFightGroups;
 
@@ -273,6 +283,10 @@ class ExportPassengerModal extends Component {
       return oldData;
     }
     const resultArr = oldData.map((currV, index) => {
+      //把0转换成‘0’
+      if (newData[index + 1] && newData[index + 1][abroad === 0 ? 4 : 8] === 0) {
+        newData[index + 1][abroad === 0 ? 4 : 8] = "0";
+      }
       return {
         ...currV,
         ticket: newData[index + 1] && newData[index + 1][abroad === 0 ? 4 : 8] && newData[index + 1][abroad === 0 ? 4 : 8].toString(),
@@ -328,7 +342,6 @@ class ExportPassengerModal extends Component {
                   payload: paidMemberAfterInsertTicket,
                 });
                 this.serverTicketsData = file.response.data;
-                message.success('导入票号成功');
               } else {
                 notification.error({
                   message: `提示`,
@@ -405,6 +418,13 @@ class ExportPassengerModal extends Component {
             type='primary'
             loading={modalConfirmLoading}
             onClick={() => {
+              if (this.serverTicketsData && this.isTicketsAllNull()) {
+                notification.error({
+                  message: `提示`,
+                  description: '请导入票号信息',
+                });
+                return;
+              }
               const {id, dispatch} = this.props;
               dispatch({
                 type: 'checkFightGroups/fetchSaveTickets',

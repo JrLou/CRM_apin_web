@@ -7,13 +7,10 @@ import {CloseReasonModal, SendLogModal, ExportPassengerModal} from './components
 
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import DescriptionList from '../../components/DescriptionList';
-import ImageWrapper from '../../components/ImageWrapper';
 import styles from './CheckFightGroups.less';
 import {getPar, formatPar, formatDate} from '../../utils/utils';
 
 const {Description} = DescriptionList;
-
-//TODO a. 点击关闭拼团按钮弹出页面，录入需要备注的内容，  点击【保存】 下方日志信息  *****应该刷新*****
 
 const logInfoColumns = [{
   title: '操作时间',
