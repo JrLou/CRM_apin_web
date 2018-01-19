@@ -13,7 +13,7 @@ class LogTable extends Component {
         const loColumns = [{
             title: '推送时间',
             dataIndex: 'create_time',
-            render: (text, record) => moment(text).format('YYYY-MM-DD'),
+            render: (text, record) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
         },
 
         {
@@ -37,7 +37,7 @@ class LogTable extends Component {
         {
             title: '销售价',
             render: (text, record) => {
-                return record.flightInfo[1].sell_price;
+                return record.flightInfo[1].sell_price/100;
             },
         },
         {
