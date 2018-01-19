@@ -20,10 +20,20 @@
     "g2-plugin-slider": "G2.Plugin.slider"
   },
   "proxy": {
-    "/api": {
-    "target": "http://appadmin.test.io.apin.com/",
+    "/java": {
+    "target": "http://10.5.101.11:9800/",
+    "changeOrigin": true,
+    "pathRewrite": { "^/java" : "" }
+    },
+     "/api": {
+    "target": "http://10.5.101.12:6040/",
     "changeOrigin": true,
     "pathRewrite": { "^/api" : "/api" }
+    },
+     "/airportCity": {
+    "target": "http://192.168.0.46:9904/",
+    "changeOrigin": true,
+    "pathRewrite": { "^/airportCity" : "/airportCity" }
     }
   },
   "ignoreMomentLocale": true,

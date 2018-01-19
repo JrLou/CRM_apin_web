@@ -67,19 +67,19 @@ class AddForm extends Component {
       list[0].FlightNo = list[0].flight_no
       list[0].FlightDepAirport = list[0].city_dep_name
       list[0].FlightDepcode = list[0].airport_dep_name
-      list[0].FlightDeptimePlanDate = moment(list[0].departure_start).format("YYYY-MM-DD")
+      list[0].FlightDeptimePlanDate = moment(list[0].time_dep).format("YYYY-MM-DD")
       list[0].FlightArrAirport = list[0].city_arr_name
       list[0].FlightArrcode = list[0].airport_arr_name
       list[0].FlightCompany = list[0].flight_company
-      list[0].FlightArrtimePlanDate = moment(list[0].departure_end).format("YYYY-MM-DD")
+      list[0].FlightArrtimePlanDate = moment(list[0].time_arr).format("YYYY-MM-DD")
       list[1].FlightCompany = list[1].flight_company
       list[1].FlightNo = list[0].flight_no
       list[1].FlightDepAirport = list[0].city_dep_name
       list[1].FlightDepcode = list[0].airport_dep_name
-      list[1].FlightDeptimePlanDate = moment(list[0].departure_start).format("YYYY-MM-DD")
+      list[1].FlightDeptimePlanDate = moment(list[1].time_dep).format("HH:mm")
       list[1].FlightArrAirport = list[0].city_arr_name
       list[1].FlightArrcode = list[0].airport_arr_name
-      list[1].FlightArrtimePlanDate = moment(list[0].departure_end).format("YYYY-MM-DD")
+      list[1].FlightArrtimePlanDate = moment(list[1].time_arr).format("YYYY-MM-DD")
       flightdata.flightTimeWill = [moment(list[0].departure_start), moment(list[0].departure_end)]
       if (list[0].trip_index == 0) {
         flightdata.selectedWeekGroup[0] = list[0].week_flights
@@ -179,8 +179,8 @@ class AddForm extends Component {
 
 
   handleCancel(e) { //弹框关闭回调
+
     let data = this.state.flightdata;
-    data.selected = null;
     data.entry = false;
     this.setState({
       flightdata: data,
@@ -235,7 +235,7 @@ class AddForm extends Component {
     if (flightstockAdd && flightstockAdd.accurate.data && flightstockAdd.accurate.data.length > 0) {
       flightstockAdd.accurate.data.map((v, k) => {
         options.push(
-          <Radio value={k} key={v} className={css.selectbBox}>
+          <Radio value={v} key={v} className={css.selectbBox}>
             <FlightstockShow accurate={v} routeSelection={this.routeSelection.bind(this)}/>
           </Radio>
         )
@@ -244,13 +244,11 @@ class AddForm extends Component {
     }
   }
 
-  routeSelection(arr) { //查询航线结果选中
+  routeSelection(e) { //查询航线结果选中
     let {flightstockAdd, flightstockData, linenubber, flightdata} = this.state
-    flightstockData[flightstockAdd.numbering] = arr
+    flightstockData[flightstockAdd.numbering] = e.target.value
     linenubber[flightstockAdd.numbering] = flightstockAdd.numbering
-    flightdata.selected = flightstockAdd.numbering;
     flightdata.selectedWeekGroup[flightstockAdd.numbering] = flightstockAdd.accurate.option.mixedFlights
-    flightdata.selected = flightstockAdd.numbering;
     this.setState({
       flightstockData: flightstockData,
       linenubber: linenubber,
@@ -264,8 +262,11 @@ class AddForm extends Component {
     flightstockData[numbering] = ole
     flightdata.selectedWeekGroup[numbering] = Algorithm.toogleToWeekStr(ole.flights)
     linenubber[numbering] = numbering
+    flightdata.entry = false
     this.setState({
       flightstockAdd: flightstockAdd,
+      flightdata: flightdata,
+      flightNumsdbdsdering: true
     });
   }
 
@@ -277,7 +278,6 @@ class AddForm extends Component {
           message.warning('请选择航班');
           return
         } else {
-          flightdata.selected = null;
           this.setState({
             flightdata: flightdata
           });
@@ -396,6 +396,7 @@ class AddForm extends Component {
   }
 
   dome(e) {
+    console.log('这是外层的')
     console.log(e.target.value)
   }
 
@@ -825,7 +826,7 @@ class AddForm extends Component {
             footer={null}
           >
             {flightstockAdd.accurate && flightstockAdd.accurate.data &&
-            <RadioGroup onChange={this.dome.bind(this)}>
+            <RadioGroup onChange={this.routeSelection.bind(this)}>
               {this.reviewerLists()}
             </RadioGroup>}
             {!flightstockAdd.accurate.data &&

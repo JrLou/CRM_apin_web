@@ -98,6 +98,21 @@ const menuData = [{
     // }]
   }],
 },
+{
+    name: '线下订单管理',
+    icon: 'table',
+    path: 'offline',
+    children: [{
+      name: '线下订单列表',
+      path: 'offline/order',
+    },{
+      name: '客户（旅行社）管理',
+      path: 'offline/customerMannagement',
+    },{
+      name: '供应商管理',
+      path: 'offline/supporterMannagement',
+    }],
+  },
   // {
   //   name: '财务管理',
   //   icon: 'table',

@@ -101,7 +101,12 @@ export default class BasicProfile extends Component {
     let _this = this;
     if (this.passengerData && this.passengerData.length > 0) {
       for (let i = 0; i < this.passengerData.length; i++) {
-        let user = this.passengerData[i], ticket = user.ticketDep + ',' + user.ticketArr;
+        let user = this.passengerData[i];
+        if ((user.ticketDep && !user.ticketArr) || (!user.ticketDep && user.ticketArr)) {
+          message.warning('出/返票号填写状态需保持一致');
+          return false
+        }
+        let ticket = user.ticketDep + ',' + user.ticketArr;
         ticketInfo.push({id: user.id, ticket: ticket})
       }
       let params = {
@@ -359,8 +364,6 @@ export default class BasicProfile extends Component {
         title: '操作时间',
         dataIndex: 'create_time',
         key: 'create_time',
-        defaultSortOrder: 'descend',
-        sorter: (a, b) => a.create_time - b.create_time,
         render: (text) => {
           return timeHelp.getYMDHMS(text)
         }
@@ -429,7 +432,7 @@ export default class BasicProfile extends Component {
           <Divider style={{marginBottom: 32}}/>
           <div className={styles.title}><Icon type="red-envelope"/> 支付信息</div>
           {
-            (nameType === 'FlyingPig' && (order_status == 0 || order_status == 1)) || (nameType === 'Entrust' && order_status == 0) ?
+            (nameType === 'FlyingPig' && (order_status == 0 || order_status == 1)) || (nameType === 'Entrust' && order_status == 0) || !payrecord || payrecord.length === 0 ?
               <p style={{margin: '15px 0', height: 60}}>暂无用户支付信息</p> :
               <div>
                 {
