@@ -129,22 +129,22 @@ export const getRouterData = (app) => {
     },
     //供应商政策
     '/supplier/supplierPolicy/flightstock': {
-      name:'供应商资源列表',
+      name: '供应商资源列表',
       component: dynamicWrapper(app, ['flightstock'], () => import('../routes/Supplier/supplierPolicy/Flightstock')),
     },
     //供应商政策-新增
     '/supplier/supplierPolicy/flightstock/Add': {
-      name:'新增供应商',
+      name: '新增供应商',
       component: dynamicWrapper(app, ['flightstockAdd'], () => import('../routes/Supplier/supplierPolicy/FlightstockAdd')),
     },
     //供应商政策-编辑
     '/supplier/supplierPolicy/flightstock/Edit': {
-      name:'编辑供应商',
+      name: '编辑供应商',
       component: dynamicWrapper(app, ['flightstockEdit'], () => import('../routes/Supplier/supplierPolicy/FlightstockEdit')),
     },
     //供应商政策-查看
     '/supplier/supplierPolicy/flightstock/View': {
-      name:'查看供应商',
+      name: '查看供应商',
       component: dynamicWrapper(app, ['flightstockView'], () => import('../routes/Supplier/supplierPolicy/FlightstockView')),
     },
     //飞猪资源
@@ -171,7 +171,7 @@ export const getRouterData = (app) => {
     //冷门资源-编辑
     '/supplier/supplierPolicy/h5/Edit': {
       name:'编辑冷门资源',
-      component: dynamicWrapper(app, ['h5List'], () => import('../routes/Supplier/H5/H5Add')),
+      component: dynamicWrapper(app, ['h5Add'], () => import('../routes/Supplier/H5/H5Add')),
     },
     //冷门资源-新增
     '/supplier/supplierPolicy/h5/Add': {
@@ -184,16 +184,40 @@ export const getRouterData = (app) => {
     },
     //banner添加/编辑
     '/operations/banner/bannerAdd': {
-      name:'新增banner',
+      name: '新增banner',
       component: dynamicWrapper(app, ['bannerList'], () => import('../routes/Operations/BannerAdd.js')),
     },
     '/operations/banner/bannerEdit': {
-      name:'编辑banner',
+      name: '编辑banner',
       component: dynamicWrapper(app, ['bannerList'], () => import('../routes/Operations/BannerView.js')),
     },
     // '/user/:id': {
     //   component: dynamicWrapper(app, [], () => import('../routes/User/SomeComponent')),
     // },
+    '/offline/order': {
+      name: '线下订单列表',
+      component: dynamicWrapper(app, ['offline'], () => import('../routes/Offline/OfflineList.js')),
+    },
+    '/offline/order/addOrder': {
+      name: '新增订单',
+      component: dynamicWrapper(app, ['offline'], () => import('../routes/Offline/AddOrder.js')),
+    },
+    '/offline/order/ViewOrder/:id': {
+      name: '查看订单',
+      component: dynamicWrapper(app, ['offline'], () => import('../routes/Offline/ViewOrder.js')),
+    },
+    '/offline/order/EditOrder/:id': {
+      name: '修改订单',
+      component: dynamicWrapper(app, ['offline'], () => import('../routes/Offline/EditOrder.js')),
+    },
+    '/offline/customerMannagement': {
+      name: '客户（旅行社）管理',
+      component: dynamicWrapper(app, ['customerMannagement'], () => import('../routes/CustomerMannagement/CustomerMannagement.js')),
+    },
+    '/offline/supporterMannagement': {
+      name: '客户（旅行社）管理',
+      component: dynamicWrapper(app, ['customerMannagement'], () => import('../routes/SupporterMannagement/SupporterMannagement.js')),
+    },
   };
   // Get name from ./menu.js or just set it in the router data.
   const menuData = getFlatMenuData(getMenuData());

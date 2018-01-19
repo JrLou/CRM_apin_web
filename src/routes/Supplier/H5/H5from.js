@@ -22,7 +22,6 @@ import moment from 'moment';
 import FlightstockPlugin from '../supplierPolicy/FlightstockPlugin.js';
 import Algorithm from '../supplierPolicy/FlightstockAlgorithm.js';
 import Manual from '../supplierPolicy/FlightstockManual.js';
-import FlightstockCalendar from '../supplierPolicy/FlightstockCalendar.js';
 import FlightstockShow from '../supplierPolicy/FlightstockShow.js';
 
 const {TextArea} = Input;
@@ -50,33 +49,31 @@ class AddForm extends Component {
       baioshi: false,
       competencese: false,
       numbering: null,
+      flightTimeWill: '',
+      identification: false
     };
   }
 
   componentWillReceiveProps(nextProps) {
-    let {flightdata} = this.state
+    let {flightdata, identification} = this.state
     this.setState({
       h5Add: nextProps.h5Add ? nextProps.h5Add : {details: []},
     });
-
-    if (nextProps.h5Add && nextProps.h5Add.details.length > 0) {
+    if (nextProps.h5Add && nextProps.h5Add.details && nextProps.h5Add.details.length > 0 && !identification) {
       let list = nextProps.h5Add.details;
-      list[0].seat_type == 0 ? list[0].seat_type = "硬切" : list[0].seat_type = "代销"
       list[0].FlightNo = list[0].flight_no
-      list[0].FlightDepAirport = list[0].city_dep_name
-      list[0].FlightDepcode = list[0].airport_dep_name
-      list[0].FlightDeptimePlanDate = moment(list[0].departure_start).format("YYYY-MM-DD")
-      list[0].FlightArrAirport = list[0].city_arr_name
-      list[0].FlightArrcode = list[0].airport_arr_name
-      list[0].FlightArrtimePlanDate = moment(list[0].departure_end).format("YYYY-MM-DD")
-      flightdata.flightTimeWill = moment(list[0].departure_start)
-      flightdata.selectedWeekGroup[0] = list[0].week_flights
+      list[0].FlightDep = list[0].city_dep_name
+      list[0].FlightDepAirport = list[0].airport_dep_name
+      list[0].FlightDeptimePlanDate = list[0].time_dep
+      list[0].FlightArr = list[0].city_arr_name
+      list[0].FlightArrAirport = list[0].airport_arr_name
+      list[0].FlightArrtimePlanDate = list[0].time_arr
+      flightdata.flightTimeWill = moment(list[0].departure_start).format("YYYY-MM-DD")
       this.setState({
         flightstockData: [list[0]],
-        linenubber: [0]
-      });
-      this.setState({
+        linenubber: [0],
         flightdata: flightdata,
+        flightTimeWill: moment(list[0].departure_start)
       });
     }
     if (nextProps.h5Add && nextProps.h5Add.judgment) {
@@ -92,37 +89,39 @@ class AddForm extends Component {
     let data = this.state.flightdata;
     data.competenceEdit = true
     data.competence = false
-    data.selectedWeekGroup = ['', '']
-    if (this.props.id) {
-      data.competence = true
-      data.competenceEdit = false
-    }
     this.setState({
       flightdata: data,
     });
     this.addDate(1);
   }
 
+  addPost(url, data) {
+    this.props.dispatch({
+      type: url,
+      payload: data,
+    });
+  }
+
   handleSubmit(e, event) {  //提交时数据格式整理，数据校验
     let _this = this
-    let {flightstockData, flightdata} = _this.state
+    let {flightstockData, flightdata, identification} = _this.state
     e.preventDefault();
     _this.props.form.validateFields((err, values) => {
       if (!err) {
         if (!_this.props.id) {
-          if (!flightstockData[0].FlightArr) {
+          if (!flightstockData[0].FlightNo) {
             message.warning('请查询并选择出发航线');
             return
           }
         }
-        if(_this.props.id){
-          flightstockData[0].FlightDepcode=flightstockData[0].airport_dep_code
-          flightstockData[0].FlightArrcode=flightstockData[0].airport_arr_code
-          flightstockData[0].FlightCompany=flightstockData[0].flight_company
-          flightstockData[0].FlightDep=flightstockData[0].city_dep_name
-          flightstockData[0].FlightArr=flightstockData[0].city_arr_name
-          flightstockData[0].FlightDeptimePlanDate=moment(flightstockData[0].time_dep).format("YYYY-MM-DD HH:mm:ss")
-          flightstockData[0].FlightArrtimePlanDate=moment(flightstockData[0].time_arr).format("YYYY-MM-DD HH:mm:ss")
+        if (_this.props.id && !identification) {
+          flightstockData[0].FlightDepcode = flightstockData[0].airport_dep_code
+          flightstockData[0].FlightArrcode = flightstockData[0].airport_arr_code
+          flightstockData[0].FlightCompany = flightstockData[0].flight_company
+          flightstockData[0].FlightDep = flightstockData[0].city_dep_name
+          flightstockData[0].FlightArr = flightstockData[0].city_arr_name
+          flightstockData[0].FlightDeptimePlanDate = moment(flightstockData[0].time_dep).format("YYYY-MM-DD HH:mm:ss")
+          flightstockData[0].FlightArrtimePlanDate = moment(flightstockData[0].time_arr).format("YYYY-MM-DD HH:mm:ss")
         }
         values.sellPrice = values.sellPrice * 100
         values.goAirLine = JSON.stringify([flightstockData[0]])
@@ -130,11 +129,10 @@ class AddForm extends Component {
         values.cityDep = flightstockData[0].FlightDep
         values.startDate = moment(flightdata.flightTimeWill).format("YYYY-MM-DD")
         values.flightNumber = flightstockData[0].FlightNo + '-' + flightstockData[0].FlightNo
+        console.log(flightstockData)
         this.setState({
           baioshi: true,
         });
-        console.log(values)
-        console.log(flightstockData)
         if (_this.props.id) {
           values.id = _this.props.id
           _this.props.addPost('h5Add/geteditAirlines', values);
@@ -175,7 +173,11 @@ class AddForm extends Component {
     if (data.flightTimeWill) {
       flightstockData[ole] = {}
       linenubber[ole] = null
-      flightdata.selectedWeekGroup[ole] = ''
+      if (this.props.id) {
+        this.setState({
+          identification: true,
+        });
+      }
       this.setState({
         flightstockData: flightstockData,
         flightNumbering: '航班号为：' + value + '的所有的航班',
@@ -187,6 +189,7 @@ class AddForm extends Component {
         fnum: value,
         startDate: moment(data.flightTimeWill).format("YYYY-MM-DD"),
         numbering: ole,
+        single: true,
       },);
     } else {
       message.warning('请先选择出发航班日期');
@@ -199,7 +202,7 @@ class AddForm extends Component {
     if (h5Add && h5Add.accurate.data && h5Add.accurate.data.length > 0) {
       h5Add.accurate.data.map((v, k) => {
         options.push(
-          <Radio value={k} key={k} className={css.selectbBox}>
+          <Radio value={v} key={k} className={css.selectbBox}>
             <FlightstockShow accurate={v} routeSelection={this.routeSelection.bind(this)}/>
           </Radio>
         )
@@ -208,17 +211,13 @@ class AddForm extends Component {
     }
   }
 
-  routeSelection(arr) { //查询航线结果选中
-    let {h5Add, flightstockData, linenubber, flightdata} = this.state
-    flightstockData[h5Add.numbering] = arr
+  routeSelection(e) { //查询航线结果选中
+    let {h5Add, flightstockData, linenubber,} = this.state
+    flightstockData[h5Add.numbering] = e.target.value
     linenubber[h5Add.numbering] = h5Add.numbering
-    flightdata.selected = h5Add.accurate;
-    flightdata.selectedWeekGroup[h5Add.numbering] = h5Add.accurate.option.mixedFlights
-    flightdata.selected = h5Add.numbering;
     this.setState({
-      flightstockData: flightstockData,
-      linenubber: linenubber,
-      flightdata: flightdata,
+      flightstockData,
+      linenubber,
     });
   }
 
@@ -226,10 +225,9 @@ class AddForm extends Component {
     let {linenubber, flightdata, flightstockData, h5Add, numbering} = this.state
     h5Add.visible = false;
     flightstockData[numbering] = ole
-    flightdata.selectedWeekGroup[numbering] = Algorithm.toogleToWeekStr(ole.flights)
     linenubber[numbering] = numbering
     this.setState({
-      h5Add: h5Add,
+      h5Add,
     });
   }
 
@@ -277,7 +275,6 @@ class AddForm extends Component {
 
   weekSelect(week, ole) {
     let data = this.state.flightdata;
-    data.selectedWeekGroup[ole] = Algorithm.toogleToWeekStr(week);
     this.setState({
       flightdata: data,
     });
@@ -304,7 +301,7 @@ class AddForm extends Component {
     };
     const {h5Add} = this.state
     const requiredText = "请填写此选项"
-    if (h5Add && h5Add.details.length > 0) {
+    if (this.props.id && h5Add && h5Add.details.length > 0) {
       for (let i = 0; i < h5Add.details.length; i++) {
         getFieldDecorator('names-' + i, {initialValue: h5Add.details[i].flight_no});
       }
@@ -317,7 +314,7 @@ class AddForm extends Component {
           <FormItem
             {...formItemLayout}
             style={{marginBottom: '10px'}}
-            label={( k == 1) ? '添加返程航线' : '添加航线'}
+            label={(k == 1) ? '添加返程航线' : '添加航线'}
           >
             {getFieldDecorator(`names-${k}`, {
               rules: [{
@@ -343,7 +340,6 @@ class AddForm extends Component {
         </Col>
       )
     });
-    let rangeValue = h5Add.details[0] ? moment(h5Add.details[0].departure_start) : '';
     return (
       <div className={css.AgenciesView_box}>
         <Tabs type="card">
@@ -358,7 +354,7 @@ class AddForm extends Component {
                     >
                       {getFieldDecorator('time', {
                         rules: [{required: true, message: requiredText,}],
-                        initialValue: rangeValue
+                        initialValue: this.state.flightTimeWill
                       })
                       (<DatePicker style={{width: '450px'}}
                                    disabledDate={(current) => {
@@ -386,7 +382,7 @@ class AddForm extends Component {
                           max: 6,
                           message: "最多6位"
                         }],
-                        initialValue: h5Add.details.length > 0 ? (h5Add.details[0].settlement_price / 100).toString() : '',
+                        initialValue: h5Add.details.length > 0 ? (parseInt(h5Add.details[0].sell_price) / 100).toString() : '',
 
                       })
                       (< Input placeholder="请填写"
@@ -404,8 +400,8 @@ class AddForm extends Component {
                           required: true,
                           message: requiredText,
                         }, {
-                          pattern: /^[1-9][0-9]*(\.[0-9][0-9])?$|^[1-9][0-9]*(\.[0-9])?$|^[0]\.([1-9])$|^[0]\.([0-9][1-9])$/,
-                          message: "成人价需大于0，且最多两位小数"
+                          pattern: /^[1-9](\.\d{1})?$|^(10)(\.0)?$|^[0](\.[1-9]{1}){1}$/,
+                          message: "折扣需大于0，且最多一位小数"
                         }, {
                           max: 6,
                           message: "最多6位"
@@ -440,7 +436,7 @@ class AddForm extends Component {
             footer={null}
           >
             {h5Add.accurate && h5Add.accurate.data &&
-            <RadioGroup>
+            <RadioGroup onChange={this.routeSelection.bind(this)}>
               {this.reviewerLists()}
             </RadioGroup>}
             {!h5Add.accurate.data &&

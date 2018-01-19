@@ -101,7 +101,12 @@ export default class BasicProfile extends Component {
     let _this = this;
     if (this.passengerData && this.passengerData.length > 0) {
       for (let i = 0; i < this.passengerData.length; i++) {
-        let user = this.passengerData[i], ticket = user.ticketDep + ',' + user.ticketArr;
+        let user = this.passengerData[i];
+        if ((user.ticketDep && !user.ticketArr) || (!user.ticketDep && user.ticketArr)) {
+          message.warning('出/返票号填写状态需保持一致');
+          return false
+        }
+        let ticket = user.ticketDep + ',' + user.ticketArr;
         ticketInfo.push({id: user.id, ticket: ticket})
       }
       let params = {
@@ -359,8 +364,6 @@ export default class BasicProfile extends Component {
         title: '操作时间',
         dataIndex: 'create_time',
         key: 'create_time',
-        defaultSortOrder: 'descend',
-        sorter: (a, b) => a.create_time - b.create_time,
         render: (text) => {
           return timeHelp.getYMDHMS(text)
         }
@@ -429,23 +432,19 @@ export default class BasicProfile extends Component {
           <Divider style={{marginBottom: 32}}/>
           <div className={styles.title}><Icon type="red-envelope"/> 支付信息</div>
           {
-            (nameType === 'FlyingPig' && (order_status == 0 || order_status == 1)) || (nameType === 'Entrust' && order_status == 0) ?
-              <p style={{margin: '15px 0', height: 60}}>暂无用户支付信息</p> :
-              <div>
+            nameType === 'Entrust' && (order_status == 4 || order_status == 5 || order_status == 6) ||
+            nameType === 'FlyingPig' && (order_status == 2 || order_status == 3 || order_status == 4) ?
+              <ul className={styles.infoList}>
+                <li>
+                  <span className={styles.titleDesc}>机票销售价</span>
+                  <span
+                    className={styles.priceDesc}>{count_middle}={Number(order.sell_price) / 100}元(成人价)*{this.adult_count}</span>
+                </li>
                 {
-                  nameType === 'Entrust' && (order_status == 1 || order_status == 2 || order_status == 8 || order_status == 3 || order_status == 7) ?
-                    null :
-                    <ul className={styles.infoList}>
-                      <li>
-                        <span className={styles.titleDesc}>机票销售价</span>
-                        <span
-                          className={styles.priceDesc}>{count_middle}={Number(order.sell_price) / 100}元(成人价)*{this.adult_count}</span>
-                      </li>
-                      {
-                        (nameType === 'Entrust' && order_status == 6) || (nameType === 'FlyingPig' && order_status == 4) ? null :
-                          <li>
-                            <span className={styles.titleDesc}>实际结算价</span>
-                            <span className={styles.priceDesc}>
+                  (nameType === 'Entrust' && order_status == 6) || (nameType === 'FlyingPig' && order_status == 4) ? null :
+                    <li>
+                      <span className={styles.titleDesc}>实际结算价</span>
+                      <span className={styles.priceDesc}>
                         {
                           isEdit ?
                             <Input value={inputPrice} className={styles.inputPrice} min={1} type="number"
@@ -453,28 +452,30 @@ export default class BasicProfile extends Component {
                             :
                             <span className={styles.inputPrice}>{inputPrice ? inputPrice : this.price}元</span>
                         }
-                              <Button type='primary' onClick={::this.isEdit}>{isEdit ? '保存' : '修改'}</Button></span>
-                          </li>
-                      }
-                      {
-                        (nameType === 'Entrust' && order_status == 6) || (nameType === 'FlyingPig' && order_status == 4) ? null :
-                          <li>
-                            <span className={styles.titleDesc}>差额</span>
-                            <span className={styles.priceDesc}
-                                  style={{color: count_little > 0 ? '#f00' : ''}}>{count_little}</span>
-                          </li>
-                      }
-                    </ul>
+                        <Button type='primary' onClick={::this.isEdit}>{isEdit ? '保存' : '修改'}</Button></span>
+                    </li>
                 }
-                <div className={styles.myTable} style={{marginBottom: '25px'}}>
-                  <Table
-                    pagination={false}
-                    bordered={true}
-                    dataSource={payrecord ? payrecord : []}
-                    columns={payColumns}
-                    rowKey={record => record.id + record.pay_time}
-                  />
-                </div>
+                {
+                  (nameType === 'Entrust' && order_status == 6) || (nameType === 'FlyingPig' && order_status == 4) ? null :
+                    <li>
+                      <span className={styles.titleDesc}>差额</span>
+                      <span className={styles.priceDesc}
+                            style={{color: count_little > 0 ? '#f00' : ''}}>{count_little}</span>
+                    </li>
+                }
+              </ul> : null
+          }
+          {
+            !payrecord || (payrecord && payrecord.length === 0) ?
+              <p style={{margin: '15px 0', height: 60}}>暂无用户支付信息</p> :
+              <div className={styles.myTable} style={{marginBottom: '25px'}}>
+                <Table
+                  pagination={false}
+                  bordered={true}
+                  dataSource={payrecord ? payrecord : []}
+                  columns={payColumns}
+                  rowKey={record => record.id + record.pay_time}
+                />
               </div>
           }
           {

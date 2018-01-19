@@ -48,14 +48,28 @@ export default class TableList extends PureComponent {
   }
 
   handleTableChange(pagination) {
-    this.setState({
-      pagination: {
-        p: pagination.current,
-        pc: pagination.pageSize,
-      }
-    }, () => {
-      this.handleSearch();
+    this.page = {
+      p: pagination.current,
+      pc: pagination.pageSize,
+    };
+    const {dispatch} = this.props;
+    const {formValues} = this.state;
+    const params = {
+      ...this.page,
+      ...formValues,
+    };
+    dispatch({
+      type: 'flyingpigList/getList',
+      payload: params,
     });
+    // this.setState({
+    //   pagination: {
+    //     p: pagination.current,
+    //     pc: pagination.pageSize,
+    //   }
+    // }, () => {
+    //   this.handleSearch();
+    // });
   }
 
   handleFormReset() {
@@ -165,9 +179,9 @@ export default class TableList extends PureComponent {
                   })(
                     <Select placeholder="请选择" style={{width: '100%'}}>
                       <Option value="" key=''>全部</Option>
-                      <Option value='1' key='1'>飞猪</Option>
-                      <Option value='2' key='2'>供应商</Option>
-                      <Option value='3' key='3'>东航</Option>
+                      <Option value='0' key='0'>飞猪</Option>
+                      <Option value='1' key='1'>供应商</Option>
+                      <Option value='2' key='2'>东航</Option>
                     </Select>
                   )}
                 </FormItem>
@@ -229,20 +243,21 @@ export default class TableList extends PureComponent {
   }
 
   render() {
-    const {flyingpigList: {loading, list, total}, backpath} = this.props;
+    const {flyingpigList: {loading, data: {data, option}}, backpath} = this.props;
+    console.log(this.props);
     let Url = backpath === 'FlyingPig' ? '/order/flyingpig/detail/' : '/order/entrust/detail/';
     let columns = [
       {
         title: '订单号', dataIndex: 'id', render: (text, record) => {
-        return <Link
-          to={Url + formatPar({id: record.id})}>
-          {text}</Link>
-      }
+          return <Link
+            to={Url + formatPar({id: record.id})}>
+            {text}</Link>
+        }
       },
       {
         title: '订单状态', dataIndex: 'order_status', render: (text) => {
-        return this.status[text];
-      },
+          return this.status[text];
+        },
       },
       {title: '联系人', dataIndex: 'contact',},
       {title: '联系电话', dataIndex: 'mobile',},
@@ -250,47 +265,47 @@ export default class TableList extends PureComponent {
       {title: '到达城市', dataIndex: 'city_arr'},
       {
         title: '出发日期', dataIndex: 'dep_yyyymm', render: (text, record) => {
-        let date1 = String(text).substr(0, 4) || '', date2 = String(text).substr(4, 2) || '', day = '';
-        switch (record.dep_dd) {
-          case 0:
-            day = '(不限)';
-            break;
-          case -1:
-            day = '(上旬)';
-            break;
-          case -2:
-            day = '(中旬)';
-            break;
-          case -3:
-            day = '(下旬)';
-            break;
-          default:
-            day = backpath === 'FlyingPig' ? `-${record.dep_dd}` : `${record.dep_dd}日`;
+          let date1 = String(text).substr(0, 4) || '', date2 = String(text).substr(4, 2) || '', day = '';
+          switch (record.dep_dd) {
+            case 0:
+              day = '(不限)';
+              break;
+            case -1:
+              day = '(上旬)';
+              break;
+            case -2:
+              day = '(中旬)';
+              break;
+            case -3:
+              day = '(下旬)';
+              break;
+            default:
+              day = backpath === 'FlyingPig' ? `-${record.dep_dd}` : `${record.dep_dd}日`;
+          }
+          return backpath === 'FlyingPig' ? `${date1}-${date2}${day}` : `${date1}年${date2}月${day}`;
         }
-        return backpath === 'FlyingPig' ? `${date1}-${date2}${day}` : `${date1}年${date2}月${day}`;
-      }
       },
       {
         title: '出发航班号', dataIndex: 'flight_no', render: (text) => {
-        let flightArr = text ? text.split('/') : [];
-        return flightArr[0] || '';
-      }
+          let flightArr = text ? text.split('/') : [];
+          return flightArr[0] || '';
+        }
       },
       {title: '人数', dataIndex: 'adult_count',},
       {
         title: '已付金额', dataIndex: 'payAmount', render: (text) => {
-        return '￥' + Number(text) / 100;
-      }
+          return '￥' + Number(text) / 100;
+        }
       },
       {
         title: '资源来源', dataIndex: 'group_type', render: (text) => {
-        return this.source[text];
-      }
+          return this.source[text];
+        }
       },
       {
         title: '订单来源', dataIndex: 'source', render: (text) => {
-        return this.typeArray[text];
-      },
+          return this.typeArray[text];
+        },
       }, {
         title: '下单时间', dataIndex: 'create_time', render: (text) => {
           return timeHelp.getYMDHMS(text)
@@ -298,16 +313,26 @@ export default class TableList extends PureComponent {
       },
       {
         title: '操作', render: (text, record) => {
-        let title = (record.order_status === 4 && backpath === 'Entrust') || (backpath === 'FlyingPig' && record.order_status === 2 ) ? '出票' : '查看';
-        return <Link
-          to={Url + formatPar({id: record.id})}>
-          {title}</Link>
-      }
+          let title = (record.order_status === 4 && backpath === 'Entrust') || (backpath === 'FlyingPig' && record.order_status === 2) ? '出票' : '查看';
+          return <Link
+            to={Url + formatPar({id: record.id})}>
+            {title}</Link>
+        }
       }];
     if (backpath === 'Entrust') {
       let arr1 = columns.slice(0, 7), arr2 = columns.slice(8, 10), arr3 = columns.slice(11);
       columns = arr1.concat(arr2, arr3);
     }
+    const page = {
+      current: option.current,
+      pageSize: option.size,
+      total: option.total,
+    };
+    const paginationProps = {
+      showSizeChanger: true,
+      showQuickJumper: true,
+      ...page,
+    };
     return (
       <PageHeaderLayout>
         <Card bordered={false}>
@@ -316,9 +341,9 @@ export default class TableList extends PureComponent {
               {this.renderForm()}
             </div>
             <Table
-              dataSource={list}
+              dataSource={data}
               columns={columns}
-              pagination={{showSizeChanger: true, showQuickJumper: true, total}}
+              pagination={paginationProps}
               loading={loading}
               onChange={::this.handleTableChange}
               rowKey={record => record.id + new Date().getTime()}

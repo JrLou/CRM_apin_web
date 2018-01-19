@@ -108,7 +108,7 @@ export function fakeList4(count) {
   const list = [];
   for (let i = 0; i < count; i += 1) {
     list.push({
-      id: `fake-list-${Math.random().toFixed(6)}`, 
+      id: `fake-list-${Math.ceil(Math.random() * 40)}`, 
       createTime:'2018-01-21',
       depAirport:'萧山机场',
       arrAirport:'咸阳机场',

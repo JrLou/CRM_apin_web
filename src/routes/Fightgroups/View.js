@@ -96,6 +96,9 @@ export default class View extends PureComponent {
     }, {
       title: '销售价格',
       dataIndex: 'sell_price',
+      render: (text, record) => {
+        return +text / 100;
+      },
     }, {
       title: '是否成团',
       render: (text, record) => {

@@ -1,7 +1,7 @@
-import {queryMenus, authrouteApi} from '../services/api';
+import { queryMenus, authrouteApi } from '../services/api';
 import CookieHelp from './../utils/cookies';
-import {routerRedux} from 'dva/router';
-import {debug} from 'util';
+import { routerRedux } from 'dva/router';
+import { debug } from 'util';
 
 export default {
   namespace: 'global',
@@ -25,14 +25,14 @@ export default {
   },
 
   effects: {
-    * fetchMenus(_, {call, put}) {
+    * fetchMenus(_, { call, put }) {
       yield put({
         type: 'changeMenusLoading',
         payload: true,
       });
       const res = yield call(queryMenus);
       if (res && res.code >= 1) {
-        const {data} = res
+        const { data } = res
         yield put({
           type: 'changerouterPathData',
           payload: data
@@ -56,12 +56,12 @@ export default {
         yield put(routerRedux.push('/user/login'));
       }
     },
-    * authroute({payload}, {call, put, select}) {
+    * authroute({ payload }, { call, put, select }) {
       const routerPath = yield select(state => state.global.routerPath);
       const id = routerPath.filter(item => item.parentId && payload.indexOf(item.path) > -1)[0].id
-      const res = yield call(authrouteApi, {id});
+      const res = yield call(authrouteApi, { id });
       if (res && res.code >= 1) {
-        const {data} = res
+        const { data } = res
         yield put({
           type: 'changerouterPathData',
           payload: data
@@ -70,25 +70,25 @@ export default {
     }
   },
   reducers: {
-    changeLayoutCollapsed(state, {payload}) {
+    changeLayoutCollapsed(state, { payload }) {
       return {
         ...state,
         collapsed: payload,
       };
     },
-    changeMenusload(state, {payload}) {
+    changeMenusload(state, { payload }) {
       return {
         ...state,
         menusload: payload,
       };
     },
-    changeMenusData(state, {payload}) {
+    changeMenusData(state, { payload }) {
       return {
         ...state,
         menus: payload,
       };
     },
-    changerouterPathData(state, {payload}) {
+    changerouterPathData(state, { payload }) {
       return {
         ...state,
         routerPath: state.routerPath.concat(payload),
@@ -97,9 +97,9 @@ export default {
   },
 
   subscriptions: {
-    setup({history}) {
+    setup({ history }) {
       // Subscribe history(url) change, trigger `load` action if pathname is `/`
-      return history.listen(({pathname, search}) => {
+      return history.listen(({ pathname, search }) => {
         if (typeof window.ga !== 'undefined') {
           window.ga('send', 'pageview', pathname + search);
         }
