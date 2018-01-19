@@ -52,14 +52,28 @@ export default class TableList extends PureComponent {
   }
 
   handleTableChange(pagination) {
-    this.setState({
-      pagination: {
-        p: pagination.current,
-        pc: pagination.pageSize,
-      }
-    }, () => {
-      this.handleSearch();
+    this.page = {
+      p: pagination.current,
+      pc: pagination.pageSize,
+    };
+    const {dispatch} = this.props;
+    const {formValues} = this.state;
+    const params = {
+      ...this.page,
+      ...formValues,
+    };
+    dispatch({
+      type: 'refund/getList',
+      payload: params,
     });
+    // this.setState({
+    //   pagination: {
+    //     p: pagination.current,
+    //     pc: pagination.pageSize,
+    //   }
+    // }, () => {
+    //   this.handleSearch();
+    // });
   }
 
   handleFormReset() {
@@ -181,7 +195,7 @@ export default class TableList extends PureComponent {
         dispatch({
           type: 'refund/retryRefund',
           payload: {order_id: id},
-          callback:(res)=>{
+          callback: (res) => {
             if (res && res.code >= 1) {
               message.success('重新退款提交成功');
               this.handleSearch();
@@ -219,7 +233,7 @@ export default class TableList extends PureComponent {
   }
 
   render() {
-    const {refund: {loading, list, total}} = this.props;
+    const {refund: {loading, data: {data, option}}} = this.props;
     const columns = [
       {title: '退款单号', dataIndex: 'id',},
       {
@@ -264,7 +278,16 @@ export default class TableList extends PureComponent {
         </span>
         }
       }];
-
+    const page = {
+      current: option.current,
+      pageSize: option.size,
+      total: option.total,
+    };
+    const paginationProps = {
+      showSizeChanger: true,
+      showQuickJumper: true,
+      ...page,
+    };
     return (
       <PageHeaderLayout>
         <Card bordered={false}>
@@ -273,9 +296,9 @@ export default class TableList extends PureComponent {
               {this.renderForm()}
             </div>
             <Table
-              dataSource={list}
+              dataSource={data}
               columns={columns}
-              pagination={{showSizeChanger: true, showQuickJumper: true, total}}
+              pagination={paginationProps}
               loading={loading}
               onChange={::this.handleTableChange}
               rowKey={record => record.order_id + Math.random() * 100 + record.audit_time}

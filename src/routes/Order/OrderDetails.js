@@ -101,7 +101,12 @@ export default class BasicProfile extends Component {
     let _this = this;
     if (this.passengerData && this.passengerData.length > 0) {
       for (let i = 0; i < this.passengerData.length; i++) {
-        let user = this.passengerData[i], ticket = user.ticketDep + ',' + user.ticketArr;
+        let user = this.passengerData[i];
+        if ((user.ticketDep && !user.ticketArr) || (!user.ticketDep && user.ticketArr)) {
+          message.warning('出/返票号填写状态需保持一致');
+          return false
+        }
+        let ticket = user.ticketDep + ',' + user.ticketArr;
         ticketInfo.push({id: user.id, ticket: ticket})
       }
       let params = {

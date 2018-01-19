@@ -202,7 +202,7 @@ export default class Choose extends PureComponent {
     };
     const { continueFlag } = this.par;
     return (
-      <Form>
+      <Form onSubmit={this.handleSearch.bind(this)}>
         <Row gutter={20}>
           <Col span={8}>
             <FormItem label="起飞时间" {...formItemLayout}>
@@ -254,7 +254,7 @@ export default class Choose extends PureComponent {
 
         <div style={{ overflow: 'hidden' }}>
           <span style={{ float: 'right', marginBottom: 24 }} className={styles.btnBox}>
-            <Button type="primary" htmlType="submit" onClick={this.handleSearch.bind(this)}>查询</Button>
+            <Button type="primary" htmlType="submit" >查询</Button>
             <Button type="default" onClick={this.resetSearch.bind(this)}>重置</Button>
             <Button type="primary" onClick={this.pushScheme.bind(this)}>{continueFlag ? '推送当前方案' : '推送方案'}</Button>
           </span>
