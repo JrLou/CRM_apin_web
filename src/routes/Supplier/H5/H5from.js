@@ -104,7 +104,7 @@ class AddForm extends Component {
 
   handleSubmit(e, event) {  //提交时数据格式整理，数据校验
     let _this = this
-    let {flightstockData, flightdata} = _this.state
+    let {flightstockData, flightdata, identification} = _this.state
     e.preventDefault();
     _this.props.form.validateFields((err, values) => {
       if (!err) {
@@ -114,7 +114,7 @@ class AddForm extends Component {
             return
           }
         }
-        if (_this.props.id) {
+        if (_this.props.id && !identification) {
           flightstockData[0].FlightDepcode = flightstockData[0].airport_dep_code
           flightstockData[0].FlightArrcode = flightstockData[0].airport_arr_code
           flightstockData[0].FlightCompany = flightstockData[0].flight_company
@@ -129,6 +129,7 @@ class AddForm extends Component {
         values.cityDep = flightstockData[0].FlightDep
         values.startDate = moment(flightdata.flightTimeWill).format("YYYY-MM-DD")
         values.flightNumber = flightstockData[0].FlightNo + '-' + flightstockData[0].FlightNo
+        console.log(flightstockData)
         this.setState({
           baioshi: true,
         });
