@@ -179,8 +179,8 @@ export default class TableList extends PureComponent {
                   })(
                     <Select placeholder="请选择" style={{width: '100%'}}>
                       <Option value="" key=''>全部</Option>
-                      <Option value='0' key='0'>飞猪</Option>
-                      <Option value='1' key='1'>供应商</Option>
+                      <Option value='0' key='0'> 供应商</Option>
+                      <Option value='1' key='1'>飞猪</Option>
                       <Option value='2' key='2'>东航</Option>
                     </Select>
                   )}
