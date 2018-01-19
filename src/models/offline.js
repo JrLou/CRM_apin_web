@@ -9,6 +9,7 @@ export default {
     usernameData: [],
     supplierData: [],
     cityData: [],
+    cityData2: [],
     loading: false,
     isDill: false,
     changeInfo: [
@@ -132,7 +133,7 @@ export default {
       const response = yield call(outExcel, payload);
       if (response.code == 200) {
         message.success('操作成功');
-        window.open(response.data.url);
+        window.location.href = response.data.url;
       } else {
         message.error(response.message)
       }
@@ -164,11 +165,16 @@ export default {
       }
     },
     *searchCity({ payload }, { call, put }) {
-      const response = yield call(searchCity, payload);
+
+      const response = yield call(searchCity, { condition: payload.condition });
       if (response && response.code == 200) {
+        if (response.data.length > 10) { response.data = response.data.splice(0, 10); }
+        let citiesArr = response.data.map((v, k) => {
+          return v.cityName;
+        });
         yield put({
           type: 'getCity',
-          payload: response.data ? response.data : [],
+          payload: { data: citiesArr, arrFlag: payload.arrFlag },
         });
       }
     },
@@ -233,7 +239,7 @@ export default {
       };
     },
     addOneScheme(state, action) {
-      state.schemeInfo.push({ supplierName: '', unitprice: '', flight: '' });
+      state.schemeInfo.push({ supplierName: '', unitprice: '', flight: '', orderId: action.payload });
       let newSchemeInfo = state.schemeInfo;
       return {
         ...state,
@@ -261,9 +267,10 @@ export default {
       };
     },
     getCity(state, action) {
+      let key = action.payload.arrFlag ? 'cityData2' : 'cityData';
       return {
         ...state,
-        cityData: action.payload
+        [key]: action.payload.data
       };
     },
     getSupplier(state, action) {
@@ -283,6 +290,8 @@ export default {
       let newschemeInfo = state.schemeInfo.map((v, k) => {
         if (action.payload == k) {
           v.selected = 1;
+        } else {
+          v.selected = 0;
         }
         return v;
       });

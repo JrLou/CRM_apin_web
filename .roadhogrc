@@ -26,9 +26,14 @@
     "pathRewrite": { "^/java" : "" }
     },
      "/api": {
-    "target": "http://192.168.0.32:9712",
+    "target": "http://192.168.0.180:6040/",
     "changeOrigin": true,
     "pathRewrite": { "^/api" : "/api" }
+    },
+     "/airportCity": {
+    "target": "http://192.168.0.46:9904/",
+    "changeOrigin": true,
+    "pathRewrite": { "^/airportCity" : "/airportCity" }
     }
   },
   "ignoreMomentLocale": true,

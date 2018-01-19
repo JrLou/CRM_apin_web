@@ -65,7 +65,9 @@ export default class AddOrderForm extends Component {
                                 <Input
                                     disabled={readOnly}
                                     style={{ width: '50%', marginRight: '5px' }}
+                                    onBlur={this.changeCaulator}
                                     onChange={this.saveScheme.bind(null, k, 'unitprice')} />
+
                                 )}
                             <span>元/人</span>
                         </FormItem>
@@ -109,7 +111,7 @@ export default class AddOrderForm extends Component {
         const { dispatch } = this.props;
         dispatch({
             type: 'offline/addOneScheme',
-            payload: '',
+            payload: this.props.id,
         });
 
     }
@@ -361,6 +363,14 @@ export default class AddOrderForm extends Component {
             }
         });
     };
+    changeCaulator = (e) => {
+        // 如果是数字且方案已选择
+        let index = this.props.form.getFieldValue('selected');
+        if (!isNaN(e.target.value) && (index === 0 || index)) {
+            // 重新计算 
+            this.changeScheme(index)
+        }
+    }
     changeScheme = (value) => {
         const { dispatch } = this.props;
         // 人数  结算价  卖价;
@@ -406,7 +416,13 @@ export default class AddOrderForm extends Component {
             case 'cityData':
                 dispatch({
                     type: 'offline/searchCity',
-                    payload: { name: value },
+                    payload: { condition: value },
+                });
+                break;
+            case 'cityData2':
+                dispatch({
+                    type: 'offline/searchCity',
+                    payload: { condition: value, arrFlag: true },
                 });
                 break;
             default:
@@ -424,7 +440,7 @@ export default class AddOrderForm extends Component {
             labelCol: { span: 3 },
             wrapperCol: { span: 16 },
         };
-        const { readOnly, offline: { usernameData, supplierData, cityData, changeInfo, schemeInfo } } = this.props;
+        const { readOnly, offline: { usernameData, supplierData, cityData, cityData2, changeInfo, schemeInfo } } = this.props;
         let detail = this.props.detail ? this.props.detail : {};
         schemeInfo.map((v, k) => {
             if (v.selected == 1) {
@@ -527,7 +543,11 @@ export default class AddOrderForm extends Component {
                                                     rules: [],
                                                     initialValue: detail.cityArr
                                                 })(
-                                                    <AutoComplete disabled={readOnly} dataSource={usernameData} onBlur={this.onBlurCheck.bind(null, 'cityArr', usernameData)} />
+                                                    <AutoComplete
+                                                        disabled={readOnly}
+                                                        onSearch={this.autoCompSearch.bind(null, 'cityData2')}
+                                                        dataSource={cityData2}
+                                                        onBlur={this.onBlurCheck.bind(null, 'cityArr', cityData2)} />
                                                     )}
                                             </FormItem>
                                         </Col>
@@ -559,7 +579,7 @@ export default class AddOrderForm extends Component {
                                                     rules: [{ pattern: /^[1-9][0-9]{0,2}$/, message: "请输入不大于999的整数" }],
                                                     initialValue: detail.numbers
                                                 })(
-                                                    <Input disabled={readOnly} style={{ width: '50%', marginRight: '5px' }} />
+                                                    <Input onBlur={this.changeCaulator} disabled={readOnly} style={{ width: '50%', marginRight: '5px' }} />
                                                     )}
                                                 <span>人</span>
                                             </FormItem>
