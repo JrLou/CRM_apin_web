@@ -3,7 +3,8 @@ import {connect} from 'dva';
 import {Modal, Table, Input, Button, message, Upload, Icon} from 'antd';
 import less from './ModalCpm.less'
 import {formatDate} from "../../../utils/utils";
-import {stringify} from 'qs';
+import {checkCode} from "../../../utils/request";
+
 
 const {TextArea} = Input;
 
@@ -40,9 +41,6 @@ class CloseReasonModal extends Component {
     const {modalData: {data}} = checkFightGroups;
     return (
       <Modal {...this.props} >
-        {
-          //TODO 这里的placeholder需要产品确认
-        }
         <TextArea
           placeholder="请输入内容"
           autosize={{minRows: 2, maxRows: 4}}
@@ -105,6 +103,10 @@ class SendLogModal extends Component {
   }
 
   render() {
+    const {groupsInfoData: {data: groupsInfoDataData}} = this.props.checkFightGroups;
+    const date_dep = formatDate(groupsInfoDataData.date_dep, 'YYYY-MM-DD');
+    const date_ret = formatDate(groupsInfoDataData.date_ret, 'YYYY-MM-DD');
+
     const columns = [
       {
         title: '推送时间',
@@ -115,12 +117,15 @@ class SendLogModal extends Component {
       }, {
         title: '起飞日期',
         dataIndex: 'flight_dep',
+        render: () => date_dep
       }, {
         title: '返回日期',
         dataIndex: 'flight_arr',
+        render: () => date_ret
       }, {
         title: '销售价',
         dataIndex: 'sell_price',
+        render: text => typeof text === "number" && (text / 100).toFixed(2)
       }, {
         title: '用户反馈',
         dataIndex: 'status',
@@ -270,16 +275,17 @@ class ExportPassengerModal extends Component {
       return oldData;
     }
     let resultArr = oldData.map((currV, index) => {
+      console.log({ticket: newData[index + 1] && newData[index + 1][abroad === 0 ? 4 : 8] && newData[index + 1][abroad === 0 ? 4 : 8].toString()});
       return {
         ...currV,
-        ticket: newData[index + 1][abroad === 0 ? 4 : 8].toString(),
+        ticket: newData[index + 1] && newData[index + 1][abroad === 0 ? 4 : 8] && newData[index + 1][abroad === 0 ? 4 : 8].toString(),
       }
     });
     return resultArr;
   }
 
   isTicketChange(newData, oldData) {
-    return oldData.some((currV, index) => currV.ticket !== newData[index].ticket);
+    return oldData.some((currV, index) => currV.ticket != newData[index].ticket);
   }
 
   render() {
@@ -311,12 +317,14 @@ class ExportPassengerModal extends Component {
       },
       onChange: ({file, fileList, event,}) => {
         let isTicketChange = false;
+        let paidMemberAfterInsertTicket = [];
         if (file.status !== 'uploading') {
         }
         if (file.status === 'done') {
+          checkCode(file.response);//todo 最好把他变成promise,使用then的语法,目前太confuse,这里还有bug
           //文件上传成功后，有两种情况，通过code码判断，如果为200 通过，否则，弹出msg错误消息
-          if (file.response.code === 200) {
-            const paidMemberAfterInsertTicket = this.getPaidMemberAfterInsertTickets(file.response.data, data, abroad);
+          if (file.response.code >= 1) {
+            paidMemberAfterInsertTicket = this.getPaidMemberAfterInsertTickets(file.response.data, data, abroad);
             isTicketChange = this.isTicketChange(paidMemberAfterInsertTicket, data);
             if (isTicketChange) {
               dispatch({
@@ -327,18 +335,21 @@ class ExportPassengerModal extends Component {
               message.success('导入票号成功');
             } else {
               fileList = [];
-              message.warning('票号导入重复');
+              message.error('票号导入重复');
             }
           } else {
             fileList = [];
-            message.error("导入失败，" + file.response.msg);//todo 我这里没有走request，所以就没有错误消息啦
+            // message.error("导入失败，" + file.response.msg);
           }
         } else if (file.status === 'error') {
           message.error(`${file.name} 上传失败`);
           console.log("如果出现了此文字，请检查此处代码", file.response);
         }
         //仅仅取fileList中的最新的一个
-        if (file.status !== 'done' || !isTicketChange) {
+        // if (file.status !== 'done' || !isTicketChange) {
+        //   this.serverTicketsData = null;
+        // }
+        if (fileList.length === 0) {
           this.serverTicketsData = null;
         }
         fileList = fileList.slice(-1);
