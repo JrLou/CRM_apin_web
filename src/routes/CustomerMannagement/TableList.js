@@ -28,27 +28,27 @@ class StandardTable extends PureComponent {
       {
         title: `${this.getPageName()}名称`,
         dataIndex: 'name',
-        width: '14%'
+        width: '12%'
       },
       {
         title: '地址',
         dataIndex: 'address',
-        width: '18%'
+        width: '24%'
       },
       {
         title: '联系人',
         dataIndex: 'contacts',
-        width: '15%'
+        width: '12%'
       },
       {
         title: '电话号码',
         dataIndex: 'mobile',
-        width: '15%'
+        width: '14%'
       },
       {
         title: '微信/QQ',
         dataIndex: 'wxqq',
-        width: '10%'
+        width: '11%'
       },
       {
         title: '操作日期',
