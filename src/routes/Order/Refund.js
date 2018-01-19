@@ -26,7 +26,7 @@ const FormItem = Form.Item;
 const {Option} = Select;
 const confirm = Modal.confirm;
 const {TextArea} = Input;
-const refundStatus = ['已退款', '退款中', '退款失败'];
+const refundStatus = ['退款中','已退款', '退款失败'];
 @connect(state => ({
   refund: state.refund,
 }))
@@ -151,14 +151,14 @@ export default class TableList extends PureComponent {
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="退款状态">
-              {getFieldDecorator('refund_status', {
+              {getFieldDecorator('audit_status', {
                 initialValue: ''
               })(
                 <Select placeholder="请选择" style={{width: '100%'}}>
                   <Option value=''>全部</Option>
                   {
                     refundStatus.map((item, index) => {
-                      return <Option value={index + 1} key={index + 1}>{item}</Option>
+                      return <Option value={index} key={index }>{item}</Option>
                     })
                   }
                 </Select>
@@ -237,8 +237,8 @@ export default class TableList extends PureComponent {
     const columns = [
       {title: '退款单号', dataIndex: 'id',},
       {
-        title: '退款状态', dataIndex: 'refund_status', render: (text) => {
-          return refundStatus[text - 1];
+        title: '退款状态', dataIndex: 'audit_status', render: (text) => {
+          return refundStatus[text];
         },
       },
       {

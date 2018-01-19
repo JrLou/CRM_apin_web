@@ -244,7 +244,6 @@ export default class TableList extends PureComponent {
 
   render() {
     const {flyingpigList: {loading, data: {data, option}}, backpath} = this.props;
-    console.log(this.props);
     let Url = backpath === 'FlyingPig' ? '/order/flyingpig/detail/' : '/order/entrust/detail/';
     let columns = [
       {
