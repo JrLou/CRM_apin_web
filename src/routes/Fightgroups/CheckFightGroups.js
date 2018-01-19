@@ -125,7 +125,7 @@ export default class CheckFightGroups extends Component {
 
 
     return (
-      <div>
+      <div className={styles.outFightGropuInfoContainer}>
         <div className={styles.title}>
           <Icon type="profile"/>&nbsp;
           <span>拼团信息</span>

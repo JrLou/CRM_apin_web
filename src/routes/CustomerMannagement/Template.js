@@ -30,7 +30,7 @@ export default class TableList extends PureComponent {
       modalType: 'add',//add、 edit、 delete
     };
     this.page = {
-      current: 1,
+      pageNum: 1,
       pageSize: 10,
     };
   }
@@ -54,7 +54,7 @@ export default class TableList extends PureComponent {
     const {dispatch} = this.props;
 
     this.page = {
-      current: pagination.current,
+      pageNum: pagination.current,
       pageSize: pagination.pageSize,
     };
 
@@ -71,7 +71,7 @@ export default class TableList extends PureComponent {
   resetCurrentPage = () => {
     this.page = {
       ...this.page,
-      current: 1,
+      pageNum: 1,
     }
   };
 
@@ -130,7 +130,7 @@ export default class TableList extends PureComponent {
             <FormItem label={`${this.getPageName()}名称`}>
               {getFieldDecorator('name', { //【客户名称】支持中文、英文、数字，最多50个字符；
                 initialValue: "",
-                rules: [{max: 20, message: '最长20位'}],
+                rules: [{max: 50, message: '最长50位'}],
               })
               (<Input placeholder="请输入"/>)
               }
