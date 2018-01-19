@@ -49,16 +49,17 @@ class AddForm extends Component {
       baioshi: false,
       competencese: false,
       numbering: null,
-      flightTimeWill:''
+      flightTimeWill: '',
+      identification: false
     };
   }
 
   componentWillReceiveProps(nextProps) {
-    let {flightdata} = this.state
+    let {flightdata, identification} = this.state
     this.setState({
       h5Add: nextProps.h5Add ? nextProps.h5Add : {details: []},
     });
-    if (nextProps.h5Add && nextProps.h5Add.details && nextProps.h5Add.details.length > 0) {
+    if (nextProps.h5Add && nextProps.h5Add.details && nextProps.h5Add.details.length > 0 && !identification) {
       let list = nextProps.h5Add.details;
       list[0].FlightNo = list[0].flight_no
       list[0].FlightDep = list[0].city_dep_name
@@ -72,7 +73,8 @@ class AddForm extends Component {
         flightstockData: [list[0]],
         linenubber: [0],
         flightdata: flightdata,
-    });
+        flightTimeWill: moment(list[0].departure_start)
+      });
     }
     if (nextProps.h5Add && nextProps.h5Add.judgment) {
       this.props.away()
@@ -170,6 +172,11 @@ class AddForm extends Component {
     if (data.flightTimeWill) {
       flightstockData[ole] = {}
       linenubber[ole] = null
+      if (this.props.id) {
+        this.setState({
+          identification: true,
+        });
+      }
       this.setState({
         flightstockData: flightstockData,
         flightNumbering: '航班号为：' + value + '的所有的航班',
@@ -293,7 +300,7 @@ class AddForm extends Component {
     };
     const {h5Add} = this.state
     const requiredText = "请填写此选项"
-    if (h5Add && h5Add.details.length > 0) {
+    if (this.props.id && h5Add && h5Add.details.length > 0) {
       for (let i = 0; i < h5Add.details.length; i++) {
         getFieldDecorator('names-' + i, {initialValue: h5Add.details[i].flight_no});
       }
@@ -332,8 +339,6 @@ class AddForm extends Component {
         </Col>
       )
     });
-    // let rangeValue = this.props.id ? moment(h5Add.details[0].departure_start) : '';
-    let rangeValue = '';
     return (
       <div className={css.AgenciesView_box}>
         <Tabs type="card">
@@ -394,8 +399,8 @@ class AddForm extends Component {
                           required: true,
                           message: requiredText,
                         }, {
-                          pattern: /^[1-9][0-9]*(\.[0-9][0-9])?$|^[1-9][0-9]*(\.[0-9])?$|^[0]\.([1-9])$|^[0]\.([0-9][1-9])$/,
-                          message: "成人价需大于0，且最多两位小数"
+                          pattern: /^[1-9](\.\d{1})?$|^(10)(\.0)?$|^[0](\.[1-9]{1}){1}$/,
+                          message: "折扣需大于0，且最多一位小数"
                         }, {
                           max: 6,
                           message: "最多6位"

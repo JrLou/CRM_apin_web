@@ -553,7 +553,7 @@ class AddForm extends Component {
                       {...formItemLayout}
                     >
                       {getFieldDecorator('manager', {
-                        rules: [{required: true, message: requiredText,}, {max: 32, message: "最多32位"}],
+                        rules: [{required: true, message: requiredText,}, {max: 6, message: "最多6位"}],
                         initialValue: flightstockEdit.details.length > 0 ? flightstockEdit.details[0].manager : '',
                       })
                       (< Input placeholder="请填写航线负责人"
@@ -671,8 +671,8 @@ class AddForm extends Component {
                           required: true,
                           message: requiredText,
                         }, {
-                          pattern: /^[1-9][0-9]*(\.[0-9][0-9])?$|^[1-9][0-9]*(\.[0-9])?$|^[0]\.([1-9])$|^[0]\.([0-9][1-9])$/,
-                          message: "折扣需大于0，且最多两位小数"
+                          pattern: /^[1-9](\.\d{1})?$|^(10)(\.0)?$|^[0](\.[1-9]{1}){1}$/,
+                          message: "折扣需大于0，且最多一位小数"
                         }, {
                           max: 6,
                           message: "最多6位"
