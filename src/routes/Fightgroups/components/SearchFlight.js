@@ -44,6 +44,12 @@ export default class SearchFlight extends PureComponent {
                     message.warning('请选择出发航班和返回航班后再提交')
                     return
                 }
+                let startms = moment(this.props.form.getFieldValue('startDate')).format('x');
+                let endms = moment(this.props.form.getFieldValue('endDate')).format('x');
+                if (startms > endms) {
+                    message.warning('出发时间不能大于到达时间')
+                    return
+                }
                 let idString = orderList.map((v, k) => {
                     return v.id
                 })
@@ -301,7 +307,7 @@ export default class SearchFlight extends PureComponent {
                             <FormItem label="折扣"  {...formItemLayout} className={styles.formItem}>
                                 {getFieldDecorator('discount', {
                                     rules: [{ required: true, message: '必填' },
-                                    { pattern: /^[1-3]$/, message: '请输入1到3之间的整数', }],
+                                    { pattern: /^[012](\.\d{1})?|([3])(\.0)?$/, message: '请输入1到3之间的整数', }],
 
                                 })(
                                     <Input placeholder="请输入折扣，不可高于3折" />)
