@@ -14,7 +14,9 @@ app.get('/', function (req, res) {
 //   let body = await rp(requrl)
 //   res.send(body)
 // })
-app.use('/api', proxy({target:config.api, changeOrigin: true}));
+app.use('/java', proxy({target:config.api, changeOrigin: true,"pathRewrite": { "^/java" : "" }}));
+app.use('/', proxy({target:config.api, changeOrigin: true}));
+
 // app.use('/api',(req, res) => {
 //   const requrl = url.api + req.originalUrl
 //   // req.pipe(request(requrl)).pipe(res);
