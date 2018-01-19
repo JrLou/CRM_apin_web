@@ -20,15 +20,16 @@
     "g2-plugin-slider": "G2.Plugin.slider"
   },
   "proxy": {
-     "/": {
-    "target": "http://10.5.58.9:6040/",
-    "changeOrigin": true
-    },
      "/java": {
     "target": "http://10.5.58.9:6040/",
     "changeOrigin": true,
     "pathRewrite": { "^/java" : "" }
+    },
+     "/": {
+    "target": "http://10.5.58.9:6040/",
+    "changeOrigin": true
     }
+
   },
   "ignoreMomentLocale": true,
   "theme": "./src/theme.js",
