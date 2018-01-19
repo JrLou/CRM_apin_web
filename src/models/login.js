@@ -20,7 +20,7 @@ export default {
         try{
            CookieHelp.saveUserInfo(null,response.data.token,true);
           //保存用户名
-          const userName = Base64.encodeURI(response.data.user.account)
+          const userName = Base64.encodeURI(response.data.user.name)
           CookieHelp.saveUserInfo('_u',userName,true);
           const roles = Base64.encodeURI(response.data.user.roles)
           CookieHelp.saveUserInfo('_r',roles,true);

@@ -28,8 +28,12 @@ export default class Demand extends PureComponent {
   componentDidMount() {
     this.handleSearch();
   }
-  handleSearch() {
+  handleSearch(e) {
+    if(e){
+      e.preventDefault();
+    }
     const { dispatch, form } = this.props;
+
     form.validateFields((err, values) => {
       if (!err) {
         for (let item in values) {
@@ -99,7 +103,7 @@ export default class Demand extends PureComponent {
         </Row>
         <div style={{ overflow: 'hidden' }}>
           <span style={{ float: 'right' }}>
-            <Button type="primary" style={{ marginRight: 6 }} onClick={this.handleSearch.bind(this)} htmlType="submit">查询</Button>
+            <Button type="primary" style={{ marginRight: 6 }}  htmlType="submit">查询</Button>
             <Button type="default" onClick={this.resetValue.bind(this)}>重置</Button>
           </span>
         </div>
