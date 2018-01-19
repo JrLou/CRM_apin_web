@@ -1,4 +1,15 @@
-import { getdetailAirLine, getpriceAirline, getmodifyPrice,getmodifyInventory,getmodifyDays,getimportFile,geteditAirline,stateAirLine,getAirLineLogs,getLogAirLine} from '../services/api';
+import {
+  getdetailAirLine,
+  getpriceAirline,
+  getmodifyPrice,
+  getmodifyInventory,
+  getmodifyDays,
+  getimportFile,
+  geteditAirline,
+  stateAirLine,
+  getAirLineLogs,
+  getLogAirLine,
+} from '../services/api';
 import {message} from 'antd';
 
 export default {
@@ -14,7 +25,7 @@ export default {
     //编辑回显数据
     * addtailAirLine({payload}, {call, put}) {
       const response = yield call(getdetailAirLine, payload)
-      if (response&&response.code >= 1) {
+      if (response && response.code >= 1) {
         yield put({
           type: 'detail',
           payload: response,
@@ -24,7 +35,7 @@ export default {
     //获取日历数据
     * getpriceAirline({payload}, {call, put}) {
       const response = yield call(getpriceAirline, payload)
-      if (response&&response.code >= 1) {
+      if (response && response.code >= 1) {
         yield put({
           type: 'airline',
           payload: response,
@@ -34,7 +45,7 @@ export default {
     //批量修改团期价格
     * getmodifyPricees({payload}, {call, put}) {
       const response = yield call(getmodifyPrice, payload)
-      if (response&&response.code >= 1) {
+      if (response && response.code >= 1) {
         message.success('操作成功')
         yield put({
           type: 'ajaxJudg',
@@ -47,7 +58,7 @@ export default {
     //批量修改团期库存
     * getmodifyInventoryes({payload}, {call, put}) {
       const response = yield call(getmodifyInventory, payload)
-      if (response&&response.code >= 1) {
+      if (response && response.code >= 1) {
         message.success('操作成功')
         yield put({
           type: 'ajaxJudg',
@@ -60,7 +71,7 @@ export default {
     //批量修改清位时间
     * getgetmodifyDayses({payload}, {call, put}) {
       const response = yield call(getmodifyDays, payload)
-      if (response&&response.code >= 1) {
+      if (response && response.code >= 1) {
         message.success('操作成功')
         yield put({
           type: 'ajaxJudg',
@@ -73,7 +84,7 @@ export default {
     //批量批量修改价格
     * getimportFilees({payload}, {call, put}) {
       const response = yield call(getimportFile, payload)
-      if (response&&response.code >= 1) {
+      if (response && response.code >= 1) {
         message.success('操作成功')
         yield put({
           type: 'ajaxJudg',
@@ -86,7 +97,7 @@ export default {
     //编辑
     * geteditAirlines({payload}, {call, put}) {
       const response = yield call(geteditAirline, payload)
-      if (response&&response.code >= 1) {
+      if (response && response.code >= 1) {
         message.success('操作成功')
         yield put({
           type: 'ajaxJudg',
@@ -99,7 +110,7 @@ export default {
     //上架
     * getstateAirLines({payload}, {call, put}) {
       const response = yield call(stateAirLine, payload)
-      if (response&&response.code >= 1) {
+      if (response && response.code >= 1) {
         message.success('操作成功')
         yield put({
           type: 'ajaxJudg',
@@ -120,7 +131,7 @@ export default {
     * LogAirLine({payload}, {call, put}) {
       //日志添加
       const response = yield call(getLogAirLine, payload)
-      if (response&&response.code >= 1) {
+      if (response && response.code >= 1) {
         message.success('操作成功')
         yield put({
           type: 'ajaxJudg',
