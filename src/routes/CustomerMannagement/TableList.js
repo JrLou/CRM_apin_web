@@ -90,10 +90,14 @@ class StandardTable extends PureComponent {
         }
       },
     ];
+    const pageProps = {
+      current: page.pageNum,
+      pageSize: page.pageSize,
+    };
     const paginationProps = {
       showSizeChanger: true,
       showQuickJumper: true,
-      ...page,
+      ...pageProps,
       total: option,
     };
     return (
