@@ -364,8 +364,6 @@ export default class BasicProfile extends Component {
         title: '操作时间',
         dataIndex: 'create_time',
         key: 'create_time',
-        defaultSortOrder: 'descend',
-        sorter: (a, b) => a.create_time - b.create_time,
         render: (text) => {
           return timeHelp.getYMDHMS(text)
         }
@@ -434,7 +432,7 @@ export default class BasicProfile extends Component {
           <Divider style={{marginBottom: 32}}/>
           <div className={styles.title}><Icon type="red-envelope"/> 支付信息</div>
           {
-            (nameType === 'FlyingPig' && (order_status == 0 || order_status == 1)) || (nameType === 'Entrust' && order_status == 0) ?
+            (nameType === 'FlyingPig' && (order_status == 0 || order_status == 1)) || (nameType === 'Entrust' && order_status == 0) || !payrecord || payrecord.length === 0 ?
               <p style={{margin: '15px 0', height: 60}}>暂无用户支付信息</p> :
               <div>
                 {
