@@ -165,10 +165,21 @@ class ExportPassengerModal extends Component {
   constructor() {
     super();
     this.state = {
-      fileList: [],
       ticketLoading: false,
     };
-    this.serverTicketsData = null;//导出乘机人=>确认提交票号的时候使用
+  }
+
+  componentDidMount() {
+    this.initUploadData();
+  }
+
+  componentWillUnmount() {
+    this.initUploadData();
+  }
+
+  initUploadData() {
+    this.setState({fileList: []});
+    this.serverTicketsData = null;
   }
 
   setTicketLoading = (ticketLoading, cb) => {
@@ -179,11 +190,6 @@ class ExportPassengerModal extends Component {
     this.props.changeVisible && this.props.changeVisible();
     this.initUploadData();
   };
-
-  initUploadData() {
-    this.setState({fileList: []});
-    this.serverTicketsData = null;
-  }
 
   getColumns() {
     const {groupsInfoData: {data: {abroad}}} = this.props.checkFightGroups;
@@ -312,7 +318,7 @@ class ExportPassengerModal extends Component {
           let isTicketChange = false;
           let paidMemberAfterInsertTicket = [];
           if (file.status === 'done') {
-            checkCode(file.response);//todo 最好把他变成promise,使用then的语法,目前太confuse,这里还有bug
+            checkCode(file.response);//todo 最好把他变成promise
             if (file.response.code >= 1) {
               paidMemberAfterInsertTicket = this.getPaidMemberAfterInsertTickets(file.response.data, data, abroad);
               isTicketChange = this.isTicketChange(paidMemberAfterInsertTicket, data);
@@ -406,15 +412,10 @@ class ExportPassengerModal extends Component {
                   data: JSON.stringify(this.serverTicketsData),
                   uuid: id
                 },
-                succCallback: response => {
-                  if (response.code == 200) {
-                    message.success("操作成功");
-                    console.log(response);
-                    this.initUploadData();
-                  } else {
-                    message.success("操作失败");
-                    console.log('error');
-                  }
+                succCallback: () => {
+                  message.success("操作成功");
+                  //一定要成功后清除数据
+                  this.initUploadData();
                 }
               });
             }}
@@ -427,4 +428,4 @@ class ExportPassengerModal extends Component {
   }
 }
 
-export default {CloseReasonModal, SendLogModal, ExportPassengerModal};//TODO 这3个modal很多重复代码， 后续可以抽取成高阶组件
+export default {CloseReasonModal, SendLogModal, ExportPassengerModal};

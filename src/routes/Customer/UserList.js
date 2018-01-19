@@ -150,10 +150,7 @@ export default class TableList extends PureComponent {
             <FormItem label="手机号:" style={formItemStyle}>
               {getFieldDecorator('mobile', {
                 initialValue: "",
-                rules: [{
-                  pattern: /^\d{0,11}$/,
-                  message: '请输入正确的手机号'
-                }],
+                rules: [{max: 32, message: '最长32位'}],
               })
               (<Input placeholder="请输入" style={inputStyle}/>)
               }

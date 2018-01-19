@@ -27,7 +27,7 @@ const menuData = [{
     name: '冷门资源',
     path: 'supplier/supplierPolicy/h5',
   }, {
-    name: '飞猪资源',
+    name: '第三方资源',
     path: 'supplier/flyPigList',
   }],
 }, {
