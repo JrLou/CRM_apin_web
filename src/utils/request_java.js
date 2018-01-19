@@ -60,7 +60,7 @@ function checkCode(json) {
       message: `提示`,
       description: json.msg || json.message || "",
     });
-    if (json.code == 422 || json.code == 411 || json.code == -2 || json.code == -8 || json.code == -4 || json.code== -11|| json.code== -12) {
+    if (json.code == 422 || json.code == 411 || json.code == 413 || json.code == -2 || json.code == -8 || json.code == -4 || json.code== -11|| json.code== -12) {
       Cookies.clearCookie()
       setTimeout(() => {
         location.reload()
