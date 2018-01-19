@@ -267,7 +267,7 @@ class AddForm extends Component {
   mokecopen(ole) { //手动录入成功回调函数
     let {linenubber, flightdata, flightstockData, flightstockAdd, numbering} = this.state
     this.props.addPost('flightstockAdd/getsearchAirportes', {code: [ole.FlightDepcode, ole.FlightArrcode]});
-    if (flightstockAdd.code && flightstockAdd.code.length > 0) {
+    if (flightstockAdd.code.length > 0 && flightstockAdd.code[0].data.length > 0) {
       debugger
       flightstockAdd.visible = false;
       ole.FlightDepAirport = flightstockAdd.code[0].data[0].airport_name
@@ -283,6 +283,8 @@ class AddForm extends Component {
         flightdata: flightdata,
         flightNumsdbdsdering: true
       });
+    } else {
+      message.warning('请输入正确的三字码');
     }
 
   }
