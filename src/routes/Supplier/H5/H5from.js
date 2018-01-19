@@ -49,7 +49,7 @@ class AddForm extends Component {
       baioshi: false,
       competencese: false,
       numbering: null,
-      flightTimeWill: '',
+      flightTimeWill: null,
       identification: false
     };
   }
@@ -143,11 +143,12 @@ class AddForm extends Component {
     });
   }
 
-  dome(obj){
-    this.obj=obj
+  dome(obj) {
+    this.obj = obj
     this.domes(obj)
   }
-  domes(){
+
+  domes() {
     this.dome()
   }
 
@@ -231,12 +232,24 @@ class AddForm extends Component {
 
   mokecopen(ole) { //手动录入成功回调函数
     let {linenubber, flightdata, flightstockData, h5Add, numbering} = this.state
+    this.props.addPost('h5Add/getsearchAirportes', {code: [ole.FlightDepcode, ole.FlightArrcode]});
+    if (h5Add.code.length > 0 && h5Add.code[0].data.length > 0) {
+      debugger
+    ole.FlightDepAirport = h5Add.code[0].data[0].airport_name
+    ole.FlightArrAirport = h5Add.code[1].data[0].airport_name
+    ole.FlightDeptimePlanDate = flightdata.flightTimeWill.format('YYYY-MM-DD') + " " + ole.FlightDeptimePlanDate + ':00'
+    ole.FlightArrtimePlanDate = flightdata.flightTimeWill.format('YYYY-MM-DD') + " " + ole.FlightArrtimePlanDate + ':00'
     h5Add.visible = false;
     flightstockData[numbering] = ole
     linenubber[numbering] = numbering
     this.setState({
       h5Add,
+      flightstockData,
+      linenubber,
     });
+    } else {
+      message.warning('请输入正确的三字码');
+    }
   }
 
   handleOk() { //弹窗确定操作回调
