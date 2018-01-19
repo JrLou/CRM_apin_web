@@ -64,7 +64,13 @@ let algorithm = {
         }
         return cycleDateadd
     },
-    // 出行天数算新区间的加的方法 old为moment格式数组
+    // 出行天数算新单个加的方法 old为moment格式数组
+    _caculateNewDatePartSingle(oldPart, days) {
+        let addMs = (+days) * (24 * 60 * 60 * 1000)
+        let oldMsArr = +moment(oldPart).format('x') + addMs
+        return moment(oldMsArr).format('YYYY-MM-DD')
+    },
+  // 出行天数算新区间的加的方法 old为moment格式数组
     _caculateNewDatePart(oldPart, days) {
         let addMs = (+days) * (24 * 60 * 60 * 1000)
         let oldMsArr = [+moment(oldPart[0]).format('x') + addMs, +moment(oldPart[1]).format('x')]
