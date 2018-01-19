@@ -36,18 +36,26 @@
     }
   }
 }
-.fightGropuInfoContainer {//实现内部文字太长了就显示为...
+.outFightGropuInfoContainer {
   :global {
-    .ant-row > div {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      &:hover {
-        overflow: initial;
-      }
-      div {
-        display: inline;
+    .ant-spin-container {
+      overflow: initial;
+    }
+  }
+  .fightGropuInfoContainer {//实现内部文字太长了就显示为...
+    :global {
+      .ant-row > div {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        &:hover {
+          overflow: initial;
+        }
+        div {
+          display: inline;
+        }
       }
     }
   }
 }
+

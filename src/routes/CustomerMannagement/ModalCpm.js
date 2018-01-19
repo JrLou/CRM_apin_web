@@ -111,7 +111,7 @@ class AddEditModal extends PureComponent {
             {getFieldDecorator('name', { //【客户名称】支持中文、英文、数字，最多50个字符；
               initialValue: this.getInitData(modalData, 'name'),
               rules: [
-                {max: 20, message: '最长20位'},
+                {max: 50, message: '最长50位'},
                 {required: true, message: `请输入${this.getPageName()}名称`}
               ],
             })

@@ -237,7 +237,7 @@ export default class OfflineList extends PureComponent {
       showQuickJumper: true,
       pageSize: this.page.pageSize,
       current: this.page.page,
-      total: list.option,
+      total: list && list.option,
       onChange: ((page, pageSize) => {
         this.page = {
           page: page,
@@ -295,14 +295,23 @@ export default class OfflineList extends PureComponent {
       {
         title: '卖价总价',
         dataIndex: 'totalPrice',
+        render: (text, record) => {
+          return +text / 100
+        },
       },
       {
         title: '结算总价',
         dataIndex: 'settlePrice',
+        render: (text, record) => {
+          return +text / 100
+        },
       },
       {
         title: '利润',
         dataIndex: 'profit',
+        render: (text, record) => {
+          return +text / 100
+        },
       },
       {
         title: '供应商',
@@ -312,8 +321,8 @@ export default class OfflineList extends PureComponent {
         title: '操作',
         render: (text, record) => {
           return <div className={styles.handleBtn}>
-            <Button type='primary'><Link to={"/offline/order/ViewOrder/" + record.id}>查看</Link></Button>
-            <Button type='primary'><Link to={"/offline/order/EditOrder/" + record.id}>修改</Link></Button>
+            <Link to={"/offline/order/ViewOrder/" + record.id}><Button type='primary'>查看</Button></Link>
+            <Link to={"/offline/order/EditOrder/" + record.id}><Button type='primary'>修改</Button></Link>
             <Button type='primary' disabled={!isLeader} onClick={this.delOrder.bind(this, record.id)}>删除</Button>
           </div>
         }
@@ -328,7 +337,7 @@ export default class OfflineList extends PureComponent {
             {this.renderForm()}
           </div>
           <div className={styles.btnGroup}><Button type={'primary'}><Link to='/offline/order/addOrder'>新增订单</Link></Button></div>
-          <div className={styles.titleGroup}>共搜索到{list.option}条数据</div>
+          <div className={styles.titleGroup}>共搜索到{list && list.option}条数据</div>
           <Table
             dataSource={list && list.data}
             columns={columns}
@@ -336,7 +345,7 @@ export default class OfflineList extends PureComponent {
             loading={loading}
             rowKey="id"
           />
-          <Button type="primary" style={{marginTop:'10px'}} onClick={this.outExcel}>导出EXCEL表格</Button>
+          <Button type="primary" style={{ marginTop: '10px' }} onClick={this.outExcel}>导出EXCEL表格</Button>
         </Card>
       </PageHeaderLayout>
     );
