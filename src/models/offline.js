@@ -62,9 +62,8 @@ export default {
       const response = yield call(delOrder, payload);
       if (response.code == 200) {
         message.success('操作成功')
-      } else {
-        message.error(response.message)
       }
+      
       yield put({
         type: 'changeLoading',
         payload: false,
@@ -79,9 +78,8 @@ export default {
       if (response.code == 200) {
         message.success('操作成功');
         yield put(routerRedux.push('/offline/order'));
-      } else {
-        message.error(response.message)
       }
+      
       yield put({
         type: 'changeLoading',
         payload: false,
@@ -96,9 +94,8 @@ export default {
       if (response.code == 200) {
         message.success('修改成功');
         yield put(routerRedux.push('/offline/order'));
-      } else {
-        message.error(response.message)
-      }
+      } 
+      
       yield put({
         type: 'changeLoading',
         payload: false,
@@ -117,9 +114,8 @@ export default {
           payload: payload,
         });
 
-      } else {
-        message.error(response.message)
-      }
+      } 
+      
       yield put({
         type: 'changeLoading',
         payload: false,
@@ -134,9 +130,8 @@ export default {
       if (response.code == 200) {
         message.success('操作成功');
         window.location.href = response.data.url;
-      } else {
-        message.error(response.message)
-      }
+      } 
+      
       yield put({
         type: 'changeLoading',
         payload: false,
@@ -149,9 +144,8 @@ export default {
           type: 'getCustomers',
           payload: response.data ? response.data : [],
         });
-      } else {
-        message.error(response.message);
       }
+      
     },
     *searchSupplier({ payload }, { call, put }) {
       const response = yield call(searchSupplier, payload);
@@ -160,9 +154,8 @@ export default {
           type: 'getSupplier',
           payload: response.data ? response.data : [],
         });
-      } else {
-        message.error(response.message);
-      }
+      } 
+      
     },
     *searchCity({ payload }, { call, put }) {
 
@@ -186,9 +179,8 @@ export default {
           type: 'delOneScheme',
           payload: payload.index,
         });
-      } else {
-        message.error(response.message);
       }
+      
     },
   },
 
