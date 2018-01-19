@@ -10,7 +10,7 @@ import {
 } from 'antd';
 import StandardTable from './TableList';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
-import AllModal from './ModalCpm'
+import AllModal from './ModalCpm';
 
 import styles from './Template.less';
 

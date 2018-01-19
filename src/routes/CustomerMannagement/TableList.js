@@ -1,12 +1,17 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'dva';
-import {Table, Input, Popconfirm} from 'antd';
+import CookieHelp from '../../utils/cookies';
+import {Table, Button} from 'antd';
 import styles from './TableList.less';
 
 @connect(state => ({
   customerMannagement: state.customerMannagement,
 }))
 class StandardTable extends PureComponent {
+  constructor(){
+    super();
+    this.currentUser = CookieHelp.getCookieInfo('_r') ? Base64.decode(CookieHelp.getCookieInfo('_r')) : null;
+  }
   handleTableChange = (pagination, filters, sorter) => {
     this.props.onChange(pagination, filters, sorter);
   };
@@ -18,6 +23,7 @@ class StandardTable extends PureComponent {
 
   render() {
     const {customerMannagement: {loading, data: {data, option}}, handleShowModalSwitch, page, dispatch} = this.props;
+    const isLeader = !!this.currentUser && this.currentUser.split(',').indexOf('716103936e1a461ab79dcb7283a979b8') !== -1;
     const columns = [
       {
         title: `${this.getPageName()}名称`,
@@ -52,10 +58,11 @@ class StandardTable extends PureComponent {
         title: '编辑',
         dataIndex: 'operation',
         render: (text, record) => {
-          const {editable, isEditing} = record;
           return (
             <div style={{whiteSpace: "nowrap"}}>
-              <a
+              <Button
+                disabled={!isLeader}
+                type='primary'
                 onClick={() => {
                   handleShowModalSwitch('edit');
                   dispatch({
@@ -64,9 +71,11 @@ class StandardTable extends PureComponent {
                   })
                 }}>
                 修改
-              </a>
+              </Button>
               &nbsp;&nbsp;&nbsp;
-              <a
+              <Button
+                disabled={!isLeader}
+                type='primary'
                 onClick={() => {
                   handleShowModalSwitch('delete');
                   dispatch({
@@ -75,7 +84,7 @@ class StandardTable extends PureComponent {
                   });
                 }}>
                 删除
-              </a>
+              </Button>
             </div>
           );
         }
