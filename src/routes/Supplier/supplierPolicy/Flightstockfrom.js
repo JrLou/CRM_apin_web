@@ -61,7 +61,7 @@ class AddForm extends Component {
       flightstockEdit: nextProps.flightstockEdit ? nextProps.flightstockEdit : {details: []},
     });
 
-    if (nextProps.flightstockEdit && nextProps.flightstockEdit.details.length > 0) {
+    if (nextProps.flightstockEdit && nextProps.flightstockEdit.details.length == 2) {
       let list = nextProps.flightstockEdit.details;
       list[0].seat_type == 0 ? list[0].seat_type = "硬切" : list[0].seat_type = "代销"
       list[0].FlightNo = list[0].flight_no
@@ -233,9 +233,9 @@ class AddForm extends Component {
     let options = []
     const {flightstockAdd} = this.state;
     if (flightstockAdd && flightstockAdd.accurate.data && flightstockAdd.accurate.data.length > 0) {
-      flightstockAdd.accurate.datva.map((v, k) => {
+      flightstockAdd.accurate.data.map((v, k) => {
         options.push(
-          <Radio value={k} key={v} className={css.selectbBox}>
+          <Radio value={v} key={v} className={css.selectbBox}>
             <FlightstockShow accurate={v} routeSelection={this.routeSelection.bind(this)}/>
           </Radio>
         )
@@ -244,9 +244,9 @@ class AddForm extends Component {
     }
   }
 
-  routeSelection(arr) { //查询航线结果选中
+  routeSelection(e) { //查询航线结果选中
     let {flightstockAdd, flightstockData, linenubber, flightdata} = this.state
-    flightstockData[flightstockAdd.numbering] = arr
+    flightstockData[flightstockAdd.numbering] = e.target.value
     linenubber[flightstockAdd.numbering] = flightstockAdd.numbering
     flightdata.selected = flightstockAdd.numbering;
     flightdata.selectedWeekGroup[flightstockAdd.numbering] = flightstockAdd.accurate.option.mixedFlights
@@ -373,6 +373,7 @@ class AddForm extends Component {
         break;
     }
   }
+
   weekSelect(week, ole) {
     let data = this.state.flightdata;
     data.selectedWeekGroup[ole] = Algorithm.toogleToWeekStr(week);
@@ -380,6 +381,7 @@ class AddForm extends Component {
       flightdata: data,
     });
   }
+
   addDate(ole, add) {
     let _this = this;
     const {form} = _this.props;
@@ -392,9 +394,12 @@ class AddForm extends Component {
         break;
     }
   }
-  dome(e){
+
+  dome(e) {
+    console.log('这是外层的')
     console.log(e.target.value)
   }
+
   shelves() {
     console.log(this.props)
     let _this = this
@@ -821,7 +826,7 @@ class AddForm extends Component {
             footer={null}
           >
             {flightstockAdd.accurate && flightstockAdd.accurate.data &&
-            <RadioGroup onChange={this.dome.bind(this)}>
+            <RadioGroup onChange={this.routeSelection.bind(this)}>
               {this.reviewerLists()}
             </RadioGroup>}
             {!flightstockAdd.accurate.data &&

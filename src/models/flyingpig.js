@@ -5,8 +5,10 @@ export default {
   namespace: "flyingpigList",
   state: {
     loading: true,
-    list: [],
-    total: 0,
+    data:{
+      data:[],
+      option:{},
+    },
   },
   effects: {
     * getList({payload}, {call, put}) {
@@ -36,8 +38,7 @@ export default {
     save(state, {payload}) {
       return {
         ...state,
-        list: payload.data ? payload.data : [],
-        total: payload.option.total ? payload.option.total : 0,
+        data:payload,
       };
     },
     changeLoading(state, {payload}) {
