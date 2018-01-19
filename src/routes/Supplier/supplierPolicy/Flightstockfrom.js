@@ -157,7 +157,7 @@ class AddForm extends Component {
         values.cityDep = flightstockData[0].FlightDep
         values.endDate = moment(flightdata.flightTimeWill[1]).format("YYYY-MM-DD")
         values.startDate = moment(flightdata.flightTimeWill[0]).format("YYYY-MM-DD")
-        values.flightNumber = flightstockData[0].FlightNo + '-' + flightstockData[0].FlightNo
+        values.flightNumber = flightstockData[0].FlightNo + '-' + flightstockData[1].FlightNo
         values.weekFlights = flightdata.selectedWeekGroup[0]
         values.managerId = 0
         this.setState({
@@ -261,15 +261,21 @@ class AddForm extends Component {
   mokecopen(ole) { //手动录入成功回调函数
     let {linenubber, flightdata, flightstockData, flightstockAdd, numbering} = this.state
     flightstockAdd.visible = false;
-    flightstockData[numbering] = ole
-    flightdata.selectedWeekGroup[numbering] = Algorithm.toogleToWeekStr(ole.flights)
-    linenubber[numbering] = numbering
-    flightdata.entry = false
-    this.setState({
-      flightstockAdd: flightstockAdd,
-      flightdata: flightdata,
-      flightNumsdbdsdering: true
-    });
+    this.props.addPost('flightstockAdd/getsearchAirportes', {code: [ole.FlightDepcode, ole.FlightArrcode]});
+    if (flightstockAdd.code && flightstockAdd.code.length > 0) {
+      ole.FlightDepAirport = flightstockAdd.code[0]
+      ole.FlightArrAirport = flightstockAdd.code[1]
+      flightstockData[numbering] = ole
+      flightdata.selectedWeekGroup[numbering] = Algorithm.toogleToWeekStr(ole.flights)
+      linenubber[numbering] = numbering
+      flightdata.entry = false
+      this.setState({
+        flightstockAdd,
+        flightdata: flightdata,
+        flightNumsdbdsdering: true
+      });
+    }
+
   }
 
   handleOk() { //弹窗确定操作回调
@@ -397,17 +403,10 @@ class AddForm extends Component {
     }
   }
 
-  dome(e) {
-    console.log('这是外层的')
-    console.log(e.target.value)
-  }
-
   shelves() {
-    console.log(this.props)
     let _this = this
     let data = _this.props.information.airline_status
     data == 0 ? data = "上架" : data = "下架"
-    console.log(data)
     confirm({
       title: '您确定要' + data + '吗？',
       onOk() {
@@ -415,6 +414,9 @@ class AddForm extends Component {
           id: _this.props.id,
           airlineStatus: data == "上架" ? 1 : 0,
         },);
+        _this.setState({
+          baioshi: true,
+        });
       },
       onCancel() {
       },

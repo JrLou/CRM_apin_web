@@ -286,6 +286,13 @@ export async function getLogAirLine(params) {
     body: params,
   });
 }
+//添加日志
+export async function getsearchAirport(params) {
+  return request('/api/resource/searchAirport', {
+    method: 'POST',
+    body: params,
+  });
+}
 //冷门资源列表
 export async function geth5(params) {
   return request('/api/resource/getAirLinesRare', {
