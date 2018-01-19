@@ -702,6 +702,8 @@ class BulkImportForm extends Component {
         this.props.visiblees();
         console.log(obj)
         console.log(this.props)
+      } else {
+        message.success(obj.file.response.msg)
       }
       this.setState({
         fileList: obj.fileList
@@ -709,18 +711,21 @@ class BulkImportForm extends Component {
 
     }
   }
-  beforeUpload(file){
+
+  beforeUpload(file) {
     const isJPG = file.type === 'xlsx/xls';
     // if (!isJPG) {
     //   message.error('您上传的不是Excel，请重新上传!');
     // }
-    const isLt2M = file.size > 4096000;
-    if (!isLt2M) {
+    console.log(file)
+    const isLt2M = file.size < 4096000;
+    if (file.size > 4096000) {
       debugger
       message.error('上传文件不能大于4MB，请重新导入!');
     }
-    return isJPG && isLt2M;
+    return isLt2M;
   }
+
   render() {
     const {getFieldDecorator} = this.props.form;
     const formItemLayout = {
