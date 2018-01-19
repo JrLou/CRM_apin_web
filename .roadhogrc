@@ -21,7 +21,7 @@
   },
   "proxy": {
     "/api": {
-    "target": "http://192.168.0.32:9712/",
+    "target": "http://appadmin.test.io.apin.com/",
     "changeOrigin": true,
     "pathRewrite": { "^/api" : "/api" }
     }
