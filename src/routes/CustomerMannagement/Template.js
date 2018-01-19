@@ -30,7 +30,7 @@ export default class TableList extends PureComponent {
       modalType: 'add',//add、 edit、 delete
     };
     this.page = {
-      pageNum: 1,
+      current: 1,
       pageSize: 10,
     };
   }
@@ -54,7 +54,7 @@ export default class TableList extends PureComponent {
     const {dispatch} = this.props;
 
     this.page = {
-      pageNum: pagination.current,
+      current: pagination.current,
       pageSize: pagination.pageSize,
     };
 
@@ -71,7 +71,7 @@ export default class TableList extends PureComponent {
   resetCurrentPage = () => {
     this.page = {
       ...this.page,
-      pageNum: 1,
+      current: 1,
     }
   };
 
