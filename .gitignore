@@ -20,3 +20,4 @@ npm-debug.log*
 /coverage
 ._roadhogrc
 /server/node_modules
+.roadhogrc

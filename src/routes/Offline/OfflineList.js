@@ -237,7 +237,7 @@ export default class OfflineList extends PureComponent {
       showQuickJumper: true,
       pageSize: this.page.pageSize,
       current: this.page.page,
-      total: list.option,
+      total: list && list.option,
       onChange: ((page, pageSize) => {
         this.page = {
           page: page,
@@ -328,7 +328,7 @@ export default class OfflineList extends PureComponent {
             {this.renderForm()}
           </div>
           <div className={styles.btnGroup}><Button type={'primary'}><Link to='/offline/order/addOrder'>新增订单</Link></Button></div>
-          <div className={styles.titleGroup}>共搜索到{list.option}条数据</div>
+          <div className={styles.titleGroup}>共搜索到{list && list.option}条数据</div>
           <Table
             dataSource={list && list.data}
             columns={columns}
@@ -336,7 +336,7 @@ export default class OfflineList extends PureComponent {
             loading={loading}
             rowKey="id"
           />
-          <Button type="primary" style={{marginTop:'10px'}} onClick={this.outExcel}>导出EXCEL表格</Button>
+          <Button type="primary" style={{ marginTop: '10px' }} onClick={this.outExcel}>导出EXCEL表格</Button>
         </Card>
       </PageHeaderLayout>
     );
