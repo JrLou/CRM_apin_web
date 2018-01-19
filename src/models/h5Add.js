@@ -1,4 +1,4 @@
-import {getaddAirLine, geth5Add, getdetailAirLine, geth5Edit} from '../services/api';
+import {getaddAirLine, geth5Add, getdetailAirLine, geth5Edit, getsearchAirport} from '../services/api';
 import {message} from 'antd';
 
 export default {
@@ -10,6 +10,7 @@ export default {
     ok: '',
     judgment: false,
     details: [],//编辑回显数据
+    code: []
   },
   effects: {
     //飞常准查询
@@ -64,6 +65,17 @@ export default {
         })
       }
     },
+    * getsearchAirportes({payload}, {call, put}) {
+      //根据三字码查询机场
+      const responseA = yield call(getsearchAirport, {code: payload.code[0]})
+      const responseB = yield call(getsearchAirport, {code: payload.code[1]})
+      if (responseA && responseB && responseA.code >= 1 && responseB.code >= 1) {
+        yield put({
+          type: 'codes',
+          payload: {code: [responseA, responseB]},
+        })
+      }
+    },
     * visiblebs({payload}, {call, put}) {
       yield put({
         type: 'visibles',
@@ -92,7 +104,7 @@ export default {
         payload: payload,
       })
     },
-  * detailsadd({payload}, {call, put}) {
+    * detailsadd({payload}, {call, put}) {
       yield put({
         type: 'detailsadder',
         payload: payload,
@@ -138,6 +150,13 @@ export default {
         numbering: null,
       }
     },
+    codes(state, action) {
+      debugger
+      return {
+        ...state,
+        code: action.payload.code,
+      }
+    },
     visibles(state, action) {
       return {
         ...state,
@@ -147,7 +166,7 @@ export default {
     judgme(state, action) {
       return {
         ...state,
-          judgment: action.payload.judgmentes,
+        judgment: action.payload.judgmentes,
       }
     },
   },

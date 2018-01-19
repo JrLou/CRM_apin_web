@@ -51,7 +51,6 @@ export default class TableList extends PureComponent {
         pc: 10,
       },
     });
-    console.log(this.props)
   }
 
   companyname(ole, e, event) { //全局函数（根据ole作为标识可以快速查找各功能实现位置）
@@ -254,16 +253,6 @@ export default class TableList extends PureComponent {
               }}
             >
               <Column
-                title="机票资源号"
-                dataIndex="id"
-                key="id"
-              />
-              <Column
-                title="供应商名称"
-                dataIndex="supplier_name"
-                key="supplier_name"
-              />
-              <Column
                 title="出发/回程城市"
                 dataIndex="city_dep"
                 key="city_dep"
@@ -272,49 +261,63 @@ export default class TableList extends PureComponent {
                 }}
               />
               <Column
-                title="出发/回程航班"
+                title="航班号"
                 dataIndex="flight_no"
                 key="flight_no"
               />
               <Column
-                title="航班周期"
+                title="出发日期"
                 dataIndex="departure_start"
                 key="departure_start"
                 render={(text, record, index) => {
-                  return <div>{moment(record.departure_start).format('YYYY/MM/DD') + "至" + moment(record.departure_end).format('YYYY/MM/DD')}</div>
+                  return <div>{moment(record.departure_start).format('YYYY-MM-DD')}</div>
                 }}
               />
               <Column
-                title="往返天数"
-                dataIndex="days"
-                key="days"
+                title="出发时刻"
+                dataIndex="time_dep"
+                key="time_dep"
+                render={(text, record, index) => {
+                  return <div>{moment(record.time_dep).format('HH:mm') + "-" + moment(record.time_arr).format('HH:mm')}</div>
+                }}
               />
               <Column
-                title="航班负责人"
-                dataIndex="manager"
-                key="manager"
+                title="含税价"
+                dataIndex="sell_price"
+                key="sell_price"
+                render={(text, record, index) => {
+                  return <div>{"￥" + record.sell_price}</div>
+                }}
+              />
+              <Column
+                title="折扣"
+                dataIndex="seat_count"
+                key="seat_count"
+                render={(text, record, index) => {
+                  return <div>{record.seat_count + '折'}</div>
+                }}
               />
               <Column
                 title="状态"
-                dataIndex="airline_status"
-                key="airline_status"
+                dataIndex="is_invalid"
+                key="is_invalid"
                 render={(text, record, index) => {
-                  switch (record.airline_status) {
+                  switch (record.is_invalid) {
                     case 0:
-                      return <div>待上架</div>
+                      return <div>有效</div>
                       break;
                     case 1:
-                      return <div>已上架</div>
+                      return <div>无效</div>
                       break;
                   }
                 }}
               />
               <Column
-                title="创建时间"
-                dataIndex="time"
-                key="time"
+                title="更新时间"
+                dataIndex="create_time"
+                key="create_time"
                 render={(text, record, index) => {
-                  return <div>{moment(record.create_time).format('YYYY/MM/DD')}</div>
+                  return <div>{moment(record.create_time).format('YYYY-MM-DD HH:mm')}</div>
                 }}
               />
               <Column
