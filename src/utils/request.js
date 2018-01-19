@@ -34,7 +34,7 @@ function checkStatus(response) {
   error.response = response;
   throw error;
 }
-function checkCode(json) {
+export function checkCode(json) {
   // >=1 操作成功
   // -1 ~ -99 固定错误编码，需要特殊处理
   // -199 ~ -100  用户输入信息校验错误

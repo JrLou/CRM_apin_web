@@ -319,7 +319,7 @@ export default class OfflineList extends PureComponent {
         }
       },
     ];
-    let isLeader = this.currentUser.split(',').indexOf('716103936e1a461ab79dcb7283a979b8') !== -1;
+    let isLeader = !!this.currentUser && this.currentUser.split(',').indexOf('716103936e1a461ab79dcb7283a979b8') !== -1;
     console.log('总监？', isLeader);
     return (
       <PageHeaderLayout>
