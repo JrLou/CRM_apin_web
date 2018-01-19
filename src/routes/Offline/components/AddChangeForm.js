@@ -23,7 +23,7 @@ export default class AddFlightForm extends Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                values.handle_date = moment(values.handle_date).format('YYYY-MM-DD');
+                values.handleDate = moment(values.handleDate).format('YYYY-MM-DD');
                 dispatch({
                     type: 'offline/addOneChange',
                     payload: { ...values, orderId: currentOrder },
@@ -63,7 +63,7 @@ export default class AddFlightForm extends Component {
                     <Col span={10}>
                         <FormItem label="发生费用"  {...formItemLayout}>
                             {getFieldDecorator('fee', {
-                                rules: [{ required: true, message: "必填" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入不大于99999的整数" }],
+                                rules: [{ required: true, message: "必填" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
                                 initialValue: ''
                             })(
                                 <Input />
@@ -73,7 +73,7 @@ export default class AddFlightForm extends Component {
                     <Col span={10}>
                         <FormItem label="退改利润"  {...formItemLayout}>
                             {getFieldDecorator('profit', {
-                                rules: [{ required: true, message: "必填" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入不大于99999的整数" }],
+                                rules: [{ required: true, message: "必填" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
                                 initialValue: ''
                             })(
                                 <Input />
@@ -96,7 +96,7 @@ export default class AddFlightForm extends Component {
                 <Row gutter={20}>
                     <Col span={10}>
                         <FormItem label="操作日期"  {...formItemLayout}>
-                            {getFieldDecorator('handle_date', {
+                            {getFieldDecorator('handleDate', {
                                 rules: [{ required: true, message: "必填" }],
                                 initialValue: moment(new Date())
                             })(

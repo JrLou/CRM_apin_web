@@ -217,6 +217,9 @@ export default class TableList extends PureComponent {
         title: '操作时间',
         dataIndex: 'create_time',
         key: 'create_time',
+        render: (text, data) => {
+          return moment(data.create_time).format("YYYY-MM-DD:hh:mm:ss");
+        }
       }, {
         title: '操作内容',
         dataIndex: 'create_content',

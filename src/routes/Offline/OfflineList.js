@@ -336,14 +336,14 @@ export default class OfflineList extends PureComponent {
       },
     ];
     let isLeader = !!this.currentUser && this.currentUser.split(',').indexOf('716103936e1a461ab79dcb7283a979b8') !== -1;
-    console.log('总监？', isLeader);
+    // console.log('总监？', isLeader);
     return (
       <PageHeaderLayout>
         <Card bordered={false}>
           <div className={styles.tableListForm}>
             {this.renderForm()}
           </div>
-          <div className={styles.btnGroup}><Button type={'primary'}><Link to='/offline/order/addOrder'>新增订单</Link></Button></div>
+          <div className={styles.btnGroup}><Link to='/offline/order/addOrder'><Button type={'primary'}>新增订单</Button></Link></div>
           <div className={styles.titleGroup}>共搜索到{list && list.option}条数据</div>
           <Table
             className={styles.tableOutter}

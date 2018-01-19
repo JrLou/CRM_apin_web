@@ -7,3 +7,12 @@
     vertical-align: top;
   }
 }
+
+//把上传的文件及进度条隐藏
+.uploadContainer {
+  :global {
+    .ant-upload-list,.ant-upload-list-text {
+      display: none;
+    }
+  }
+}
