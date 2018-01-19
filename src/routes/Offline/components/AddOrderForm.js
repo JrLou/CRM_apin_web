@@ -264,11 +264,11 @@ export default class AddOrderForm extends Component {
                     <Row gutter={20}>
                         <Col span={8}>
                             <FormItem label="操作日期"  {...formItemLayout}>
-                                {getFieldDecorator('handle_date' + k, {
+                                {getFieldDecorator('handleDate' + k, {
                                     rules: [],
-                                    initialValue: v.handle_date
+                                    initialValue: v.handleDate
                                 })(
-                                    <DatePicker disabled={isDisabled} onChange={this.saveChange.bind(null, k, 'handle_date')} />
+                                    <DatePicker disabled={isDisabled} onChange={this.saveChange.bind(null, k, 'handleDate')} />
                                     )}
                             </FormItem>
                         </Col>
