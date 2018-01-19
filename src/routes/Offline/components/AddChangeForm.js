@@ -98,6 +98,7 @@ export default class AddFlightForm extends Component {
                         <FormItem label="操作日期"  {...formItemLayout}>
                             {getFieldDecorator('handle_date', {
                                 rules: [{ required: true, message: "必填" }],
+                                initialValue: moment(new Date())
                             })(
                                 <DatePicker />
                                 )}
