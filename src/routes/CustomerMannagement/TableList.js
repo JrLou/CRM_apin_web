@@ -28,31 +28,37 @@ class StandardTable extends PureComponent {
       {
         title: `${this.getPageName()}名称`,
         dataIndex: 'name',
+        width: '12%'
       },
       {
         title: '地址',
         dataIndex: 'address',
+        width: '24%'
       },
       {
         title: '联系人',
         dataIndex: 'contacts',
+        width: '12%'
       },
       {
         title: '电话号码',
         dataIndex: 'mobile',
+        width: '14%'
       },
       {
         title: '微信/QQ',
         dataIndex: 'wxqq',
+        width: '11%'
       },
       {
         title: '操作日期',
         dataIndex: 'updateTime',
-        render: text => typeof text === 'string' && text.substring(0, 10)
+        render: text => (<span style={{whiteSpace: "nowrap"}}>{typeof text === 'string' && text.substring(0, 10)}</span>)
       },
       {
         title: '操作人',
         dataIndex: 'updateUserName',
+        render: text => (<span style={{whiteSpace: "nowrap"}}>{text}</span>)
       },
       {
         title: '编辑',

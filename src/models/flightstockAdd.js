@@ -1,4 +1,4 @@
-import {getaddAirLine, getadd} from '../services/api';
+import {getaddAirLine, getadd, getsearchAirport} from '../services/api';
 import {message} from 'antd';
 
 export default {
@@ -8,7 +8,8 @@ export default {
     numbering: null,
     visible: false,
     ok: '',
-    judgment: false
+    judgment: false,
+    code: []
   },
   effects: {
     //飞常准查询
@@ -64,6 +65,17 @@ export default {
         })
       }
     },
+    * getsearchAirportes({payload}, {call, put}) {
+      //根据三字码查询机场
+      const responseA = yield call(getsearchAirport, {code: payload.code[0]})
+      const responseB = yield call(getsearchAirport, {code: payload.code[1]})
+      if (responseA && responseB && responseA.code >= 1 && responseB.code >= 1) {
+        yield put({
+          type: 'codes',
+          payload: {code: [responseA, responseB]},
+        })
+      }
+    },
     * judgmentesdobj({payload}, {call, put}) {
       yield put({
         type: 'judgmentes',
@@ -101,6 +113,12 @@ export default {
       return {
         ...state,
         visible: action.payload.visible,
+      }
+    },
+    codes(state, action) {
+      return {
+        ...state,
+        code: action.payload.code,
       }
     },
     judgmentes(state, action) {

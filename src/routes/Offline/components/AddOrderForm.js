@@ -80,7 +80,7 @@ export default class AddOrderForm extends Component {
                     <Col span={5}>
                         <FormItem label="结算价"  {...formItemLayout}>
                             {getFieldDecorator('unitprice' + k, {
-                                rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入不大于99999的整数" }],
+                                rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
                                 initialValue: v.unitprice
                             })(
                                 <Input
@@ -708,7 +708,7 @@ export default class AddOrderForm extends Component {
                                                         rules: [{ required: true, message: "必填" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入不大于99999的整数" }],
                                                         initialValue: detail.sellPrice
                                                     })(
-                                                        <Input disabled={readOnly} style={{ width: '70%', marginRight: "6px" }} />
+                                                        <Input onBlur={this.changeCaulator} disabled={readOnly} style={{ width: '70%', marginRight: "6px" }} />
                                                         )}
                                                     <span>元/人</span>
                                                 </FormItem>
