@@ -72,7 +72,7 @@ class AddForm extends Component {
         flightstockData: [list[0]],
         linenubber: [0],
         flightdata: flightdata,
-      });
+    });
     }
     if (nextProps.h5Add && nextProps.h5Add.judgment) {
       this.props.away()
