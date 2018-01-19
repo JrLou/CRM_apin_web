@@ -13,7 +13,7 @@ class LogTable extends Component {
         const loColumns = [{
             title: '推送时间',
             dataIndex: 'create_time',
-            render: (text, record) => moment(text).format('YYYY-MM-DD'),
+            render: (text, record) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
         },
 
         {
@@ -25,19 +25,31 @@ class LogTable extends Component {
         {
             title: '起飞日期',
             render: (text, record) => {
-                // return record.flightInfo[0].time_dep;
+                let _innerText;
+                record.flightInfo.map((v, k) => {
+                    if (v.trip_index == 0) {
+                        _innerText = moment(v.date_dep).format('YYYY-MM-DD');
+                    }
+                });
+                return _innerText;
             },
         },
         {
             title: '返回日期',
             render: (text, record) => {
-                // return record.flightInfo[1].time_dep;
+                let _innerText;
+                record.flightInfo.map((v, k) => {
+                    if (v.trip_index == 1) {
+                        _innerText = moment(v.date_dep).format('YYYY-MM-DD');
+                    }
+                });
+                return _innerText;
             },
         },
         {
             title: '销售价',
             render: (text, record) => {
-                return record.flightInfo[1].sell_price;
+                return record.flightInfo[1].sell_price / 100;
             },
         },
         {
