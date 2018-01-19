@@ -174,6 +174,7 @@ class AddForm extends Component {
   }
 
   onChange(value, selectedOptions) {  //日期选择器结果输出
+    console.log(value)
     let data = this.state.flightdata;
     data.flightTimeWill = value;
     this.setState({flightdata: data});
@@ -205,29 +206,34 @@ class AddForm extends Component {
     let data = this.state.flightdata
     let {flightstockAdd, flightstockData, linenubber, flightdata} = this.state
     if (!data.competence) {
+      if (!flightdata.days) {
+        message.warning('请先填写出行天数');
+        return;
+      }
       if (!value) {
         message.warning('请填写要查询的航班');
         return;
       }
-      if (data.flightTimeWill) {
-        flightstockData[ole] = {}
-        linenubber[ole] = null
-        flightdata.selectedWeekGroup[ole] = ''
-        this.setState({
-          flightstockData: flightstockData,
-          flightNumbering: '航班号为：' + value + '的所有的航班',
-          flightdata: flightdata,
-          numbering: ole
-        });
-        this.props.addPost('flightstockAdd/addAirLine', {
-          endDate: moment(data.flightTimeWill[1]).format("YYYY-MM-DD"),
-          fnum: value,
-          startDate: moment(data.flightTimeWill[0]).format("YYYY-MM-DD"),
-          numbering: ole,
-        },);
-      } else {
+      if (!data.flightTimeWill) {
         message.warning('请先选择出发航班日期');
+        return;
       }
+      flightstockData[ole] = {}
+      linenubber[ole] = null
+      flightdata.selectedWeekGroup[ole] = ''
+      this.setState({
+        flightstockData: flightstockData,
+        flightNumbering: '航班号为：' + value + '的所有的航班',
+        flightdata: flightdata,
+        numbering: ole
+      });
+      this.props.addPost('flightstockAdd/addAirLine', {
+        endDate: moment(data.flightTimeWill[1]).format("YYYY-MM-DD"),
+        fnum: value,
+        startDate: moment(data.flightTimeWill[0]).format("YYYY-MM-DD"),
+        numbering: ole,
+      },);
+
     }
   }
 
@@ -260,11 +266,14 @@ class AddForm extends Component {
 
   mokecopen(ole) { //手动录入成功回调函数
     let {linenubber, flightdata, flightstockData, flightstockAdd, numbering} = this.state
-    flightstockAdd.visible = false;
     this.props.addPost('flightstockAdd/getsearchAirportes', {code: [ole.FlightDepcode, ole.FlightArrcode]});
     if (flightstockAdd.code && flightstockAdd.code.length > 0) {
-      ole.FlightDepAirport = flightstockAdd.code[0]
-      ole.FlightArrAirport = flightstockAdd.code[1]
+      debugger
+      flightstockAdd.visible = false;
+      ole.FlightDepAirport = flightstockAdd.code[0].data[0].airport_name
+      ole.FlightArrAirport = flightstockAdd.code[1].data[0].airport_name
+      ole.FlightDeptimePlanDate = flightdata.flightTimeWill[0].format('YYYY-MM-DD') + " " + ole.FlightDeptimePlanDate + ':00'
+      ole.FlightArrtimePlanDate = Algorithm._caculateNewDatePartSingle(flightdata.flightTimeWill[0].format('YYYY-MM-DD'), flightdata.days - 1) + " " + ole.FlightArrtimePlanDate + ':00'
       flightstockData[numbering] = ole
       flightdata.selectedWeekGroup[numbering] = Algorithm.toogleToWeekStr(ole.flights)
       linenubber[numbering] = numbering
@@ -296,9 +305,7 @@ class AddForm extends Component {
         break;
       case "手工录入":
         flightdata.entry = true;
-        flightdata.visible = true;
         flightdata.flightNumsdbdsdering = false;
-        flightdata.remarks = false;
         flightdata.ok = "录入";
         this.setState({
           flightNumsdbdsdering: false,
@@ -306,7 +313,6 @@ class AddForm extends Component {
         });
         break;
       case "录入":
-        flightdata.remarks = false;
         flightdata.flightNumsdbdsdering = false;
         break;
     }
@@ -332,6 +338,12 @@ class AddForm extends Component {
     let data = _this.state.flightdata;
     let {flightstockAdd} = _this.state;
     switch (olr) {
+      case 1:
+        data.days = e.target.value
+        _this.setState({
+          flightdata: data,
+        });
+        break;
       case 5:
         data.chupiaodays = parseFloat(e.target.value);
         _this.setState({
@@ -594,6 +606,7 @@ class AddForm extends Component {
                       })
                       (< Input placeholder="请填写出行天数"
                                disabled={this.state.flightdata.competence}
+                               onChange={this.valHeadquarters.bind(this, 1)}
                                style={{width: '450px'}}
                       />)}
                     </FormItem>
