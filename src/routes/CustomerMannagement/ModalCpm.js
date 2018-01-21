@@ -49,10 +49,13 @@ class AddEditModal extends PureComponent {
       dispatch({
         type: 'customerMannagement/' + urlLast,
         payload: payload,
-        succCB: () => {
+        succCB: () => {//TODO 这里add请求成功后应该重新请求第一页的数据，edit应该不用的
+          if (modalType === 'add') {
+            this.props.resetCurrentPage && this.props.resetCurrentPage();
+          }
           dispatch({
             type: "customerMannagement/fetch",
-            payload: {...page}
+            payload: page
           });
           form.resetFields();
         }
