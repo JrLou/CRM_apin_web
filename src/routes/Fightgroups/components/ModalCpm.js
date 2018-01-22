@@ -417,6 +417,7 @@ class ExportPassengerModal extends Component {
           <Button
             type='primary'
             loading={modalConfirmLoading}
+            disabled={!this.serverTicketsData}// || this.isTicketsAllNull()
             onClick={() => {
               if (this.serverTicketsData && this.isTicketsAllNull()) {
                 notification.error({
