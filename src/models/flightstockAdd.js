@@ -74,6 +74,9 @@ export default {
           type: 'codes',
           payload: {code: [responseA, responseB]},
         })
+      }  else {
+        message.warning('请输入正确的机场三字码');
+        return
       }
     },
     * judgmentesdobj({payload}, {call, put}) {
