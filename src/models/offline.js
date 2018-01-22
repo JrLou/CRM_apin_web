@@ -222,7 +222,7 @@ export default {
       };
     },
     getOneChange(state, action) {
-      action.payload.handle_date = moment(action.payload.handle_date, 'YYYY-MM-DD');
+      action.payload.handleDate = moment(action.payload.handleDate, 'YYYY-MM-DD');
       state.changeInfo.push(action.payload);
       let newChangeInfo = state.changeInfo;
       return {
