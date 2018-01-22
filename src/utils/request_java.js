@@ -102,7 +102,7 @@ export default function request(url, options) {
   // } catch (e) {
   // }
   if (newOptions.method === 'POST' || newOptions.method === 'PUT') {
-    let Authorization = decodeURIComponent(Cookies.getCookieInfo('USERINFOADMIN_ARM'));
+    let Authorization = decodeURIComponent(Cookies.getCookieInfo('token'));
     if (Authorization.indexOf('{') > -1) {
       Authorization = JSON.parse(Authorization).accessToken;
     }
