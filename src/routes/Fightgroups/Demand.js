@@ -29,7 +29,7 @@ export default class Demand extends PureComponent {
     this.handleSearch();
   }
   handleSearch(e) {
-    if(e){
+    if (e) {
       e.preventDefault();
     }
     const { dispatch, form } = this.props;
@@ -103,7 +103,7 @@ export default class Demand extends PureComponent {
         </Row>
         <div style={{ overflow: 'hidden' }}>
           <span style={{ float: 'right' }}>
-            <Button type="primary" style={{ marginRight: 6 }}  htmlType="submit">查询</Button>
+            <Button type="primary" style={{ marginRight: 6 }} htmlType="submit">查询</Button>
             <Button type="default" onClick={this.resetValue.bind(this)}>重置</Button>
           </span>
         </div>
@@ -135,14 +135,14 @@ export default class Demand extends PureComponent {
               {this.renderForm()}
             </div>
           </Card>
-          <p style={{ padding: '10px 0 0' }}>共有{list.option && list.option.total}个需求池</p>
+          <p style={{ padding: '10px 0 0' }}>共有{list && list.option && list.option.total}个需求池</p>
           <div className={styles.cardList}>
             <List
               rowKey="id"
               loading={loading}
               pagination={pagination}
               grid={{ gutter: 24, lg: 4, md: 2, sm: 1, xs: 1 }}
-              dataSource={list.data}
+              dataSource={list && list.data}
               renderItem={item => (
                 <List.Item key={item.id}>
                   <Card hoverable className={styles.card}

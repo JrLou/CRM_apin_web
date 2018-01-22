@@ -74,14 +74,24 @@ export default class View extends PureComponent {
     }, {
       title: '出发机场',
       render: (text, record) => {
-        let obj = record.airPortInfo[0] ? record.airPortInfo[0] : {};
-        return obj.airport_dep_name;
+        let _innerText;
+        record.airPortInfo.map((v, k) => {
+          if (v.trip_index == 0) {
+            _innerText = v.airport_dep_name;
+          }
+        });
+        return _innerText;
       },
     }, {
       title: '到达机场',
       render: (text, record) => {
-        let obj = record.airPortInfo[0] ? record.airPortInfo[0] : {};
-        return obj.airport_arr_name;
+        let _innerText;
+        record.airPortInfo.map((v, k) => {
+          if (v.trip_index == 1) {
+            _innerText = v.airport_dep_name;
+          }
+        });
+        return _innerText;
       },
     }, {
       title: '航班号',

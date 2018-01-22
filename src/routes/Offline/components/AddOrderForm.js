@@ -25,7 +25,7 @@ export default class AddOrderForm extends Component {
     }
     componentDidMount() {
         const { dispatch } = this.props;
-        // 获取默认的三个自动补全数组 
+        // 获取默认的三个自动补全数组
         dispatch({
             type: 'offline/searchCustomer',
             payload: { name: '' },
@@ -389,7 +389,7 @@ export default class AddOrderForm extends Component {
         // 如果是数字且方案已选择
         let index = this.props.form.getFieldValue('selected');
         if (!isNaN(e.target.value) && (index === 0 || index)) {
-            // 重新计算 
+            // 重新计算
             this.changeScheme(index)
         }
     }
@@ -519,7 +519,7 @@ export default class AddOrderForm extends Component {
                                         <Col span={8}>
                                             <FormItem label="客户名"  {...formItemLayout}>
                                                 {getFieldDecorator('customerName', {
-                                                    rules: [{ max: 30, message: "输入位数过长" }, { required: true, message: "必填" }],
+                                                    rules: [  { required: true, message: "必填" }],
                                                     initialValue: detail.customerName
                                                 })(
                                                     <AutoComplete

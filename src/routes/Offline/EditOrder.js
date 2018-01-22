@@ -44,7 +44,7 @@ export default class EditOrder extends PureComponent {
         changedDetail = this._toMoment(changedDetail, ['arrDate', 'depDate', 'inquiryDate', 'printDate']);
         // 客服总监
         let isLeader = this.currentUser.split(',').indexOf('716103936e1a461ab79dcb7283a979b8') !== -1;
-        console.log('总监？', isLeader);
+        // console.log('总监？', isLeader);
         // 未出票都能编辑，出票后总监可以编辑，普通客服如果快递什么的有值了不能编辑 否则可以编辑那个地方。。。
         let flag;
         if (changedDetail.isPrint == 0) {
