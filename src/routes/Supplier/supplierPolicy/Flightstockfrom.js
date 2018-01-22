@@ -301,6 +301,7 @@ class AddForm extends Component {
       flightdata: flightdata,
       flightNumsdbdsdering: true
     });
+    this.props.addPost('flightstockAdd/getsearchAirportesaddes', {},);
   }
 
   handleOk() { //弹窗确定操作回调

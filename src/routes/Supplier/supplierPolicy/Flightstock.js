@@ -38,7 +38,6 @@ export default class TableList extends PureComponent {
 
   componentDidMount() {
     //加载第一页
-    const val = this.state.filter;
     const {dispatch} = this.props;
     dispatch({
       type: 'flightstock/fetch',
