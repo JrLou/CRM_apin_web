@@ -51,6 +51,7 @@ class AddForm extends Component {
       baioshi: false,
       competencese: false,
       numbering: null,
+      code: {},
     };
   }
 
@@ -114,6 +115,14 @@ class AddForm extends Component {
     if (nextProps.flightstockAdd && nextProps.flightstockAdd.judgment) {
       this.props.addPost('flightstockAdd/judgmentesdobj', {judgmentes: false},);
       this.props.away()
+    }
+    if (nextProps.flightstockAdd.code.length > 0 && nextProps.flightstockAdd.code[0].data.length > 0) {
+      this.setState({
+        flightstockAdd: nextProps.flightstockAdd,
+      })
+      setTimeout(() => {
+        this.judgmentMokecopen()
+      }, 100)
     }
   }
 
@@ -218,6 +227,7 @@ class AddForm extends Component {
         message.warning('请先选择出发航班日期');
         return;
       }
+      this.props.addPost('flightstockAdd/getsearchAirportesaddes', {},);
       flightstockData[ole] = {}
       linenubber[ole] = null
       flightdata.selectedWeekGroup[ole] = ''
@@ -267,26 +277,30 @@ class AddForm extends Component {
   mokecopen(ole) { //手动录入成功回调函数
     let {linenubber, flightdata, flightstockData, flightstockAdd, numbering} = this.state
     this.props.addPost('flightstockAdd/getsearchAirportes', {code: [ole.FlightDepcode, ole.FlightArrcode]});
-    setTimeout(()=>{
-      if (flightstockAdd.code.length > 0 && flightstockAdd.code[0].data.length > 0) {
-        flightstockAdd.visible = false;
-        ole.FlightDepAirport = flightstockAdd.code[0].data[0].airport_name
-        ole.FlightArrAirport = flightstockAdd.code[1].data[0].airport_name
-        ole.FlightDeptimePlanDate = flightdata.flightTimeWill[0].format('YYYY-MM-DD') + " " + ole.FlightDeptimePlanDate + ':00'
-        ole.FlightArrtimePlanDate = Algorithm._caculateNewDatePartSingle(flightdata.flightTimeWill[0].format('YYYY-MM-DD'), flightdata.days - 1) + " " + ole.FlightArrtimePlanDate + ':00'
-        flightstockData[numbering] = ole
-        flightdata.selectedWeekGroup[numbering] = Algorithm.toogleToWeekStr(ole.flights)
-        linenubber[numbering] = numbering
-        flightdata.entry = false
-        this.setState({
-          flightstockAdd,
-          flightdata: flightdata,
-          flightNumsdbdsdering: true
-        });
-      } else {
-        message.warning('请输入正确的三字码');
-      }
-    },100)
+    this.setState({
+      code: ole,
+    });
+  }
+
+  judgmentMokecopen() {
+    let {linenubber, flightdata, flightstockData, flightstockAdd, numbering, code} = this.state
+    flightstockAdd.visible = false;
+    code.FlightDepAirport = flightstockAdd.code[0].data[0].airport_name
+    code.FlightArrAirport = flightstockAdd.code[1].data[0].airport_name
+    code.FlightDeptimePlanDate = flightdata.flightTimeWill[0].format('YYYY-MM-DD') + " " + code.FlightDeptimePlanDate + ':00'
+    code.FlightArrtimePlanDate = Algorithm._caculateNewDatePartSingle(flightdata.flightTimeWill[0].format('YYYY-MM-DD'), flightdata.days - 1) + " " + code.FlightArrtimePlanDate + ':00'
+    flightstockData[numbering] = code
+    flightdata.selectedWeekGroup[numbering] = Algorithm.toogleToWeekStr(code.flights)
+    linenubber[numbering] = numbering
+    flightdata.entry = false
+    this.setState({
+      flightstockAdd,
+      linenubber,
+      flightdata,
+      flightstockData,
+      flightdata: flightdata,
+      flightNumsdbdsdering: true
+    });
   }
 
   handleOk() { //弹窗确定操作回调

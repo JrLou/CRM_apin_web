@@ -51,7 +51,7 @@ class AddForm extends Component {
       numbering: null,
       flightTimeWill: null,
       identification: false,
-      code: []
+      code: {}
     };
   }
 
@@ -189,6 +189,7 @@ class AddForm extends Component {
       return;
     }
     if (data.flightTimeWill) {
+      this.props.addPost('h5Add/getsearchAirportesaddes', {},);
       flightstockData[ole] = {}
       linenubber[ole] = null
       if (this.props.id) {

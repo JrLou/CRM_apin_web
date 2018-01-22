@@ -69,7 +69,7 @@ export default {
       //根据三字码查询机场
       const responseA = yield call(getsearchAirport, {code: payload.code[0]})
       const responseB = yield call(getsearchAirport, {code: payload.code[1]})
-      if (responseA && responseB && responseA.code >= 1 && responseB.code >= 1) {
+      if (responseA && responseB && responseA.data.length > 0 && responseB.data.length > 0) {
         debugger
         yield put({
           type: 'codes',
@@ -79,6 +79,12 @@ export default {
         message.warning('请输入正确的机场三字码');
         return
       }
+    },
+    * getsearchAirportesaddes({payload}, {call, put}) {
+      yield put({
+        type: 'getsearchAirportesadd',
+        payload: payload,
+      })
     },
     * visiblebs({payload}, {call, put}) {
       yield put({
@@ -165,6 +171,12 @@ export default {
       return {
         ...state,
         visible: action.payload.visible,
+      }
+    },
+    getsearchAirportesadd(state, action) {
+      return {
+        ...state,
+        code: [],
       }
     },
     judgme(state, action) {
