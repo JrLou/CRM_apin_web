@@ -70,10 +70,14 @@ export default {
       const responseA = yield call(getsearchAirport, {code: payload.code[0]})
       const responseB = yield call(getsearchAirport, {code: payload.code[1]})
       if (responseA && responseB && responseA.code >= 1 && responseB.code >= 1) {
+        debugger
         yield put({
           type: 'codes',
           payload: {code: [responseA, responseB]},
         })
+      } else {
+        message.warning('请输入正确的机场三字码');
+        return
       }
     },
     * visiblebs({payload}, {call, put}) {

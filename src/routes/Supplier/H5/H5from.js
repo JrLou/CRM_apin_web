@@ -50,7 +50,8 @@ class AddForm extends Component {
       competencese: false,
       numbering: null,
       flightTimeWill: null,
-      identification: false
+      identification: false,
+      code: []
     };
   }
 
@@ -58,7 +59,15 @@ class AddForm extends Component {
     let {flightdata, identification} = this.state
     this.setState({
       h5Add: nextProps.h5Add ? nextProps.h5Add : {details: []},
-    });
+    })
+    if (nextProps.h5Add.code.length > 0 && nextProps.h5Add.code[0].data.length > 0) {
+      this.setState({
+        h5Add: nextProps.h5Add,
+      })
+      setTimeout(() => {
+        this.judgmentMokecopen()
+      }, 100)
+    }
     if (nextProps.h5Add && nextProps.h5Add.details && nextProps.h5Add.details.length > 0 && !identification) {
       let list = nextProps.h5Add.details;
       list[0].FlightNo = list[0].flight_no
@@ -231,25 +240,47 @@ class AddForm extends Component {
   }
 
   mokecopen(ole) { //手动录入成功回调函数
-    let {linenubber, flightdata, flightstockData, h5Add, numbering} = this.state
+    let {linenubber, flightdata, flightstockData, h5Add, numbering, code} = this.state
     this.props.addPost('h5Add/getsearchAirportes', {code: [ole.FlightDepcode, ole.FlightArrcode]});
-    if (h5Add.code.length > 0 && h5Add.code[0].data.length > 0) {
-      debugger
-    ole.FlightDepAirport = h5Add.code[0].data[0].airport_name
-    ole.FlightArrAirport = h5Add.code[1].data[0].airport_name
-    ole.FlightDeptimePlanDate = flightdata.flightTimeWill.format('YYYY-MM-DD') + " " + ole.FlightDeptimePlanDate + ':00'
-    ole.FlightArrtimePlanDate = flightdata.flightTimeWill.format('YYYY-MM-DD') + " " + ole.FlightArrtimePlanDate + ':00'
+    this.setState({
+      code: ole,
+    });
+    // setTimeout(() => {
+    //   if (code.length > 0 && code[0].data && code[0].data.length > 0) {
+    //     debugger
+    //     ole.FlightDepAirport = h5Add.code[0].data[0].airport_name
+    //     ole.FlightArrAirport = h5Add.code[1].data[0].airport_name
+    //     ole.FlightDeptimePlanDate = flightdata.flightTimeWill.format('YYYY-MM-DD') + " " + ole.FlightDeptimePlanDate + ':00'
+    //     ole.FlightArrtimePlanDate = flightdata.flightTimeWill.format('YYYY-MM-DD') + " " + ole.FlightArrtimePlanDate + ':00'
+    //     h5Add.visible = false;
+    //     flightstockData[numbering] = ole
+    //     linenubber[numbering] = numbering
+    //     this.setState({
+    //       h5Add,
+    //       flightstockData,
+    //       linenubber,
+    //     });
+    //   } else {
+    //     message.warning('请输入正确的三字码');
+    //   }
+    // }, 1000)
+  }
+
+  judgmentMokecopen() {
+    let {flightdata, code, h5Add, flightstockData, linenubber, numbering} = this.state
+    debugger
+    code.FlightDepAirport = h5Add.code[0].data[0].airport_name
+    code.FlightArrAirport = h5Add.code[1].data[0].airport_name
+    code.FlightDeptimePlanDate = flightdata.flightTimeWill.format('YYYY-MM-DD') + " " + code.FlightDeptimePlanDate + ':00'
+    code.FlightArrtimePlanDate = flightdata.flightTimeWill.format('YYYY-MM-DD') + " " + code.FlightArrtimePlanDate + ':00'
     h5Add.visible = false;
-    flightstockData[numbering] = ole
+    flightstockData[numbering] = code
     linenubber[numbering] = numbering
     this.setState({
       h5Add,
       flightstockData,
       linenubber,
     });
-    } else {
-      message.warning('请输入正确的三字码');
-    }
   }
 
   handleOk() { //弹窗确定操作回调

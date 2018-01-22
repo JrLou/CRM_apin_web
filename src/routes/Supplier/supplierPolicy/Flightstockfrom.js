@@ -267,26 +267,26 @@ class AddForm extends Component {
   mokecopen(ole) { //手动录入成功回调函数
     let {linenubber, flightdata, flightstockData, flightstockAdd, numbering} = this.state
     this.props.addPost('flightstockAdd/getsearchAirportes', {code: [ole.FlightDepcode, ole.FlightArrcode]});
-    if (flightstockAdd.code.length > 0 && flightstockAdd.code[0].data.length > 0) {
-      debugger
-      flightstockAdd.visible = false;
-      ole.FlightDepAirport = flightstockAdd.code[0].data[0].airport_name
-      ole.FlightArrAirport = flightstockAdd.code[1].data[0].airport_name
-      ole.FlightDeptimePlanDate = flightdata.flightTimeWill[0].format('YYYY-MM-DD') + " " + ole.FlightDeptimePlanDate + ':00'
-      ole.FlightArrtimePlanDate = Algorithm._caculateNewDatePartSingle(flightdata.flightTimeWill[0].format('YYYY-MM-DD'), flightdata.days - 1) + " " + ole.FlightArrtimePlanDate + ':00'
-      flightstockData[numbering] = ole
-      flightdata.selectedWeekGroup[numbering] = Algorithm.toogleToWeekStr(ole.flights)
-      linenubber[numbering] = numbering
-      flightdata.entry = false
-      this.setState({
-        flightstockAdd,
-        flightdata: flightdata,
-        flightNumsdbdsdering: true
-      });
-    } else {
-      message.warning('请输入正确的三字码');
-    }
-
+    setTimeout(()=>{
+      if (flightstockAdd.code.length > 0 && flightstockAdd.code[0].data.length > 0) {
+        flightstockAdd.visible = false;
+        ole.FlightDepAirport = flightstockAdd.code[0].data[0].airport_name
+        ole.FlightArrAirport = flightstockAdd.code[1].data[0].airport_name
+        ole.FlightDeptimePlanDate = flightdata.flightTimeWill[0].format('YYYY-MM-DD') + " " + ole.FlightDeptimePlanDate + ':00'
+        ole.FlightArrtimePlanDate = Algorithm._caculateNewDatePartSingle(flightdata.flightTimeWill[0].format('YYYY-MM-DD'), flightdata.days - 1) + " " + ole.FlightArrtimePlanDate + ':00'
+        flightstockData[numbering] = ole
+        flightdata.selectedWeekGroup[numbering] = Algorithm.toogleToWeekStr(ole.flights)
+        linenubber[numbering] = numbering
+        flightdata.entry = false
+        this.setState({
+          flightstockAdd,
+          flightdata: flightdata,
+          flightNumsdbdsdering: true
+        });
+      } else {
+        message.warning('请输入正确的三字码');
+      }
+    },100)
   }
 
   handleOk() { //弹窗确定操作回调
