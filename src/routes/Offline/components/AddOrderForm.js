@@ -64,7 +64,7 @@ export default class AddOrderForm extends Component {
           <Col span={5}>
             <FormItem label="供应商" {...formItemLayout}>
               {getFieldDecorator('supplierName' + k, {
-                rules: [{ max: 30, message: "最多输入30字" }],
+                rules: [],
                 initialValue: v.supplierName
               })(
                 <AutoComplete
@@ -157,9 +157,9 @@ export default class AddOrderForm extends Component {
     schemeInfo.map((v, k) => {
       this.props.form.setFieldsValue(
         {
-          ['supplier' + k]: v.supplier,
-          ['price' + k]: v.price,
-          ['line' + k]: v.line,
+          ['supplierName' + k]: v.supplierName,
+          ['unitprice' + k]: v.unitprice,
+          ['flight' + k]: v.flight,
         }
       )
     })
@@ -172,6 +172,7 @@ export default class AddOrderForm extends Component {
       type: 'offline/changeSchemeInfo',
       payload: newSchemeInfo,
     })
+    console.log(schemeInfo)
   }
   isShowTabs = (e) => {
     const { dispatch } = this.props;
