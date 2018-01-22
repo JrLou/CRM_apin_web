@@ -217,6 +217,7 @@ export default class TableList extends PureComponent {
         <AllModal
           modalType={this.state.modalType}
           page={this.page}
+          resetCurrentPage={this.resetCurrentPage}
         />
       </PageHeaderLayout>
     );

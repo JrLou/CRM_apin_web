@@ -1,30 +1,44 @@
 @border: 1px solid #d9d9d9;
+.textEllipsis() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .page {
   .groupCard {
     &_body {
       &_lineA {
-
-        & > p:first-child {
-          overflow: hidden;
-          text-overflow:ellipsis;
-          white-space: nowrap;
-          margin-bottom: 2px;
+        & > p {
+          .textEllipsis;
+          &:first-child {
+            margin-bottom: 2px;
+          }
         }
       }
       &_lineB {
         color: #666;
+        &_time {
+          .textEllipsis;
+          float: right;
+          width: 50%;
+        }
         &_city {
+          .textEllipsis;
           font-size: 16px;
           font-weight: bold;
+          display: inline-block;
+          width: 50%;
         }
       }
       &_lineC {
         color: #666;
         & > p {
+          .textEllipsis;
           margin-bottom: 5px;
-        }
-        & > p:last-child {
-          margin-bottom: 0;
+          &:last-child {
+            margin-bottom: 0;
+          }
         }
       }
     }
@@ -34,6 +48,21 @@
       li:first-child span:hover {
         cursor: inherit;
         color: inherit;
+      }
+    }
+  }
+  .listParCon {
+    :global {
+      .ant-list-item {
+        display: block;
+      }
+      .ant-card-actions {
+        & > li:first-child {
+          .textEllipsis;
+        }
+      }
+      .ant-list-something-after-last-item .ant-list-item:last-child {
+        border-bottom: 0;
       }
     }
   }

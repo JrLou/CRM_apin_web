@@ -165,10 +165,21 @@ class ExportPassengerModal extends Component {
   constructor() {
     super();
     this.state = {
-      fileList: [],
       ticketLoading: false,
     };
-    this.serverTicketsData = null;//导出乘机人=>确认提交票号的时候使用
+  }
+
+  componentDidMount() {
+    this.initUploadData();
+  }
+
+  componentWillUnmount() {
+    this.initUploadData();
+  }
+
+  initUploadData() {
+    this.setState({fileList: []});
+    this.serverTicketsData = null;
   }
 
   setTicketLoading = (ticketLoading, cb) => {
@@ -180,9 +191,14 @@ class ExportPassengerModal extends Component {
     this.initUploadData();
   };
 
-  initUploadData() {
-    this.setState({fileList: []});
-    this.serverTicketsData = null;
+  isTicketsAllNull() {
+    const {groupsInfoData: {data: {abroad}}} = this.props.checkFightGroups;
+    return this.serverTicketsData.every((item, index) => {
+      if (index !== 0 && !!item[abroad === 0 ? 4 : 8]) {
+        return false;
+      }
+      return true;
+    });
   }
 
   getColumns() {
@@ -267,6 +283,10 @@ class ExportPassengerModal extends Component {
       return oldData;
     }
     const resultArr = oldData.map((currV, index) => {
+      //把0转换成‘0’
+      if (newData[index + 1] && newData[index + 1][abroad === 0 ? 4 : 8] === 0) {
+        newData[index + 1][abroad === 0 ? 4 : 8] = "0";
+      }
       return {
         ...currV,
         ticket: newData[index + 1] && newData[index + 1][abroad === 0 ? 4 : 8] && newData[index + 1][abroad === 0 ? 4 : 8].toString(),
@@ -312,7 +332,7 @@ class ExportPassengerModal extends Component {
           let isTicketChange = false;
           let paidMemberAfterInsertTicket = [];
           if (file.status === 'done') {
-            checkCode(file.response);//todo 最好把他变成promise,使用then的语法,目前太confuse,这里还有bug
+            checkCode(file.response);//todo 最好把他变成promise
             if (file.response.code >= 1) {
               paidMemberAfterInsertTicket = this.getPaidMemberAfterInsertTickets(file.response.data, data, abroad);
               isTicketChange = this.isTicketChange(paidMemberAfterInsertTicket, data);
@@ -322,7 +342,6 @@ class ExportPassengerModal extends Component {
                   payload: paidMemberAfterInsertTicket,
                 });
                 this.serverTicketsData = file.response.data;
-                message.success('导入票号成功');
               } else {
                 notification.error({
                   message: `提示`,
@@ -398,7 +417,15 @@ class ExportPassengerModal extends Component {
           <Button
             type='primary'
             loading={modalConfirmLoading}
+            disabled={!this.serverTicketsData}// || this.isTicketsAllNull()
             onClick={() => {
+              if (this.serverTicketsData && this.isTicketsAllNull()) {
+                notification.error({
+                  message: `提示`,
+                  description: '请导入票号信息',
+                });
+                return;
+              }
               const {id, dispatch} = this.props;
               dispatch({
                 type: 'checkFightGroups/fetchSaveTickets',
@@ -406,15 +433,10 @@ class ExportPassengerModal extends Component {
                   data: JSON.stringify(this.serverTicketsData),
                   uuid: id
                 },
-                succCallback: response => {
-                  if (response.code == 200) {
-                    message.success("操作成功");
-                    console.log(response);
-                    this.initUploadData();
-                  } else {
-                    message.success("操作失败");
-                    console.log('error');
-                  }
+                succCallback: () => {
+                  message.success("操作成功");
+                  //一定要成功后清除数据
+                  this.initUploadData();
                 }
               });
             }}
@@ -427,4 +449,4 @@ class ExportPassengerModal extends Component {
   }
 }
 
-export default {CloseReasonModal, SendLogModal, ExportPassengerModal};//TODO 这3个modal很多重复代码， 后续可以抽取成高阶组件
+export default {CloseReasonModal, SendLogModal, ExportPassengerModal};
