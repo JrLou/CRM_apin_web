@@ -7,13 +7,10 @@ import {CloseReasonModal, SendLogModal, ExportPassengerModal} from './components
 
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import DescriptionList from '../../components/DescriptionList';
-import ImageWrapper from '../../components/ImageWrapper';
 import styles from './CheckFightGroups.less';
 import {getPar, formatPar, formatDate} from '../../utils/utils';
 
 const {Description} = DescriptionList;
-
-//TODO a. 点击关闭拼团按钮弹出页面，录入需要备注的内容，  点击【保存】 下方日志信息  *****应该刷新*****
 
 const logInfoColumns = [{
   title: '操作时间',
@@ -234,7 +231,7 @@ export default class CheckFightGroups extends Component {
             </Link>
           );
           return (
-            <span>
+            <span style={{whiteSpace: "nowrap"}}>
               {
                 isRefuse ?
                   <Popover content={popoverContent} title="不接受">
@@ -269,22 +266,24 @@ export default class CheckFightGroups extends Component {
         dataIndex: 'action',
         render: (text, record, index) => {//生成复杂数据的渲染函数，参数分别为当前行的值，当前行数据，行索引，@return里面可以设置表格行/列合并
           return (
-            <a onClick={() => {
-              this.setState({modalType: 1}, () => {
-                this.handleshowModal();
+            <a
+              style={{whiteSpace: "nowrap"}}
+              onClick={() => {
+                this.setState({modalType: 1}, () => {
+                  this.handleshowModal();
 
-                //发起请求，获取订单推送日志
-                const {dispatch} = this.props;
-                dispatch({
-                  type: 'checkFightGroups/fetchPublishLogs',
-                  payload: {
-                    id: record.id,
-                    p: 1,
-                    pc: 1000,
-                  },
+                  //发起请求，获取订单推送日志
+                  const {dispatch} = this.props;
+                  dispatch({
+                    type: 'checkFightGroups/fetchPublishLogs',
+                    payload: {
+                      id: record.id,
+                      p: 1,
+                      pc: 1000,
+                    },
+                  });
                 });
-              });
-            }}>
+              }}>
               推送日志
             </a>
           );
@@ -313,7 +312,7 @@ export default class CheckFightGroups extends Component {
     const dataSource = this.getDataSource(data);
 
     return (
-      <div>
+      <div className={styles.orderInfoContainer}>
         <div className={styles.title}><Icon type="idcard"/>&nbsp;
           <span>订单信息</span>
           <Button

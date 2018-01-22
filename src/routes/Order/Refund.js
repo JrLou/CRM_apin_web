@@ -26,7 +26,7 @@ const FormItem = Form.Item;
 const {Option} = Select;
 const confirm = Modal.confirm;
 const {TextArea} = Input;
-const refundStatus = ['退款中','已退款', '退款失败'];
+const refundStatus = ['退款中', '已退款', '退款失败'];
 @connect(state => ({
   refund: state.refund,
 }))
@@ -84,7 +84,8 @@ export default class TableList extends PureComponent {
       pagination: {
         p: 1,
         pc: 10,
-      }
+      },
+      timeArr: [],
     }, () => {
       this.handleSearch();
     });
@@ -158,7 +159,7 @@ export default class TableList extends PureComponent {
                   <Option value=''>全部</Option>
                   {
                     refundStatus.map((item, index) => {
-                      return <Option value={index} key={index }>{item}</Option>
+                      return <Option value={index} key={index}>{item}</Option>
                     })
                   }
                 </Select>

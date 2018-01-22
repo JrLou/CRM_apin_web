@@ -36,6 +36,13 @@
     }
   }
 }
+.orderInfoContainer {//表头不换行
+  :global {
+    .ant-table-thead > tr > th {
+      white-space: nowrap;
+    }
+  }
+}
 .outFightGropuInfoContainer {
   :global {
     .ant-spin-container {
