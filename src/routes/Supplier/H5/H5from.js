@@ -51,7 +51,7 @@ class AddForm extends Component {
       numbering: null,
       flightTimeWill: null,
       identification: false,
-      code: []
+      code: {}
     };
   }
 
@@ -152,15 +152,6 @@ class AddForm extends Component {
     });
   }
 
-  dome(obj) {
-    this.obj = obj
-    this.domes(obj)
-  }
-
-  domes() {
-    this.dome()
-  }
-
   onChange(value, selectedOptions) {  //日期选择器结果输出
     let data = this.state.flightdata;
     data.flightTimeWill = value;
@@ -189,6 +180,7 @@ class AddForm extends Component {
       return;
     }
     if (data.flightTimeWill) {
+      this.props.addPost('h5Add/getsearchAirportesaddes', {},);
       flightstockData[ole] = {}
       linenubber[ole] = null
       if (this.props.id) {
@@ -268,7 +260,6 @@ class AddForm extends Component {
 
   judgmentMokecopen() {
     let {flightdata, code, h5Add, flightstockData, linenubber, numbering} = this.state
-    debugger
     code.FlightDepAirport = h5Add.code[0].data[0].airport_name
     code.FlightArrAirport = h5Add.code[1].data[0].airport_name
     code.FlightDeptimePlanDate = flightdata.flightTimeWill.format('YYYY-MM-DD') + " " + code.FlightDeptimePlanDate + ':00'
