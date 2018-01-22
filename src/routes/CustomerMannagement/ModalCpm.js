@@ -1,8 +1,8 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'dva';
 import {Modal, Form, Input, Button, Spin} from 'antd';
-
 const FormItem = Form.Item;
+const { TextArea } = Input;
 
 @connect(state => ({
   customerMannagement: state.customerMannagement,
@@ -96,8 +96,8 @@ class AddEditModal extends PureComponent {
   renderModalForm() {
     const {
       form: {getFieldDecorator},
-      dispatch,
       customerMannagement: {
+        pageType,
         modalFormLoading,
         modalConfirmLoading,
         modalData: {data: modalData}
@@ -159,6 +159,19 @@ class AddEditModal extends PureComponent {
             (<Input placeholder="请输入"/>)
             }
           </FormItem>
+          {
+            pageType === 'c' ?
+              null
+              :
+            <FormItem {...formItemLayout} label="优势线路:">
+            {getFieldDecorator('predominantLine', {//【微信/QQ】支持中文、英文、数字，允许输入特殊字符，小写英文自动转换为大写，最多100个字符
+              initialValue: this.getInitData(modalData, 'predominantLine'),
+              rules: [{max: 200, message: '最长200位'}],
+            })
+            (<TextArea placeholder="请输入" autosize={{ minRows: 2, maxRows: 10 }}/>)
+            }
+          </FormItem>
+          }
           <FormItem {...formTailLayout}>
             <Button
               type="primary"
