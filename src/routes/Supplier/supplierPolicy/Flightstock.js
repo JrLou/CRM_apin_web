@@ -181,7 +181,7 @@ export default class TableList extends PureComponent {
         onOk() {
           _this.props.dispatch({
             type: 'flightstock/changeStatus',
-            payload: data,
+            payload: {status: data, filter: {..._this.state.filter, p: 1, pc: 10}},
           });
         },
         onCancel() {

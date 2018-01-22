@@ -40,11 +40,11 @@ export default {
         type: 'changeLoading',
         payload: true,
       });
-      const judgment = yield call(stateAirLine, payload);
+      const judgment = yield call(stateAirLine, payload.status);
       if (judgment && judgment.code >= 1) {
         message.success('上架成功');
       }
-      const response = yield call(flightstockList, this.state.filter)
+      const response = yield call(flightstockList, payload.filter)
       if (response && response.code >= 1) {
         yield put({
           type: 'save',

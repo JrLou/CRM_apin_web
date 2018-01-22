@@ -116,7 +116,7 @@ class AddForm extends Component {
       this.props.addPost('flightstockAdd/judgmentesdobj', {judgmentes: false},);
       this.props.away()
     }
-    if (nextProps.flightstockAdd.code.length > 0 && nextProps.flightstockAdd.code[0].data.length > 0) {
+    if (nextProps.flightstockAdd && nextProps.flightstockAdd.code.length > 0 && nextProps.flightstockAdd.code[0].data.length > 0) {
       this.setState({
         flightstockAdd: nextProps.flightstockAdd,
       })
