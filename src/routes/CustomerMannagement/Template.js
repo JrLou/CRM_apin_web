@@ -72,7 +72,7 @@ export default class TableList extends PureComponent {
     this.page = {
       ...this.page,
       pageNum: 1,
-    }
+    };
   };
 
 
@@ -120,7 +120,7 @@ export default class TableList extends PureComponent {
   };
 
   renderForm() {
-    const {form:{getFieldDecorator}} = this.props;
+    const {form:{getFieldDecorator}, customerMannagement:{pageType}} = this.props;
     const layoutForm = {md: 8, lg: 24, xl: 48};
 
     return (
@@ -166,6 +166,21 @@ export default class TableList extends PureComponent {
               }
             </FormItem>
           </Col>
+          {
+            pageType === 'c' ?
+              null
+              :
+            <Col md={8} sm={24}>
+            <FormItem label="优势线路:">
+              {getFieldDecorator('predominantLine', {//【微信/QQ】支持中文、英文、数字，允许输入特殊字符，小写英文自动转换为大写，最多100个字符
+                initialValue: "",
+                rules: [{max: 200, message: '最长200位'}],
+              })
+              (<Input placeholder="请输入"/>)
+              }
+            </FormItem>
+          </Col>
+          }
         </Row>
         <Row>
           <Col span={12}>
@@ -217,6 +232,7 @@ export default class TableList extends PureComponent {
         <AllModal
           modalType={this.state.modalType}
           page={this.page}
+          resetCurrentPage={this.resetCurrentPage}
         />
       </PageHeaderLayout>
     );

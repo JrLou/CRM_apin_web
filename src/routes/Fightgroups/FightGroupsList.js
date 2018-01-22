@@ -19,27 +19,25 @@ export default class TableList extends PureComponent {
       loading: true,
       dataList: [],
     };
-    this.reset();//todo 这里耦合太高，记得重构
     this.current = 1;
     this.pageSize = 12;
     this.total = 0;
   }
 
   componentDidMount() {
-    //请求数据
+    this.formValues = {//初始化formValues
+      state: -1,//拼团状态验证 0、已关闭；1、拼团中；2、已成团；-1 全部
+      type: -1,//	-1 全部 0 国内 1 国外
+    };
     this.loadTableData();
   }
 
-  reset() {//重置
-    this.formValues = {
-      state: -1,
-      type: -1,
-    };
+  resetCurrPage() {
+    this.current = 1;
   }
 
-
+  //请求table数据
   loadTableData() {
-
     const param = {
       ...this.formValues,
       p: this.current,
@@ -128,7 +126,7 @@ export default class TableList extends PureComponent {
           <p>{create_time}</p>
         </div>
         <p className={less.groupCard_body_lineB}>
-          <span style={{float: 'right'}}>
+          <span className={less.groupCard_body_lineB_time}>
             {date_dep}出发
           </span>
           <span className={less.groupCard_body_lineB_city}>
@@ -151,11 +149,13 @@ export default class TableList extends PureComponent {
         <GroupSearchForm
           onSearch={data => {
             this.formValues = data;
+            this.resetCurrPage();
             this.loadTableData();
           }}
-          onCancelAfter={data => {
-            this.reset();
-            this.loadTableData(this.formValues);
+          onCancelAfter={formValues => {
+            this.formValues = formValues;
+            this.resetCurrPage();
+            this.loadTableData();
           }}
         />
       </div>
@@ -171,7 +171,7 @@ export default class TableList extends PureComponent {
       current: this.current,
       pageSize: this.pageSize,
       total: this.total,
-      pageSizeOptions: ['12', '16', '24', '40'],
+      pageSizeOptions: ['12', '16', '20', '24'],
       onChange: (page, pageSize) => {//页码改变的回调，参数是改变后的页码及每页条数
         this.pageSize = pageSize;
         this.current = page;
@@ -199,7 +199,7 @@ export default class TableList extends PureComponent {
                     title={this.getGroupState(item.group_status)}
                     extra={item.paidPeople + item.waitPeople + '人'}
                     actions={[
-                      <span>处理客服：{item.creator_name}</span>,
+                      <span>处理客服:{item.creator_name}</span>,
                       <Link to={'/fightgroups/demand/checkFightGroups/' + item.id}>
                         <span
                           style={{color: '#1890ff'}}>查看</span>

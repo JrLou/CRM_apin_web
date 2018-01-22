@@ -286,7 +286,7 @@ export async function getLogAirLine(params) {
     body: params,
   });
 }
-//添加日志
+//查询机场
 export async function getsearchAirport(params) {
   return request('/api/resource/searchAirport', {
     method: 'POST',
