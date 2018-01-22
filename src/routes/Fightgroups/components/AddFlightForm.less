@@ -1,8 +1,8 @@
 
 // 自己写的布局
 .myFormItem {
-  height: 34px;
-  line-height: 34px;
+  // height: 34px;
+  // line-height: 34px;
   margin: 10px 0;
   text-align: left;
 }
@@ -10,16 +10,29 @@
 .required {
   margin-right: 15px;
   display: inline-block;
-  width: 88px;
-  text-align: left;
+  width: 120px;
+  text-align: right;
+  padding-left: 20px;
+  padding-top: 8px;
+  &:before {
+    display: inline-block;
+    margin-right: 4px;
+    content: "*";
+    font-family: SimSun;
+    line-height: 1;
+    font-size: 14px;
+    color: #f5222d;
+  }
 }
 
 .smallInput {
   width: 150px;
 }
-.longInput{
-  width:432px;
+
+.longInput {
+  width: 330px;
 }
+
 .formContainer {
   padding: 20px 40px;
 }
@@ -27,10 +40,12 @@
 .inlineFormItem {
   display: inline-block!important;
 }
-.btnBox{
+
+.btnBox {
   text-align: center;
   margin: 20px 0;
 }
+
 :global {
   .ManualAddFlightForm {
     .ant-form-item-label label:before {
@@ -69,4 +84,16 @@
       background: transparent!important;
     }
   }
+}
+
+:global {
+  .ant-time-picker-large .ant-time-picker-input {
+    font-size: 14px;
+  }
+}
+
+.labelTop {
+  display: inline-block;
+  width: 200px;
+  text-align: right;
 }

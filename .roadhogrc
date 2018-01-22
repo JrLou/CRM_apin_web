@@ -21,7 +21,7 @@
   },
   "proxy": {
      "/java": {
-    "target": "http://10.5.5.7:6040/",
+    "target": "http://appadmin.io.apin.com/",
     "changeOrigin": true,
     "pathRewrite": { "^/java" : "" }
     },

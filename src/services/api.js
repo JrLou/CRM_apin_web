@@ -301,15 +301,15 @@ export async function geth5(params) {
   });
 }
 //冷门资源-新增
-  export async function geth5Add(params) {
-  return request('/api/resource/addAirLinesRare',{
+export async function geth5Add(params) {
+  return request('/api/resource/addAirLinesRare', {
     method: 'POST',
     body: params,
   });
 }
 //冷门资源-编辑
-  export async function geth5Edit(params) {
-  return request('/api/resource/editAirLinesRare',{
+export async function geth5Edit(params) {
+  return request('/api/resource/editAirLinesRare', {
     method: 'POST',
     body: params,
   });
@@ -489,4 +489,7 @@ export async function offlineSupporterDelete(params) {
 // !!!!!!!!!!!!
 export async function searchCity(params) {
   return request('/airportCity/fuzzy/query', { method: 'POST', body: params });
+}
+export async function searchPort(params) {
+  return request('/api/resource/searchAirport', { method: 'POST', body: params });
 }
