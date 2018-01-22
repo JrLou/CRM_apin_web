@@ -8,26 +8,26 @@ import moment from 'moment';
 import { getPar, formatPar } from '../../utils/utils';
 import AddorderForm from './components/AddOrderForm';
 @connect(state => ({
-    offline: state.offline,
+  offline: state.offline,
 }))
 export default class AddOrder extends PureComponent {
-    constructor() {
-        super()
-    }
-    componentDidMount() {
-        // 初始化之后清空保存的方案和退改信息
-        const { dispatch } = this.props;
-        dispatch({
-            type: 'offline/resetPlansAndEndorse',
-            payload: '',
-        });
-    }
+  constructor() {
+    super()
+  }
+  componentDidMount() {
+    // 初始化之后清空保存的方案和退改信息
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'offline/resetPlansAndEndorse',
+      payload: '',
+    });
+  }
 
-    render() {
-        return (
-            <PageHeaderLayout>
-                <AddorderForm />
-            </PageHeaderLayout >
-        )
-    }
+  render() {
+    return (
+      <PageHeaderLayout>
+        <AddorderForm isAdd={true} />
+      </PageHeaderLayout >
+    )
+  }
 }

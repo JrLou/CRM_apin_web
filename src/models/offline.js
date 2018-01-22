@@ -59,11 +59,17 @@ export default {
         type: 'changeLoading',
         payload: true,
       });
-      const response = yield call(delOrder, payload);
+      const response = yield call(delOrder, { id: payload.id });
       if (response.code == 200) {
-        message.success('操作成功')
+        message.success('操作成功');
+        // 重获数据
+        let params = payload.listParams;
+        yield put({
+          type: 'fetch',
+          payload: params,
+        });
       }
-      
+
       yield put({
         type: 'changeLoading',
         payload: false,
@@ -79,7 +85,7 @@ export default {
         message.success('操作成功');
         yield put(routerRedux.push('/offline/order'));
       }
-      
+
       yield put({
         type: 'changeLoading',
         payload: false,
@@ -94,8 +100,8 @@ export default {
       if (response.code == 200) {
         message.success('修改成功');
         yield put(routerRedux.push('/offline/order'));
-      } 
-      
+      }
+
       yield put({
         type: 'changeLoading',
         payload: false,
@@ -114,8 +120,8 @@ export default {
           payload: payload,
         });
 
-      } 
-      
+      }
+
       yield put({
         type: 'changeLoading',
         payload: false,
@@ -130,8 +136,8 @@ export default {
       if (response.code == 200) {
         message.success('操作成功');
         window.location.href = response.data.url;
-      } 
-      
+      }
+
       yield put({
         type: 'changeLoading',
         payload: false,
@@ -145,7 +151,7 @@ export default {
           payload: response.data ? response.data : [],
         });
       }
-      
+
     },
     *searchSupplier({ payload }, { call, put }) {
       const response = yield call(searchSupplier, payload);
@@ -154,8 +160,8 @@ export default {
           type: 'getSupplier',
           payload: response.data ? response.data : [],
         });
-      } 
-      
+      }
+
     },
     *searchCity({ payload }, { call, put }) {
 
@@ -180,7 +186,7 @@ export default {
           payload: payload.index,
         });
       }
-      
+
     },
   },
 
@@ -216,7 +222,7 @@ export default {
       };
     },
     getOneChange(state, action) {
-      action.payload.handle_date = moment(action.payload.handle_date, 'YYYY-MM-DD');
+      action.payload.handleDate = moment(action.payload.handleDate, 'YYYY-MM-DD');
       state.changeInfo.push(action.payload);
       let newChangeInfo = state.changeInfo;
       return {

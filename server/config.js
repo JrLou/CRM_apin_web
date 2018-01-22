@@ -1,5 +1,5 @@
 module.exports={
-  api:"http://10.5.5.7:6040/",
+  api:"http://appadmin.io.apin.com/",
   PORT:'9000'
   // test
 }

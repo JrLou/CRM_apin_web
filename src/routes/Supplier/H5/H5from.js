@@ -77,11 +77,11 @@ class AddForm extends Component {
       list[0].FlightArr = list[0].city_arr_name
       list[0].FlightArrAirport = list[0].airport_arr_name
       list[0].FlightArrtimePlanDate = list[0].time_arr
-      flightdata.flightTimeWill = moment(list[0].departure_start).format("YYYY-MM-DD")
+      flightdata.flightTimeWill = moment(list[0].departure_start)
       this.setState({
         flightstockData: [list[0]],
         linenubber: [0],
-        flightdata: flightdata,
+        flightdata,
         flightTimeWill: moment(list[0].departure_start)
       });
     }
@@ -237,25 +237,6 @@ class AddForm extends Component {
     this.setState({
       code: ole,
     });
-    // setTimeout(() => {
-    //   if (code.length > 0 && code[0].data && code[0].data.length > 0) {
-    //     debugger
-    //     ole.FlightDepAirport = h5Add.code[0].data[0].airport_name
-    //     ole.FlightArrAirport = h5Add.code[1].data[0].airport_name
-    //     ole.FlightDeptimePlanDate = flightdata.flightTimeWill.format('YYYY-MM-DD') + " " + ole.FlightDeptimePlanDate + ':00'
-    //     ole.FlightArrtimePlanDate = flightdata.flightTimeWill.format('YYYY-MM-DD') + " " + ole.FlightArrtimePlanDate + ':00'
-    //     h5Add.visible = false;
-    //     flightstockData[numbering] = ole
-    //     linenubber[numbering] = numbering
-    //     this.setState({
-    //       h5Add,
-    //       flightstockData,
-    //       linenubber,
-    //     });
-    //   } else {
-    //     message.warning('请输入正确的三字码');
-    //   }
-    // }, 1000)
   }
 
   judgmentMokecopen() {
@@ -272,6 +253,7 @@ class AddForm extends Component {
       flightstockData,
       linenubber,
     });
+    this.props.addPost('h5Add/getsearchAirportesaddes', {},);
   }
 
   handleOk() { //弹窗确定操作回调
@@ -418,13 +400,7 @@ class AddForm extends Component {
                         rules: [{
                           required: true,
                           message: requiredText,
-                        }, {
-                          pattern: /^[1-9][0-9]*(\.[0-9][0-9])?$|^[1-9][0-9]*(\.[0-9])?$|^[0]\.([1-9])$|^[0]\.([0-9][1-9])$/,
-                          message: "成人价需大于0，且最多两位小数"
-                        }, {
-                          max: 6,
-                          message: "最多6位"
-                        }],
+                        },{pattern: /^[1-9]\d{0,5}$/, message: "只允许输入最长6位自然数"},],
                         initialValue: h5Add.details.length > 0 ? (parseInt(h5Add.details[0].sell_price) / 100).toString() : '',
 
                       })
@@ -444,7 +420,7 @@ class AddForm extends Component {
                           message: requiredText,
                         }, {
                           pattern: /^[1-9](\.\d{1})?$|^(10)(\.0)?$|^[0](\.[1-9]{1}){1}$/,
-                          message: "折扣需大于0，且最多一位小数"
+                          message: "最多输入一位小数，范围从0.1至10折"
                         }, {
                           max: 6,
                           message: "最多6位"

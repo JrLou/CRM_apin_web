@@ -38,7 +38,6 @@ export default class TableList extends PureComponent {
 
   componentDidMount() {
     //加载第一页
-    const val = this.state.filter;
     const {dispatch} = this.props;
     dispatch({
       type: 'flightstock/fetch',
@@ -182,7 +181,7 @@ export default class TableList extends PureComponent {
         onOk() {
           _this.props.dispatch({
             type: 'flightstock/changeStatus',
-            payload: data,
+            payload: {status: data, filter: {..._this.state.filter, p: 1, pc: 10}},
           });
         },
         onCancel() {

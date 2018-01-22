@@ -10,6 +10,7 @@ export default {
     },
     loading: true,
     logs: {},
+    filter: {p: 1, pc: 10},
   },
   effects: {
     * fetch({payload}, {call, put}) {
@@ -17,8 +18,12 @@ export default {
         type: 'changeLoading',
         payload: true,
       });
+      yield put({
+        type: 'filteradd',
+        payload: payload,
+      });
       const response = yield call(flightstockList, payload);
-      if(response && response.code >= 1){
+      if (response && response.code >= 1) {
         yield put({
           type: 'save',
           payload: response,
@@ -35,12 +40,12 @@ export default {
         type: 'changeLoading',
         payload: true,
       });
-      const judgment = yield call(stateAirLine, payload);
+      const judgment = yield call(stateAirLine, payload.status);
       if (judgment && judgment.code >= 1) {
         message.success('上架成功');
       }
-      const response = yield call(flightstockList, {p: 1, pc: 10})
-      if(response && response.code >= 1){
+      const response = yield call(flightstockList, payload.filter)
+      if (response && response.code >= 1) {
         yield put({
           type: 'save',
           payload: response,
@@ -68,7 +73,6 @@ export default {
         return
       }
     },
-
   },
   reducers: {
     save(state, action) {
@@ -85,7 +89,12 @@ export default {
         logs: action.payload,
       };
     },
-
+    filteradd(state, action) {
+      return {
+        ...state,
+        filter: action.payload,
+      };
+    },
     changeLoading(state, action) {
       return {
         ...state,
