@@ -72,6 +72,7 @@ export default class OfflineList extends PureComponent {
     });
   }
   delOrder(id) {
+    let listParams = { ... this.searchValues, pageNum: this.page.page, pageSize: this.page.pageSize };
     const { dispatch } = this.props;
     confirm({
       title: '注意',
@@ -82,10 +83,10 @@ export default class OfflineList extends PureComponent {
       onOk: () => {
         dispatch({
           type: 'offline/delOrder',
-          payload: { id },
+          payload: { id: id, listParams: listParams },
         });
         // 请求数据
-        this.getData()
+        // this.getData()
       }
     });
   }
@@ -139,6 +140,7 @@ export default class OfflineList extends PureComponent {
             <FormItem label="是否出票">
               {getFieldDecorator('isPrint', {
                 rules: [{ max: 32, message: "长度不超过32" }],
+                initialValue: ''
               })(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
                   <Option value="">全部</Option>
