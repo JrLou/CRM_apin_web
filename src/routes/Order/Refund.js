@@ -188,6 +188,7 @@ export default class TableList extends PureComponent {
 
   afreshRefund(id) {
     const {dispatch} = this.props;
+    let _this=this;
     confirm({
       title: '请确认是否重新退款?',
       okText: '是',
@@ -199,7 +200,7 @@ export default class TableList extends PureComponent {
           callback: (res) => {
             if (res && res.code >= 1) {
               message.success('重新退款提交成功');
-              this.handleSearch();
+              _this.handleSearch();
             } else if (!res) {
               message.error('系统异常');
             } else {
@@ -267,7 +268,7 @@ export default class TableList extends PureComponent {
           {
             record.refund_status != 3 ? null :
               <span>
-                 <a onClick={this.afreshRefund.bind(this, record.id)}>重新退款</a>
+                 <a onClick={this.afreshRefund.bind(this, record.order_id)}>重新退款</a>
                  <OfflineModal failReason={::this.failReason} data={record}/>
               </span>
           }
