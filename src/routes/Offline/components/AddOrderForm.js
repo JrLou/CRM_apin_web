@@ -93,7 +93,7 @@ export default class AddOrderForm extends Component {
               <span>元/人</span>
             </FormItem>
           </Col>
-          <Col span={5}>
+          <Col span={8}>
             <FormItem label="出行航班"  {...formItemLayout}>
               {getFieldDecorator('flight' + k, {
                 rules: [{ max: 200, message: "最多输入200字" }],
@@ -460,7 +460,7 @@ export default class AddOrderForm extends Component {
       wrapperCol: { span: 16 },
     };
     const formItemLayout2 = {
-      labelCol: { span: 3 },
+      labelCol: { span: 2 },
       wrapperCol: { span: 16 },
     };
     const { readOnly, offline: { usernameData, supplierData, cityData, cityData2, changeInfo, schemeInfo } } = this.props;
@@ -495,7 +495,7 @@ export default class AddOrderForm extends Component {
                       </div> : null
                   }
                   <Row gutter={20}>
-                    <Col span={16}>
+                    <Col span={24}>
                       <FormItem label="备忘录" {...formItemLayout2}>
                         {getFieldDecorator('remark', {
                           rules: [{ max: 200, message: "最多输入200字" }],
