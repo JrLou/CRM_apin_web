@@ -231,7 +231,7 @@ export default class CheckFightGroups extends Component {
             </Link>
           );
           return (
-            <span>
+            <span style={{whiteSpace: "nowrap"}}>
               {
                 isRefuse ?
                   <Popover content={popoverContent} title="不接受">
@@ -266,22 +266,24 @@ export default class CheckFightGroups extends Component {
         dataIndex: 'action',
         render: (text, record, index) => {//生成复杂数据的渲染函数，参数分别为当前行的值，当前行数据，行索引，@return里面可以设置表格行/列合并
           return (
-            <a onClick={() => {
-              this.setState({modalType: 1}, () => {
-                this.handleshowModal();
+            <a
+              style={{whiteSpace: "nowrap"}}
+              onClick={() => {
+                this.setState({modalType: 1}, () => {
+                  this.handleshowModal();
 
-                //发起请求，获取订单推送日志
-                const {dispatch} = this.props;
-                dispatch({
-                  type: 'checkFightGroups/fetchPublishLogs',
-                  payload: {
-                    id: record.id,
-                    p: 1,
-                    pc: 1000,
-                  },
+                  //发起请求，获取订单推送日志
+                  const {dispatch} = this.props;
+                  dispatch({
+                    type: 'checkFightGroups/fetchPublishLogs',
+                    payload: {
+                      id: record.id,
+                      p: 1,
+                      pc: 1000,
+                    },
+                  });
                 });
-              });
-            }}>
+              }}>
               推送日志
             </a>
           );
@@ -310,7 +312,7 @@ export default class CheckFightGroups extends Component {
     const dataSource = this.getDataSource(data);
 
     return (
-      <div>
+      <div className={styles.orderInfoContainer}>
         <div className={styles.title}><Icon type="idcard"/>&nbsp;
           <span>订单信息</span>
           <Button
