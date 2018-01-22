@@ -19201,6 +19201,9 @@ li.ant-tree-treenode-disabled > .ant-tree-node-content-wrapper:hover {
 .ManualAddFlightFormModal .ant-time-picker-panel-input {
   background: transparent!important;
 }
+.ant-time-picker-large .ant-time-picker-input {
+  font-size: 14px;
+}
 /* stylelint-disable at-rule-empty-line-before,at-rule-name-space-after,at-rule-no-unknown */
 /* stylelint-disable no-duplicate-selectors */
 /* stylelint-disable declaration-bang-space-before,no-duplicate-selectors */
