@@ -152,15 +152,6 @@ class AddForm extends Component {
     });
   }
 
-  dome(obj) {
-    this.obj = obj
-    this.domes(obj)
-  }
-
-  domes() {
-    this.dome()
-  }
-
   onChange(value, selectedOptions) {  //日期选择器结果输出
     let data = this.state.flightdata;
     data.flightTimeWill = value;
