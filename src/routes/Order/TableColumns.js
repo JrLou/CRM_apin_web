@@ -80,7 +80,8 @@ export default class TableList extends PureComponent {
       pagination: {
         p: 1,
         pc: 10,
-      }
+      },
+      timeArr: [],
     }, () => {
       this.handleSearch();
     });
