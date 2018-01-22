@@ -98,7 +98,7 @@ export default class OfflineList extends PureComponent {
   renderForm() {
     const { getFieldDecorator } = this.props.form;
     return (
-      <Form onSubmit={this.handleSearch.bind(this)}>
+      <Form layout="inline" onSubmit={this.handleSearch.bind(this)} >
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="订单号">
@@ -136,7 +136,7 @@ export default class OfflineList extends PureComponent {
           </Col>
         </Row>
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-          <Col md={6} sm={24}>
+          <Col md={8} sm={24}>
             <FormItem label="是否出票">
               {getFieldDecorator('isPrint', {
                 rules: [{ max: 32, message: "长度不超过32" }],
@@ -150,7 +150,7 @@ export default class OfflineList extends PureComponent {
                 )}
             </FormItem>
           </Col>
-          <Col md={6} sm={24}>
+          <Col md={8} sm={24}>
             <FormItem label="是否账清">
               {getFieldDecorator('isPayoff', {
                 initialValue: '',
@@ -163,7 +163,7 @@ export default class OfflineList extends PureComponent {
                 )}
             </FormItem>
           </Col>
-          <Col md={6} sm={24}>
+          <Col md={8} sm={24}>
             <FormItem label="发票是否寄出">
               {getFieldDecorator('isSendoff', {
                 initialValue: '',
@@ -176,7 +176,9 @@ export default class OfflineList extends PureComponent {
                 )}
             </FormItem>
           </Col>
-          <Col md={6} sm={24}>
+        </Row>
+        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+          <Col md={8} sm={24}>
             <FormItem label="是否退改">
               {getFieldDecorator('isEndorse', {
                 initialValue: '',
@@ -189,8 +191,6 @@ export default class OfflineList extends PureComponent {
                 )}
             </FormItem>
           </Col>
-        </Row>
-        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="询价日期">
               {getFieldDecorator('inquiryDate', {
