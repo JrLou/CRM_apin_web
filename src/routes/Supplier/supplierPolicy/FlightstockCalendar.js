@@ -720,7 +720,6 @@ class BulkImportForm extends Component {
     console.log(file)
     const isLt2M = file.size < 4096000;
     if (file.size > 4096000) {
-      debugger
       message.error('上传文件不能大于4MB，请重新导入!');
     }
     return isLt2M;

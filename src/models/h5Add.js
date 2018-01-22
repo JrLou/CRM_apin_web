@@ -70,7 +70,6 @@ export default {
       const responseA = yield call(getsearchAirport, {code: payload.code[0]})
       const responseB = yield call(getsearchAirport, {code: payload.code[1]})
       if (responseA && responseB && responseA.data.length > 0 && responseB.data.length > 0) {
-        debugger
         yield put({
           type: 'codes',
           payload: {code: [responseA, responseB]},
@@ -161,7 +160,6 @@ export default {
       }
     },
     codes(state, action) {
-      debugger
       return {
         ...state,
         code: action.payload.code,

@@ -260,7 +260,6 @@ class AddForm extends Component {
 
   judgmentMokecopen() {
     let {flightdata, code, h5Add, flightstockData, linenubber, numbering} = this.state
-    debugger
     code.FlightDepAirport = h5Add.code[0].data[0].airport_name
     code.FlightArrAirport = h5Add.code[1].data[0].airport_name
     code.FlightDeptimePlanDate = flightdata.flightTimeWill.format('YYYY-MM-DD') + " " + code.FlightDeptimePlanDate + ':00'
