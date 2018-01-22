@@ -53,10 +53,10 @@ export default class TableList extends PureComponent {
   handleStandardTableChange = (pagination, filtersArg, sorter) => {//分页、排序、筛选变化时触发
     const {dispatch} = this.props;
 
-    this.page = {
+    Object.assign(this.page, {
       pageNum: pagination.current,
       pageSize: pagination.pageSize,
-    };
+    });
 
     dispatch({
       type: 'customerMannagement/fetch',
@@ -69,7 +69,7 @@ export default class TableList extends PureComponent {
 
   //当【查询】or 【重置】时，都应该从第一页从新请求
   resetCurrentPage = () => {
-    this.page.pageNum = 1;
+    Object.assign(this.page, {pageNum: 1});
     //todo 记得总结!不能这样重置，因为这样传递过去的this.page就重新赋值了，而之前传递给子组件的this.page却是没有从新赋值，而这个又不是state，不会重新渲染，就有出bug
     // this.page = {
     //   ...this.page,
@@ -116,13 +116,13 @@ export default class TableList extends PureComponent {
     });
   };
 
-  getPageName = () =>{
-    const {customerMannagement:{pageType}} = this.props;
-    return pageType === 's' ? '供应商':'客户';
+  getPageName = () => {
+    const {customerMannagement: {pageType}} = this.props;
+    return pageType === 's' ? '供应商' : '客户';
   };
 
   renderForm() {
-    const {form:{getFieldDecorator}, customerMannagement:{pageType}} = this.props;
+    const {form: {getFieldDecorator}, customerMannagement: {pageType}} = this.props;
     const layoutForm = {md: 8, lg: 24, xl: 48};
 
     return (
@@ -172,16 +172,16 @@ export default class TableList extends PureComponent {
             pageType === 'c' ?
               null
               :
-            <Col md={8} sm={24}>
-            <FormItem label="优势线路:">
-              {getFieldDecorator('predominantLine', {//【微信/QQ】支持中文、英文、数字，允许输入特殊字符，小写英文自动转换为大写，最多100个字符
-                initialValue: "",
-                rules: [{max: 200, message: '最长200位'}],
-              })
-              (<Input placeholder="请输入"/>)
-              }
-            </FormItem>
-          </Col>
+              <Col md={8} sm={24}>
+                <FormItem label="优势线路:">
+                  {getFieldDecorator('predominantLine', {//【微信/QQ】支持中文、英文、数字，允许输入特殊字符，小写英文自动转换为大写，最多100个字符
+                    initialValue: "",
+                    rules: [{max: 200, message: '最长200位'}],
+                  })
+                  (<Input placeholder="请输入"/>)
+                  }
+                </FormItem>
+              </Col>
           }
         </Row>
         <Row>

@@ -1,8 +1,9 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'dva';
 import {Modal, Form, Input, Button, Spin} from 'antd';
+
 const FormItem = Form.Item;
-const { TextArea } = Input;
+const {TextArea} = Input;
 
 @connect(state => ({
   customerMannagement: state.customerMannagement,
@@ -13,9 +14,9 @@ class AddEditModal extends PureComponent {
     super(props);
   }
 
-  getPageName = () =>{
-    const {customerMannagement:{pageType}} = this.props;
-    return pageType === 's' ? '供应商':'客户';
+  getPageName = () => {
+    const {customerMannagement: {pageType}} = this.props;
+    return pageType === 's' ? '供应商' : '客户';
   };
 
   handleSubmit = (e) => {
@@ -39,10 +40,6 @@ class AddEditModal extends PureComponent {
         case 'edit':
           urlLast = "fetchEdit";
           payload = {...values, id: modalData.id};
-          break;
-        default :
-          urlLast = "fetchAdd";
-          payload = {...values};
           break;
       }
 
@@ -151,14 +148,14 @@ class AddEditModal extends PureComponent {
             pageType === 'c' ?
               null
               :
-            <FormItem {...formItemLayout} label="优势线路:">
-            {getFieldDecorator('predominantLine', {//【微信/QQ】支持中文、英文、数字，允许输入特殊字符，小写英文自动转换为大写，最多100个字符
-              initialValue: this.getInitData(modalData, 'predominantLine'),
-              rules: [{max: 200, message: '最长200位'}],
-            })
-            (<TextArea placeholder="请输入" autosize={{ minRows: 2, maxRows: 10 }}/>)
-            }
-          </FormItem>
+              <FormItem {...formItemLayout} label="优势线路:">
+                {getFieldDecorator('predominantLine', {//【微信/QQ】支持中文、英文、数字，允许输入特殊字符，小写英文自动转换为大写，最多100个字符
+                  initialValue: this.getInitData(modalData, 'predominantLine'),
+                  rules: [{max: 200, message: '最长200位'}],
+                })
+                (<TextArea placeholder="请输入" autosize={{minRows: 2, maxRows: 10}}/>)
+                }
+              </FormItem>
           }
           <FormItem {...formTailLayout}>
             <Button
@@ -184,7 +181,7 @@ class AddEditModal extends PureComponent {
   }
 
   render() {
-    const {customerMannagement: {showModal, modalConfirmLoading}, modalType} = this.props;
+    const {customerMannagement: {showModal}, modalType} = this.props;
     return (
       <Modal
         title={modalType === 'add' ? `新增${this.getPageName()}` : `修改${this.getPageName()}`}
@@ -222,7 +219,7 @@ class DeleteModal extends PureComponent {
   render() {
     const {
       dispatch,
-      formValues:searchFormValues,
+      formValues: searchFormValues,
       customerMannagement: {
         showModal,
         modalConfirmLoading,
@@ -246,7 +243,6 @@ class DeleteModal extends PureComponent {
             type="primary"
             loading={modalConfirmLoading}
             onClick={() => {
-              console.log("deleteItemId:",deleteItemId);
               dispatch({
                 type: 'customerMannagement/fetchDelete',
                 payload: {id: deleteItemId},
