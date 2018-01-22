@@ -21,7 +21,7 @@ class AddEditModal extends PureComponent {
   handleSubmit = (e) => {
     e.preventDefault();
 
-    const {dispatch, form, page, modalType, customerMannagement: {modalData: {data: modalData}}} = this.props;
+    const {dispatch, form, handlePageFormReset, modalType, customerMannagement: {modalData: {data: modalData}}} = this.props;
 
     form.validateFields((err, fieldsValue) => {
       if (err) return;
@@ -50,20 +50,8 @@ class AddEditModal extends PureComponent {
         type: 'customerMannagement/' + urlLast,
         payload: payload,
         succCB: () => {
-          console.log("page",page);
-          console.log("this.props.page",this.props.page);
-          let reqPage = {...page};
-          if (modalType === 'add' || modalType === 'edit') {
-            this.props.resetCurrentPage && this.props.resetCurrentPage();
-            reqPage = {...page,pageNum: 1}
-          }//todo 这里为啥page不会变
-          console.log("最终请求的page",page);
-          console.log("最终请求的this.props.page",this.props.page);
-          dispatch({
-            type: "customerMannagement/fetch",
-            payload: reqPage
-          });
-          this.handleCancel();
+          handlePageFormReset && handlePageFormReset();//执行父页面的【重置】功能
+          this.handleCancel();//清空页面上部的form的内容
         }
       });
     });
@@ -234,8 +222,8 @@ class DeleteModal extends PureComponent {
   render() {
     const {
       dispatch,
+      formValues:searchFormValues,
       customerMannagement: {
-        modalData: {data: modalData},
         showModal,
         modalConfirmLoading,
         deleteItemId,
@@ -265,7 +253,10 @@ class DeleteModal extends PureComponent {
                 succCB: () => {
                   dispatch({
                     type: "customerMannagement/fetch",
-                    payload: {...page}
+                    payload: {
+                      ...page,
+                      ...searchFormValues
+                    }
                   });
                 }
               });
@@ -287,11 +278,8 @@ class DeleteModal extends PureComponent {
 
 const AllModal = (props) => {
   const ModalView = props.modalType === 'delete' ? DeleteModal : AddEditModal;
-  console.log("AllModal",props);
   return (
-    <ModalView
-      {...props}
-    />
+    <ModalView {...props}/>
   );
 };
 
