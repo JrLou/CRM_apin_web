@@ -628,7 +628,7 @@ export default class AddOrderForm extends Component {
                   <div className={styles.schemeBox}>
                     {this.createScheme()}
                     <Row gutter={20}>
-                      <Col span={6} offset={15}>
+                      <Col span={6} offset={18}>
                         {schemeInfo.length == 3 ? null : <Button type='primary' disabled={readOnly} onClick={this.addScheme}>增加方案</Button>}
                       </Col>
                     </Row>
@@ -681,22 +681,6 @@ export default class AddOrderForm extends Component {
                   <TabPane tab="出票" key="1">
                     <Row gutter={20}>
                       <Col span={8}>
-                        <FormItem label="请选择方案" {...formItemLayout}>
-                          {getFieldDecorator('selected', {
-                            rules: [{ required: true, message: "必填" }],
-                            initialValue: detail.selected
-                          })(
-                            <Select placeholder="请选择"
-                              disabled={readOnly}
-                              onChange={this.changeScheme}>
-                              {this.createOptions()}
-                            </Select>
-                            )}
-                        </FormItem>
-                      </Col>
-                    </Row>
-                    <Row gutter={20}>
-                      <Col span={8}>
                         <FormItem label="出票日期" {...formItemLayout}>
                           {getFieldDecorator('printDate', {
                             rules: [{ required: true, message: "必填" }],
@@ -721,7 +705,23 @@ export default class AddOrderForm extends Component {
                       </Col>
                     </Row>
                     <Row gutter={20}>
-                      <Col span={5}>
+                      <Col span={8}>
+                        <FormItem label="请选择方案" {...formItemLayout}>
+                          {getFieldDecorator('selected', {
+                            rules: [{ required: true, message: "必填" }],
+                            initialValue: detail.selected
+                          })(
+                            <Select placeholder="请选择"
+                              disabled={readOnly}
+                              onChange={this.changeScheme}>
+                              {this.createOptions()}
+                            </Select>
+                            )}
+                        </FormItem>
+                      </Col>
+                    </Row>
+                    <Row gutter={20}>
+                      <Col span={8}>
                         <FormItem label="结算总价" {...formItemLayout}>
                           {getFieldDecorator('settlePrice', {
                             initialValue: detail.settlePrice
@@ -731,7 +731,7 @@ export default class AddOrderForm extends Component {
                           <span>元/人</span>
                         </FormItem>
                       </Col>
-                      <Col span={5}>
+                      <Col span={8}>
                         <FormItem label="卖价总价" {...formItemLayout}>
                           {getFieldDecorator('totalPrice', {
                             initialValue: detail.totalPrice
@@ -741,7 +741,7 @@ export default class AddOrderForm extends Component {
                           <span>元/人</span>
                         </FormItem>
                       </Col>
-                      <Col span={5}>
+                      <Col span={8}>
                         <FormItem label="利润" {...formItemLayout}>
                           {getFieldDecorator('profit', {
                             initialValue: detail.profit
