@@ -286,7 +286,7 @@ export default class TableList extends PureComponent {
                 dataIndex="sell_price"
                 key="sell_price"
                 render={(text, record, index) => {
-                  return <div>{"￥" + record.sell_price}</div>
+                  return <div>{"￥" + record.sell_price / 100}</div>
                 }}
               />
               <Column
