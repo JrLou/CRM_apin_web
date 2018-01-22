@@ -1,8 +1,8 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'dva';
 import {Modal, Form, Input, Button, Spin} from 'antd';
-
 const FormItem = Form.Item;
+const { TextArea } = Input;
 
 @connect(state => ({
   customerMannagement: state.customerMannagement,
@@ -49,15 +49,21 @@ class AddEditModal extends PureComponent {
       dispatch({
         type: 'customerMannagement/' + urlLast,
         payload: payload,
-        succCB: () => {//TODO 这里add请求成功后应该重新请求第一页的数据，edit应该不用的
-          if (modalType === 'add') {
+        succCB: () => {
+          console.log("page",page);
+          console.log("this.props.page",this.props.page);
+          let reqPage = {...page};
+          if (modalType === 'add' || modalType === 'edit') {
             this.props.resetCurrentPage && this.props.resetCurrentPage();
-          }
+            reqPage = {...page,pageNum: 1}
+          }//todo 这里为啥page不会变
+          console.log("最终请求的page",page);
+          console.log("最终请求的this.props.page",this.props.page);
           dispatch({
             type: "customerMannagement/fetch",
-            payload: page
+            payload: reqPage
           });
-          form.resetFields();
+          this.handleCancel();
         }
       });
     });
@@ -90,8 +96,8 @@ class AddEditModal extends PureComponent {
   renderModalForm() {
     const {
       form: {getFieldDecorator},
-      dispatch,
       customerMannagement: {
+        pageType,
         modalFormLoading,
         modalConfirmLoading,
         modalData: {data: modalData}
@@ -153,6 +159,19 @@ class AddEditModal extends PureComponent {
             (<Input placeholder="请输入"/>)
             }
           </FormItem>
+          {
+            pageType === 'c' ?
+              null
+              :
+            <FormItem {...formItemLayout} label="优势线路:">
+            {getFieldDecorator('predominantLine', {//【微信/QQ】支持中文、英文、数字，允许输入特殊字符，小写英文自动转换为大写，最多100个字符
+              initialValue: this.getInitData(modalData, 'predominantLine'),
+              rules: [{max: 200, message: '最长200位'}],
+            })
+            (<TextArea placeholder="请输入" autosize={{ minRows: 2, maxRows: 10 }}/>)
+            }
+          </FormItem>
+          }
           <FormItem {...formTailLayout}>
             <Button
               type="primary"
@@ -268,6 +287,7 @@ class DeleteModal extends PureComponent {
 
 const AllModal = (props) => {
   const ModalView = props.modalType === 'delete' ? DeleteModal : AddEditModal;
+  console.log("AllModal",props);
   return (
     <ModalView
       {...props}

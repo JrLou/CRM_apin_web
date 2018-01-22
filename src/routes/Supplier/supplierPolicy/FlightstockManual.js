@@ -169,7 +169,7 @@ class HorizontalLoginForm extends Component {
                 rules: [{
                   required: true,
                   message: requiredText
-                }, {max: 3, message: '只能输入三位'}],
+                }, {max: 3, message: '只能输入三位'}, {pattern: /^[a-zA-Z]{3}$/, message: "请输入正确额三字码"}],
               })
               (<Input placeholder="机场三字码" style={{width: '100%'}}/>)}
             </FormItem>
@@ -182,7 +182,7 @@ class HorizontalLoginForm extends Component {
                 rules: [{
                   required: true,
                   message: requiredText
-                }, {max: 3, message: '只能输入三位'}],
+                }, {max: 3, message: '只能输入三位'}, {pattern: /^[a-zA-Z]{3}$/, message: "请输入正确额三字码"}],
               })
               (<Input placeholder="机场三字码" style={{width: '100%'}}/>)}
             </FormItem>
