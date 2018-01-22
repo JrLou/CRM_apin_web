@@ -835,9 +835,8 @@ export default class AddOrderForm extends Component {
           <Card bordered={false}>
             <div style={{ textAlign: 'center' }}>
               {this.props.isView ?
-                <Button type='primary'>
-                  <Link to={"/offline/order/EditOrder/" + this.props.id}>修改</Link>
-                </Button> :
+                <Link to={"/offline/order/EditOrder/" + this.props.id}> <Button type='primary'>修改</Button></Link>
+                :
                 <Button type='primary' htmlType="submit">保存</Button>
               }
             </div>
