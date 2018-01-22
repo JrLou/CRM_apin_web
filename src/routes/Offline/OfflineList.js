@@ -302,17 +302,11 @@ export default class OfflineList extends PureComponent {
       },
       {
         title: '卖价总价',
-        dataIndex: 'totalPrice',
-        render: (text, record) => {
-          return +text / 100
-        },
+        dataIndex: 'totalPrice'
       },
       {
         title: '结算总价',
-        dataIndex: 'settlePrice',
-        render: (text, record) => {
-          return +text / 100
-        },
+        dataIndex: 'settlePrice'
       },
       {
         title: '利润',
