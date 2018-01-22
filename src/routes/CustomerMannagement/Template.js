@@ -72,7 +72,7 @@ export default class TableList extends PureComponent {
     this.page = {
       ...this.page,
       pageNum: 1,
-    }
+    };
   };
 
 

@@ -525,7 +525,7 @@ export default class CheckFightGroups extends Component {
   render() {
     return (
       <PageHeaderLayout>
-        <Card bordered={false}>
+        <Card bordered={false} style={{overflow:'hidden'}}>
           {/*拼团信息*/}
           {this.getFightGroupsInfoView()}
           <Divider style={{marginBottom: 32}}/>

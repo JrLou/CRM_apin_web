@@ -49,15 +49,21 @@ class AddEditModal extends PureComponent {
       dispatch({
         type: 'customerMannagement/' + urlLast,
         payload: payload,
-        succCB: () => {//TODO 这里add请求成功后应该重新请求第一页的数据，edit应该不用的
-          if (modalType === 'add') {
+        succCB: () => {
+          console.log("page",page);
+          console.log("this.props.page",this.props.page);
+          let reqPage = {...page};
+          if (modalType === 'add' || modalType === 'edit') {
             this.props.resetCurrentPage && this.props.resetCurrentPage();
-          }
+            reqPage = {...page,pageNum: 1}
+          }//todo 这里为啥page不会变
+          console.log("最终请求的page",page);
+          console.log("最终请求的this.props.page",this.props.page);
           dispatch({
             type: "customerMannagement/fetch",
-            payload: page
+            payload: reqPage
           });
-          form.resetFields();
+          this.handleCancel();
         }
       });
     });
@@ -268,6 +274,7 @@ class DeleteModal extends PureComponent {
 
 const AllModal = (props) => {
   const ModalView = props.modalType === 'delete' ? DeleteModal : AddEditModal;
+  console.log("AllModal",props);
   return (
     <ModalView
       {...props}
