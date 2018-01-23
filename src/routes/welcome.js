@@ -10,6 +10,6 @@ export default () => (
         // description="登陆成功"
         style={{ marginTop:78, marginBottom: 16 }}
       /> */}
-      <div style={{width:'100%',margin:'7% auto',textAlign:'center'}}><div style={{marginBottom:'5%',fontSize:'24px'}}>欢迎进入爱拼运营管理系统</div><img src={welcome} alt="welcome" /></div>
+      <div style={{width:'100%',margin:'7% auto',textAlign:'center'}}><div style={{marginBottom:'5%',fontSize:'24px'}}>欢迎进入Apin运营管理系统</div><img src={welcome} alt="welcome" /></div>
     </Card>
 );
