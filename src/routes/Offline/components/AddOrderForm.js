@@ -751,7 +751,7 @@ export default class AddOrderForm extends Component {
                           })(
                             <Input readOnly className={styles.reandOnly} />
                             )}
-                          <span>元/人</span>
+                          <span>元</span>
                         </FormItem>
                       </Col>
                       <Col span={8}>
@@ -761,7 +761,7 @@ export default class AddOrderForm extends Component {
                           })(
                             <Input readOnly className={styles.reandOnly} />
                             )}
-                          <span>元/人</span>
+                          <span>元</span>
                         </FormItem>
                       </Col>
                       <Col span={8}>
@@ -771,7 +771,7 @@ export default class AddOrderForm extends Component {
                           })(
                             <Input readOnly className={styles.reandOnly} />
                             )}
-                          <span>元/人</span>
+                          <span>元</span>
                         </FormItem>
                       </Col>
                     </Row>
