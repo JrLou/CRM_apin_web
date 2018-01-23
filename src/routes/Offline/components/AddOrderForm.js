@@ -332,8 +332,12 @@ export default class AddOrderForm extends Component {
   }
   handleModalVisible = (bool) => {
     const { dispatch } = this.props;
-    this.setState({
-      modalVisible: bool
+    // this.setState({
+    //   modalVisible: bool
+    // })
+    dispatch({
+      type: 'offline/isShowModal',
+      payload: bool,
     })
   }
   _changeToDatestr = (values, strArr) => {
@@ -371,7 +375,12 @@ export default class AddOrderForm extends Component {
         console.log('将要提交的参数'); console.log(values);
         // 判断编辑还是新增
         if (this.props.id) {
-          values.endorse = changeInfo;
+          // 转化格式
+          values.endorse = changeInfo.map((v, k) => {
+            let _v = { ...v };
+            _v.handleDate = moment(_v.handleDate).format('YYYY-MM-DD');
+            return _v;
+          });
           dispatch({
             type: 'offline/updateOrder',
             payload: { ...values, id: this.props.id },
@@ -467,7 +476,7 @@ export default class AddOrderForm extends Component {
       labelCol: { span: 8 },
       wrapperCol: { span: 16 },
     };
-    const { readOnly, offline: { usernameData, supplierData, cityData, cityData2, changeInfo, schemeInfo } } = this.props;
+    const { readOnly, offline: { usernameData, supplierData, cityData, cityData2, changeInfo, schemeInfo, isShowModal } } = this.props;
     let detail = this.props.detail ? this.props.detail : {};
     schemeInfo.map((v, k) => {
       if (v.selected == 1) {
@@ -489,6 +498,7 @@ export default class AddOrderForm extends Component {
     } else {
       resonText = ''
     }
+
     return (
       <div>
         <Form onSubmit={this.handleSearch} className={styles.addOrderForm}>
@@ -523,7 +533,7 @@ export default class AddOrderForm extends Component {
                       <FormItem label="询价日期" {...formItemLayout}>
                         {getFieldDecorator('inquiryDate', {
                           rules: [{ required: true, message: "必填" }],
-                          initialValue: detail.inquiryDate || this.props.isAdd && moment(new Date())
+                          initialValue: this.props.isAdd ? moment(new Date()) : detail.inquiryDate
                         })(
                           <DatePicker disabled={readOnly} />
                           )}
@@ -857,12 +867,12 @@ export default class AddOrderForm extends Component {
         </Form>
         <Modal
           title="退改签"
-          visible={this.state.modalVisible}
+          visible={isShowModal}
           onCancel={() => this.handleModalVisible(false)}
           footer={null}
           width={850}
         >
-          {this.state.modalVisible ? <AddChangeForm hideModal={this.handleModalVisible.bind(null, false)} /> : null}
+          {isShowModal ? <AddChangeForm hideModal={() => this.handleModalVisible(false)} /> : null}
         </Modal>
       </div>
     )
