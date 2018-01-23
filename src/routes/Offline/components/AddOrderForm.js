@@ -108,7 +108,7 @@ export default class AddOrderForm extends Component {
           <Col span={4}>
             {schemeInfo.length == 1 ? null : <Button type='primary' disabled={readOnly} onClick={this.delOneSche.bind(null, k)}>删除</Button>}
           </Col>
-          {getFieldDecorator('planid' + k, {
+          {getFieldDecorator('id' + k, {
             initialValue: v.id
           })(
             <Input type='hidden' />
@@ -149,10 +149,14 @@ export default class AddOrderForm extends Component {
         payload: k,
       });
     }
-    this.setValue()
+    setTimeout(() => {
+      this.setValue()
+    }, 200);
+
   }
   setValue = () => {
     const { offline: { schemeInfo } } = this.props;
+    console.log('xxxxxxxxxxxxxxx');
     console.log(schemeInfo);
     schemeInfo.map((v, k) => {
       this.props.form.setFieldsValue(
@@ -160,6 +164,8 @@ export default class AddOrderForm extends Component {
           ['supplierName' + k]: v.supplierName,
           ['unitprice' + k]: v.unitprice,
           ['flight' + k]: v.flight,
+          ['id' + k]: v.id,
+          ['orderId' + k]: v.orderId,
         }
       )
     })
@@ -273,16 +279,16 @@ export default class AddOrderForm extends Component {
                   )}
               </FormItem>
             </Col>
-            {getFieldDecorator('id' + k, {
+            {/* {getFieldDecorator('id' + k, {
               initialValue: v.id
             })(
               <Input type='hidden' />
-              )}
-            {getFieldDecorator('orderId' + k, {
+              )} */}
+            {/* {getFieldDecorator('orderId' + k, {
               initialValue: v.orderId
             })(
               <Input type='hidden' />
-              )}
+              )} */}
             {/* <Col span={6}>
                             <Button type='primary' onClick={this.delOneChange.bind(null, k)}>删除</Button>
                         </Col> */}
@@ -357,9 +363,9 @@ export default class AddOrderForm extends Component {
         midObj[v] = values[v + i]
         delete values[v + i]
       })
-      // id特殊一点
-      midObj.id = midObj.planid
-      delete midObj.planid
+      // // id特殊一点
+      // midObj.id = midObj.planid
+      // delete midObj.planid
       plan.push(midObj)
     }
     values.plans = plan;
@@ -372,7 +378,7 @@ export default class AddOrderForm extends Component {
     form.validateFields((err, values) => {
       if (!err) {
         values = this._changeToDatestr(values, ['arrDate', 'depDate', 'inquiryDate', 'printDate'])
-        values = this._changePlanValues(values, ['supplierName', 'unitprice', 'flight', 'planid', 'orderId', 'selected'])
+        values = this._changePlanValues(values, ['supplierName', 'unitprice', 'flight', 'id', 'orderId', 'selected'])
         values.isPayoff = values.isPayoff ? '1' : '0';
         values.isSendoff = values.isSendoff ? '1' : '0';
         console.log('将要提交的参数'); console.log(values);
