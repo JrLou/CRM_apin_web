@@ -108,7 +108,7 @@ export default class AddOrderForm extends Component {
           <Col span={4}>
             {schemeInfo.length == 1 ? null : <Button type='primary' disabled={readOnly} onClick={this.delOneSche.bind(null, k)}>删除</Button>}
           </Col>
-          {getFieldDecorator('id' + k, {
+          {getFieldDecorator('planid' + k, {
             initialValue: v.id
           })(
             <Input type='hidden' />
@@ -232,7 +232,7 @@ export default class AddOrderForm extends Component {
             <Col span={8}>
               <FormItem label="发生费用"  {...formItemLayout}>
                 {getFieldDecorator('fee' + k, {
-                  rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" },{ required: true, message: "必填" }],
+                  rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }, { required: true, message: "必填" }],
                   initialValue: v.fee
                 })(
                   <Input disabled={isDisabled} onChange={this.saveChange.bind(null, k, 'fee')} />
@@ -242,7 +242,7 @@ export default class AddOrderForm extends Component {
             <Col span={8}>
               <FormItem label="退改利润"  {...formItemLayout}>
                 {getFieldDecorator('profit' + k, {
-                  rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" },{ required: true, message: "必填" }],
+                  rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }, { required: true, message: "必填" }],
                   initialValue: v.profit
                 })(
                   <Input disabled={isDisabled} onChange={this.saveChange.bind(null, k, 'profit')} />
@@ -254,7 +254,7 @@ export default class AddOrderForm extends Component {
             <Col span={8}>
               <FormItem label="退改详情"  {...formItemLayout}>
                 {getFieldDecorator('detail' + k, {
-                  rules: [{ max: 200, message: "输入位数过长" },{ required: true, message: "必填" }],
+                  rules: [{ max: 200, message: "输入位数过长" }, { required: true, message: "必填" }],
                   initialValue: v.detail
                 })(
                   <TextArea disabled={isDisabled} onChange={this.saveChange.bind(null, k, 'detail')} />
@@ -357,6 +357,9 @@ export default class AddOrderForm extends Component {
         midObj[v] = values[v + i]
         delete values[v + i]
       })
+      // id特殊一点
+      midObj.id = midObj.planid
+      delete midObj.planid
       plan.push(midObj)
     }
     values.plans = plan;
@@ -369,7 +372,7 @@ export default class AddOrderForm extends Component {
     form.validateFields((err, values) => {
       if (!err) {
         values = this._changeToDatestr(values, ['arrDate', 'depDate', 'inquiryDate', 'printDate'])
-        values = this._changePlanValues(values, ['supplierName', 'unitprice', 'flight', 'id', 'orderId', 'selected'])
+        values = this._changePlanValues(values, ['supplierName', 'unitprice', 'flight', 'planid', 'orderId', 'selected'])
         values.isPayoff = values.isPayoff ? '1' : '0';
         values.isSendoff = values.isSendoff ? '1' : '0';
         console.log('将要提交的参数'); console.log(values);
