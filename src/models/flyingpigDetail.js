@@ -4,7 +4,7 @@ export default {
   namespace: 'flyingpigDetail',
 
   state: {
-    groupVoyage: [],//订单委托信息
+    groupVoyage: [],//订单K座信息
     log: [],//日志信息
     order: {},//订单信息
     orderGroup: [],//方案推送记录
@@ -67,7 +67,7 @@ export default {
 
       return {
         ...state,
-        groupVoyage: groupVoyageArr || [],//订单委托信息
+        groupVoyage: groupVoyageArr || [],//订单K座信息
         log: payload.data.log || [],//日志信息
         order: payload.data.order || {},//订单信息
         orderGroup: payload.data.orderGroup || [],//方案推送记录
