@@ -72,10 +72,10 @@ const menuData = [{
     //   path:'/order/flyingpig/detail/:params',
     // }]
   }, {
-    name: '委托订单',
+    name: 'K座订单',
     path: 'order/entrust',
     // children:[{
-    //   name:'委托订单详情',
+    //   name:'K座订单详情',
     //   path:'/order/entrust/detail/:params',
     // }]
   }, {
