@@ -104,7 +104,7 @@ export default class BasicProfile extends Component {
         let user = this.passengerData[i];
         if (this.orderData.group_type != 3) {
           if (((user.ticketDep && !user.ticketArr) || (!user.ticketDep && user.ticketArr))) {
-            message.warning('出/返票号填写状态需保持一致');
+            message.warning('去/返票号填写状态需保持一致');
             return false
           }
           if (!user.ticketDep && !user.ticketArr) {
