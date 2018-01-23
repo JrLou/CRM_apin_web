@@ -302,7 +302,7 @@ export default class TableList extends PureComponent {
                 dataIndex="is_invalid"
                 key="is_invalid"
                 render={(text, record, index) => {
-                  switch (record.is_invalid) {
+                  switch (record.airline_status) {
                     case 0:
                       return <div>有效</div>
                       break;
