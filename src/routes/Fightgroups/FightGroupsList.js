@@ -78,13 +78,13 @@ export default class TableList extends PureComponent {
         break;
       case 2:
         result = {
-          txt: "拼团成功",
+          txt: "拼团完成",
           backgroundColor: '#33cc66'
         };
         break;
       case 3:
         result = {
-          txt: "拼团完成",
+          txt: "拼团成功",
           backgroundColor: '#33cc66'
         };
         break;

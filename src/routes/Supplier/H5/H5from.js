@@ -73,10 +73,10 @@ class AddForm extends Component {
       list[0].FlightNo = list[0].flight_no
       list[0].FlightDep = list[0].city_dep_name
       list[0].FlightDepAirport = list[0].airport_dep_name
-      list[0].FlightDeptimePlanDate = list[0].time_dep
+      list[0].FlightDeptimePlanDate = moment(list[0].time_dep + list[0].departure_start).format("HH:mm")
       list[0].FlightArr = list[0].city_arr_name
       list[0].FlightArrAirport = list[0].airport_arr_name
-      list[0].FlightArrtimePlanDate = list[0].time_arr
+      list[0].FlightArrtimePlanDate = moment(list[0].time_arr + list[0].departure_start).format("HH:mm")
       flightdata.flightTimeWill = moment(list[0].departure_start)
       this.setState({
         flightstockData: [list[0]],
@@ -400,7 +400,7 @@ class AddForm extends Component {
                         rules: [{
                           required: true,
                           message: requiredText,
-                        },{pattern: /^[1-9]\d{0,5}$/, message: "只允许输入最长6位自然数"},],
+                        }, {pattern: /^[1-9]\d{0,5}$/, message: "只允许输入最长6位自然数"},],
                         initialValue: h5Add.details.length > 0 ? (parseInt(h5Add.details[0].sell_price) / 100).toString() : '',
 
                       })
