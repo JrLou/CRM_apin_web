@@ -528,7 +528,7 @@ export default class AddOrderForm extends Component {
                       <FormItem label="询价日期" {...formItemLayout}>
                         {getFieldDecorator('inquiryDate', {
                           rules: [{ required: true, message: "必填" }],
-                          // initialValue: this.props.isAdd ? moment(new Date()) : detail.inquiryDate
+                          initialValue: this.props.isAdd ? moment(new Date()) : detail.inquiryDate
                         })(
                           <DatePicker disabled={readOnly} />
                           )}
@@ -597,7 +597,7 @@ export default class AddOrderForm extends Component {
                       <FormItem label="去程日期" {...formItemLayout}>
                         {getFieldDecorator('depDate', {
                           rules: [],
-                          // initialValue: detail.depDate
+                          initialValue: detail.depDate
                         })(
                           <DatePicker disabled={readOnly} />
                           )}
@@ -607,7 +607,7 @@ export default class AddOrderForm extends Component {
                       <FormItem label="回程日期"  {...formItemLayout}>
                         {getFieldDecorator('arrDate', {
                           rules: [],
-                          // initialValue: detail.arrDate
+                          initialValue: detail.arrDate
                         })(
                           <DatePicker disabled={readOnly} />
                           )}
@@ -702,7 +702,7 @@ export default class AddOrderForm extends Component {
                         <FormItem label="出票日期" {...formItemLayout3}>
                           {getFieldDecorator('printDate', {
                             rules: [{ required: true, message: "必填" }],
-                            // initialValue: detail.printDate
+                            initialValue: detail.printDate
                           })(
                             <DatePicker disabled={readOnly} />
                             )}
