@@ -304,10 +304,10 @@ export default class TableList extends PureComponent {
                 render={(text, record, index) => {
                   switch (record.airline_status) {
                     case 0:
-                      return <div>有效</div>
+                      return <div>无效</div>
                       break;
                     case 1:
-                      return <div>无效</div>
+                      return <div>有效</div>
                       break;
                   }
                 }}
