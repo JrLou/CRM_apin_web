@@ -171,7 +171,7 @@ class StandardTable extends PureComponent {
 
   getBtns(text, record, index){
     return (
-      <div>
+      <div className={styles.editBtn}>
         <Button type={record.state==1?'danger':'primary'} className={styles.btn}
           onClick={()=>{
             let status = record.state==1?0:1;
