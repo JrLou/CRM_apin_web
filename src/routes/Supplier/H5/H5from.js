@@ -136,9 +136,8 @@ class AddForm extends Component {
         values.goAirLine = JSON.stringify([flightstockData[0]])
         values.cityArr = flightstockData[0].FlightArr
         values.cityDep = flightstockData[0].FlightDep
-        values.startDate = moment(flightdata.flightTimeWill).format("YYYY-MM-DD")
+        values.startDate = values.time.format("YYYY-MM-DD")
         values.flightNumber = flightstockData[0].FlightNo + '-' + flightstockData[0].FlightNo
-        console.log(flightstockData)
         this.setState({
           baioshi: true,
         });
@@ -148,6 +147,7 @@ class AddForm extends Component {
         } else {
           _this.props.addPost('h5Add/getaddtit', values);
         }
+        // console.log(values)
       }
     });
   }
