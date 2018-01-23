@@ -61,7 +61,7 @@ export default class AddOrderForm extends Component {
       return (<div key={'scheme' + k}>
         <div className={styles.schemeTitle}><Icon type="file-text" /> <b>方案{k + 1}</b></div>
         <Row gutter={20}>
-          <Col span={5}>
+          <Col span={6}>
             <FormItem label="供应商" {...formItemLayout}>
               {getFieldDecorator('supplierName' + k, {
                 rules: [],
@@ -77,7 +77,7 @@ export default class AddOrderForm extends Component {
                 )}
             </FormItem>
           </Col>
-          <Col span={5}>
+          <Col span={6}>
             <FormItem label="结算价"  {...formItemLayout}>
               {getFieldDecorator('unitprice' + k, {
                 rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
@@ -105,7 +105,7 @@ export default class AddOrderForm extends Component {
                 )}
             </FormItem>
           </Col>
-          <Col span={6}>
+          <Col span={4}>
             {schemeInfo.length == 1 ? null : <Button type='primary' disabled={readOnly} onClick={this.delOneSche.bind(null, k)}>删除</Button>}
           </Col>
           {getFieldDecorator('id' + k, {
@@ -790,7 +790,7 @@ export default class AddOrderForm extends Component {
                   </TabPane>
                   <TabPane tab="结算" key="2">
                     <Row gutter={20}>
-                      <Col span={8}>
+                      <Col span={12}>
                         <FormItem label="汇款给供应商" {...formItemLayout}>
                           {getFieldDecorator('isPayoff', {
                             valuePropName: 'checked',
