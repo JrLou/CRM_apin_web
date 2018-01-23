@@ -70,11 +70,6 @@ export default class TableList extends PureComponent {
   //当【查询】or 【重置】时，都应该从第一页从新请求
   resetCurrentPage = () => {
     Object.assign(this.page, {pageNum: 1});
-    //todo 记得总结!不能这样重置，因为这样传递过去的this.page就重新赋值了，而之前传递给子组件的this.page却是没有从新赋值，而这个又不是state，不会重新渲染，就有出bug
-    // this.page = {
-    //   ...this.page,
-    //   pageNum: 1,
-    // };
   };
 
 
