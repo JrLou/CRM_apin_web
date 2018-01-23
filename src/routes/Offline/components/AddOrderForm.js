@@ -61,7 +61,7 @@ export default class AddOrderForm extends Component {
       return (<div key={'scheme' + k}>
         <div className={styles.schemeTitle}><Icon type="file-text" /> <b>方案{k + 1}</b></div>
         <Row gutter={20}>
-          <Col span={5}>
+          <Col span={6}>
             <FormItem label="供应商" {...formItemLayout}>
               {getFieldDecorator('supplierName' + k, {
                 rules: [],
@@ -77,7 +77,7 @@ export default class AddOrderForm extends Component {
                 )}
             </FormItem>
           </Col>
-          <Col span={5}>
+          <Col span={6}>
             <FormItem label="结算价"  {...formItemLayout}>
               {getFieldDecorator('unitprice' + k, {
                 rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
@@ -105,7 +105,7 @@ export default class AddOrderForm extends Component {
                 )}
             </FormItem>
           </Col>
-          <Col span={6}>
+          <Col span={4}>
             {schemeInfo.length == 1 ? null : <Button type='primary' disabled={readOnly} onClick={this.delOneSche.bind(null, k)}>删除</Button>}
           </Col>
           {getFieldDecorator('id' + k, {
@@ -213,7 +213,7 @@ export default class AddOrderForm extends Component {
             <Col span={8}>
               <FormItem label="类型" {...formItemLayout}>
                 {getFieldDecorator('type' + k, {
-                  rules: [],
+                  rules: [{ required: true, message: "必填" }],
                   initialValue: v.type
                 })(
                   <Select
@@ -232,7 +232,7 @@ export default class AddOrderForm extends Component {
             <Col span={8}>
               <FormItem label="发生费用"  {...formItemLayout}>
                 {getFieldDecorator('fee' + k, {
-                  rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
+                  rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" },{ required: true, message: "必填" }],
                   initialValue: v.fee
                 })(
                   <Input disabled={isDisabled} onChange={this.saveChange.bind(null, k, 'fee')} />
@@ -242,7 +242,7 @@ export default class AddOrderForm extends Component {
             <Col span={8}>
               <FormItem label="退改利润"  {...formItemLayout}>
                 {getFieldDecorator('profit' + k, {
-                  rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
+                  rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" },{ required: true, message: "必填" }],
                   initialValue: v.profit
                 })(
                   <Input disabled={isDisabled} onChange={this.saveChange.bind(null, k, 'profit')} />
@@ -254,7 +254,7 @@ export default class AddOrderForm extends Component {
             <Col span={8}>
               <FormItem label="退改详情"  {...formItemLayout}>
                 {getFieldDecorator('detail' + k, {
-                  rules: [{ max: 200, message: "输入位数过长" }],
+                  rules: [{ max: 200, message: "输入位数过长" },{ required: true, message: "必填" }],
                   initialValue: v.detail
                 })(
                   <TextArea disabled={isDisabled} onChange={this.saveChange.bind(null, k, 'detail')} />
@@ -266,7 +266,7 @@ export default class AddOrderForm extends Component {
             <Col span={8}>
               <FormItem label="操作日期"  {...formItemLayout}>
                 {getFieldDecorator('handleDate' + k, {
-                  rules: [],
+                  rules: [{ required: true, message: "必填" }],
                   initialValue: v.handleDate
                 })(
                   <DatePicker disabled={isDisabled} onChange={this.saveChange.bind(null, k, 'handleDate')} />
@@ -332,8 +332,12 @@ export default class AddOrderForm extends Component {
   }
   handleModalVisible = (bool) => {
     const { dispatch } = this.props;
-    this.setState({
-      modalVisible: bool
+    // this.setState({
+    //   modalVisible: bool
+    // })
+    dispatch({
+      type: 'offline/isShowModal',
+      payload: bool,
     })
   }
   _changeToDatestr = (values, strArr) => {
@@ -371,7 +375,12 @@ export default class AddOrderForm extends Component {
         console.log('将要提交的参数'); console.log(values);
         // 判断编辑还是新增
         if (this.props.id) {
-          values.endorse = changeInfo;
+          // 转化格式
+          values.endorse = changeInfo.map((v, k) => {
+            let _v = { ...v };
+            _v.handleDate = moment(_v.handleDate).format('YYYY-MM-DD');
+            return _v;
+          });
           dispatch({
             type: 'offline/updateOrder',
             payload: { ...values, id: this.props.id },
@@ -463,7 +472,11 @@ export default class AddOrderForm extends Component {
       labelCol: { span: 2 },
       wrapperCol: { span: 16 },
     };
-    const { readOnly, offline: { usernameData, supplierData, cityData, cityData2, changeInfo, schemeInfo } } = this.props;
+    const formItemLayout3 = {
+      labelCol: { span: 8 },
+      wrapperCol: { span: 16 },
+    };
+    const { readOnly, offline: { usernameData, supplierData, cityData, cityData2, changeInfo, schemeInfo, isShowModal } } = this.props;
     let detail = this.props.detail ? this.props.detail : {};
     schemeInfo.map((v, k) => {
       if (v.selected == 1) {
@@ -477,6 +490,15 @@ export default class AddOrderForm extends Component {
     } else if (detail.isPrint == 1 && !this.props.isLeader) {//已出票，不是领导
       specialFlag = true
     }
+    let resonText;
+    if (detail.nodealReason) {
+      resonText = detail.nodealReason
+    } else if (detail.nodealReason === 0) {
+      resonText = 0
+    } else {
+      resonText = ''
+    }
+
     return (
       <div>
         <Form onSubmit={this.handleSearch} className={styles.addOrderForm}>
@@ -511,7 +533,7 @@ export default class AddOrderForm extends Component {
                       <FormItem label="询价日期" {...formItemLayout}>
                         {getFieldDecorator('inquiryDate', {
                           rules: [{ required: true, message: "必填" }],
-                          initialValue: detail.inquiryDate || this.props.isAdd && moment(new Date())
+                          initialValue: this.props.isAdd ? moment(new Date()) : detail.inquiryDate
                         })(
                           <DatePicker disabled={readOnly} />
                           )}
@@ -532,7 +554,7 @@ export default class AddOrderForm extends Component {
                       </FormItem>
                     </Col>
                     <Col span={8}>
-                      <FormItem label="是否匹配切位"  {...formItemLayout}>
+                      <FormItem label="是否匹配切位" className='specialLabel' {...formItemLayout}>
                         {getFieldDecorator('isCutoff', {
                           rules: [],
                           initialValue: detail.isCutoff
@@ -652,9 +674,10 @@ export default class AddOrderForm extends Component {
                         <FormItem label="原因" {...formItemLayout}>
                           {getFieldDecorator('nodealReason', {
                             rules: [],
-                            initialValue: detail.nodealReason
+                            initialValue: resonText
                           })(
                             <Select placeholder="请选择" disabled={readOnly}>
+                              <Option value=''>请选择</Option>
                               <Option value={0}>比价询单采购意愿低</Option>
                               <Option value={1}>账期结算</Option>
                               <Option value={2}>跟踪周期较长待客人确认</Option>
@@ -681,7 +704,7 @@ export default class AddOrderForm extends Component {
                   <TabPane tab="出票" key="1">
                     <Row gutter={20}>
                       <Col span={8}>
-                        <FormItem label="出票日期" {...formItemLayout}>
+                        <FormItem label="出票日期" {...formItemLayout3}>
                           {getFieldDecorator('printDate', {
                             rules: [{ required: true, message: "必填" }],
                             initialValue: detail.printDate
@@ -693,7 +716,7 @@ export default class AddOrderForm extends Component {
                     </Row>
                     <Row gutter={20}>
                       <Col span={8}>
-                        <FormItem label="卖价" {...formItemLayout}>
+                        <FormItem label="卖价" {...formItemLayout3}>
                           {getFieldDecorator('sellPrice', {
                             rules: [{ required: true, message: "必填" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
                             initialValue: detail.sellPrice
@@ -706,7 +729,7 @@ export default class AddOrderForm extends Component {
                     </Row>
                     <Row gutter={20}>
                       <Col span={8}>
-                        <FormItem label="请选择方案" {...formItemLayout}>
+                        <FormItem label="请选择方案" {...formItemLayout3}>
                           {getFieldDecorator('selected', {
                             rules: [{ required: true, message: "必填" }],
                             initialValue: detail.selected
@@ -722,39 +745,39 @@ export default class AddOrderForm extends Component {
                     </Row>
                     <Row gutter={20}>
                       <Col span={8}>
-                        <FormItem label="结算总价" {...formItemLayout}>
+                        <FormItem label="结算总价" {...formItemLayout3}>
                           {getFieldDecorator('settlePrice', {
                             initialValue: detail.settlePrice
                           })(
                             <Input readOnly className={styles.reandOnly} />
                             )}
-                          <span>元/人</span>
+                          <span>元</span>
                         </FormItem>
                       </Col>
                       <Col span={8}>
-                        <FormItem label="卖价总价" {...formItemLayout}>
+                        <FormItem label="卖价总价" {...formItemLayout3}>
                           {getFieldDecorator('totalPrice', {
                             initialValue: detail.totalPrice
                           })(
                             <Input readOnly className={styles.reandOnly} />
                             )}
-                          <span>元/人</span>
+                          <span>元</span>
                         </FormItem>
                       </Col>
                       <Col span={8}>
-                        <FormItem label="利润" {...formItemLayout}>
+                        <FormItem label="利润" {...formItemLayout3}>
                           {getFieldDecorator('profit', {
                             initialValue: detail.profit
                           })(
                             <Input readOnly className={styles.reandOnly} />
                             )}
-                          <span>元/人</span>
+                          <span>元</span>
                         </FormItem>
                       </Col>
                     </Row>
                     <Row gutter={20}>
                       <Col span={8}>
-                        <FormItem label="票号" {...formItemLayout}>
+                        <FormItem label="票号" {...formItemLayout3}>
                           {getFieldDecorator('ticketNo', {
                             rules: [{ required: true, message: "必填" }, { max: 200, message: "最大输入200位" }],
                             initialValue: detail.ticketNo
@@ -767,7 +790,7 @@ export default class AddOrderForm extends Component {
                   </TabPane>
                   <TabPane tab="结算" key="2">
                     <Row gutter={20}>
-                      <Col span={8}>
+                      <Col span={12}>
                         <FormItem label="汇款给供应商" {...formItemLayout}>
                           {getFieldDecorator('isPayoff', {
                             valuePropName: 'checked',
@@ -835,9 +858,8 @@ export default class AddOrderForm extends Component {
           <Card bordered={false}>
             <div style={{ textAlign: 'center' }}>
               {this.props.isView ?
-                <Button type='primary'>
-                  <Link to={"/offline/order/EditOrder/" + this.props.id}>修改</Link>
-                </Button> :
+                <Link to={"/offline/order/EditOrder/" + this.props.id}> <Button type='primary'>修改</Button></Link>
+                :
                 <Button type='primary' htmlType="submit">保存</Button>
               }
             </div>
@@ -845,12 +867,12 @@ export default class AddOrderForm extends Component {
         </Form>
         <Modal
           title="退改签"
-          visible={this.state.modalVisible}
+          visible={isShowModal}
           onCancel={() => this.handleModalVisible(false)}
           footer={null}
           width={850}
         >
-          {this.state.modalVisible ? <AddChangeForm hideModal={this.handleModalVisible.bind(null, false)} /> : null}
+          {isShowModal ? <AddChangeForm hideModal={() => this.handleModalVisible(false)} /> : null}
         </Modal>
       </div>
     )

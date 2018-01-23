@@ -119,7 +119,10 @@ export default {
           type: 'getOneChange',
           payload: payload,
         });
-
+        yield put({
+          type: 'isShowModal',
+          payload: false,
+        });
       }
 
       yield put({
@@ -198,11 +201,15 @@ export default {
       };
     },
     getDetail(state, action) {
+      let newArr = action.payload.data.endorse.map((v, k) => {
+        v.handleDate = moment(v.handleDate);
+        return v;
+      })
       return {
         ...state,
         orderDetail: action.payload.data,
         schemeInfo: action.payload.data.plans.length > 0 ? action.payload.data.plans : [{ supplierName: '', unitprice: '', flight: '' }],
-        changeInfo: action.payload.data.endorse,
+        changeInfo: newArr,
         currentOrder: action.payload.curId,
         originalPlans: action.payload.data.plans
       };
@@ -282,6 +289,12 @@ export default {
         ...state,
         schemeInfo: [{ supplierName: '', unitprice: '', flight: '' }],
         changeInfo: [],
+      };
+    },
+    isShowModal(state, action) {
+      return {
+        ...state,
+        isShowModal: action.payload,
       };
     },
     changeSelected(state, action) {
