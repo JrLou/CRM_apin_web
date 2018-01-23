@@ -59,7 +59,7 @@ export default {
     * authroute({ payload }, { call, put, select }) {
       const routerPath = yield select(state => state.global.routerPath);
       const value = routerPath.filter(item => item.parentId && payload.indexOf(item.path) > -1)
-      if (value&&value.length) {
+      if (value&&value[0].id) {
         const id = value[0].id
         const res = yield call(authrouteApi, { id });
         if (res && res.code >= 1) {
