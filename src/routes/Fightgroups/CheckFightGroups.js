@@ -91,10 +91,10 @@ export default class CheckFightGroups extends Component {
         txt = "拼团中";
         break;
       case 2:
-        txt = "拼团成功";
+        txt = "拼团完成";
         break;
       case 3:
-        txt = "拼团完成";
+        txt = "拼团成功";
         break;
       default:
         txt = "未知的拼团状态";
@@ -129,7 +129,7 @@ export default class CheckFightGroups extends Component {
           <Button
             type="primary"
             className={styles.btn}
-            disabled={data.group_status !== 3 || groupsInfoLoading}
+            disabled={data.group_status !== 2 || groupsInfoLoading}
             onClick={() => {
               this.setState({modalType: 0}, () => {
                 this.handleshowModal()

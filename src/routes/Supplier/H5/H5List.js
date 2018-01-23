@@ -217,7 +217,7 @@ export default class TableList extends PureComponent {
         dataIndex: 'create_time',
         key: 'create_time',
         render: (text, data) => {
-          return moment(data.create_time).format("YYYY-MM-DD:hh:mm:ss");
+          return moment(data.create_time).format("YYYY-MM-DD HH:mm:ss");
         }
       }, {
         title: '操作内容',
@@ -278,7 +278,7 @@ export default class TableList extends PureComponent {
                 dataIndex="time_dep"
                 key="time_dep"
                 render={(text, record, index) => {
-                  return <div>{moment(record.time_dep).format('HH:mm') + "-" + moment(record.time_arr).format('HH:mm')}</div>
+                  return <div>{moment(record.time_dep + record.departure_start).format('HH:mm') + "-" + moment(record.time_arr + record.departure_start).format('HH:mm')}</div>
                 }}
               />
               <Column
@@ -294,7 +294,7 @@ export default class TableList extends PureComponent {
                 dataIndex="seat_count"
                 key="seat_count"
                 render={(text, record, index) => {
-                  return <div>{record.seat_count + '折'}</div>
+                  return <div>{record.discount + '折'}</div>
                 }}
               />
               <Column
@@ -302,12 +302,12 @@ export default class TableList extends PureComponent {
                 dataIndex="is_invalid"
                 key="is_invalid"
                 render={(text, record, index) => {
-                  switch (record.is_invalid) {
+                  switch (record.airline_status) {
                     case 0:
-                      return <div>有效</div>
+                      return <div>无效</div>
                       break;
                     case 1:
-                      return <div>无效</div>
+                      return <div>有效</div>
                       break;
                   }
                 }}
