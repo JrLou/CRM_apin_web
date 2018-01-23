@@ -21457,7 +21457,7 @@ textarea.ant-input-number {
   padding-right: 8px;
 }
 .tableListForm___L0iyo .ant-form-item > .ant-form-item-label label {
-  width: 85px;
+  width: 100px;
   display: inline-block;
 }
 .tableListForm___L0iyo .ant-form-item-control-wrapper {
@@ -21539,6 +21539,14 @@ textarea.ant-input-number {
   }
   .addOrderForm___3Bhkm .specialLabel .ant-form-item-control-wrapper {
     width: 70%;
+  }
+}
+@media screen and (max-width: 1330px) {
+  .addOrderForm___3Bhkm .specialLabel .ant-form-item-label {
+    width: 40%;
+  }
+  .addOrderForm___3Bhkm .specialLabel .ant-form-item-control-wrapper {
+    width: 60%;
   }
 }
 /* stylelint-disable at-rule-empty-line-before,at-rule-name-space-after,at-rule-no-unknown */

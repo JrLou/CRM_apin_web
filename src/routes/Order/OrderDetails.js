@@ -13,7 +13,7 @@ const confirm = Modal.confirm;
 const {Description} = DescriptionList;
 const certType = ['身份证', '护照', '港澳通行证', '台胞证'],
   payType = ['线下支付', '支付宝', '微信', '银联', '微信公众号支付'],
-  source = ['委托订单', '飞猪', '供应商', '东航'],
+  source = ['K座订单', '飞猪', '供应商', '东航'],
   time_slot = ['不限', '上午(6:00-12:00)', '下午(12:00-19:00)', '晚上(19:00-6:00)', '凌晨'],
   user_status = ['取消', '推送', '接受', '支付超时'],
   typeArray = ["APP", "H5", "WEB"];
@@ -32,7 +32,7 @@ export default class BasicProfile extends Component {
     this.status = this.props.nameType === 'FlyingPig' ?
       ['待付款', '订单关闭', '待出票', '已出票', '出票失败']
       :
-      ['待付款', '委托中', '方案选择中', '待付尾款', '待出票', '已出票', '出票失败', '委托过期', '委托关闭',];
+      ['待付款', 'K座中', '方案选择中', '待付尾款', '待出票', '已出票', '出票失败', 'K座过期', 'K座关闭',];
   }
 
 
@@ -104,7 +104,7 @@ export default class BasicProfile extends Component {
         let user = this.passengerData[i];
         if (this.orderData.group_type != 3) {
           if (((user.ticketDep && !user.ticketArr) || (!user.ticketDep && user.ticketArr))) {
-            message.warning('出/返票号填写状态需保持一致');
+            message.warning('去/返票号填写状态需保持一致');
             return false
           }
           if (!user.ticketDep && !user.ticketArr) {
@@ -285,7 +285,7 @@ export default class BasicProfile extends Component {
         },
       ]
     ;
-    //委托信息
+    //K座信息
     const groupVoyageColumns = [
       {
         title: '出发目的地', dataIndex: 'city_dep', key: 'city_dep', render: (text, record) => {
@@ -491,7 +491,7 @@ export default class BasicProfile extends Component {
             (nameType === 'Entrust' && order_status == 6) || nameType === 'FlyingPig' ? null :
               <div>
                 <Divider style={{marginBottom: 32}}/>
-                <div className={styles.title}><Icon type="profile"/> 委托信息</div>
+                <div className={styles.title}><Icon type="profile"/> K座信息</div>
                 <Table
                   pagination={false}
                   bordered={true}
