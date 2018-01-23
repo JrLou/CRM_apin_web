@@ -278,7 +278,7 @@ export default class TableList extends PureComponent {
                 dataIndex="time_dep"
                 key="time_dep"
                 render={(text, record, index) => {
-                  return <div>{moment(record.time_dep).format('HH:mm') + "-" + moment(record.time_arr).format('HH:mm')}</div>
+                  return <div>{moment(record.time_dep + record.departure_start).format('HH:mm') + "-" + moment(record.time_arr + record.departure_start).format('HH:mm')}</div>
                 }}
               />
               <Column
