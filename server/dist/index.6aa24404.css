@@ -21533,6 +21533,14 @@ textarea.ant-input-number {
 .addOrderForm___3Bhkm .ant-calendar-picker {
   width: 100%;
 }
+@media screen and (max-width: 1530px) {
+  .addOrderForm___3Bhkm .specialLabel .ant-form-item-label {
+    width: 30%;
+  }
+  .addOrderForm___3Bhkm .specialLabel .ant-form-item-control-wrapper {
+    width: 70%;
+  }
+}
 /* stylelint-disable at-rule-empty-line-before,at-rule-name-space-after,at-rule-no-unknown */
 /* stylelint-disable no-duplicate-selectors */
 /* stylelint-disable declaration-bang-space-before,no-duplicate-selectors */
