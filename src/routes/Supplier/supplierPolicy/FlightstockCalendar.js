@@ -518,6 +518,8 @@ class ModifyPriceFrom extends Component {
       if (!err) {
         console.log('Received values of form: ', values);
         // this.props.dateArr
+        values.sellPrice = parseInt(values.sellPrice) * 100;
+        values.settlementPrice = parseInt(values.settlementPrice) * 100;
         this.props.modifyData(values)
 
       }
