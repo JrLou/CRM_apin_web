@@ -310,10 +310,7 @@ export default class OfflineList extends PureComponent {
       },
       {
         title: '利润',
-        dataIndex: 'profit',
-        render: (text, record) => {
-          return +text / 100
-        },
+        dataIndex: 'profit'
       },
       {
         title: '供应商',

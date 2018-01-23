@@ -463,6 +463,10 @@ export default class AddOrderForm extends Component {
       labelCol: { span: 2 },
       wrapperCol: { span: 16 },
     };
+    const formItemLayout3 = {
+      labelCol: { span: 8 },
+      wrapperCol: { span: 16 },
+    };
     const { readOnly, offline: { usernameData, supplierData, cityData, cityData2, changeInfo, schemeInfo } } = this.props;
     let detail = this.props.detail ? this.props.detail : {};
     schemeInfo.map((v, k) => {
@@ -532,7 +536,7 @@ export default class AddOrderForm extends Component {
                       </FormItem>
                     </Col>
                     <Col span={8}>
-                      <FormItem label="是否匹配切位"  {...formItemLayout}>
+                      <FormItem label="是否匹配切位"  className='specialLabel' {...formItemLayout}>
                         {getFieldDecorator('isCutoff', {
                           rules: [],
                           initialValue: detail.isCutoff
@@ -681,7 +685,7 @@ export default class AddOrderForm extends Component {
                   <TabPane tab="出票" key="1">
                     <Row gutter={20}>
                       <Col span={8}>
-                        <FormItem label="出票日期" {...formItemLayout}>
+                        <FormItem label="出票日期" {...formItemLayout3}>
                           {getFieldDecorator('printDate', {
                             rules: [{ required: true, message: "必填" }],
                             initialValue: detail.printDate
@@ -693,7 +697,7 @@ export default class AddOrderForm extends Component {
                     </Row>
                     <Row gutter={20}>
                       <Col span={8}>
-                        <FormItem label="卖价" {...formItemLayout}>
+                        <FormItem label="卖价" {...formItemLayout3}>
                           {getFieldDecorator('sellPrice', {
                             rules: [{ required: true, message: "必填" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
                             initialValue: detail.sellPrice
@@ -706,7 +710,7 @@ export default class AddOrderForm extends Component {
                     </Row>
                     <Row gutter={20}>
                       <Col span={8}>
-                        <FormItem label="请选择方案" {...formItemLayout}>
+                        <FormItem label="请选择方案" {...formItemLayout3}>
                           {getFieldDecorator('selected', {
                             rules: [{ required: true, message: "必填" }],
                             initialValue: detail.selected
@@ -722,7 +726,7 @@ export default class AddOrderForm extends Component {
                     </Row>
                     <Row gutter={20}>
                       <Col span={8}>
-                        <FormItem label="结算总价" {...formItemLayout}>
+                        <FormItem label="结算总价" {...formItemLayout3}>
                           {getFieldDecorator('settlePrice', {
                             initialValue: detail.settlePrice
                           })(
@@ -732,7 +736,7 @@ export default class AddOrderForm extends Component {
                         </FormItem>
                       </Col>
                       <Col span={8}>
-                        <FormItem label="卖价总价" {...formItemLayout}>
+                        <FormItem label="卖价总价" {...formItemLayout3}>
                           {getFieldDecorator('totalPrice', {
                             initialValue: detail.totalPrice
                           })(
@@ -742,7 +746,7 @@ export default class AddOrderForm extends Component {
                         </FormItem>
                       </Col>
                       <Col span={8}>
-                        <FormItem label="利润" {...formItemLayout}>
+                        <FormItem label="利润" {...formItemLayout3}>
                           {getFieldDecorator('profit', {
                             initialValue: detail.profit
                           })(
@@ -754,7 +758,7 @@ export default class AddOrderForm extends Component {
                     </Row>
                     <Row gutter={20}>
                       <Col span={8}>
-                        <FormItem label="票号" {...formItemLayout}>
+                        <FormItem label="票号" {...formItemLayout3}>
                           {getFieldDecorator('ticketNo', {
                             rules: [{ required: true, message: "必填" }, { max: 200, message: "最大输入200位" }],
                             initialValue: detail.ticketNo
