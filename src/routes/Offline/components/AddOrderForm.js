@@ -481,6 +481,14 @@ export default class AddOrderForm extends Component {
     } else if (detail.isPrint == 1 && !this.props.isLeader) {//已出票，不是领导
       specialFlag = true
     }
+    let resonText;
+    if (detail.nodealReason) {
+      resonText = detail.nodealReason
+    } else if (detail.nodealReason === 0) {
+      resonText = 0
+    } else {
+      resonText = ''
+    }
     return (
       <div>
         <Form onSubmit={this.handleSearch} className={styles.addOrderForm}>
@@ -536,7 +544,7 @@ export default class AddOrderForm extends Component {
                       </FormItem>
                     </Col>
                     <Col span={8}>
-                      <FormItem label="是否匹配切位"  className='specialLabel' {...formItemLayout}>
+                      <FormItem label="是否匹配切位" className='specialLabel' {...formItemLayout}>
                         {getFieldDecorator('isCutoff', {
                           rules: [],
                           initialValue: detail.isCutoff
@@ -656,9 +664,10 @@ export default class AddOrderForm extends Component {
                         <FormItem label="原因" {...formItemLayout}>
                           {getFieldDecorator('nodealReason', {
                             rules: [],
-                            initialValue: detail.nodealReason
+                            initialValue: resonText
                           })(
                             <Select placeholder="请选择" disabled={readOnly}>
+                              <Option value=''>请选择</Option>
                               <Option value={0}>比价询单采购意愿低</Option>
                               <Option value={1}>账期结算</Option>
                               <Option value={2}>跟踪周期较长待客人确认</Option>
