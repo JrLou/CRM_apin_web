@@ -129,8 +129,8 @@ export default class TableList extends PureComponent {
               })(
                 <Select placeholder="请选择" style={{width: '100%'}}>
                   <Option value='-1' key='-1'>全部</Option>
-                  <Option value='1' key='1'>上架</Option>
-                  <Option value='0' key='0'>待上架</Option>
+                  <Option value='1' key='1'>有效</Option>
+                  <Option value='0' key='0'>失效</Option>
                 </Select>
               )}
             </FormItem>
@@ -155,7 +155,7 @@ export default class TableList extends PureComponent {
         onOk() {
           _this.props.dispatch({
             type: 'h5List/changeStatus',
-            payload: data,
+            payload: {status: data, filter: {..._this.state.filter, p: 1, pc: 10}},
           });
         },
         onCancel() {
@@ -286,7 +286,7 @@ export default class TableList extends PureComponent {
                 dataIndex="sell_price"
                 key="sell_price"
                 render={(text, record, index) => {
-                  return <div>{"￥" + record.sell_price}</div>
+                  return <div>{"￥" + record.sell_price / 100}</div>
                 }}
               />
               <Column

@@ -126,11 +126,20 @@
         width: auto;
         line-height: 32px;
         padding-right: 8px;
+
+        label {
+          width: 85px;
+          display: inline-block;
+        }
       }
     }
 
     .ant-form-item-control-wrapper {
       flex: 1;
+    }
+
+    .ant-calendar-picker {
+      width: 100%;
     }
   }
 
@@ -222,6 +231,16 @@
     .ant-calendar-picker {
       width: 100%;
     }
+    @media screen and (max-width: 1530px) {
+      .specialLabel {
+        .ant-form-item-label {
+          width: 30%;
+        }
 
+        .ant-form-item-control-wrapper {
+          width: 70%;
+        }
+      }
+    }
   }
 }
