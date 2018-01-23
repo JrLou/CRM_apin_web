@@ -375,7 +375,12 @@ export default class AddOrderForm extends Component {
         console.log('将要提交的参数'); console.log(values);
         // 判断编辑还是新增
         if (this.props.id) {
-          values.endorse = changeInfo;
+          // 转化格式
+          values.endorse = changeInfo.map((v, k) => {
+            let _v = { ...v };
+            _v.handleDate = moment(_v.handleDate).format('YYYY-MM-DD');
+            return _v;
+          });
           dispatch({
             type: 'offline/updateOrder',
             payload: { ...values, id: this.props.id },
