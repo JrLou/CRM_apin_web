@@ -497,13 +497,15 @@ class AddForm extends Component {
         title: '操作人',
         dataIndex: 'user_name',
         key: 'user_name',
+        width: '20%',
       }, {
         title: '操作时间',
         dataIndex: 'create_time',
         key: 'create_time',
         render: (text, data) => {
           return moment(data.create_time).format("YYYY-MM-DD HH:mm:ss");
-        }
+        },
+        width: '20%',
       }, {
         title: '操作内容',
         dataIndex: 'create_content',

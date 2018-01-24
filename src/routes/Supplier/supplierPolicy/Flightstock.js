@@ -401,8 +401,9 @@ export default class TableList extends PureComponent {
               onOk={this.companyname.bind(this, 1)}
               onCancel={this.companyname.bind(this, 1)}
             >
-              <Table pagination={false} rowKey={'id'}
-                     dataSource={datalis ? datalis : []} columns={columns}/>
+              <Table  pagination={false}
+                      rowKey={'create_time'}
+                      dataSource={datalis ? datalis : []} columns={columns}/>
             </Modal>
           </div>
         </Card>
