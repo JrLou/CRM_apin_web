@@ -461,7 +461,8 @@ export default class BasicProfile extends Component {
                             :
                             <span className={styles.inputPrice}>{inputPrice ? inputPrice : this.price}元</span>
                         }
-                        <Button type='primary' onClick={::this.isEdit}>{isEdit ? '保存' : '修改'}</Button></span>
+                        <Button type='primary' className={styles.btn}
+                                onClick={::this.isEdit}>{isEdit ? '保存' : '修改'}</Button></span>
                     </li>
                 }
                 {
@@ -483,7 +484,7 @@ export default class BasicProfile extends Component {
                   bordered={true}
                   dataSource={payrecord ? payrecord : []}
                   columns={payColumns}
-                  rowKey={record => record.id + record.pay_time + Math.random()*10000}
+                  rowKey={record => record.id + record.pay_time + Math.random() * 10000}
                 />
               </div>
           }

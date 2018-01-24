@@ -6,71 +6,82 @@
   font-weight: 500;
   margin-bottom: 16px;
 }
-.picTable{
+
+.picTable {
   width: 40px;
 }
-.myTable{
-  width:60%;
-  min-width:850px;
-  :global{
-    .ant-table-thead{
-      &>tr>th{
+
+.myTable {
+  width: 60%;
+  min-width: 850px;
+  :global {
+    .ant-table-thead {
+      & > tr > th {
         // background-color:#ddd;
       }
     }
   }
 }
-.acticnBtn{
-  margin:20px 0;
-  text-align:center;
+
+.acticnBtn {
+  margin: 20px 0;
+  text-align: center;
 }
+
 //支付信息
-.infoList{
+.infoList {
   list-style: none;
-  padding-left:0;
-  width:50%;
-  border:1px solid #101010;
-  margin-bottom:25px;
-  border-bottom:none;
-  li{
-    border-bottom:1px solid #101010;
-    line-height:32px;
-    .titleDesc,.priceDesc{
-      display:inline-block;
-      text-align:center;
-      padding:15px;
+  padding-left: 0;
+  width: 50%;
+  border: 1px solid #101010;
+  margin-bottom: 25px;
+  border-bottom: none;
+  li {
+    border-bottom: 1px solid #101010;
+    line-height: 32px;
+    .titleDesc, .priceDesc {
+      display: inline-block;
+      text-align: center;
+      padding: 15px;
     }
-    .titleDesc{
-      width:40%;
-      background-color:#ddd;
+    .titleDesc {
+      width: 40%;
+      background-color: #ddd;
       font-weight: bold;
     }
-    .priceDesc{
-      width:60%;
-      .inputPrice{
-        width:60%;
-        margin-right:15px;
-        display:inline-block;
+    .priceDesc {
+      width: 60%;
+      position: relative;
+      .inputPrice {
+        width: 60%;
+      }
+      .btn {
+        position: absolute;
+        right: 10px;
+        margin-left: 10px;
       }
     }
   }
 }
 
-.inputTicket{
-  width:100px;
-  margin:0 8px;
+.inputTicket {
+  width: 100px;
+  margin: 0 8px;
 }
-.statusTitle{
-  font-size:20px;
-  font-weight:bold;
-  text-align:center;
+
+.statusTitle {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
 }
-.showTicket{
+
+.showTicket {
   display: inline-block;
-  min-width:80px;
-  margin:0 8px;
+  min-width: 80px;
+  margin: 0 8px;
 }
-.remarkText{
+
+.remarkText {
   font-size: 14px;
   height: 40px;
   line-height: 30px;
