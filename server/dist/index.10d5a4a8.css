@@ -21225,7 +21225,7 @@ textarea.ant-input-number {
   margin-bottom: 24px;
 }
 .picTable___wz8v3 {
-  width: 50px;
+  width: 85px;
   height: 50px;
 }
 @media screen and (max-width: 992px) {
@@ -21244,7 +21244,12 @@ textarea.ant-input-number {
 .standardTable___1G2oe .tableAlert___1Csor {
   margin-bottom: 16px;
 }
-.btn___rci8z {
+.editBtn___12ZSu .ant-btn-danger {
+  color: #fff;
+  background-color: rgba(255, 77, 79, 0.9);
+  border-color: rgba(255, 77, 79, 0.99);
+}
+.editBtn___12ZSu .btn___rci8z {
   margin: 0 3px 3px;
 }
 /* stylelint-disable at-rule-empty-line-before,at-rule-name-space-after,at-rule-no-unknown */

@@ -320,7 +320,7 @@ export default class TableList extends PureComponent {
         }
       }];
     if (backpath === 'Entrust') {
-      let arr1 = columns.slice(0, 7), arr2 = columns.slice(8, 10), arr3 = columns.slice(11);
+      let arr1 = columns.slice(0, 7), arr2 = columns.slice(8, 10), arr3 = columns.slice(12);
       columns = arr1.concat(arr2, arr3);
     }
     const page = {
