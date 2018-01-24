@@ -288,7 +288,7 @@ export default class TableList extends PureComponent {
         }
       },
       {
-        title: '退款时间', dataIndex: 'pay_time', render: (text) => {
+        title: '退款时间', dataIndex: 'create_time', render: (text) => {
           return text ? timeHelp.getYMDHMS(text) : ''
         }
       },
@@ -333,7 +333,7 @@ export default class TableList extends PureComponent {
               pagination={paginationProps}
               loading={loading}
               onChange={::this.handleTableChange}
-              rowKey={record => record.order_id + Math.random() * 100 + record.pay_time}
+              rowKey={record => record.order_id + Math.random() * 100 + record.create_time}
             />
             <RefundModal ref={(a) => this.refundModal = a}/>
           </div>
