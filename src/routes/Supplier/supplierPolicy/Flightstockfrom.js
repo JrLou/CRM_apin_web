@@ -93,7 +93,6 @@ class AddForm extends Component {
         });
       } else {
         flightdata.selectedWeekGroup[0] = list[1].week_flights
-        debugger
         this.setState({
           flightstockData: [list[1], list[0]],
           linenubber: [1, 0]
@@ -339,7 +338,6 @@ class AddForm extends Component {
 
   showcasing(ole) {
     let data = this.state.flightstockData;
-    debugger
     if (!this.props.id) {
       return <Col style={{width: '100%', marginTop: '10px'}} span={24}>
         <div style={{width: '100%'}}>
@@ -354,7 +352,6 @@ class AddForm extends Component {
       </Col>
     } else {
       if (ole == data[ole].trip_index) {
-        debugger
         return <Col style={{width: '100%', marginTop: '10px'}} span={24}>
           <div style={{width: '100%'}}>
             <FlightstockPlugin
@@ -367,7 +364,6 @@ class AddForm extends Component {
           </div>
         </Col>
       } else {
-        debugger
         return <Col style={{width: '100%', marginTop: '10px'}} span={24}>
           <div style={{width: '100%'}}>
             <FlightstockPlugin
