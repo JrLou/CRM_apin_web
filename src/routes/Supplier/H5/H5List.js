@@ -247,7 +247,7 @@ export default class TableList extends PureComponent {
                 val.p = pagination.current;
                 val.pc = pagination.pageSize;
                 this.props.dispatch({
-                  type: 'H5List/fetch',
+                  type: 'h5List/fetch',
                   payload: val,
                 });
               }}
