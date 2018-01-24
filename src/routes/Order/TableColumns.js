@@ -34,6 +34,8 @@ export default class TableList extends PureComponent {
         pc: 10,
       },
       timeArr: [],
+      clicktag:0,
+      resetClick:0,
     };
     this.status = this.props.backpath === 'FlyingPig' ?
       ['待付款', '订单关闭', '待出票', '已出票', '出票失败']
@@ -45,6 +47,9 @@ export default class TableList extends PureComponent {
 
   componentDidMount() {
     this.handleSearch();
+    this.setState({
+      clicktag:0,
+    })
   }
 
   handleTableChange(pagination) {
@@ -73,18 +78,37 @@ export default class TableList extends PureComponent {
   }
 
   handleFormReset() {
-    this.props.form.resetFields();
-    const param = this.props.form.getFieldsValue();
-    this.setState({
-      formValues: param,
-      pagination: {
-        p: 1,
-        pc: 10,
-      },
-      timeArr: [],
-    }, () => {
-      this.handleSearch();
-    });
+    let {resetClick,pagination}=this.state;
+    const {dispatch} = this.props;
+    if(resetClick===0){
+      this.setState({
+        resetClick:1,
+      });
+      this.props.form.resetFields();
+      const param = this.props.form.getFieldsValue();
+      this.setState({
+        formValues: param,
+        pagination: {
+          p: 1,
+          pc: 10,
+        },
+        timeArr: [],
+      });
+      let obj={
+        'start_time': '',
+        'end_time': '',
+      }
+      dispatch({
+        type: 'flyingpigList/getList',
+        payload:{...param,...pagination,...obj},
+      });
+      let me=this;
+      window.setTimeout(function () {
+        me.setState({
+          resetClick:0
+        });
+      }, 2000);
+    }
   };
 
   selectTime(date, dateString) {
@@ -94,9 +118,12 @@ export default class TableList extends PureComponent {
   }
 
   handleSearch() {
-    const {dispatch, form, backpath} = this.props, {pagination, timeArr} = this.state;
+    const {dispatch, form, backpath} = this.props, {pagination, timeArr,clicktag} = this.state;
     form.validateFields((err, fieldsValue) => {
-      if (!err) {
+      if (!err && clicktag === 0) {
+        this.setState({
+          clicktag:1,
+        });
         const values = {
           ...fieldsValue,
           'start_time': timeArr[0] || '',
@@ -119,14 +146,21 @@ export default class TableList extends PureComponent {
           type: 'flyingpigList/getList',
           payload: params,
         });
+        let me=this;
+        window.setTimeout(function () {
+         me.setState({
+           clicktag:0
+         });
+        }, 2000);
       }
+
     });
   }
 
   renderForm() {
     const {getFieldDecorator} = this.props.form;
     const layoutForm = {md: 8, lg: 24, xl: 48};
-    let {backpath} = this.props;
+    let {backpath} = this.props,{clicktag,resetClick}=this.state;
     return (
       <Form layout="inline">
         <Row gutter={layoutForm}>
@@ -235,8 +269,9 @@ export default class TableList extends PureComponent {
         </Row>
         <div style={{overflow: 'hidden'}}>
           <span style={{float: 'right', marginBottom: 24}}>
-            <Button type="primary" onClick={::this.handleSearch}>查询</Button>
-            <Button style={{marginLeft: 8}} onClick={::this.handleFormReset}>重置</Button>
+            <Button type="primary" onClick={::this.handleSearch}
+                    disabled={clicktag===1}>查询</Button>
+            <Button style={{marginLeft: 8}} onClick={::this.handleFormReset} disabled={resetClick === 1}>重置</Button>
           </span>
         </div>
       </Form>
