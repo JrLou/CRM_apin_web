@@ -4,8 +4,10 @@ export default {
   namespace: 'flyPiglist',
   state: {
     loading: true,
-    data: {},
-    total: 0,
+    data:{
+      data:[],
+      option:{},
+    },
   },
   effects: {
     *fetch({ payload }, { call, put }) {
@@ -28,8 +30,7 @@ export default {
     save(state, { payload }) {
       return {
         ...state,
-        list: payload.data,
-        total: payload.option.total,
+        data:payload,
       };
     },
     changeLoading(state, { payload }) {
