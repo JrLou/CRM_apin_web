@@ -402,7 +402,7 @@ export default class TableList extends PureComponent {
               onCancel={this.companyname.bind(this, 1)}
             >
               <Table  pagination={false}
-                      rowKey={'create_time'}
+                      rowKey={'id'}
                       dataSource={datalis ? datalis : []} columns={columns}/>
             </Modal>
           </div>
