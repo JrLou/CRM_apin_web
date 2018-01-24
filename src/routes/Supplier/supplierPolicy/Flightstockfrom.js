@@ -912,7 +912,7 @@ class AddForm extends Component {
             visible={visible}
             onCancel={this.handleCancels.bind(this)}
             footer={null}
-            width={this.state.listAir == 1 ? '400px' : '1200px'}
+            width={this.state.listAir == 1 ? '500px' : '1200px'}
           >
             {this.state.listAir == 1 && <TextArea placeholder="请填写" onChange={this.valHeadquarters.bind(this, 8)}/>}
             {this.state.listAir == 2 &&
