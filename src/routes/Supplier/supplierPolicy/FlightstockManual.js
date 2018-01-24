@@ -1,14 +1,9 @@
 import React, {Component} from 'react'
 import {
-  Checkbox, message, Col, Form, Input, Select, Button, Row,
+  Checkbox, Col, Form, Input, Select, Button, Row,
 } from 'antd'
-import css from './Flightstock.less';
 
 const CheckboxGroup = Checkbox.Group;
-// import HttpTool from '../../../http/HttpTool.js';
-// import APILXF from '../../../http/APILXF.js';
-import Algorithm from './FlightstockAlgorithm.js';
-
 const FormItem = Form.Item;
 const Option = Select.Option;
 
