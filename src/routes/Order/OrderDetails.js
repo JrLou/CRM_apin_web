@@ -483,7 +483,7 @@ export default class BasicProfile extends Component {
                   bordered={true}
                   dataSource={payrecord ? payrecord : []}
                   columns={payColumns}
-                  rowKey={record => record.id + record.pay_time}
+                  rowKey={record => record.id + record.pay_time + Math.random()*10000}
                 />
               </div>
           }
