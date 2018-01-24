@@ -912,10 +912,11 @@ class AddForm extends Component {
             visible={visible}
             onCancel={this.handleCancels.bind(this)}
             footer={null}
+            width={'900px'}
           >
             {this.state.listAir == 1 && <TextArea placeholder="请填写" onChange={this.valHeadquarters.bind(this, 8)}/>}
             {this.state.listAir == 2 &&
-            <Table style={{width: '900px'}} pagination={false}
+            <Table pagination={false}
                    dataSource={flightstockEdit.logs.data ? flightstockEdit.logs.data : []}
                    columns={columns}/>}
             {this.state.listAir == 1 &&

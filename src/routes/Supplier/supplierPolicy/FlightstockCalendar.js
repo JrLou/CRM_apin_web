@@ -627,7 +627,7 @@ class ModifyPriceFrom extends Component {
                 message: "请输入小于6位的正整数"
               }],
             })(
-              <Input style={{width: '150px'}} addonBefore={'于'} addonAfter={'天前清位'}/>
+              <Input style={{width: '200px'}} addonBefore={'于'} addonAfter={'天前清位'}/>
             )}
           </FormItem>
           : null}

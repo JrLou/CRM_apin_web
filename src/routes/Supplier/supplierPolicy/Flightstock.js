@@ -325,7 +325,7 @@ export default class TableList extends PureComponent {
                 key="days"
               />
               <Column
-                title="航班负责人"
+                title="资源负责人"
                 dataIndex="manager"
                 key="manager"
               />
@@ -349,7 +349,7 @@ export default class TableList extends PureComponent {
                 dataIndex="time"
                 key="time"
                 render={(text, record, index) => {
-                  return <div>{moment(record.create_time).format('YYYY/MM/DD')}</div>
+                  return <div>{moment(record.create_time).format('YYYY/MM/DD HH:mm:ss')}</div>
                 }}
               />
               <Column
