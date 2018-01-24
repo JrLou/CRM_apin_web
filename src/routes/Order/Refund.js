@@ -82,7 +82,7 @@ export default class TableList extends PureComponent {
   }
 
   handleFormReset() {
-    let {resetClick} = this.state;
+    let {resetClick,pagination} = this.state;
     const {dispatch} = this.props;
     if (resetClick === 0) {
       this.setState({
@@ -98,9 +98,13 @@ export default class TableList extends PureComponent {
         },
         timeArr: [],
       });
+      let obj={
+        'start_time': '',
+        'end_time': '',
+      }
       dispatch({
         type: 'refund/getList',
-        payload: {...param, ...this.state.pagination},
+        payload: {...param, ...pagination,...obj},
       });
       let me = this;
       window.setTimeout(function () {
