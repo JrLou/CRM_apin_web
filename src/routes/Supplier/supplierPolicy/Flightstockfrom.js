@@ -77,13 +77,13 @@ class AddForm extends Component {
       list[0].FlightArrcode = list[0].airport_arr_name
       list[0].FlightCompany = list[0].flight_company
       list[1].FlightCompany = list[1].flight_company
-      list[1].FlightNo = list[0].flight_no
-      list[1].FlightDepAirport = list[0].city_dep_name
-      list[1].FlightDepcode = list[0].airport_dep_name
+      list[1].FlightNo = list[1].flight_no
+      list[1].FlightDepAirport = list[1].city_dep_name
+      list[1].FlightDepcode = list[1].airport_dep_name
       list[1].FlightDeptimePlanDate = moment(list[1].time_dep).format("HH:mm")
       list[1].FlightArrtimePlanDate = moment(list[1].time_arr).format("HH:mm")
-      list[1].FlightArrAirport = list[0].city_arr_name
-      list[1].FlightArrcode = list[0].airport_arr_name
+      list[1].FlightArrAirport = list[1].city_arr_name
+      list[1].FlightArrcode = list[1].airport_arr_name
       flightdata.flightTimeWill = [moment(list[0].departure_start), moment(list[0].departure_end)]
       if (list[0].trip_index == 0) {
         flightdata.selectedWeekGroup[0] = list[0].week_flights
@@ -93,10 +93,12 @@ class AddForm extends Component {
         });
       } else {
         flightdata.selectedWeekGroup[0] = list[1].week_flights
+        debugger
         this.setState({
           flightstockData: [list[1], list[0]],
-          linenubber: [0, 1]
+          linenubber: [1, 0]
         });
+
       }
       if (nextProps.flightstockEdit && nextProps.flightstockEdit.ajaxJudgment && this.state.baioshi) {
         this.props.away()
@@ -336,18 +338,51 @@ class AddForm extends Component {
   }
 
   showcasing(ole) {
-    let data = this.state.flightstockData[ole];
-    return <Col style={{width: '100%', marginTop: '10px'}} span={24}>
-      <div style={{width: '100%'}}>
-        <FlightstockPlugin
-          data={data}
-          week={Algorithm.toogleToWeekArr(this.state.flightdata.selectedWeekGroup[ole])}
-          weekSelect={this.weekSelect.bind(this)}
-          disabledadd={this.state.flightdata.competence}
-          kyes={ole}
-        />
-      </div>
-    </Col>
+    let data = this.state.flightstockData;
+    debugger
+    if (!this.props.id) {
+      return <Col style={{width: '100%', marginTop: '10px'}} span={24}>
+        <div style={{width: '100%'}}>
+          <FlightstockPlugin
+            data={data[ole]}
+            week={Algorithm.toogleToWeekArr(this.state.flightdata.selectedWeekGroup[ole])}
+            weekSelect={this.weekSelect.bind(this)}
+            disabledadd={this.state.flightdata.competence}
+            kyes={ole}
+          />
+        </div>
+      </Col>
+    } else {
+      if (ole == data[ole].trip_index) {
+        debugger
+        return <Col style={{width: '100%', marginTop: '10px'}} span={24}>
+          <div style={{width: '100%'}}>
+            <FlightstockPlugin
+              data={data[ole]}
+              week={Algorithm.toogleToWeekArr(this.state.flightdata.selectedWeekGroup[ole])}
+              weekSelect={this.weekSelect.bind(this)}
+              disabledadd={this.state.flightdata.competence}
+              kyes={ole}
+            />
+          </div>
+        </Col>
+      } else {
+        debugger
+        return <Col style={{width: '100%', marginTop: '10px'}} span={24}>
+          <div style={{width: '100%'}}>
+            <FlightstockPlugin
+              data={data[data[ole].trip_index]}
+              week={Algorithm.toogleToWeekArr(this.state.flightdata.selectedWeekGroup[ole])}
+              weekSelect={this.weekSelect.bind(this)}
+              disabledadd={this.state.flightdata.competence}
+              kyes={ole}
+            />
+          </div>
+        </Col>
+
+      }
+
+    }
   }
 
   valHeadquarters(olr, e, event) {
@@ -480,7 +515,7 @@ class AddForm extends Component {
       }];
     if (flightstockEdit && flightstockEdit.details.length > 0) {
       for (let i = 0; i < flightstockEdit.details.length; i++) {
-        getFieldDecorator('names-' + i, {initialValue: flightstockEdit.details[i].flight_no});
+        getFieldDecorator('names-' + flightstockEdit.details[i].trip_index, {initialValue: flightstockEdit.details[i].flight_no});
       }
       console.log(getFieldsValue())
     }
