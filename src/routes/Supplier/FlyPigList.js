@@ -222,8 +222,8 @@ export default class TableList extends PureComponent {
         dataIndex: 'time_dep',
         render:(text,data)=>{
           let record=this.getFlight(data);
-          let time_dep_0 = timeHelp.getHM(record.time_dep_0);
-          let time_arr_0 = timeHelp.getHM(record.time_arr_0);
+          let time_dep_0 = timeHelp.getHM(record.time_dep_0+record.flight_date);
+          let time_arr_0 = timeHelp.getHM(record.time_arr_0+record.flight_date);
           return `${time_dep_0}-${time_arr_0}`;
         }
       }, {
@@ -239,8 +239,8 @@ export default class TableList extends PureComponent {
         dataIndex: 'time_arr',
         render:(text,data)=>{
           let record=this.getFlight(data);
-          let time_dep_1 = timeHelp.getHM(record.time_dep_1);
-          let time_arr_1 = timeHelp.getHM(record.time_arr_1);
+          let time_dep_1 = timeHelp.getHM(record.time_dep_1+record.flight_date);
+          let time_arr_1 = timeHelp.getHM(record.time_arr_1+record.flight_date);
           return `${time_dep_1}-${time_arr_1}`;
         }
       }, {
