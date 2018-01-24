@@ -908,14 +908,15 @@ class AddForm extends Component {
         < div className={css.shoudes}>
           <Modal
             className={css.popModal}
-            title={"添加备注"}
+            title={this.state.listAir == 1 ? "添加备注" : "日志"}
             visible={visible}
             onCancel={this.handleCancels.bind(this)}
             footer={null}
           >
             {this.state.listAir == 1 && <TextArea placeholder="请填写" onChange={this.valHeadquarters.bind(this, 8)}/>}
             {this.state.listAir == 2 &&
-            <Table pagination={false} dataSource={flightstockEdit.logs.data ? flightstockEdit.logs.data : []}
+            <Table style={{width: '900px'}} pagination={false}
+                   dataSource={flightstockEdit.logs.data ? flightstockEdit.logs.data : []}
                    columns={columns}/>}
             {this.state.listAir == 1 &&
             <Button style={{marginLeft: '41%', marginTop: "20px"}} type="primary"

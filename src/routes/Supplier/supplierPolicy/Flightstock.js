@@ -154,6 +154,22 @@ export default class TableList extends PureComponent {
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
+            <FormItem label="往返天数">
+              {getFieldDecorator('days', {rules: [{max: 32, message: '最长32位'}]})
+              (
+                <Input placeholder="请输入"/>
+              )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="资源负责人">
+              {getFieldDecorator('principalName', {rules: [{max: 32, message: '最长32位'}]})
+              (
+                <Input placeholder="请输入"/>
+              )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
             <FormItem label="供应商名称">
               {getFieldDecorator('supplierName', {rules: [{max: 32, message: '最长32位'}]})
               (
