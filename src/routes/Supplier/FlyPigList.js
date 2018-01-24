@@ -36,14 +36,29 @@ export default class TableList extends PureComponent {
   }
 
   handleTableChange(pagination) {
-    this.setState({
-      pagination: {
-        p: pagination.current,
-        pc: pagination.pageSize,
-      }
-    }, () => {
-      this.handleSearch();
+    this.page = {
+      p: pagination.current,
+      pc: pagination.pageSize,
+    };
+    const {dispatch} = this.props;
+    const {formValues} = this.state;
+    const params = {
+      ...this.page,
+      ...formValues,
+    };
+
+    dispatch({
+      type: 'flyPiglist/fetch',
+      payload: params,
     });
+    // this.setState({
+    //   pagination: {
+    //     p: pagination.current,
+    //     pc: pagination.pageSize,
+    //   }
+    // }, () => {
+    //   this.handleSearch();
+    // });
   }
 
   handleFormReset() {
@@ -188,7 +203,7 @@ export default class TableList extends PureComponent {
   }
 
   render() {
-    const {flyPiglist: {loading, list,flightInfo, total}} = this.props;
+    const {flyPiglist: {loading, data: {data, option}}} = this.props;
 
     const columns = [{
         title: '资源ID',
@@ -222,8 +237,8 @@ export default class TableList extends PureComponent {
         dataIndex: 'time_dep',
         render:(text,data)=>{
           let record=this.getFlight(data);
-          let time_dep_0 = timeHelp.getHM(record.time_dep_0);
-          let time_arr_0 = timeHelp.getHM(record.time_arr_0);
+          let time_dep_0 = timeHelp.getHM(record.time_dep_0+record.flight_date);
+          let time_arr_0 = timeHelp.getHM(record.time_arr_0+record.flight_date);
           return `${time_dep_0}-${time_arr_0}`;
         }
       }, {
@@ -239,8 +254,8 @@ export default class TableList extends PureComponent {
         dataIndex: 'time_arr',
         render:(text,data)=>{
           let record=this.getFlight(data);
-          let time_dep_1 = timeHelp.getHM(record.time_dep_1);
-          let time_arr_1 = timeHelp.getHM(record.time_arr_1);
+          let time_dep_1 = timeHelp.getHM(record.time_dep_1+record.flight_date);
+          let time_arr_1 = timeHelp.getHM(record.time_arr_1+record.flight_date);
           return `${time_dep_1}-${time_arr_1}`;
         }
       }, {
@@ -263,6 +278,17 @@ export default class TableList extends PureComponent {
         render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
       }];
 
+      const page = {
+        current: option.current,
+        pageSize: option.size,
+        total: option.total,
+      };
+      const paginationProps = {
+        showSizeChanger: true,
+        showQuickJumper: true,
+        ...page,
+      };
+
     return (
       <PageHeaderLayout>
         <Card bordered={false}>
@@ -271,9 +297,9 @@ export default class TableList extends PureComponent {
               {this.renderForm()}
             </div>
             <Table
-              dataSource={list}
+              dataSource={data}
               columns={columns}
-              pagination={{showSizeChanger: true, showQuickJumper: true, total}}
+              pagination={paginationProps}
               loading={loading}
               onChange={::this.handleTableChange}
               rowKey="id"
