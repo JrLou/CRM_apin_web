@@ -174,7 +174,7 @@ class BannerEdit extends PureComponent {
             <Row>
               <Col md={16} sm={24}>
                 <FormItem label="指向地址:" {...formItemLayout}>
-                  {getFieldDecorator('link_url', { initialValue: data.link_url ? data.link_url : '',rules: [{type:'url',message:'请输入正确的url地址'},{ max: 128, message: '指向地址长度不能超过128' }]})
+                  {getFieldDecorator('link_url', { initialValue: data.link_url ? data.link_url : '',rules: [{pattern:'(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]',message:'请输入正确的url地址'},{ max: 128, message: '指向地址长度不能超过128' }]})
                     (<Input placeholder="请输入…" />)
                   }
                 </FormItem>
