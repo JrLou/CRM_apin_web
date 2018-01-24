@@ -483,7 +483,7 @@ export default class BasicProfile extends Component {
                   bordered={true}
                   dataSource={payrecord ? payrecord : []}
                   columns={payColumns}
-                  rowKey={record => record.id + record.pay_time}
+                  rowKey={record => record.id + record.pay_time + Math.random()*10000}
                 />
               </div>
           }
@@ -569,7 +569,7 @@ class FailModal extends React.Component {
       this.props.failReason(textAreaValue);
       this.hideModal();
     } else {
-      message.warning('出票失败的原因最多32个字')
+      message.warning('最多可输入32个字')
     }
   }
 
@@ -583,7 +583,7 @@ class FailModal extends React.Component {
           visible={visible}
           onCancel={::this.hideModal}
           footer={[
-            <span key="tip" style={{marginRight: 10}}>提交后,将直接退款</span>,
+            <span key="tip" style={{marginRight: 10}}>提交后，将直接退款</span>,
             <Button key="submit" type="primary" onClick={::this.handleOk}>
               提交
             </Button>,

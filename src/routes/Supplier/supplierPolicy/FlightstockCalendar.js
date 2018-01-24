@@ -109,12 +109,12 @@ class page extends Component {
               {
                 type: 'warning',
                 content: '销售价',
-                price: airline[i].sell_price
+                price: parseInt(airline[i].sell_price) / 100
               },
               {
                 type: 'error',
                 content: '结算价',
-                price: airline[i].settlement_price
+                price: parseInt(airline[i].settlement_price) / 100
               },
               {
                 type: 'normal',
@@ -518,6 +518,8 @@ class ModifyPriceFrom extends Component {
       if (!err) {
         console.log('Received values of form: ', values);
         // this.props.dateArr
+        values.sellPrice = parseInt(values.sellPrice) * 100;
+        values.settlementPrice = parseInt(values.settlementPrice) * 100;
         this.props.modifyData(values)
 
       }
