@@ -175,7 +175,7 @@ class HorizontalLoginForm extends Component {
                     rules: [{
                       required: true,
                       message: requiredText
-                    }, {pattern: /^[\u2E80-\u9FFF]+$/, message: "请输入城市"}],
+                    }, {pattern: /^[\u2E80-\u9FFF]+$/, message: "城市名格式有误"}],
                   })
                   (<Input placeholder="请输入城市" style={{marginLeft: '-22px', width: '147px'}}/>)}
                 </FormItem>
@@ -188,7 +188,7 @@ class HorizontalLoginForm extends Component {
                     rules: [{
                       required: true,
                       message: requiredText
-                    }, {pattern: /^[\u2E80-\u9FFF]+$/, message: "请输入城市"}],
+                    }, {pattern: /^[\u2E80-\u9FFF]+$/, message: "城市名格式有误"}],
                   })
                   (<Input placeholder="请输入城市" style={{width: '147px'}}/>)}
                 </FormItem>
