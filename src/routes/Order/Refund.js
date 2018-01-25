@@ -432,7 +432,7 @@ class OfflineModal extends React.Component {
 
   handleOk() {
     let {data, failReason} = this.props, {textAreaValue} = this.state;
-    if (textAreaValue.length < 32) {
+    if (textAreaValue.length < 33) {
       failReason({'message': textAreaValue, 'order_id': data.order_id, 'pay_id': data.id});
       this.hideModal();
     } else {

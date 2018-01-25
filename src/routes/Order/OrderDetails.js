@@ -102,6 +102,10 @@ export default class BasicProfile extends Component {
     if (this.passengerData && this.passengerData.length > 0) {
       for (let i = 0; i < this.passengerData.length; i++) {
         let user = this.passengerData[i];
+        if (user.ticketDep.length > 32 || user.ticketArr.length > 32) {
+          message.warning('去/返票号最多32个字符');
+          return false
+        }
         if (this.orderData.group_type != 3) {
           if (((user.ticketDep && !user.ticketArr) || (!user.ticketDep && user.ticketArr))) {
             message.warning('去/返票号填写状态需保持一致');
@@ -171,11 +175,7 @@ export default class BasicProfile extends Component {
   }
 
   ticketChange(e, record, type) {
-    if (e.target.value.length < 32) {
-      record[type] = e.target.value;
-    } else {
-      record[type] = e.target.value.slice(0, 32);
-    }
+    record[type] = e.target.value;
   }
 
   render() {
