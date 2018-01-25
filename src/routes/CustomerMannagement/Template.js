@@ -4,7 +4,6 @@ import { Card, Form, Input, Button, Row, Col } from "antd";
 import StandardTable from "./TableList";
 import PageHeaderLayout from "../../layouts/PageHeaderLayout";
 import AllModal from "./ModalCpm";
-
 import styles from "./Template.less";
 
 const FormItem = Form.Item;
@@ -132,6 +131,15 @@ export default class TableList extends PureComponent {
                 //【客户名称】支持中文、英文、数字，最多50个字符；
                 initialValue: "",
                 rules: [{ max: 50, message: "最长50位" }],
+              })(<Input placeholder="请输入" />)}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="负责人:">
+              {getFieldDecorator("charge", {
+                //【负责人】支持模糊搜索，最长字符可输入10个。
+                initialValue: "",
+                rules: [{ max: 10, message: "最长10位" }],
               })(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>

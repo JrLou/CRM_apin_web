@@ -117,6 +117,13 @@ class AddEditModal extends PureComponent {
               ],
             })(<Input placeholder="请输入" />)}
           </FormItem>
+          <FormItem {...formItemLayout} label="负责人:">
+            {getFieldDecorator("charge", {
+              //【负责人】支持模糊搜索，最长字符可输入10个。
+              initialValue: this.getInitData(modalData, "charge"),
+              rules: [{ max: 10, message: "最长10位" }],
+            })(<Input placeholder="请输入" />)}
+          </FormItem>
           <FormItem {...formItemLayout} label="地址:">
             {getFieldDecorator("address", {
               //【客户名称】支持中文、英文、数字，最多50个字符；

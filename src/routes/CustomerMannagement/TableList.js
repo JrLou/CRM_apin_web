@@ -44,6 +44,11 @@ class StandardTable extends PureComponent {
         width: "10%",
       },
       {
+        title: "负责人",
+        dataIndex: "charge",
+        width: "5%",
+      },
+      {
         title: "地址",
         dataIndex: "address",
         width: "13%",
@@ -125,6 +130,11 @@ class StandardTable extends PureComponent {
         title: `${this.getPageName()}名称`,
         dataIndex: "name",
         width: "12%",
+      },
+      {
+        title: "负责人",
+        dataIndex: "charge",
+        width: "5%",
       },
       {
         title: "地址",
