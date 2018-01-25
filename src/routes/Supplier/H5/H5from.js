@@ -117,11 +117,9 @@ class AddForm extends Component {
     e.preventDefault();
     _this.props.form.validateFields((err, values) => {
       if (!err) {
-        if (!_this.props.id) {
-          if (!flightstockData[0].FlightNo) {
-            message.warning('请查询并选择出发航线');
-            return
-          }
+        if (!flightstockData[0].FlightNo) {
+          message.warning('请查询并选择出发航线');
+          return
         }
         if (_this.props.id && !identification) {
           flightstockData[0].FlightDepcode = flightstockData[0].airport_dep_code
@@ -173,37 +171,32 @@ class AddForm extends Component {
   }
 
   inquiries(ole, value, event) {  //查询航线详细信息
-    let data = this.state.flightdata
-    let {flightstockData, flightdata, linenubber} = this.state
+    let {flightdata} = this.state
     if (!value) {
       message.warning('请填写要查询的航班');
       return;
     }
-    if (data.flightTimeWill) {
-      this.props.addPost('h5Add/getsearchAirportesaddes', {},);
-      flightstockData[ole] = {}
-      linenubber[ole] = null
-      if (this.props.id) {
-        this.setState({
-          identification: true,
-        });
-      }
-      this.setState({
-        flightstockData: flightstockData,
-        flightNumbering: '航班号为：' + value + '的所有的航班',
-        flightdata: flightdata,
-        numbering: ole
-      });
-      this.props.addPost('h5Add/addAirLine', {
-        endDate: moment(data.flightTimeWill).format("YYYY-MM-DD"),
-        fnum: value,
-        startDate: moment(data.flightTimeWill).format("YYYY-MM-DD"),
-        numbering: ole,
-        single: true,
-      },);
-    } else {
+    if (!flightdata.flightTimeWill) {
       message.warning('请先选择出发航班日期');
+      return;
     }
+    this.props.addPost('h5Add/getsearchAirportesaddes', {},);
+    this.setState({
+      identification: true,
+      flightstockData: [],
+      flightdata,
+      linenubber: [],
+      flightNumbering: '航班号为：' + value + '的所有的航班',
+      numbering: ole
+    });
+    this.props.addPost('h5Add/addAirLine', {
+      endDate: moment(flightdata.flightTimeWill).format("YYYY-MM-DD"),
+      fnum: value,
+      startDate: moment(flightdata.flightTimeWill).format("YYYY-MM-DD"),
+      numbering: ole,
+      single: true,
+    },);
+
   }
 
   reviewerLists() {
@@ -319,7 +312,6 @@ class AddForm extends Component {
   }
 
   validatores(rule, value, callback) {
-    console.log(typeof value)
     if (value < 51) {
       callback('最小值为51')
     }
@@ -363,7 +355,6 @@ class AddForm extends Component {
               <Search
                 placeholder="请填写航班号"
                 style={{width: '450px'}}
-                // disabled={this.state.flightdata.competence}
                 onSearch={this.inquiries.bind(this, k)}
                 enterButton
               />

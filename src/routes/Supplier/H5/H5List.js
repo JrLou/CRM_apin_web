@@ -65,6 +65,13 @@ export default class TableList extends PureComponent {
 
   handleFormReset() {
     this.props.form.resetFields();
+    this.props.dispatch({
+      type: 'h5List/fetch',
+      payload: {
+        p: 1,
+        pc: 10,
+      },
+    });
   };
 
   handleSubmit(e) {
