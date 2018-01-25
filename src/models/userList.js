@@ -9,7 +9,7 @@ export default {
       msg: '',
       option: {},//这里面会有分页器需要的信息： current、 pageSize、total，但需要转换
     },
-    loading: true,
+    loading: false,
   },
   effects: {
     * fetch({payload}, {call, put}) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
