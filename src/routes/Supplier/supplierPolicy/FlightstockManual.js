@@ -66,7 +66,8 @@ class HorizontalLoginForm extends Component {
         <Row gutter={{md: 8, lg: 24, xl: 48}} style={{textAlign: 'center', display: "block"}}>
           <Col md={6} sm={24}>
             <Col md={24} sm={24}>
-              <p style={{textAlign: 'right', lineHeight: '40px', color: 'rgba(0, 0, 0, 0.85)'}}><span
+              <p
+                style={{marginLeft: '20px', textAlign: 'right', lineHeight: '40px', color: 'rgba(0, 0, 0, 0.85)'}}><span
                 style={{color: 'red'}}>*</span>航班号:</p>
             </Col>
             <Col md={24} sm={24}>
@@ -74,7 +75,7 @@ class HorizontalLoginForm extends Component {
                 style={{color: 'red'}}>*</span>航空公司:</p>
             </Col>
           </Col>
-          <Col md={18} sm={24}>
+          <Col md={18} sm={24} style={{marginLeft: '-20px'}}>
             <Col md={24} sm={24}>
               <FormItem
                 style={{marginBottom: "15px"}}
@@ -132,8 +133,12 @@ class HorizontalLoginForm extends Component {
               <p style={{textAlign: 'right', lineHeight: '40px', color: 'rgba(0, 0, 0, 0.85)'}}><span
                 style={{color: 'red'}}>*</span>机场三字码:</p>
             </Col>
+            <Col md={24} sm={24}>
+              <p style={{textAlign: 'right', lineHeight: '40px', color: 'rgba(0, 0, 0, 0.85)'}}><span
+                style={{color: 'red'}}>*</span>周期选择:</p>
+            </Col>
           </Col>
-          <Col md={18} sm={24}>
+          <Col md={18} sm={24} style={{marginLeft: '-22px'}}>
             <Col md={24} sm={24}>
               <Col md={12} sm={24}>
                 <FormItem style={{marginBottom: "20px",}}>
@@ -213,21 +218,19 @@ class HorizontalLoginForm extends Component {
                 </FormItem>
               </Col>
             </Col>
-
+            <Col md={24} sm={24}>
+              <FormItem>
+                {getFieldDecorator('flights', {
+                  rules: [{
+                    required: true,
+                    message: requiredText
+                  }],
+                })
+                (<CheckboxGroup options={optionsWithDisabled}
+                                onChange={this.valHeadquarters.bind(this)}/>)}
+              </FormItem>
+            </Col>
           </Col>
-          <FormItem
-            label="周期选择"
-            {...formItemLayout}
-          >
-            {getFieldDecorator('flights', {
-              rules: [{
-                required: true,
-                message: requiredText
-              }],
-            })
-            (<CheckboxGroup options={optionsWithDisabled}
-                            onChange={this.valHeadquarters.bind(this)}/>)}
-          </FormItem>
           <FormItem>
             <Button style={{marginLeft: '41%'}} type="primary" htmlType="submit">提交录入</Button>
           </FormItem>

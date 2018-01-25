@@ -896,7 +896,7 @@ class AddForm extends Component {
             <RadioGroup onChange={this.routeSelection.bind(this)}>
               {this.reviewerLists()}
             </RadioGroup>}
-            {!flightstockAdd.accurate.data &&
+            {!flightstockAdd.accurate.data && !this.state.flightdata.entry &&
             <h3 style={{textAlign: "center", marginBottom: '10px'}}>没有该航班信息</h3>}
             {this.state.flightdata.entry && <Manual open={this.mokecopen.bind(this)}/>}
             {this.state.flightNumsdbdsdering &&
