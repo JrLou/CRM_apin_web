@@ -72,7 +72,7 @@ export default class Demand extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem label="出发城市">
               {getFieldDecorator('cityDep', {
-                rules: [{ max: 15, message: "输入位数过长" }],
+                rules: [{ max: 32, message: "输入位数过长" }],
               })(
                 <Input placeholder="请输入" />
                 )}
@@ -81,7 +81,7 @@ export default class Demand extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem label="到达城市">
               {getFieldDecorator('cityArr', {
-                rules: [{ max: 15, message: "输入位数过长" }],
+                rules: [{ max: 32, message: "输入位数过长" }],
               })(
                 <Input placeholder="请输入" />
                 )}
@@ -159,7 +159,7 @@ export default class Demand extends PureComponent {
                     <Card.Meta
                       description={(
                         <div>
-                          <p>3天内需要处理的订单数：<span style={{ color: '#f00' }}>{item.emergency}</span></p>
+                          {/* <p>3天内需要处理的订单数：<span style={{ color: '#f00' }}>{item.emergency}</span></p> */}
                           <p>待推方案订单数：{item.wait}</p>
                           <p>待推方案总人数：{item.wait_people}</p>
                           <p>已成团订单数：{item.finish}</p>

@@ -109,12 +109,12 @@ class page extends Component {
               {
                 type: 'warning',
                 content: '销售价',
-                price: parseInt(airline[i].sell_price) / 100
+                price: parseInt(airline[i].sell_price / 100)
               },
               {
                 type: 'error',
                 content: '结算价',
-                price: parseInt(airline[i].settlement_price) / 100
+                price: parseInt(airline[i].settlement_price / 100)
               },
               {
                 type: 'normal',
@@ -627,7 +627,7 @@ class ModifyPriceFrom extends Component {
                 message: "请输入小于6位的正整数"
               }],
             })(
-              <Input style={{width: '150px'}} addonBefore={'于'} addonAfter={'天前清位'}/>
+              <Input style={{width: '200px'}} addonBefore={'于'} addonAfter={'天前清位'}/>
             )}
           </FormItem>
           : null}
