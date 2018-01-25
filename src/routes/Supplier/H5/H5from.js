@@ -320,7 +320,7 @@ class AddForm extends Component {
 
   validatores(rule, value, callback) {
     console.log(typeof value)
-    if (value <= 51) {
+    if (value < 51) {
       callback('最小值为51')
     }
     callback()
@@ -471,7 +471,7 @@ class AddForm extends Component {
             </RadioGroup>}
             {!h5Add.accurate.data &&
             <h3 style={{textAlign: "center", marginBottom: '10px'}}>没有该航班信息</h3>}
-            {this.state.flightdata.entry && <Manual open={this.mokecopen.bind(this)}/>}
+            {this.state.flightdata.entry && <Manual h5={true} open={this.mokecopen.bind(this)}/>}
             {this.state.flightNumsdbdsdering &&
             <Button style={{marginLeft: '41%'}} type="primary"
                     onClick={this.handleOk.bind(this)}>{h5Add.ok}</Button>}

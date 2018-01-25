@@ -102,7 +102,7 @@ export default class BasicProfile extends Component {
     if (this.passengerData && this.passengerData.length > 0) {
       for (let i = 0; i < this.passengerData.length; i++) {
         let user = this.passengerData[i];
-        if (user.ticketDep.length > 32 || user.ticketArr.length > 32) {
+        if (user.ticketDep && user.ticketDep.length > 32 || user.ticketArr && user.ticketArr.length > 32) {
           message.warning('去/返票号最多32个字符');
           return false
         }

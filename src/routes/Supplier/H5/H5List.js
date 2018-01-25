@@ -123,7 +123,7 @@ export default class TableList extends PureComponent {
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="状态">
+            <FormItem label="资源状态">
               {getFieldDecorator('validity', {
                 initialValue: '-1'
               })(
@@ -264,6 +264,9 @@ export default class TableList extends PureComponent {
                 title="航班号"
                 dataIndex="flight_no"
                 key="flight_no"
+                render={(text, record, index) => {
+                  return <div>{record.flight_no.split('/')[0]}</div>
+                }}
               />
               <Column
                 title="出发日期"

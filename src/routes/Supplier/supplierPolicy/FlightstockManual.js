@@ -75,7 +75,7 @@ class HorizontalLoginForm extends Component {
                 style={{color: 'red'}}>*</span>航空公司:</p>
             </Col>
           </Col>
-          <Col md={18} sm={24} style={{marginLeft: '-20px'}}>
+          <Col md={18} sm={24} style={{marginLeft: '-10px'}}>
             <Col md={24} sm={24}>
               <FormItem
                 style={{marginBottom: "15px"}}
@@ -133,12 +133,14 @@ class HorizontalLoginForm extends Component {
               <p style={{textAlign: 'right', lineHeight: '40px', color: 'rgba(0, 0, 0, 0.85)'}}><span
                 style={{color: 'red'}}>*</span>机场三字码:</p>
             </Col>
+            {!this.props.h5 &&
             <Col md={24} sm={24}>
               <p style={{textAlign: 'right', lineHeight: '40px', color: 'rgba(0, 0, 0, 0.85)'}}><span
                 style={{color: 'red'}}>*</span>周期选择:</p>
             </Col>
+            }
           </Col>
-          <Col md={18} sm={24} style={{marginLeft: '-22px'}}>
+          <Col md={18} sm={24} style={{marginLeft: '-10px'}}>
             <Col md={24} sm={24}>
               <Col md={12} sm={24}>
                 <FormItem style={{marginBottom: "20px",}}>
@@ -218,7 +220,8 @@ class HorizontalLoginForm extends Component {
                 </FormItem>
               </Col>
             </Col>
-            <Col md={24} sm={24}>
+            {!this.props.h5 &&
+            < Col md={24} sm={24}>
               <FormItem>
                 {getFieldDecorator('flights', {
                   rules: [{
@@ -230,6 +233,7 @@ class HorizontalLoginForm extends Component {
                                 onChange={this.valHeadquarters.bind(this)}/>)}
               </FormItem>
             </Col>
+            }
           </Col>
           <FormItem>
             <Button style={{marginLeft: '41%'}} type="primary" htmlType="submit">提交录入</Button>
