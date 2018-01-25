@@ -1,4 +1,4 @@
-import {getFlylist} from '../services/api';
+import {getFlylist,fakequest} from '../services/api';
 import {message} from 'antd';
 
 export default {
@@ -9,6 +9,7 @@ export default {
       data:[],
       option:{},
     },
+    double:false,
   },
   effects: {
     * getList({payload}, {call, put}) {
@@ -16,6 +17,7 @@ export default {
         type: 'changeLoading',
         payload: true,
       });
+      const time1 = Date.now();
       const response = yield call(getFlylist, payload);
       if (response && response.code >= 1) {
         yield put({
@@ -32,6 +34,14 @@ export default {
         type: 'changeLoading',
         payload: false,
       });
+      const time2 = Date.now();
+      if(!(time2-time1>2000)){
+        yield call(fakequest, 1000);
+      }
+      yield put({
+        type: 'changeDouble',
+        payload: false,
+      });
     },
   },
   reducers: {
@@ -41,12 +51,26 @@ export default {
         data:payload,
       };
     },
-    changeLoading(state, {payload}) {
+    changeLoading(state, action) {
+      if(action.payload){
+        return {
+          ...state,
+          loading: action.payload,
+          double:action.payload
+        };
+      }else{
+        return {
+          ...state,
+          loading: action.payload,
+        };
+      }
+    },
+    changeDouble(state,{payload}){
       return {
         ...state,
-        loading: payload,
+        double:payload
       };
-    },
+    }
   },
 };
 
