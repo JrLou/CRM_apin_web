@@ -34,8 +34,8 @@ export default class TableList extends PureComponent {
         pc: 10,
       },
       timeArr: [],
-      clicktag:0,
-      resetClick:0,
+      clicktag: 0,
+      resetClick: 0,
     };
     this.status = this.props.backpath === 'FlyingPig' ?
       ['待付款', '订单关闭', '待出票', '已出票', '出票失败']
@@ -48,7 +48,7 @@ export default class TableList extends PureComponent {
   componentDidMount() {
     this.handleSearch();
     this.setState({
-      clicktag:0,
+      clicktag: 0,
     })
   }
 
@@ -78,11 +78,11 @@ export default class TableList extends PureComponent {
   }
 
   handleFormReset() {
-    let {resetClick,pagination}=this.state;
+    let {resetClick, pagination} = this.state;
     const {dispatch} = this.props;
-    if(resetClick===0){
+    if (resetClick === 0) {
       this.setState({
-        resetClick:1,
+        resetClick: 1,
       });
       this.props.form.resetFields();
       const param = this.props.form.getFieldsValue();
@@ -94,18 +94,18 @@ export default class TableList extends PureComponent {
         },
         timeArr: [],
       });
-      let obj={
+      let obj = {
         'start_time': '',
         'end_time': '',
       }
       dispatch({
         type: 'flyingpigList/getList',
-        payload:{...param,...pagination,...obj},
+        payload: {...param, ...pagination, ...obj},
       });
-      let me=this;
+      let me = this;
       window.setTimeout(function () {
         me.setState({
-          resetClick:0
+          resetClick: 0
         });
       }, 2000);
     }
@@ -118,11 +118,11 @@ export default class TableList extends PureComponent {
   }
 
   handleSearch() {
-    const {dispatch, form, backpath} = this.props, {pagination, timeArr,clicktag} = this.state;
+    const {dispatch, form, backpath} = this.props, {pagination, timeArr, clicktag} = this.state;
     form.validateFields((err, fieldsValue) => {
       if (!err && clicktag === 0) {
         this.setState({
-          clicktag:1,
+          clicktag: 1,
         });
         const values = {
           ...fieldsValue,
@@ -146,11 +146,11 @@ export default class TableList extends PureComponent {
           type: 'flyingpigList/getList',
           payload: params,
         });
-        let me=this;
+        let me = this;
         window.setTimeout(function () {
-         me.setState({
-           clicktag:0
-         });
+          me.setState({
+            clicktag: 0
+          });
         }, 2000);
       }
 
@@ -160,7 +160,7 @@ export default class TableList extends PureComponent {
   renderForm() {
     const {getFieldDecorator} = this.props.form;
     const layoutForm = {md: 8, lg: 24, xl: 48};
-    let {backpath} = this.props,{clicktag,resetClick}=this.state;
+    let {backpath} = this.props, {clicktag, resetClick} = this.state;
     return (
       <Form layout="inline">
         <Row gutter={layoutForm}>
@@ -270,7 +270,7 @@ export default class TableList extends PureComponent {
         <div style={{overflow: 'hidden'}}>
           <span style={{float: 'right', marginBottom: 24}}>
             <Button type="primary" onClick={::this.handleSearch}
-                    disabled={clicktag===1}>查询</Button>
+                    disabled={clicktag === 1}>查询</Button>
             <Button style={{marginLeft: 8}} onClick={::this.handleFormReset} disabled={resetClick === 1}>重置</Button>
           </span>
         </div>
@@ -294,10 +294,10 @@ export default class TableList extends PureComponent {
           return this.status[text];
         },
       },
-      {title: '联系人', dataIndex: 'contact',},
+      {title: '联系人', dataIndex: 'contact', width: '8%'},
       {title: '联系电话', dataIndex: 'mobile',},
-      {title: '出发城市', dataIndex: 'city_dep',},
-      {title: '到达城市', dataIndex: 'city_arr'},
+      {title: '出发城市', dataIndex: 'city_dep', width: '8%'},
+      {title: '到达城市', dataIndex: 'city_arr', width: '8%'},
       {
         title: '出发日期', dataIndex: 'dep_yyyymm', render: (text, record) => {
           let date1 = String(text).substr(0, 4) || '', date2 = String(text).substr(4, 2) || '', day = '';
