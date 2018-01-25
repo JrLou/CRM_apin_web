@@ -8,7 +8,7 @@ export default {
       data: [],
       option: {},
     },
-    loading: true,
+    loading: false,
     logs: {},
   },
   effects: {
