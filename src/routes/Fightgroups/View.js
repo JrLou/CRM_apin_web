@@ -62,7 +62,7 @@ export default class View extends PureComponent {
       title: '状态',
       dataIndex: 'group_status',
       render: (text) => {
-        const status = ['拼团关闭', '拼团中', '已完成', '拼团成功'];
+        const status = ['拼团关闭', '拼团中', '拼团完成', '拼团成功'];
         return status[text];
       },
     }, {
