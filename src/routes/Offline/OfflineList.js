@@ -97,6 +97,7 @@ export default class OfflineList extends PureComponent {
   }
   renderForm() {
     const { getFieldDecorator } = this.props.form;
+    let isLeader = !!this.currentUser && this.currentUser.split(',').indexOf('716103936e1a461ab79dcb7283a979b8') !== -1;
     return (
       <Form layout="inline" onSubmit={this.handleSearch.bind(this)} >
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
@@ -215,6 +216,18 @@ export default class OfflineList extends PureComponent {
                 )}
             </FormItem>
           </Col>
+          {isLeader ?
+            <Col md={8} sm={24}>
+              <FormItem label="客服">
+                {getFieldDecorator('createUserId', {
+                  rules: [{ max: 32, message: "长度不超过32" }],
+                })(
+                  <Input />
+                  )}
+              </FormItem>
+            </Col>
+            : null
+          }
         </Row>
         <div style={{ overflow: 'hidden' }}>
           <span style={{ float: 'right' }}>

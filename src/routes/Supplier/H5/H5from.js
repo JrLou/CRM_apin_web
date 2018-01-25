@@ -39,7 +39,7 @@ class AddForm extends Component {
     super(props);
     this.state = {
       flightdata: {},
-      flightstockData: [{}, {}],//用于储蓄已添加航线
+      flightstockData: [],//用于储蓄已添加航线
       linenubber: [],//用于存储以添加航线的值的索引
       listAir: 0, //控制航班查询有数据显示数据没有数据显示手工录入(1有数据)
       flightNumbering: '',
@@ -81,6 +81,7 @@ class AddForm extends Component {
       this.setState({
         flightstockData: [list[0]],
         linenubber: [0],
+        identification: true,
         flightdata,
         flightTimeWill: moment(list[0].departure_start)
       });
@@ -117,7 +118,7 @@ class AddForm extends Component {
     e.preventDefault();
     _this.props.form.validateFields((err, values) => {
       if (!err) {
-        if (!flightstockData[0].FlightNo) {
+        if (flightstockData.length == 0) {
           message.warning('请查询并选择出发航线');
           return
         }
@@ -182,21 +183,22 @@ class AddForm extends Component {
     }
     this.props.addPost('h5Add/getsearchAirportesaddes', {},);
     this.setState({
-      identification: true,
       flightstockData: [],
-      flightdata,
       linenubber: [],
+      identification: true,
+      flightdata,
       flightNumbering: '航班号为：' + value + '的所有的航班',
       numbering: ole
     });
-    this.props.addPost('h5Add/addAirLine', {
-      endDate: moment(flightdata.flightTimeWill).format("YYYY-MM-DD"),
-      fnum: value,
-      startDate: moment(flightdata.flightTimeWill).format("YYYY-MM-DD"),
-      numbering: ole,
-      single: true,
-    },);
-
+    setTimeout(() => {
+      this.props.addPost('h5Add/addAirLine', {
+        endDate: moment(flightdata.flightTimeWill).format("YYYY-MM-DD"),
+        fnum: value,
+        startDate: moment(flightdata.flightTimeWill).format("YYYY-MM-DD"),
+        numbering: ole,
+        single: true,
+      },)
+    }, 100)
   }
 
   reviewerLists() {

@@ -184,7 +184,6 @@ class AddForm extends Component {
   }
 
   onChange(value, selectedOptions) {  //日期选择器结果输出
-    console.log(value)
     let data = this.state.flightdata;
     data.flightTimeWill = value;
     this.setState({flightdata: data});
@@ -265,6 +264,8 @@ class AddForm extends Component {
 
   routeSelection(e) { //查询航线结果选中
     let {flightstockAdd, flightstockData, linenubber, flightdata} = this.state
+    e.target.value.FlightDeptimePlanDate = e.target.value.FlightDeptimePlanDate.split(' ')[1]
+    e.target.value.FlightArrtimePlanDate = e.target.value.FlightArrtimePlanDate.split(' ')[1]
     flightstockData[flightstockAdd.numbering] = e.target.value
     linenubber[flightstockAdd.numbering] = flightstockAdd.numbering
     flightdata.selectedWeekGroup[flightstockAdd.numbering] = flightstockAdd.accurate.option.mixedFlights
@@ -338,7 +339,14 @@ class AddForm extends Component {
 
   showcasing(ole) {
     let data = this.state.flightstockData;
+
     if (!this.props.id) {
+      // data = data.map((v, k) => {
+      //   v.FlightDeptimePlanDate = v.FlightDeptimePlanDate.split(' ')[1]
+      //   v.FlightArrtimePlanDate = v.FlightArrtimePlanDate.split(' ')[1]
+      // })
+      // data[ole].FlightDeptimePlanDate = data[ole].FlightDeptimePlanDate.split(' ')[1]
+      // data[ole].FlightArrtimePlanDate = data[ole].FlightArrtimePlanDate.split(' ')[1]
       return <Col style={{width: '100%', marginTop: '10px'}} span={24}>
         <div style={{width: '100%'}}>
           <FlightstockPlugin
