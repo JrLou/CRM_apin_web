@@ -402,7 +402,6 @@ class AddForm extends Component {
                           message: requiredText,
                         }, {pattern: /^[1-9]\d{0,5}$/, message: "只允许输入最长6位自然数"},],
                         initialValue: h5Add.details.length > 0 ? (parseInt(h5Add.details[0].sell_price) / 100).toString() : '',
-
                       })
                       (< Input placeholder="请填写"
                                style={{width: '410px', marginRight: '10px'}}/>)}
