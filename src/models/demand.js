@@ -25,7 +25,7 @@ export default {
       });
       const time2 = Date.now()
       if(!(time2-time1>2000)){
-        yield call(fakequest, 500);
+        yield call(fakequest, 1000);
       }
       yield put({
         type: 'changeDouble',
