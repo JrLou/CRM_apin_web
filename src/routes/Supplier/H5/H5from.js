@@ -320,7 +320,7 @@ class AddForm extends Component {
 
   validatores(rule, value, callback) {
     console.log(typeof value)
-    if (value <= 51) {
+    if (value < 51) {
       callback('最小值为51')
     }
     callback()

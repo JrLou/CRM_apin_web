@@ -264,6 +264,9 @@ export default class TableList extends PureComponent {
                 title="航班号"
                 dataIndex="flight_no"
                 key="flight_no"
+                render={(text, record, index) => {
+                  return <div>{record.flight_no.split('/')[0]}</div>
+                }}
               />
               <Column
                 title="出发日期"
