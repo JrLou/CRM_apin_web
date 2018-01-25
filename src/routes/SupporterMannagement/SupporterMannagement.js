@@ -1,21 +1,19 @@
-import React, {PureComponent} from 'react';
-import {connect} from 'dva';
-import Page from '../CustomerMannagement/Template';
+import React, { PureComponent } from "react";
+import { connect } from "dva";
+import Page from "../CustomerMannagement/Template";
 
 @connect(state => ({
   customerMannagement: state.customerMannagement,
 }))
 export default class TableList extends PureComponent {
   componentWillMount() {
-    const {dispatch} = this.props;
+    const { dispatch } = this.props;
     dispatch({
-      type:'customerMannagement/extendAll',
-      payload: {pageType: 's'}
-    })
+      type: "customerMannagement/extendAll",
+      payload: { pageType: "s" },
+    });
   }
   render() {
-    return (
-        <Page/>
-    );
+    return <Page />;
   }
 }
