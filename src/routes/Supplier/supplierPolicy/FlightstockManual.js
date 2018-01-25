@@ -127,7 +127,7 @@ class HorizontalLoginForm extends Component {
             </Col>
             <Col md={24} sm={24}>
               <p style={{textAlign: 'right', lineHeight: '40px', color: 'rgba(0, 0, 0, 0.85)'}}><span
-                style={{color: 'red'}}>*</span>城市三字码:</p>
+                style={{color: 'red'}}>*</span>城市:</p>
             </Col>
             <Col md={24} sm={24}>
               <p style={{textAlign: 'right', lineHeight: '40px', color: 'rgba(0, 0, 0, 0.85)'}}><span
@@ -175,9 +175,9 @@ class HorizontalLoginForm extends Component {
                     rules: [{
                       required: true,
                       message: requiredText
-                    }, {pattern: /^[a-zA-Z]{3}$/, message: "请输入正确三字码"}],
+                    }, {pattern: /^[\u2E80-\u9FFF]+$/, message: "请输入城市"}],
                   })
-                  (<Input placeholder="请输入城市三字码" style={{marginLeft: '-22px', width: '147px'}}/>)}
+                  (<Input placeholder="请输入城市" style={{marginLeft: '-22px', width: '147px'}}/>)}
                 </FormItem>
               </Col>
               <Col md={12} sm={24}>
@@ -188,9 +188,9 @@ class HorizontalLoginForm extends Component {
                     rules: [{
                       required: true,
                       message: requiredText
-                    }, {pattern: /^[a-zA-Z]{3}$/, message: "请输入正确三字码"}],
+                    }, {pattern: /^[\u2E80-\u9FFF]+$/, message: "请输入城市"}],
                   })
-                  (<Input placeholder="请输入城市三字码" style={{width: '147px'}}/>)}
+                  (<Input placeholder="请输入城市" style={{width: '147px'}}/>)}
                 </FormItem>
               </Col>
             </Col>
