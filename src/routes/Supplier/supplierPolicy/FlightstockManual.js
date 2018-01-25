@@ -146,7 +146,7 @@ class HorizontalLoginForm extends Component {
                     rules: [{
                       required: true,
                       message: requiredText
-                    }, {pattern: /^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/, message: "请输入6位的时间格式"}],
+                    }, {pattern: /^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/, message: "格式错误"}],
                   })
                   (<Input placeholder="如（12:30）" style={{marginLeft: '-22px', width: '147px'}}/>)}
                 </FormItem>
@@ -159,7 +159,7 @@ class HorizontalLoginForm extends Component {
                     rules: [{
                       required: true,
                       message: requiredText
-                    }, {pattern: /^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/, message: "请输入6位的时间格式"}],
+                    }, {pattern: /^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/, message: "格式错误"}],
                   })
                   (<Input placeholder="如（12:30）" style={{width: '147px'}}/>)}
                 </FormItem>
