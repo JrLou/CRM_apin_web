@@ -82,6 +82,9 @@ export default class TableList extends PureComponent {
   }
 
   handleSearch() {
+    if(this.props.flyPiglist.loading){
+      return null
+    }
     const {dispatch, form} = this.props, {pagination, timeArr} = this.state;
     form.validateFields((err, fieldsValue) => {
       if (!err) {

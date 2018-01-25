@@ -3,7 +3,7 @@ import { queryFlyList } from '../services/api';
 export default {
   namespace: 'flyPiglist',
   state: {
-    loading: true,
+    loading: false,
     data:{
       data:[],
       option:{},
