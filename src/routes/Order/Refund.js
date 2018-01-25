@@ -300,7 +300,7 @@ export default class TableList extends PureComponent {
         title: '操作', render: (text, record) => {
           return <span>
           {
-            record.refund_status != 3 ? null :
+            record.audit_status != 2 ? null :
               <span>
                  <a onClick={this.afreshRefund.bind(this, record.order_id)}>重新退款</a>
                  <OfflineModal failReason={::this.failReason} data={record}/>
