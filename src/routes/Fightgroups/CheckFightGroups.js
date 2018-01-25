@@ -175,6 +175,7 @@ export default class CheckFightGroups extends Component {
           txt = '委托关闭';
           break;
         case 20:
+        case 33:
         case 34:
         case 43:
         case 44:
@@ -187,7 +188,7 @@ export default class CheckFightGroups extends Component {
           txt = '委托过期';
           break;
         case 30:
-          txt = '委托选择中';
+          txt = '方案选择中';
           break;
         case 40:
           txt = '待付款';
@@ -351,8 +352,7 @@ export default class CheckFightGroups extends Component {
           rowKey="id"
         />
       </div>
-    )
-      ;
+    );
   }
 
   getDetailGroupVoyage() {
