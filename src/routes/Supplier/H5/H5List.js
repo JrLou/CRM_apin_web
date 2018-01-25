@@ -123,7 +123,7 @@ export default class TableList extends PureComponent {
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="状态">
+            <FormItem label="资源状态">
               {getFieldDecorator('validity', {
                 initialValue: '-1'
               })(
