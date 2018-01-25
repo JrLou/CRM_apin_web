@@ -5,6 +5,7 @@ export default {
   state: {
     list: {},
     loading: false,
+    double:false,
   },
   effects: {
     *fetch({ payload }, { call, put }) {
@@ -12,14 +13,22 @@ export default {
         type: 'changeLoading',
         payload: true,
       });
+      const time1 = Date.now();
       const response = yield call(demandList, payload);
       yield put({
         type: 'queryList',
         payload: response,
       });
-      // yield call(fakequest, 1000);
       yield put({
         type: 'changeLoading',
+        payload: false,
+      });
+      const time2 = Date.now()
+      if(!(time2-time1>2000)){
+        yield call(fakequest, 1000);
+      }
+      yield put({
+        type: 'changeDouble',
         payload: false,
       });
     },
@@ -33,10 +42,24 @@ export default {
       };
     },
     changeLoading(state, action) {
+      if(action.payload){
+        return {
+          ...state,
+          loading: action.payload,
+          double:action.payload
+        };
+      }else{
+        return {
+          ...state,
+          loading: action.payload,
+        };
+      }
+    },
+    changeDouble(state,{payload}){
       return {
         ...state,
-        loading: action.payload,
+        double:payload
       };
-    },
+    }
   },
 };

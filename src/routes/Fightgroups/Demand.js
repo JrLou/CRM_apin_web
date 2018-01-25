@@ -52,11 +52,12 @@ export default class Demand extends PureComponent {
   getData(values = this.searchValues) {
     const { dispatch } = this.props;
     let params = { ...values, p: this.page.page, pc: this.page.pageSize };
-    console.log(params)
-    dispatch({
-      type: 'demand/fetch',
-      payload: params,
-    });
+    if(!this.props.demand.double){
+      dispatch({
+        type: 'demand/fetch',
+        payload: params,
+      });
+    }
   };
   resetValue() {
     this.props.form.resetFields();
@@ -103,7 +104,8 @@ export default class Demand extends PureComponent {
         </Row>
         <div style={{ overflow: 'hidden' }}>
           <span style={{ float: 'right' }}>
-            <Button type="primary" style={{ marginRight: 6 }} htmlType="submit">查询</Button>
+          {/* loading={this.props.demand.loading} */}
+            <Button type="primary"  style={{ marginRight: 6 }} htmlType="submit">查询</Button>
             <Button type="default" onClick={this.resetValue.bind(this)}>重置</Button>
           </span>
         </div>

@@ -44,10 +44,12 @@ export default class TableList extends PureComponent {
       p: this.page.current,
       pc: this.page.pageSize
     };
-    dispatch({
-      type: "fightGroupsList/fetch",
-      payload: params
-    });
+    if(!this.props.fightGroupsList.loading){
+      dispatch({
+        type: "fightGroupsList/fetch",
+        payload: params
+      });
+    }
   }
 
   mapGroupStateToTxt(group_status) {

@@ -8,7 +8,7 @@ export default {
       data: [],
       option: {},
     },
-    loading: true,
+    loading: false,
     logs: {},
     filter: {p: 1, pc: 10},
   },
