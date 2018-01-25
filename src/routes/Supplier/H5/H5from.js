@@ -318,6 +318,14 @@ class AddForm extends Component {
     }
   }
 
+  validatores(rule, value, callback) {
+    console.log(typeof value)
+    if (value <= 51) {
+      callback('最小值为51')
+    }
+    callback()
+  }
+
   render() {
     const {getFieldDecorator, getFieldProps, getFieldsValue, getFieldValue} = this.props.form;
     const formItemLayout = {
@@ -400,7 +408,11 @@ class AddForm extends Component {
                         rules: [{
                           required: true,
                           message: requiredText,
-                        }, {pattern: /^[1-9]\d{0,5}$/, message: "只允许输入最长6位自然数"},],
+                        }, {pattern: /^[1-9]\d{0,5}$/, message: "只允许输入最长6位自然数"},
+                          {
+                            validator: this.validatores.bind(this),
+
+                          }],
                         initialValue: h5Add.details.length > 0 ? (parseInt(h5Add.details[0].sell_price) / 100).toString() : '',
                       })
                       (< Input placeholder="请填写"
