@@ -393,7 +393,7 @@ class AddForm extends Component {
                   </Col>
                   <Col span={24}>
                     <FormItem
-                      label="不含税价"
+                      label="含税价"
                       {...formItemLayout}
                     >
                       {getFieldDecorator('sellPrice', {
