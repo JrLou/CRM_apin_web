@@ -125,6 +125,13 @@ export default {
                 flightsTableShow: false,
             };
         },
+        resetCard(state, action) {
+            let key = action.payload ? 'depData' : 'arrData';
+            return {
+                ...state,
+                [key]: {},
+            };
+        },
         goAddFlight(state, action) {
             return {
                 ...state,

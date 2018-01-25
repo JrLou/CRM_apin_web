@@ -47,7 +47,7 @@ export default class SearchFlight extends PureComponent {
         let startms = moment(this.props.form.getFieldValue('startDate')).format('x');
         let endms = moment(this.props.form.getFieldValue('endDate')).format('x');
         if (startms > endms) {
-          message.warning('出发时间不能大于到达时间')
+          message.warning('起飞日期不能晚于返回日期')
           return
         }
         let idString = orderList.map((v, k) => {
@@ -61,6 +61,12 @@ export default class SearchFlight extends PureComponent {
           payload: { ...values, goAirLine: [depData], backAirLine: [arrData], idString: idString.join(',') },
         });
       }
+    });
+  }
+  changeDate = (isleft) => {
+    this.props.dispatch({
+      type: 'push/resetCard',
+      payload: isleft,
     });
   }
   searchFlight = (isLeft) => {
@@ -216,7 +222,7 @@ export default class SearchFlight extends PureComponent {
                 {getFieldDecorator('startDate', {
                   rules: [{ required: true, message: '必填' }],
                 })(
-                  <DatePicker disabledDate={this.disabledDate} />
+                  <DatePicker disabledDate={this.disabledDate} onChange={this.changeDate.bind(this, true)} />
                   )}
               </FormItem>
             </Col>
@@ -226,7 +232,7 @@ export default class SearchFlight extends PureComponent {
                   rules: [{ required: true, message: '必填' }],
 
                 })(
-                  <DatePicker disabledDate={this.disabledDate} />)}
+                  <DatePicker disabledDate={this.disabledDate} onChange={this.changeDate.bind(this, false)} />)}
               </FormItem>
             </Col>
           </Row>

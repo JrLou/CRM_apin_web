@@ -4,7 +4,7 @@ export default {
   namespace: "fightGroupsList",
   state: {
     listData: {},
-    loading: true,
+    loading: false,
   },
   effects: {
     *fetch({ payload }, { call, put }) {

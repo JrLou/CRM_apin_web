@@ -8,7 +8,7 @@ export default {
       data: [],
       option: {},
     },
-    loading: true,
+    loading: false,
     logs: {},
   },
   effects: {
@@ -37,7 +37,7 @@ export default {
       });
       const judgment = yield call(stateAirLine, payload.status);
       if (judgment && judgment.code >= 1) {
-        message.success('上架成功');
+        message.success('操作成功');
       }
       const response = yield call(geth5, payload.filter)
       if (response && response.code >= 1) {

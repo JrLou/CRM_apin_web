@@ -2,10 +2,10 @@ import { stringify } from 'qs';
 import request from '../utils/request';
 import request_java from '../utils/request_java';
 import md5 from 'md5'
-// const sleep = time => new Promise(resolve => setTimeout(resolve, time))
-// export async function fakequest(params){
-//   await sleep(params)
-// }
+const sleep = time => new Promise(resolve => setTimeout(resolve, time))
+export async function fakequest(params){
+  await sleep(params)
+}
 export async function queryProjectNotice() {
   return request('/api/project/notice');
 }

@@ -60,6 +60,13 @@ export default class TableList extends PureComponent {
 
   handleFormReset() {
     this.props.form.resetFields();
+    this.props.dispatch({
+      type: 'h5List/fetch',
+      payload: {
+        p: 1,
+        pc: 10,
+      },
+    });
   };
 
   selectTime(date, dateString) {
@@ -73,6 +80,9 @@ export default class TableList extends PureComponent {
     this.setState({
       isLoadingSearch: true
     });
+    if(this.props.flightstock.loading){
+      return null
+    }
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log(values)
