@@ -1,4 +1,4 @@
-import { demandList } from '../services/api';
+import { demandList,fakequest} from '../services/api';
 
 export default {
   namespace: 'demand',
@@ -17,6 +17,7 @@ export default {
         type: 'queryList',
         payload: response,
       });
+      // yield call(fakequest, 1000);
       yield put({
         type: 'changeLoading',
         payload: false,

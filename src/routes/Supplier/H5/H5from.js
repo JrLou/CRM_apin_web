@@ -318,6 +318,14 @@ class AddForm extends Component {
     }
   }
 
+  validatores(rule, value, callback) {
+    console.log(typeof value)
+    if (value <= 51) {
+      callback('最小值为51')
+    }
+    callback()
+  }
+
   render() {
     const {getFieldDecorator, getFieldProps, getFieldsValue, getFieldValue} = this.props.form;
     const formItemLayout = {
@@ -393,16 +401,19 @@ class AddForm extends Component {
                   </Col>
                   <Col span={24}>
                     <FormItem
-                      label="不含税价"
+                      label="含税价"
                       {...formItemLayout}
                     >
                       {getFieldDecorator('sellPrice', {
                         rules: [{
                           required: true,
                           message: requiredText,
-                        }, {pattern: /^[1-9]\d{0,5}$/, message: "只允许输入最长6位自然数"},],
-                        initialValue: h5Add.details.length > 0 ? (parseInt(h5Add.details[0].sell_price) / 100).toString() : '',
+                        }, {pattern: /^[1-9]\d{0,5}$/, message: "只允许输入最长6位自然数"},
+                          {
+                            validator: this.validatores.bind(this),
 
+                          }],
+                        initialValue: h5Add.details.length > 0 ? (parseInt(h5Add.details[0].sell_price) / 100).toString() : '',
                       })
                       (< Input placeholder="请填写"
                                style={{width: '410px', marginRight: '10px'}}/>)}
@@ -460,7 +471,7 @@ class AddForm extends Component {
             </RadioGroup>}
             {!h5Add.accurate.data &&
             <h3 style={{textAlign: "center", marginBottom: '10px'}}>没有该航班信息</h3>}
-            {this.state.flightdata.entry && <Manual open={this.mokecopen.bind(this)}/>}
+            {this.state.flightdata.entry && <Manual h5={true} open={this.mokecopen.bind(this)}/>}
             {this.state.flightNumsdbdsdering &&
             <Button style={{marginLeft: '41%'}} type="primary"
                     onClick={this.handleOk.bind(this)}>{h5Add.ok}</Button>}

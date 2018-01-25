@@ -123,7 +123,7 @@ export default class TableList extends PureComponent {
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="状态">
+            <FormItem label="资源状态">
               {getFieldDecorator('validity', {
                 initialValue: '-1'
               })(
@@ -247,7 +247,7 @@ export default class TableList extends PureComponent {
                 val.p = pagination.current;
                 val.pc = pagination.pageSize;
                 this.props.dispatch({
-                  type: 'H5List/fetch',
+                  type: 'h5List/fetch',
                   payload: val,
                 });
               }}

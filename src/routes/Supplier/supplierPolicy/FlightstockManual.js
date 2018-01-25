@@ -66,7 +66,8 @@ class HorizontalLoginForm extends Component {
         <Row gutter={{md: 8, lg: 24, xl: 48}} style={{textAlign: 'center', display: "block"}}>
           <Col md={6} sm={24}>
             <Col md={24} sm={24}>
-              <p style={{textAlign: 'right', lineHeight: '40px', color: 'rgba(0, 0, 0, 0.85)'}}><span
+              <p
+                style={{marginLeft: '20px', textAlign: 'right', lineHeight: '40px', color: 'rgba(0, 0, 0, 0.85)'}}><span
                 style={{color: 'red'}}>*</span>航班号:</p>
             </Col>
             <Col md={24} sm={24}>
@@ -74,7 +75,7 @@ class HorizontalLoginForm extends Component {
                 style={{color: 'red'}}>*</span>航空公司:</p>
             </Col>
           </Col>
-          <Col md={18} sm={24}>
+          <Col md={18} sm={24} style={{marginLeft: '-10px'}}>
             <Col md={24} sm={24}>
               <FormItem
                 style={{marginBottom: "15px"}}
@@ -132,8 +133,14 @@ class HorizontalLoginForm extends Component {
               <p style={{textAlign: 'right', lineHeight: '40px', color: 'rgba(0, 0, 0, 0.85)'}}><span
                 style={{color: 'red'}}>*</span>机场三字码:</p>
             </Col>
+            {!this.props.h5 &&
+            <Col md={24} sm={24}>
+              <p style={{textAlign: 'right', lineHeight: '40px', color: 'rgba(0, 0, 0, 0.85)'}}><span
+                style={{color: 'red'}}>*</span>周期选择:</p>
+            </Col>
+            }
           </Col>
-          <Col md={18} sm={24}>
+          <Col md={18} sm={24} style={{marginLeft: '-10px'}}>
             <Col md={24} sm={24}>
               <Col md={12} sm={24}>
                 <FormItem style={{marginBottom: "20px",}}>
@@ -141,7 +148,7 @@ class HorizontalLoginForm extends Component {
                     rules: [{
                       required: true,
                       message: requiredText
-                    }, {pattern: /^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/, message: "请输入6位的时间格式"}],
+                    }, {pattern: /^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/, message: "格式错误"}],
                   })
                   (<Input placeholder="如（12:30）" style={{marginLeft: '-22px', width: '147px'}}/>)}
                 </FormItem>
@@ -154,7 +161,7 @@ class HorizontalLoginForm extends Component {
                     rules: [{
                       required: true,
                       message: requiredText
-                    }, {pattern: /^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/, message: "请输入6位的时间格式"}],
+                    }, {pattern: /^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/, message: "格式错误"}],
                   })
                   (<Input placeholder="如（12:30）" style={{width: '147px'}}/>)}
                 </FormItem>
@@ -213,21 +220,21 @@ class HorizontalLoginForm extends Component {
                 </FormItem>
               </Col>
             </Col>
-
+            {!this.props.h5 &&
+            < Col md={24} sm={24}>
+              <FormItem>
+                {getFieldDecorator('flights', {
+                  rules: [{
+                    required: true,
+                    message: requiredText
+                  }],
+                })
+                (<CheckboxGroup options={optionsWithDisabled}
+                                onChange={this.valHeadquarters.bind(this)}/>)}
+              </FormItem>
+            </Col>
+            }
           </Col>
-          <FormItem
-            label="周期选择"
-            {...formItemLayout}
-          >
-            {getFieldDecorator('flights', {
-              rules: [{
-                required: true,
-                message: requiredText
-              }],
-            })
-            (<CheckboxGroup options={optionsWithDisabled}
-                            onChange={this.valHeadquarters.bind(this)}/>)}
-          </FormItem>
           <FormItem>
             <Button style={{marginLeft: '41%'}} type="primary" htmlType="submit">提交录入</Button>
           </FormItem>

@@ -102,6 +102,10 @@ export default class BasicProfile extends Component {
     if (this.passengerData && this.passengerData.length > 0) {
       for (let i = 0; i < this.passengerData.length; i++) {
         let user = this.passengerData[i];
+        if (user.ticketDep && user.ticketDep.length > 32 || user.ticketArr && user.ticketArr.length > 32) {
+          message.warning('去/返票号最多32个字符');
+          return false
+        }
         if (this.orderData.group_type != 3) {
           if (((user.ticketDep && !user.ticketArr) || (!user.ticketDep && user.ticketArr))) {
             message.warning('去/返票号填写状态需保持一致');
@@ -171,11 +175,7 @@ export default class BasicProfile extends Component {
   }
 
   ticketChange(e, record, type) {
-    if (e.target.value.length < 32) {
-      record[type] = e.target.value;
-    } else {
-      record[type] = e.target.value.slice(0, 32);
-    }
+    record[type] = e.target.value;
   }
 
   render() {
@@ -461,7 +461,8 @@ export default class BasicProfile extends Component {
                             :
                             <span className={styles.inputPrice}>{inputPrice ? inputPrice : this.price}元</span>
                         }
-                        <Button type='primary' onClick={::this.isEdit}>{isEdit ? '保存' : '修改'}</Button></span>
+                        <Button type='primary' className={styles.btn}
+                                onClick={::this.isEdit}>{isEdit ? '保存' : '修改'}</Button></span>
                     </li>
                 }
                 {
@@ -483,7 +484,7 @@ export default class BasicProfile extends Component {
                   bordered={true}
                   dataSource={payrecord ? payrecord : []}
                   columns={payColumns}
-                  rowKey={record => record.id + record.pay_time + Math.random()*10000}
+                  rowKey={record => record.id + record.pay_time + Math.random() * 10000}
                 />
               </div>
           }
