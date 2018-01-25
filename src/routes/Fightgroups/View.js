@@ -69,7 +69,7 @@ export default class View extends PureComponent {
       title: '推送时间',
       dataIndex: 'create_time',
       render: (text) => {
-        return moment(text).format('YYY-MM-DD HH:mm:ss');
+        return moment(text).format('YYYY-MM-DD HH:mm:ss');
       },
     }, {
       title: '出发机场',

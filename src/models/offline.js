@@ -19,7 +19,9 @@ export default {
     ],
     originalPlans: [],
     orderDetail: {},
-    currentOrder: ''
+    currentOrder: '',
+    totalCustomer: [],
+    totalSupplier: []
   },
   effects: {
     *fetch({ payload }, { call, put }) {
@@ -149,19 +151,25 @@ export default {
     *searchCustomer({ payload }, { call, put }) {
       const response = yield call(searchCustomer, payload);
       if (response.code == 200) {
+        let nameArr = response.data.map((v, k) => {
+          return v.name
+        })
         yield put({
           type: 'getCustomers',
-          payload: response.data ? response.data : [],
+          payload: { nameArr: nameArr, totalCustomer: response.data },
         });
       }
 
     },
     *searchSupplier({ payload }, { call, put }) {
       const response = yield call(searchSupplier, payload);
+      let nameArr = response.data.map((v, k) => {
+        return v.name;
+      });
       if (response && response.code == 200) {
         yield put({
           type: 'getSupplier',
-          payload: response.data ? response.data : [],
+          payload: { nameArr: nameArr, totalSupplier: response.data },
         });
       }
 
@@ -268,7 +276,8 @@ export default {
     getCustomers(state, action) {
       return {
         ...state,
-        usernameData: action.payload
+        usernameData: action.payload.nameArr,
+        totalCustomer: action.payload.totalCustomer
       };
     },
     getCity(state, action) {
@@ -281,7 +290,8 @@ export default {
     getSupplier(state, action) {
       return {
         ...state,
-        supplierData: action.payload
+        supplierData: action.payload.nameArr,
+        totalSupplier: action.payload.totalSupplier
       };
     },
     resetPlansAndEndorse(state, action) {

@@ -21,12 +21,12 @@
   },
   "proxy": {
      "/java": {
-    "target": "http://appadmin.pre.io.apin.com/",
+    "target": "http://appadmin.test.io.apin.com/",
     "changeOrigin": true,
     "pathRewrite": { "^/java" : "" }
     },
      "/": {
-    "target": "http://appadmin.pre.io.apin.com/",
+    "target": "http://appadmin.test.io.apin.com/",
     "changeOrigin": true
     }
 

@@ -44,9 +44,29 @@ export default class AddOrderForm extends Component {
     });
   }
 
-  onBlurCheck = (inputId, dataSource, value) => {
+  onBlurCheck = (inputId, dataSource, index, value) => {
+    const { offline: { totalCustomer, totalSupplier } } = this.props;
     if (dataSource.indexOf(value) == -1) {
       this.props.form.setFieldsValue({ [inputId]: '' })
+    } else {
+      // 拿出charge
+      switch (inputId) {
+        case 'customerName':
+          let selectedCus = totalCustomer.filter((v, k) => {
+            return v.name == value
+          })
+          this.props.form.setFieldsValue({ 'charge': selectedCus.charge })
+          break;
+        case 'supplierName':
+          let selectedSup = totalSupplier.filter((v, k) => {
+            return v.name == value
+          })
+          this.props.form.setFieldsValue({ ['charge' + index]: selectedSup.charge })
+          break;
+
+        default:
+          break;
+      }
     }
   }
   createScheme = () => {
@@ -71,7 +91,7 @@ export default class AddOrderForm extends Component {
                   disabled={readOnly}
                   onSearch={this.autoCompSearch.bind(null, 'supplierName')}
                   dataSource={supplierData}
-                  onBlur={this.onBlurCheck.bind(null, 'supplierName' + k, supplierData)}
+                  onBlur={this.onBlurCheck.bind(null, 'supplierName' + k, supplierData, k)}
                   onChange={this.saveScheme.bind(null, k, 'supplierName')}
                 />
                 )}
@@ -123,6 +143,11 @@ export default class AddOrderForm extends Component {
           })(
             <Input type='hidden' />
             )}
+          {getFieldDecorator('charge' + k, {
+            initialValue: v.charge
+          })(
+            <Input type='hidden' />
+            )}
         </Row>
       </div>)
     })
@@ -156,8 +181,6 @@ export default class AddOrderForm extends Component {
   }
   setValue = () => {
     const { offline: { schemeInfo } } = this.props;
-    console.log('xxxxxxxxxxxxxxx');
-    console.log(schemeInfo);
     schemeInfo.map((v, k) => {
       this.props.form.setFieldsValue(
         {
@@ -363,9 +386,6 @@ export default class AddOrderForm extends Component {
         midObj[v] = values[v + i]
         delete values[v + i]
       })
-      // // id特殊一点
-      // midObj.id = midObj.planid
-      // delete midObj.planid
       plan.push(midObj)
     }
     values.plans = plan;
@@ -378,7 +398,7 @@ export default class AddOrderForm extends Component {
     form.validateFields((err, values) => {
       if (!err) {
         values = this._changeToDatestr(values, ['arrDate', 'depDate', 'inquiryDate', 'printDate'])
-        values = this._changePlanValues(values, ['supplierName', 'unitprice', 'flight', 'id', 'orderId', 'selected'])
+        values = this._changePlanValues(values, ['supplierName', 'unitprice', 'flight', 'id', 'orderId', 'selected', 'charge'])
         values.isPayoff = values.isPayoff ? '1' : '0';
         values.isSendoff = values.isSendoff ? '1' : '0';
         console.log('将要提交的参数'); console.log(values);
@@ -485,7 +505,7 @@ export default class AddOrderForm extends Component {
       labelCol: { span: 8 },
       wrapperCol: { span: 16 },
     };
-    const { readOnly, offline: { usernameData, supplierData, cityData, cityData2, changeInfo, schemeInfo, isShowModal } } = this.props;
+    const { readOnly, offline: { usernameData, totalCustomer, supplierData, cityData, cityData2, changeInfo, schemeInfo, isShowModal } } = this.props;
     let detail = this.props.detail ? this.props.detail : {};
     schemeInfo.map((v, k) => {
       if (v.selected == 1) {
@@ -561,6 +581,11 @@ export default class AddOrderForm extends Component {
                             onBlur={this.onBlurCheck.bind(null, 'customerName', usernameData)} />
                           )}
                       </FormItem>
+                      {getFieldDecorator('charge', {
+                        initialValue: detail.charge
+                      })(
+                        <Input type='hidden' />
+                        )}
                     </Col>
                     <Col span={8}>
                       <FormItem label="是否匹配切位" className='specialLabel' {...formItemLayout}>
