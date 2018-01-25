@@ -62,10 +62,12 @@ export default class Choose extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     // continueFlag为继续添加的标志
-    const { id, continueFlag } = this.par;
+    const { id, continueFlag, cityArr, cityDep } = this.par;
+    console.log(this.par);
     const params = {
       ...this.page,
-      ...this.par
+      cityArr: cityArr,
+      cityDep: cityDep
     }
     dispatch({
       type: 'choose/fetch',
