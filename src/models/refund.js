@@ -24,11 +24,6 @@ export default {
           type: 'save',
           payload: response,
         });
-      } else if (!response) {
-        message.error('系统异常')
-      } else {
-        let msg = response.msg ? response.msg : '请求有误';
-        message.error(msg)
       }
       yield put({
         type: 'changeLoading',

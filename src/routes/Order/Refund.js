@@ -203,11 +203,6 @@ export default class TableList extends PureComponent {
             if (res && res.code >= 1) {
               message.success('重新退款提交成功');
               _this.handleSearch();
-            } else if (!res) {
-              message.error('系统异常');
-            } else {
-              let msg = res.msg ? res.msg : '重新退款提交失败';
-              message.error(msg);
             }
           }
         });
@@ -226,11 +221,6 @@ export default class TableList extends PureComponent {
         if (res && res.code >= 1) {
           message.success('线下退款提交成功');
           this.handleSearch();
-        } else if (!res) {
-          message.error('系统异常');
-        } else {
-          let msg = res.msg ? res.msg : '线下退款提交失败';
-          message.error(msg);
         }
       }
     })
