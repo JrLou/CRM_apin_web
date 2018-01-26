@@ -10,7 +10,7 @@ export default {
       option: {}
     },
     editData: {},
-    loading: true,
+    loading: false,
     banner_url: '',
     uploadSuccess: false,
   },
