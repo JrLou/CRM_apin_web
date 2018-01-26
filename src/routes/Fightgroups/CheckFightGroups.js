@@ -172,20 +172,20 @@ export default class CheckFightGroups extends Component {
           break;
         case 21:
         case 31:
-          txt = '委托关闭';
+          txt = 'K座关闭';
           break;
         case 20:
         case 33:
         case 34:
         case 43:
         case 44:
-          txt = '委托中';
+          txt = 'K座中';
           break;
         case 22:
         case 32:
         case 41:
         case 42:
-          txt = '委托过期';
+          txt = 'K座过期';
           break;
         case 30:
           txt = '方案选择中';

@@ -325,7 +325,7 @@ export default class Choose extends PureComponent {
         title: '订单状态',
         dataIndex: 'order_status',
         render: (text, record) => {
-          return '委托中';
+          return 'K座中';
         }
       },
       {
