@@ -47,7 +47,7 @@ export default class AddOrderForm extends Component {
   onBlurCheck = (inputId, dataSource, index, value) => {
     const { offline: { totalCustomer, totalSupplier } } = this.props;
     if (dataSource.indexOf(value) == -1) {
-      this.props.form.setFieldsValue({ [inputId]: '' })
+      this.props.form.setFieldsValue({ [inputId + index]: '' })
     } else {
       // 拿出charge
       switch (inputId) {
@@ -55,13 +55,13 @@ export default class AddOrderForm extends Component {
           let selectedCus = totalCustomer.filter((v, k) => {
             return v.name == value
           })
-          this.props.form.setFieldsValue({ 'charge': selectedCus.charge })
+          this.props.form.setFieldsValue({ 'charge': selectedCus[0].charge })
           break;
         case 'supplierName':
           let selectedSup = totalSupplier.filter((v, k) => {
             return v.name == value
           })
-          this.props.form.setFieldsValue({ ['charge' + index]: selectedSup.charge })
+          this.props.form.setFieldsValue({ ['charge' + index]: selectedSup[0].charge })
           break;
 
         default:
@@ -91,7 +91,7 @@ export default class AddOrderForm extends Component {
                   disabled={readOnly}
                   onSearch={this.autoCompSearch.bind(null, 'supplierName')}
                   dataSource={supplierData}
-                  onBlur={this.onBlurCheck.bind(null, 'supplierName' + k, supplierData, k)}
+                  onBlur={this.onBlurCheck.bind(null, 'supplierName', supplierData, k)}
                   onChange={this.saveScheme.bind(null, k, 'supplierName')}
                 />
                 )}
@@ -579,7 +579,7 @@ export default class AddOrderForm extends Component {
                             onSearch={this.autoCompSearch.bind(null, 'customerName')}
                             disabled={readOnly}
                             dataSource={usernameData}
-                            onBlur={this.onBlurCheck.bind(null, 'customerName', usernameData)} />
+                            onBlur={this.onBlurCheck.bind(null, 'customerName', usernameData, '')} />
                           )}
                       </FormItem>
                       {getFieldDecorator('charge', {
@@ -613,7 +613,7 @@ export default class AddOrderForm extends Component {
                             disabled={readOnly}
                             onSearch={this.autoCompSearch.bind(null, 'cityData')}
                             dataSource={cityData}
-                            onBlur={this.onBlurCheck.bind(null, 'cityDep', cityData)} />
+                            onBlur={this.onBlurCheck.bind(null, 'cityDep', cityData, '')} />
                           )}
                       </FormItem>
                     </Col>
@@ -627,7 +627,7 @@ export default class AddOrderForm extends Component {
                             disabled={readOnly}
                             onSearch={this.autoCompSearch.bind(null, 'cityData2')}
                             dataSource={cityData2}
-                            onBlur={this.onBlurCheck.bind(null, 'cityArr', cityData2)} />
+                            onBlur={this.onBlurCheck.bind(null, 'cityArr', cityData2, '')} />
                           )}
                       </FormItem>
                     </Col>
@@ -854,7 +854,7 @@ export default class AddOrderForm extends Component {
                       <Col span={8}>
                         <FormItem label="快递公司" {...formItemLayout}>
                           {getFieldDecorator('express', {
-                            rules: [{ max: 30, message: "最大输入30位" }],
+                            rules: [{ max: 30, message: "最大输入30位" }, { required: this.props.form.getFieldValue('isSendoff'), message: '必填' }],
                             initialValue: detail.express
                           })(
                             <Input disabled={this.props.isView ? true : specialFlag && detail.isSendoff == 1} />
@@ -864,7 +864,7 @@ export default class AddOrderForm extends Component {
                       <Col span={8}>
                         <FormItem label="快递单号" {...formItemLayout}>
                           {getFieldDecorator('waybill', {
-                            rules: [{ max: 30, message: "最大输入30位" }],
+                            rules: [{ max: 30, message: "最大输入30位" }, { required: this.props.form.getFieldValue('isSendoff'), message: '必填' }],
                             initialValue: detail.waybill
                           })(
                             <Input disabled={this.props.isView ? true : specialFlag && detail.isSendoff == 1} />

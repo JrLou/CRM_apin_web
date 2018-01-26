@@ -219,7 +219,7 @@ export default class OfflineList extends PureComponent {
           {isLeader ?
             <Col md={8} sm={24}>
               <FormItem label="客服">
-                {getFieldDecorator('createUserId', {
+                {getFieldDecorator('createUserName', {
                   rules: [{ max: 32, message: "长度不超过32" }],
                 })(
                   <Input />
