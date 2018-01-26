@@ -60,14 +60,6 @@ class AddForm extends Component {
     this.setState({
       h5Add: nextProps.h5Add ? nextProps.h5Add : {details: []},
     })
-    if (nextProps.h5Add.code.length > 0 && nextProps.h5Add.code[0].data.length > 0) {
-      this.setState({
-        h5Add: nextProps.h5Add,
-      })
-      setTimeout(() => {
-        this.judgmentMokecopen()
-      }, 100)
-    }
     if (nextProps.h5Add && nextProps.h5Add.details && nextProps.h5Add.details.length > 0 && !identification) {
       let list = nextProps.h5Add.details;
       list[0].FlightNo = list[0].flight_no
@@ -228,27 +220,19 @@ class AddForm extends Component {
 
   mokecopen(ole) { //手动录入成功回调函数
     let {linenubber, flightdata, flightstockData, h5Add, numbering, code} = this.state
-    this.props.addPost('h5Add/getsearchAirportes', {code: [ole.FlightDepcode, ole.FlightArrcode]});
     this.setState({
       code: ole,
     });
-  }
-
-  judgmentMokecopen() {
-    let {flightdata, code, h5Add, flightstockData, linenubber, numbering} = this.state
-    code.FlightDepAirport = h5Add.code[0].data[0].airport_name
-    code.FlightArrAirport = h5Add.code[1].data[0].airport_name
-    code.FlightDeptimePlanDate = flightdata.flightTimeWill.format('YYYY-MM-DD') + " " + code.FlightDeptimePlanDate + ':00'
-    code.FlightArrtimePlanDate = flightdata.flightTimeWill.format('YYYY-MM-DD') + " " + code.FlightArrtimePlanDate + ':00'
+    ole.FlightDeptimePlanDate = flightdata.flightTimeWill.format('YYYY-MM-DD') + " " + ole.FlightDeptimePlanDate + ':00'
+    ole.FlightArrtimePlanDate = flightdata.flightTimeWill.format('YYYY-MM-DD') + " " + ole.FlightArrtimePlanDate + ':00'
     h5Add.visible = false;
-    flightstockData[numbering] = code
+    flightstockData[numbering] = ole
     linenubber[numbering] = numbering
     this.setState({
       h5Add,
       flightstockData,
       linenubber,
     });
-    this.props.addPost('h5Add/getsearchAirportesaddes', {},);
   }
 
   handleOk() { //弹窗确定操作回调
@@ -462,7 +446,7 @@ class AddForm extends Component {
             <RadioGroup onChange={this.routeSelection.bind(this)}>
               {this.reviewerLists()}
             </RadioGroup>}
-            {!h5Add.accurate.data &&
+            {!h5Add.accurate.data && !this.state.flightdata.entry &&
             <h3 style={{textAlign: "center", marginBottom: '10px'}}>没有该航班信息</h3>}
             {this.state.flightdata.entry && <Manual h5={true} open={this.mokecopen.bind(this)}/>}
             {this.state.flightNumsdbdsdering &&

@@ -295,6 +295,13 @@ export async function getsearchAirport(params) {
     body: params,
   });
 }
+//查询城市
+export async function getsearchCity(params) {
+  return request('/api/resource/searchCity', {
+    method: 'POST',
+    body: params,
+  });
+}
 //冷门资源列表
 export async function geth5(params) {
   return request('/api/resource/getAirLinesRare', {
