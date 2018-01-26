@@ -134,7 +134,7 @@ export default class TableList extends PureComponent {
         <Row gutter={layoutForm}>
           <Col md={8} sm={24}>
             <FormItem label="退款单号">
-              {getFieldDecorator('id', {
+              {getFieldDecorator('pay_id', {
                 rules: [{max: 32, message: "最长32位"}],
                 initialValue: ""
               })(
@@ -239,7 +239,7 @@ export default class TableList extends PureComponent {
   render() {
     const {refund: {loading, data: {data, option}}} = this.props;
     const columns = [
-      {title: '退款单号', dataIndex: 'id',},
+      {title: '退款单号', dataIndex: 'pay_id',},
       {
         title: '退款状态', dataIndex: 'audit_status', render: (text) => {
           return refundStatus[text];
@@ -360,7 +360,7 @@ class RefundModal extends React.Component {
       >
         <div>
           {this.getContent('订单号', data.order_id || '', false)}
-          {this.getContent('退款单号', data.id || '', false)}
+          {this.getContent('退款单号', data.pay_id || '', false)}
           {this.getContent('退款金额', priceRel, true, '元')}
           {this.getContent('处理客服', data.creator_name || '', true)}
           {this.getContent('备注', data.refund_reason || '', false)}
@@ -401,7 +401,7 @@ class OfflineModal extends React.Component {
   handleOk() {
     let {data, failReason} = this.props, {textAreaValue} = this.state;
     if (textAreaValue.length < 33) {
-      failReason({'message': textAreaValue, 'order_id': data.order_id, 'pay_id': data.id});
+      failReason({'message': textAreaValue, 'order_id': data.order_id, 'pay_id': data.pay_id});
       this.hideModal();
     } else {
       message.warning('线下退款的原因最多32个字')

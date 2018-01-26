@@ -33,6 +33,9 @@ class BannerEdit extends PureComponent {
   //   });
   // }
   handleSubmit = (e) => {
+    if(this.props.bannerList.loading){
+      return null
+    }
     e.preventDefault();
     const { dispatch, form } = this.props;
     const { bannerList: { banner_url } } = this.props;
