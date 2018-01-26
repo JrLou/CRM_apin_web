@@ -189,6 +189,7 @@ export default class AddOrderForm extends Component {
           ['flight' + k]: v.flight,
           ['id' + k]: v.id,
           ['orderId' + k]: v.orderId,
+          ['charge' + k]: v.orderId,
         }
       )
     })
