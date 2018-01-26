@@ -253,7 +253,7 @@ export default class SearchFlight extends PureComponent {
               </FormItem>
             </Col>
             <Col span={9}>
-              <FormItem label="到达航班"  {...formItemLayout} className={styles.formItem + ' notFull'}>
+              <FormItem label="返程航班"  {...formItemLayout} className={styles.formItem + ' notFull'}>
                 {getFieldDecorator('flightNoArr', {
                   rules: [{ required: true, message: '必填' },
                   {
