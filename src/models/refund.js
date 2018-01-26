@@ -1,20 +1,23 @@
-import { getRefundList,offlineRefund,retryRefund } from '../services/api';
+import {getRefundList, offlineRefund, retryRefund, fakequest} from '../services/api';
 import {message} from 'antd';
+
 export default {
   namespace: "refund",
   state: {
     loading: true,
-    data:{
-      data:[],
-      option:{},
+    data: {
+      data: [],
+      option: {},
     },
+    double: false,
   },
   effects: {
-    *getList({ payload }, { call, put }) {
+    * getList({payload}, {call, put}) {
       yield put({
         type: 'changeLoading',
         payload: true,
       });
+      const time1 = Date.now();
       const response = yield call(getRefundList, payload);
       if (response && response.code >= 1) {
         yield put({
@@ -31,14 +34,22 @@ export default {
         type: 'changeLoading',
         payload: false,
       });
+      const time2 = Date.now();
+      if (!(time2 - time1 > 2000)) {
+        yield call(fakequest, 1000);
+      }
+      yield put({
+        type: 'changeDouble',
+        payload: false,
+      });
     },
-    *offlineRefund({ payload,callback }, { call, put }) {
+    * offlineRefund({payload, callback}, {call, put}) {
       const response = yield call(offlineRefund, payload);
       if (callback) {
         callback(response);
       }
     },
-    *retryRefund({ payload,callback }, { call, put }) {
+    * retryRefund({payload, callback}, {call, put}) {
       const response = yield call(retryRefund, payload);
       if (callback) {
         callback(response);
@@ -46,18 +57,32 @@ export default {
     },
   },
   reducers: {
-    save(state, { payload }) {
+    save(state, {payload}) {
       return {
         ...state,
-        data:payload,
+        data: payload,
       };
     },
-    changeLoading(state, { payload }) {
+    changeLoading(state, action) {
+      if (action.payload) {
+        return {
+          ...state,
+          loading: action.payload,
+          double: action.payload
+        };
+      } else {
+        return {
+          ...state,
+          loading: action.payload,
+        };
+      }
+    },
+    changeDouble(state, {payload}) {
       return {
         ...state,
-        loading: payload,
+        double: payload
       };
-    },
+    }
   },
 };
 
