@@ -264,8 +264,8 @@ class AddForm extends Component {
 
   routeSelection(e) { //查询航线结果选中
     let {flightstockAdd, flightstockData, linenubber, flightdata} = this.state
-    e.target.value.FlightDeptimePlanDate = e.target.value.FlightDeptimePlanDate.split(' ')[1]
-    e.target.value.FlightArrtimePlanDate = e.target.value.FlightArrtimePlanDate.split(' ')[1]
+    e.target.value.FlightDeptimePlanDate = moment(e.target.value.FlightDeptimePlanDate).format("HH:mm")
+    e.target.value.FlightArrtimePlanDate = moment(e.target.value.FlightArrtimePlanDate).format("HH:mm")
     flightstockData[flightstockAdd.numbering] = e.target.value
     linenubber[flightstockAdd.numbering] = flightstockAdd.numbering
     flightdata.selectedWeekGroup[flightstockAdd.numbering] = flightstockAdd.accurate.option.mixedFlights

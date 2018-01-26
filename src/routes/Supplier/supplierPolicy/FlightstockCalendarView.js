@@ -101,12 +101,12 @@ class page extends Component {
               {
                 type: 'warning',
                 content: '销售价',
-                price: airline[i].sell_price
+                price: parseInt(airline[i].sell_price) / 100
               },
               {
                 type: 'error',
                 content: '结算价',
-                price: airline[i].settlement_price
+                price: parseInt(airline[i].settlement_price) / 100
               },
               {
                 type: 'normal',
