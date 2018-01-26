@@ -496,7 +496,7 @@ export default class BasicProfile extends Component {
                 <Divider style={{marginBottom: 32}}/>
                 <div className={styles.title}><Icon type="profile"/> 方案推送记录</div>
                 <Table
-                  style={{width: '60%'}}
+                  style={{width: '80%'}}
                   pagination={false}
                   bordered={true}
                   dataSource={orderGroup ? orderGroup : []}
@@ -552,7 +552,7 @@ class FailModal extends React.Component {
 
   handleOk() {
     let {textAreaValue} = this.state;
-    if (textAreaValue.length < 32) {
+    if (textAreaValue.length < 33) {
       this.props.failReason(textAreaValue);
       this.hideModal();
     } else {
