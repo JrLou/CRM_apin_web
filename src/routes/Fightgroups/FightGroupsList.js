@@ -1,8 +1,8 @@
 import React, { PureComponent } from "react";
 import { connect } from "dva";
 import { Card, List, Spin } from "antd";
-import PageHeaderLayout from "../../layouts/PageHeaderLayout";
 import { Link } from "dva/router";
+import PageHeaderLayout from "../../layouts/PageHeaderLayout";
 import GroupSearchForm from "./autoForm/GroupSearchForm";
 import { formatDate } from "../../utils/utils";
 import request from "../../utils/request";
@@ -12,14 +12,14 @@ import styles from "./Demand.less";
 //TODO:  cSpell 和 eslint的未使用变量都没有生效啊
 @connect(state => ({
   //目前还没用上这个，后期重构再使用，可以参考自己写的客户列表页
-  fightGroupsList: state.fightGroupsList
+  fightGroupsList: state.fightGroupsList,
 }))
 export default class TableList extends PureComponent {
   constructor() {
     super();
     this.page = {
       current: 1,
-      pageSize: 12
+      pageSize: 12,
     };
   }
 
@@ -27,7 +27,7 @@ export default class TableList extends PureComponent {
     this.formValues = {
       //初始化formValues
       state: -1, //拼团状态验证 0、已关闭；1、拼团中；2、已成团；-1 全部
-      type: -1 //	-1 全部 0 国内 1 国外
+      type: -1, //	-1 全部 0 国内 1 国外
     };
     this.loadTableData();
   }
@@ -42,12 +42,12 @@ export default class TableList extends PureComponent {
     const params = {
       ...this.formValues,
       p: this.page.current,
-      pc: this.page.pageSize
+      pc: this.page.pageSize,
     };
-    if(!this.props.fightGroupsList.loading){
+    if (!this.props.fightGroupsList.loading) {
       dispatch({
         type: "fightGroupsList/fetch",
-        payload: params
+        payload: params,
       });
     }
   }
@@ -58,31 +58,31 @@ export default class TableList extends PureComponent {
       case 0:
         result = {
           txt: "拼团关闭",
-          backgroundColor: "#999"
+          backgroundColor: "#999",
         };
         break;
       case 1:
         result = {
           txt: "拼团中",
-          backgroundColor: "#df8600"
+          backgroundColor: "#df8600",
         };
         break;
       case 2:
         result = {
           txt: "拼团完成",
-          backgroundColor: "#33cc66"
+          backgroundColor: "#33cc66",
         };
         break;
       case 3:
         result = {
           txt: "拼团成功",
-          backgroundColor: "#33cc66"
+          backgroundColor: "#33cc66",
         };
         break;
       default:
         result = {
           txt: "未知的拼团状态",
-          backgroundColor: "#ff0300"
+          backgroundColor: "#ff0300",
         };
         break;
     }
@@ -96,7 +96,7 @@ export default class TableList extends PureComponent {
       height: "8px",
       marginRight: "6px",
       borderRadius: "50%",
-      marginBottom: "1px"
+      marginBottom: "1px",
     };
     const obj = this.mapGroupStateToTxt(group_status);
     return (
@@ -173,7 +173,7 @@ export default class TableList extends PureComponent {
         this.page.pageSize = size;
         this.page.current = current;
         this.loadTableData();
-      }
+      },
     };
     return (
       <Spin spinning={loading}>
@@ -197,7 +197,7 @@ export default class TableList extends PureComponent {
                         to={"/fightgroups/demand/checkFightGroups/" + item.id}
                       >
                         <span style={{ color: "#1890ff" }}>查看</span>
-                      </Link>
+                      </Link>,
                     ]}
                   >
                     <Card.Meta
