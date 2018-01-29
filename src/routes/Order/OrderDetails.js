@@ -496,7 +496,6 @@ export default class BasicProfile extends Component {
                 <Divider style={{marginBottom: 32}}/>
                 <div className={styles.title}><Icon type="profile"/> 方案推送记录</div>
                 <Table
-                  style={{width: '80%'}}
                   pagination={false}
                   bordered={true}
                   dataSource={orderGroup ? orderGroup : []}
