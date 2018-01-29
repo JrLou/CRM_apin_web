@@ -141,8 +141,8 @@ class AddForm extends Component {
           }
         }
         for (let i = 0; i < flightstockData.length; i++) {
-          flightstockData[i].FlightDeptimePlanDate = flightstockData[i].FlightDeptimePlanDate.format("YYYY-MM-DD HH:mm:ss")
-          flightstockData[i].FlightArrtimePlanDate = flightstockData[i].FlightArrtimePlanDate.format("YYYY-MM-DD HH:mm:ss")
+          flightstockData[i].FlightDeptimePlanDate = moment(flightstockData[i].FlightDeptimePlanDate, "YYYY-MM-DD").format("YYYY-MM-DD HH:mm:ss")
+          flightstockData[i].FlightArrtimePlanDate = moment(flightstockData[i].FlightArrtimePlanDate, "YYYY-MM-DD").format("YYYY-MM-DD HH:mm:ss")
         }
         values.settlementPrice = values.settlementPrice * 100
         values.sellPrice = values.sellPrice * 100
@@ -465,7 +465,13 @@ class AddForm extends Component {
       },
     });
   }
-
+  validatores(rule, value, callback) {
+    let data = this.state.flightdata;
+    if (value <= data.chupiaodays) {
+      callback('该天数必须大于出票时间')
+    }
+    callback()
+  }
   render() {
     const {getFieldDecorator, getFieldProps, getFieldsValue, getFieldValue} = this.props.form;
     const formItemLayout = {
@@ -503,7 +509,6 @@ class AddForm extends Component {
           getFieldDecorator('names-1', {initialValue: flightstockEdit.details[0].flight_no});
         }
       }
-      console.log(getFieldsValue())
     }
     getFieldDecorator('keys', {initialValue: []});
     const keys = getFieldValue('keys');
@@ -817,18 +822,22 @@ class AddForm extends Component {
                       // label="库存预警规则"
                       {...formItemLayout}
                     >
-                      <div style={{width: '360px'}}>
+                      <div style={{width: '560px'}}>
                         <span><span style={{color: "#e40505"}}>*</span>清位时间 起飞前</span>
                         {getFieldDecorator('clearDays', {
                           rules: [{
                             required: true,
                             message: requiredText
-                          }, {pattern: /^[1-9]\d{0,4}$/, message: "请填写小于6位的正整数"}],
+                          }, {pattern: /^[1-9]\d{0,4}$/, message: "请填写小于6位的正整数"},
+                            {
+                              validator: this.validatores.bind(this),
+
+                            }],
                           initialValue: flightstockEdit.details.length > 0 ? flightstockEdit.details[0].clear_days : '',
                         })
                         (< Input placeholder="请填写"
                                  disabled={this.state.flightdata.competence}
-                                 onChange={this.valHeadquarters.bind(this, 6)}
+                                 // onChange={this.valHeadquarters.bind(this, 6)}
                                  style={{
                                    width: '70px',
                                    marginLeft: '10px',
