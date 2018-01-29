@@ -1,31 +1,32 @@
-import {queryCustomerList} from '../services/api';
+import { queryCustomerList } from "../services/api";
 
 export default {
-  namespace: 'userList',
+  namespace: "userList",
 
   state: {
     data: {
       data: [],
-      msg: '',
-      option: {},//这里面会有分页器需要的信息： current、 pageSize、total，但需要转换
+      msg: "",
+      option: {}, //这里面会有分页器需要的信息： current、 pageSize、total，但需要转换
     },
     loading: false,
   },
   effects: {
-    * fetch({payload}, {call, put}) {//这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
+    *fetch({ payload }, { call, put }) {
+      //这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
       yield put({
-        type: 'changeLoading',
+        type: "changeLoading",
         payload: true,
       });
       const response = yield call(queryCustomerList, payload);
       if (response && response.code >= 1) {
         yield put({
-          type: 'save',
+          type: "save",
           payload: response,
         });
       }
       yield put({
-        type: 'changeLoading',
+        type: "changeLoading",
         payload: false,
       });
     },

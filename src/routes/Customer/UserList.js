@@ -7,11 +7,6 @@ import PageHeaderLayout from "../../layouts/PageHeaderLayout";
 import styles from "./UserList.less";
 
 const FormItem = Form.Item;
-const getValue = obj =>
-  Object.keys(obj)
-    .map(key => obj[key])
-    .join(",");
-
 @connect(state => ({
   userList: state.userList,
 }))
@@ -30,42 +25,16 @@ export default class TableList extends PureComponent {
   }
 
   componentDidMount() {
-    this.props.dispatch({
-      type: "userList/fetch",
-      payload: { ...this.page },
-    });
+    this.handleSearch();
   }
 
-  handleStandardTableChange = (pagination, filtersArg, sorter) => {
+  handleStandardTableChange = pagination => {
     //分页、排序、筛选变化时触发
-    console.log("pagination", pagination);
-    const { dispatch } = this.props;
-    const { formValues } = this.state;
-
-    const filters = Object.keys(filtersArg).reduce((obj, key) => {
-      const newObj = { ...obj };
-      newObj[key] = getValue(filtersArg[key]);
-      return newObj;
-    }, {});
-
     this.page = {
       p: pagination.current,
       pc: pagination.pageSize,
     };
-
-    const params = {
-      ...this.page,
-      ...formValues,
-      ...filters,
-    };
-    if (sorter.field) {
-      params.sorter = `${sorter.field}_${sorter.order}`;
-    }
-
-    dispatch({
-      type: "userList/fetch",
-      payload: params,
-    });
+    this.loadListData();
   };
 
   //当【查询】or 【重置】时，都应该从第一页从新请求
@@ -77,7 +46,7 @@ export default class TableList extends PureComponent {
   };
 
   handleFormReset = () => {
-    const { form, dispatch } = this.props;
+    const { form } = this.props;
     form.resetFields();
     form.validateFields((err, formValues) => {
       if (err) {
@@ -97,23 +66,25 @@ export default class TableList extends PureComponent {
     if (e) {
       e.preventDefault();
     }
-    const { dispatch, form } = this.props;
+    const { form } = this.props;
     form.validateFields((err, formValues) => {
       if (err) return;
-      debugger;
       this.setState({ formValues }, () => {
         this.resetCurrentPage();
-        if (!this.props.userList.loading) {
-          dispatch({
-            type: "userList/fetch",
-            payload: {
-              ...this.state.formValues,
-              ...this.page,
-            },
-          });
-        }
+        this.loadListData();
       });
     });
+  };
+
+  loadListData = () => {
+    const { dispatch } = this.props;
+    const payload = { ...this.state.formValues, ...this.page };
+    if (!this.props.userList.double) {
+      dispatch({
+        type: "userList/fetch",
+        payload,
+      });
+    }
   };
 
   renderForm() {
