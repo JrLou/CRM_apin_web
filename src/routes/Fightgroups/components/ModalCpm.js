@@ -1,3 +1,5 @@
+/*eslint camelcase: 0*/ //取消驼峰限制
+/*eslint no-unused-expressions: 0*/ //取消表达式的错误
 import React, { Component } from "react";
 import { connect } from "dva";
 import {
@@ -57,7 +59,7 @@ class SendLogModal extends Component {
     super();
     this.state = {};
   }
-
+  //eslint-disable-next-line
   handleCancel = () => {
     this.props.changeVisible && this.props.changeVisible();
   };
@@ -93,7 +95,7 @@ class SendLogModal extends Component {
       return {
         ...item,
         create_time: formatDate(item.create_time, "YYYY-MM-DD HH:mm:ss"), //2017-12-31 12:00:00
-        flight_no: depFlightInfo.flight_no + "/" + arrFlightInfo.flight_no,
+        flight_no: `${depFlightInfo.flight_no}/${arrFlightInfo.flight_no}`,
         flight_dep: formatDate(depFlightInfo.time_dep, "YYYY-MM-DD"),
         flight_arr: formatDate(arrFlightInfo.time_dep, "YYYY-MM-DD"),
         sell_price: depFlightInfo.sell_price, //此字段任意一个航班都是一样的，因为价格是真个拼团的价格
@@ -403,7 +405,11 @@ class ExportPassengerModal extends Component {
           }
 
           this.setState({ fileList }); //页面不需要它,但是上传需要它，所以不能省
-          if (file.status === "done" || file.status === "error") {
+          if (
+            file.status === "done" ||
+            file.status === "error" ||
+            !file.status
+          ) {
             this.setState({ ticketLoading: false });
           }
         });
@@ -413,7 +419,7 @@ class ExportPassengerModal extends Component {
     const columns = this.getColumns();
     return (
       <Modal
-        title={"乘机人信息—" + (abroad === 0 ? "国内" : "国际")}
+        title={`乘机人信息—${abroad === 0 ? "国内" : "国际"}`}
         onCancel={this.handleCancel}
         footer={null}
         {...this.props}
@@ -433,12 +439,10 @@ class ExportPassengerModal extends Component {
             onClick={() => {
               //其实就是下载，很简单
               const {
-                checkFightGroups: { groupsInfoData: { data } },
-                id,
-                dispatch,
+                checkFightGroups: { groupsInfoData: { data } }, // eslint-disable-line
               } = this.props;
-              const fsName =
-                formatDate(data.date_dep, "MM月DD日") + id + "团乘机人.xlsx";
+              const fsName = `${formatDate(data.date_dep, "MM月DD日") +
+                id}团乘机人.xlsx`;
               const params = {
                 uuid: id,
                 fsName,
@@ -479,7 +483,8 @@ class ExportPassengerModal extends Component {
                 });
                 return;
               }
-              const { id, dispatch, loadInitPageData } = this.props;
+
+              const { loadInitPageData } = this.props;
               dispatch({
                 type: "checkFightGroups/fetchSaveTickets",
                 payload: {

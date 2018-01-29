@@ -157,8 +157,8 @@ class BannerEdit extends PureComponent {
               <Col md={16} sm={24}>
                 <FormItem className={styles.ruleRequired} label="上传图片:" {...formItemLayout}>
                   <PicturesWall />
+                  <span className={styles.imgText}>(上传690*332像素的图片)</span>
                 </FormItem>
-                <span className={styles.imgText}>(上传690*332像素的图片)</span>
               </Col>
             </Row>
             <Row>

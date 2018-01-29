@@ -25,7 +25,7 @@ class page extends Component {
               <Col span={24}>
                 <Col span={24} style={{fontSize: '20px', color: "rgb(0, 0, 0)"}}>{accurate.FlightNo}</Col>
               </Col>
-              <Col span={accurate.stopFlag ? 11 : 12}>
+              <Col span={accurate.StopFlag == 1 ? 11 : 12}>
                 <Col style={{fontSize: '20px', color: "rgb(0, 0, 0)"}} span={24}>{accurate.FlightDep}</Col>
                 <Col span={24}>{accurate.FlightDepAirport}</Col>
                 <Col span={24}>{accurate.FlightDepcode}</Col>
@@ -36,7 +36,7 @@ class page extends Component {
                 经停
               </Col>
               }
-              <Col span={accurate.StopFlag ? 11 : 12}>
+              <Col span={accurate.StopFlag == 1 ? 11 : 12}>
                 <Col style={{fontSize: '20px', color: "rgb(0, 0, 0)"}} span={24}>{accurate.FlightArr}</Col>
                 <Col span={24}>{accurate.FlightArrAirport}</Col>
                 <Col span={24}>{accurate.FlightArrcode}</Col>

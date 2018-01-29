@@ -13,7 +13,7 @@ const getValue = obj =>
     .join(",");
 
 @connect(state => ({
-  userList: state.userList
+  userList: state.userList,
 }))
 @Form.create()
 export default class TableList extends PureComponent {
@@ -21,18 +21,18 @@ export default class TableList extends PureComponent {
     super(props);
     this.state = {
       selectedRows: [],
-      formValues: {}
+      formValues: {},
     };
     this.page = {
       p: 1,
-      pc: 10
+      pc: 10,
     };
   }
 
   componentDidMount() {
     this.props.dispatch({
       type: "userList/fetch",
-      payload: { ...this.page }
+      payload: { ...this.page },
     });
   }
 
@@ -50,13 +50,13 @@ export default class TableList extends PureComponent {
 
     this.page = {
       p: pagination.current,
-      pc: pagination.pageSize
+      pc: pagination.pageSize,
     };
 
     const params = {
       ...this.page,
       ...formValues,
-      ...filters
+      ...filters,
     };
     if (sorter.field) {
       params.sorter = `${sorter.field}_${sorter.order}`;
@@ -64,7 +64,7 @@ export default class TableList extends PureComponent {
 
     dispatch({
       type: "userList/fetch",
-      payload: params
+      payload: params,
     });
   };
 
@@ -72,7 +72,7 @@ export default class TableList extends PureComponent {
   resetCurrentPage = () => {
     this.page = {
       ...this.page,
-      p: 1
+      p: 1,
     };
   };
 
@@ -83,26 +83,24 @@ export default class TableList extends PureComponent {
       if (err) {
         return;
       }
-      this.setState({ formValues });
-    });
-    this.resetCurrentPage();
-    dispatch({
-      type: "userList/fetch",
-      payload: { ...this.page }
+      this.setState({ formValues }, this.handleSearch);
     });
   };
 
   handleSelectRows = rows => {
     this.setState({
-      selectedRows: rows
+      selectedRows: rows,
     });
   };
 
   handleSearch = e => {
-    e.preventDefault();
+    if (e) {
+      e.preventDefault();
+    }
     const { dispatch, form } = this.props;
     form.validateFields((err, formValues) => {
       if (err) return;
+      debugger;
       this.setState({ formValues }, () => {
         this.resetCurrentPage();
         if (!this.props.userList.loading) {
@@ -110,8 +108,8 @@ export default class TableList extends PureComponent {
             type: "userList/fetch",
             payload: {
               ...this.state.formValues,
-              ...this.page
-            }
+              ...this.page,
+            },
           });
         }
       });
@@ -137,7 +135,7 @@ export default class TableList extends PureComponent {
             <FormItem label="微信昵称:" style={formItemStyle}>
               {getFieldDecorator("name", {
                 initialValue: "",
-                rules: [{ max: 32, message: "最长32位" }]
+                rules: [{ max: 32, message: "最长32位" }],
               })(<Input placeholder="请输入" style={inputStyle} />)}
             </FormItem>
           </Col>
@@ -145,7 +143,7 @@ export default class TableList extends PureComponent {
             <FormItem label="手机号:" style={formItemStyle}>
               {getFieldDecorator("mobile", {
                 initialValue: "",
-                rules: [{ max: 32, message: "最长32位" }]
+                rules: [{ max: 32, message: "最长32位" }],
               })(<Input placeholder="请输入" style={inputStyle} />)}
             </FormItem>
           </Col>
