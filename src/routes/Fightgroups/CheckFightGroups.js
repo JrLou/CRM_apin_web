@@ -71,6 +71,7 @@ export default class CheckFightGroups extends Component {
     });
   }
 
+  //请求获取页面所有内容
   loadInitPageData = () => {
     const { dispatch } = this.props;
     dispatch({
@@ -499,6 +500,7 @@ export default class CheckFightGroups extends Component {
         visible={showModal}
         width={920}
         changeVisible={this.handleCancel.bind(this)}
+        loadInitPageData={this.loadInitPageData}
         maskClosable={false}
       />
     );

@@ -17,24 +17,6 @@ import { checkCode } from "../../../utils/request";
 
 const { TextArea } = Input;
 
-const progressColumns = [
-  {
-    title: "操作时间",
-    dataIndex: "time",
-    key: "time",
-  },
-  {
-    title: "操作员",
-    dataIndex: "operator",
-    key: "operator",
-  },
-  {
-    title: "操作内容",
-    dataIndex: "rate",
-    key: "rate",
-  },
-];
-
 @connect(state => ({
   checkFightGroups: state.checkFightGroups,
 }))
@@ -50,8 +32,7 @@ class CloseReasonModal extends Component {
 
   render() {
     //closeReason通过上级传过来，不通过redux！，antd pro 的查询表格就是这样的书写逻辑
-    const { closeReason, checkFightGroups } = this.props;
-    const { modalData: { data } } = checkFightGroups;
+    const { closeReason } = this.props;
     return (
       <Modal {...this.props}>
         <TextArea
@@ -59,7 +40,7 @@ class CloseReasonModal extends Component {
           autosize={{ minRows: 2, maxRows: 4 }}
           value={closeReason}
           onChange={e => {
-            const value = e.target.value;
+            const { value } = e.target;
             this.props.onChange(value);
           }}
         />
@@ -96,6 +77,8 @@ class SendLogModal extends Component {
           break;
         case 3:
           txt = "支付超时";
+          break;
+        default:
           break;
       }
       return txt;
@@ -239,7 +222,7 @@ class ExportPassengerModal extends Component {
 
     let columns = [];
     if (abroad == 0) {
-      // abroad	0 国内 1 国际
+      // abroad 0 国内 1 国际
       columns = [
         {
           title: "订单号",
@@ -496,7 +479,7 @@ class ExportPassengerModal extends Component {
                 });
                 return;
               }
-              const { id, dispatch } = this.props;
+              const { id, dispatch, loadInitPageData } = this.props;
               dispatch({
                 type: "checkFightGroups/fetchSaveTickets",
                 payload: {
@@ -505,8 +488,8 @@ class ExportPassengerModal extends Component {
                 },
                 succCallback: () => {
                   message.success("操作成功");
-                  //一定要成功后清除数据
-                  this.initUploadData();
+                  this.initUploadData(); //一定要成功后清除数据
+                  loadInitPageData(); //重新请求所有页面接口
                 },
               });
             }}

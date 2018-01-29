@@ -124,7 +124,7 @@ export default class TableList extends PureComponent {
         </p>
         <div className={less.groupCard_body_lineC}>
           <p>已支付订单：{item.paid}</p>
-          <p>待支付订单：{item.wait}</p>
+          {item.group_status === 1 ? <p>待支付订单：{item.wait}</p> : null}
           <p>已拒绝订单：{item.refuse}</p>
         </div>
       </div>
