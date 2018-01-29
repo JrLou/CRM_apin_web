@@ -65,9 +65,9 @@ class AddForm extends Component {
       list[0].FlightDep = list[0].city_dep_name
       list[0].FlightDepAirport = list[0].airport_dep_name
       list[0].FlightDeptimePlanDate = moment(list[0].time_dep + list[0].departure_start)
+      list[0].FlightArrtimePlanDate = moment(list[0].time_arr + list[0].departure_start)
       list[0].FlightArr = list[0].city_arr_name
       list[0].FlightArrAirport = list[0].airport_arr_name
-      list[0].FlightArrtimePlanDate = moment(list[0].time_arr + list[0].departure_start)
       flightdata.flightTimeWill = moment(list[0].departure_start)
       this.setState({
         flightstockData: [list[0]],
@@ -105,33 +105,34 @@ class AddForm extends Component {
 
   handleSubmit(e, event) {  //提交时数据格式整理，数据校验
     let _this = this
-    let {flightstockData, flightdata, identification} = _this.state
+    let data = []
+    let {flightdata, identification} = _this.state
     e.preventDefault();
     _this.props.form.validateFields((err, values) => {
       if (!err) {
-        if (flightstockData.length == 0) {
+        if (this.state.flightstockData.length == 0) {
           message.warning('请查询并选择出发航线');
           return
         }
-        values.goAirLine = [flightstockData[0]]
+        data = this.state.flightstockData
         if (_this.props.id && !identification) {
-          values.goAirLine[0].FlightDepcode = values.goAirLine[0].airport_dep_code
-          values.goAirLine[0].FlightArrcode = values.goAirLine[0].airport_arr_code
-          values.goAirLine[0].FlightCompany = values.goAirLine[0].flight_company
-          values.goAirLine[0].FlightDep = values.goAirLine[0].city_dep_name
-          values.goAirLine[0].FlightArr = values.goAirLine[0].city_arr_name
-          values.goAirLine[0].FlightDeptimePlanDate = moment(values.goAirLine[0].time_dep)
-          values.goAirLine[0].FlightArrtimePlanDate = moment(values.goAirLine[0].time_arr)
+          data[0].FlightDepcode = data[0].airport_dep_code
+          data[0].FlightArrcode = data[0].airport_arr_code
+          data[0].FlightCompany = data[0].flight_company
+          data[0].FlightDep = data[0].city_dep_name
+          data[0].FlightArr = data[0].city_arr_name
+          data[0].FlightDeptimePlanDate = moment(data[0].time_dep)
+          data[0].FlightArrtimePlanDate = moment(data[0].time_arr)
         } else {
-          values.goAirLine[0].FlightDeptimePlanDate = moment(values.goAirLine[0].FlightDeptimePlanDate).format("YYYY-MM-DD HH:mm:ss")
-          values.goAirLine[0].FlightArrtimePlanDate = moment(values.goAirLine[0].FlightArrtimePlanDate).format("YYYY-MM-DD HH:mm:ss")
+          data[0].FlightDeptimePlanDate = moment(data[0].FlightDeptimePlanDate).format("YYYY-MM-DD HH:mm:ss")
+          data[0].FlightArrtimePlanDate = moment(data[0].FlightArrtimePlanDate).format("YYYY-MM-DD HH:mm:ss")
         }
         values.sellPrice = values.sellPrice * 100
-        values.goAirLine = JSON.stringify(values.goAirLine)
-        values.cityArr = flightstockData[0].FlightArrcode
-        values.cityDep = flightstockData[0].FlightDepcode
+        values.goAirLine = JSON.stringify([data[0]])
+        values.cityArr = data[0].FlightArrcode
+        values.cityDep = data[0].FlightDepcode
         values.startDate = values.time.format("YYYY-MM-DD")
-        values.flightNumber = flightstockData[0].FlightNo + '-' + flightstockData[0].FlightNo
+        values.flightNumber = data[0].FlightNo + '-' + data[0].FlightNo
         this.setState({
           baioshi: true,
         });

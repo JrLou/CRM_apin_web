@@ -64,25 +64,32 @@ class AddForm extends Component {
     if (nextProps.flightstockEdit && nextProps.flightstockEdit.details.length == 2) {
       let list = nextProps.flightstockEdit.details;
       list[0].seat_type == 0 ? list[0].seat_type = "硬切" : list[0].seat_type = "代销"
-      list[0].FlightNo = list[0].flight_no
-      list[0].FlightDepAirport = list[0].city_dep_name
-      list[0].FlightDepcode = list[0].airport_dep_name
-      // list[0].FlightDeptimePlanDate =moment(parseInt(list[0].departure_start) + parseInt(list[0].time_dep)).format("HH:mm")
-      // list[0].FlightDeptimePlanDate =moment(new Date(1516411800000),'x').format("HH:mm")
-      // list[0].FlightDeptimePlanDate = new Date(parseInt(list[0].departure_start) + parseInt(list[0].time_dep)).getMinutes()
-      list[0].FlightDeptimePlanDate = moment(list[0].time_dep)
-      list[0].FlightArrtimePlanDate = moment(list[0].time_arr)
-      list[0].FlightArrAirport = list[0].city_arr_name
-      list[0].FlightArrcode = list[0].airport_arr_name
-      list[0].FlightCompany = list[0].flight_company
-      list[1].FlightCompany = list[1].flight_company
-      list[1].FlightNo = list[1].flight_no
-      list[1].FlightDepAirport = list[1].city_dep_name
-      list[1].FlightDepcode = list[1].airport_dep_name
-      list[1].FlightDeptimePlanDate = moment(list[1].time_dep)
-      list[1].FlightArrtimePlanDate = moment(list[1].time_arr)
-      list[1].FlightArrAirport = list[1].city_arr_name
-      list[1].FlightArrcode = list[1].airport_arr_name
+      for (let i = 0; i < list.length; i++) {
+        list[i].FlightNo = list[i].flight_no
+        list[i].FlightDepAirport = list[i].city_arr_name
+        list[i].FlightDepcode = list[i].airport_dep_code
+        list[i].FlightDeptimePlanDate = moment(list[i].time_dep)
+        list[i].FlightArrtimePlanDate = moment(list[i].time_arr)
+        list[i].FlightArrAirport = list[i].city_arr_name
+        list[i].FlightArrcode = list[i].airport_arr_name
+        list[i].FlightCompany = list[i].flight_company
+      }
+      // list[0].FlightNo = list[0].flight_no
+      // list[0].FlightDepAirport = list[0].city_arr_name
+      // list[0].FlightDepcode = list[0].airport_dep_code
+      // list[0].FlightDeptimePlanDate = moment(list[0].time_dep)
+      // list[0].FlightArrtimePlanDate = moment(list[0].time_arr)
+      // list[0].FlightArrAirport = list[0].city_arr_name
+      // list[0].FlightArrcode = list[0].airport_arr_name
+      // list[0].FlightCompany = list[0].flight_company
+      // list[1].FlightCompany = list[1].flight_company
+      // list[1].FlightNo = list[1].flight_no
+      // list[1].FlightDepAirport = list[1].city_arr_name
+      // list[1].FlightDepcode = list[1].airport_dep_code
+      // list[1].FlightDeptimePlanDate = moment(list[1].time_dep)
+      // list[1].FlightArrtimePlanDate = moment(list[1].time_arr)
+      // list[1].FlightArrAirport = list[1].city_arr_name
+      // list[1].FlightArrcode = list[1].airport_arr_name
       flightdata.flightTimeWill = [moment(list[0].departure_start), moment(list[0].departure_end)]
       if (list[0].trip_index == 0) {
         flightdata.selectedWeekGroup[0] = list[0].week_flights
@@ -150,8 +157,8 @@ class AddForm extends Component {
           }
         }
         for (let i = 0; i < flightstockData.length; i++) {
-          flightstockData[i].FlightDeptimePlanDate=flightstockData[i].FlightDeptimePlanDate.format("YYYY-MM-DD HH:mm:ss")
-          flightstockData[i].FlightArrtimePlanDate=flightstockData[i].FlightArrtimePlanDate.format("YYYY-MM-DD HH:mm:ss")
+          flightstockData[i].FlightDeptimePlanDate = flightstockData[i].FlightDeptimePlanDate.format("YYYY-MM-DD HH:mm:ss")
+          flightstockData[i].FlightArrtimePlanDate = flightstockData[i].FlightArrtimePlanDate.format("YYYY-MM-DD HH:mm:ss")
         }
         values.settlementPrice = values.settlementPrice * 100
         values.sellPrice = values.sellPrice * 100
@@ -506,7 +513,12 @@ class AddForm extends Component {
       }];
     if (flightstockEdit && flightstockEdit.details.length > 0) {
       for (let i = 0; i < flightstockEdit.details.length; i++) {
-        getFieldDecorator('names-' + flightstockEdit.details[i].trip_index, {initialValue: flightstockEdit.details[i].flight_no});
+        if (flightstockEdit.details[i].trip_index == i) {
+          getFieldDecorator('names-' + flightstockEdit.details[i].trip_index, {initialValue: flightstockEdit.details[flightstockEdit.details[i].trip_index].flight_no});
+        } else {
+          getFieldDecorator('names-0', {initialValue: flightstockEdit.details[1].flight_no});
+          getFieldDecorator('names-1', {initialValue: flightstockEdit.details[0].flight_no});
+        }
       }
       console.log(getFieldsValue())
     }
