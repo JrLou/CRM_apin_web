@@ -47,7 +47,7 @@ export default {
         payload: true,
       });
       const response = yield call(continueAdd, payload);
-      if (response.code == 1) {
+      if (response.code >= 1) {
         // 继续添加成功回到详情页
         yield put(routerRedux.push('/fightgroups/demand/checkFightGroups/' + payload.groupId));
       } else {

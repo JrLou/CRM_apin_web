@@ -12,6 +12,7 @@ const FormItem = Form.Item;
 const { Option } = Select;
 const CheckboxGroup = Checkbox.Group;
 const period = [
+  { label: '不限', value: '0' },
   { label: '上午航班（06:00-12:00）', value: '1' },
   { label: '下午航班（12:00-19:00）', value: '2' },
   { label: '晚上航班（19:00-06:00）', value: '3' },
@@ -92,10 +93,10 @@ export default class Choose extends PureComponent {
     });
   };
 
-  handleSearch() {
+  handleSearch(e) {
     const { dispatch, form } = this.props;
     const { cityArr, cityDep } = this.par;
-
+    e.preventDefault();
     form.validateFields((err, values) => {
       if (err) return;
       console.log('参数');
@@ -106,9 +107,9 @@ export default class Choose extends PureComponent {
       const { checkedList, daysCheckedList } = this.state;
       values.timeSlot = (checkedList).join(',');
       values.tripDays = (daysCheckedList).join(',');
-      if (checkedList.length == 3) {
-        values.timeSlot = '0,' + values.timeSlot;
-      }
+      // if (checkedList.length == 3) {
+      //   values.timeSlot = '0,' + values.timeSlot;
+      // }
       if (daysCheckedList.length == 6) {
         values.tripDays = '-1,' + values.tripDays;
       }
@@ -224,13 +225,13 @@ export default class Choose extends PureComponent {
           </Col>
         </Row>
         <FormItem >
-          <Checkbox
+          {/* <Checkbox
             indeterminate={this.state.indeterminate}
             onChange={this.onCheckAllChange}
             checked={this.state.checkAll}
           >
             不限
-          </Checkbox>
+          </Checkbox> */}
           {getFieldDecorator('timeSlot', {
             initialValue: this.state.checkedList,
             valuePropName: 'checked',

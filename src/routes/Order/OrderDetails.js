@@ -475,7 +475,7 @@ export default class BasicProfile extends Component {
               </div>
           }
           {
-            (nameType === 'Entrust' && order_status == 6) || nameType === 'FlyingPig' ? null :
+            nameType === 'FlyingPig' ? null :
               <div>
                 <Divider style={{marginBottom: 32}}/>
                 <div className={styles.title}><Icon type="profile"/> K座信息</div>
@@ -490,13 +490,11 @@ export default class BasicProfile extends Component {
           }
 
           {
-            (nameType === 'Entrust' && (order_status == 0 || order_status == 1)) || nameType === 'FlyingPig' ?
-              null :
+           nameType === 'FlyingPig' ? null :
               <div>
                 <Divider style={{marginBottom: 32}}/>
                 <div className={styles.title}><Icon type="profile"/> 方案推送记录</div>
                 <Table
-                  style={{width: '80%'}}
                   pagination={false}
                   bordered={true}
                   dataSource={orderGroup ? orderGroup : []}
