@@ -9,7 +9,6 @@ export default {
     visible: false,
     ok: '',
     judgment: false,
-    code: []
   },
   effects: {
     //飞常准查询
@@ -65,26 +64,7 @@ export default {
         })
       }
     },
-    * getsearchAirportes({payload}, {call, put}) {
-      //根据三字码查询机场
-      const responseA = yield call(getsearchAirport, {code: payload.code[0]})
-      const responseB = yield call(getsearchAirport, {code: payload.code[1]})
-      if (responseA && responseB && responseA.data.length > 0 && responseB.data.length > 0) {
-        yield put({
-          type: 'codes',
-          payload: {code: [responseA, responseB]},
-        })
-      }  else {
-        message.warning('请输入正确的机场三字码');
-        return
-      }
-    },
-    * getsearchAirportesaddes({payload}, {call, put}) {
-      yield put({
-        type: 'getsearchAirportesadd',
-        payload: payload,
-      })
-    },
+
     * judgmentesdobj({payload}, {call, put}) {
       yield put({
         type: 'judgmentes',
@@ -124,18 +104,7 @@ export default {
         visible: action.payload.visible,
       }
     },
-    codes(state, action) {
-      return {
-        ...state,
-        code: action.payload.code,
-      }
-    },
-    getsearchAirportesadd(state, action) {
-      return {
-        ...state,
-        code: [],
-      }
-    },
+
     judgmentes(state, action) {
       return {
         ...state,
