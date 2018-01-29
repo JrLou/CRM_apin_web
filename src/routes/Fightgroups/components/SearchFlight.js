@@ -319,7 +319,7 @@ export default class SearchFlight extends PureComponent {
               <FormItem label="折扣"  {...formItemLayout} className={styles.formItem}>
                 {getFieldDecorator('discount', {
                   rules: [{ required: true, message: '必填' },
-                  { pattern: /^[12](\.\d{1})?$|^([3])(\.0)?$|^[0](\.[1-9]{1}){1}$/, message: '请输入0到3之间的折扣数，可以是1位小数', }],
+                  { pattern: /^[1-9](\.\d{1})?$|^(10)(\.0)?$|^[0](\.[1-9]{1}){1}$/, message: '请输入0到10之间的折扣数，可以是1位小数', }],
 
                 })(
                   <Input placeholder="请输入折扣，不可高于3折" />)

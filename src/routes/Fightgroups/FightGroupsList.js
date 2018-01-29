@@ -6,7 +6,6 @@ import { Link } from "dva/router";
 import PageHeaderLayout from "../../layouts/PageHeaderLayout";
 import GroupSearchForm from "./autoForm/GroupSearchForm";
 import { formatDate } from "../../utils/utils";
-import request from "../../utils/request";
 import less from "./FightGroupsList.less";
 import styles from "./Demand.less";
 
@@ -133,18 +132,23 @@ export default class TableList extends PureComponent {
 
   //生成form内容
   renderForm() {
+    const { fightGroupsList: { loading } } = this.props;
     return (
       <div className={less.formContainer}>
         <GroupSearchForm
           onSearch={data => {
             this.formValues = data;
             this.resetCurrPage();
-            this.loadTableData();
+            if (!loading) {
+              this.loadTableData();
+            }
           }}
           onCancelAfter={data => {
             this.formValues = data;
             this.resetCurrPage();
-            this.loadTableData();
+            if (!loading) {
+              this.loadTableData();
+            }
           }}
         />
       </div>
