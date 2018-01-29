@@ -64,7 +64,7 @@ class Masking extends Component {
             {this.props.data.FlightNo}
 
           </Col>
-          <Col span={this.props.data.stopFlag ? 11 : 12}>
+          <Col span={this.props.data.StopFlag == 1 ? 11 : 12}>
             <Col span={24} className={css.flightCaption}>
               {this.props.data.FlightDep}
             </Col>
@@ -79,7 +79,7 @@ class Masking extends Component {
             经停
           </Col>
           }
-          <Col span={this.props.data.stopFlag ? 11 : 12}>
+          <Col span={this.props.data.StopFlag == 1 ? 11 : 12}>
             <Col span={24} className={css.flightCaption}>
               {this.props.data.FlightArr}
             </Col>
