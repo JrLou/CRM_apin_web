@@ -1,3 +1,4 @@
+/*eslint camelcase: 0*/ //取消驼峰限制
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "dva";
@@ -45,7 +46,6 @@ const logInfoColumns = [
   },
 ];
 
-/*eslint-disable*/
 @connect(state => ({
   checkFightGroups: state.checkFightGroups,
 }))
@@ -71,60 +71,47 @@ export default class CheckFightGroups extends Component {
     });
   }
 
-  //请求获取页面所有内容
-  loadInitPageData = () => {
-    const { dispatch } = this.props;
-    dispatch({
-      // 获取拼团信息
-      type: "checkFightGroups/fetchGroupsInfo",
-      payload: { id: this.id },
-    });
-    dispatch({
-      // 获取订单信息
-      type: "checkFightGroups/fetchGroupOrders",
-      payload: {
-        id: this.id,
-        state: -1, //[-1, 空] => all
-        p: 1,
-        pc: 1000, //目前不分页，但是后台是按这种形式写的接口
-      },
-    });
-    dispatch({
-      // 获取方案明细
-      type: "checkFightGroups/fetchDetailGroupVoyage",
-      payload: { id: this.id },
-    });
-    dispatch({
-      // 获取日志信息
-      type: "checkFightGroups/fetchGroupLogs",
-      payload: {
-        uuid: this.id,
-        p: 1,
-        pc: 1000, //目前不分页，但是后台是按这种形式写的接口
-      },
-    });
-  };
+  getExportPassengerModal(showModal) {
+    return (
+      <ExportPassengerModal
+        id={this.id}
+        visible={showModal}
+        width={920}
+        changeVisible={this.handleCancel.bind(this)}
+        loadInitPageData={this.loadInitPageData}
+        maskClosable={false}
+      />
+    );
+  }
 
-  mapGroupStateToTxt(group_status) {
-    let txt = "";
-    switch (group_status) {
-      case 0:
-        txt = "拼团关闭";
-        break;
-      case 1:
-        txt = "拼团中";
-        break;
-      case 2:
-        txt = "拼团完成";
-        break;
-      case 3:
-        txt = "拼团成功";
-        break;
-      default:
-        txt = "未知的拼团状态";
-        break;
-    }
-    return txt;
+  getSendLogModal(showModal, modalConfirmLoading) {
+    return (
+      <SendLogModal
+        visible={showModal}
+        width={920}
+        changeVisible={this.handleCancel.bind(this)}
+      />
+    );
+  }
+
+  getCloseFightGroupsModal(showModal, modalConfirmLoading) {
+    return (
+      <CloseReasonModal
+        title="请确认是否关闭拼团，关闭请输入原因："
+        visible={showModal}
+        onOk={this.handleOk.bind(this)}
+        okText="保存"
+        onCancel={this.handleCancel.bind(this)}
+        confirmLoading={modalConfirmLoading}
+        maskClosable={false}
+        closeReason={this.state.closeReason}
+        onChange={value => {
+          if (value.length <= 100) {
+            this.setState({ closeReason: value });
+          }
+        }}
+      />
+    );
   }
 
   getFightGroupsInfoView() {
@@ -138,13 +125,13 @@ export default class CheckFightGroups extends Component {
     const expired_time = formatDate(data.expired_time, "YYYY-MM-DD HH:mm");
 
     const group_status = this.mapGroupStateToTxt(data.group_status);
-    const city_dep = data.city_dep;
-    const city_arr = data.city_arr;
+    const { city_dep } = data;
+    const { city_arr } = data;
     const date_dep = formatDate(data.date_dep, "YYYY-MM-DD");
     const date_ret = formatDate(data.date_ret, "YYYY-MM-DD");
 
     const paidMan = +data.paidMan;
-    const creator_name = data.creator_name;
+    const { creator_name } = data;
 
     return (
       <div className={styles.outFightGropuInfoContainer}>
@@ -227,6 +214,8 @@ export default class CheckFightGroups extends Component {
         case 60:
           txt = "已出票";
           break;
+        default:
+          break;
       }
       return txt;
     };
@@ -251,7 +240,7 @@ export default class CheckFightGroups extends Component {
             </div>
           );
           const orderIdContent = (
-            <Link to={"/order/entrust/detail/" + formatPar({ id: text })}>
+            <Link to={`/order/entrust/detail/${formatPar({ id: text })}`}>
               {text}
             </Link>
           );
@@ -364,7 +353,7 @@ export default class CheckFightGroups extends Component {
           >
             批量导出乘机人 / 出票
           </Button>
-          <Link to={"/fightgroups/demand/choose/" + params}>
+          <Link to={`/fightgroups/demand/choose/${params}`}>
             <Button
               type="primary"
               className={styles.btn}
@@ -463,48 +452,61 @@ export default class CheckFightGroups extends Component {
     );
   }
 
-  getCloseFightGroupsModal(showModal, modalConfirmLoading) {
-    return (
-      <CloseReasonModal
-        title="请确认是否关闭拼团，关闭请输入原因："
-        visible={showModal}
-        onOk={this.handleOk.bind(this)}
-        okText={"保存"}
-        onCancel={this.handleCancel.bind(this)}
-        confirmLoading={modalConfirmLoading}
-        maskClosable={false}
-        closeReason={this.state.closeReason}
-        onChange={value => {
-          if (value.length <= 100) {
-            this.setState({ closeReason: value });
-          }
-        }}
-      />
-    );
+  mapGroupStateToTxt(group_status) {
+    let txt = "";
+    switch (group_status) {
+      case 0:
+        txt = "拼团关闭";
+        break;
+      case 1:
+        txt = "拼团中";
+        break;
+      case 2:
+        txt = "拼团完成";
+        break;
+      case 3:
+        txt = "拼团成功";
+        break;
+      default:
+        txt = "未知的拼团状态";
+        break;
+    }
+    return txt;
   }
 
-  getSendLogModal(showModal, modalConfirmLoading) {
-    return (
-      <SendLogModal
-        visible={showModal}
-        width={920}
-        changeVisible={this.handleCancel.bind(this)}
-      />
-    );
-  }
-
-  getExportPassengerModal(showModal) {
-    return (
-      <ExportPassengerModal
-        id={this.id}
-        visible={showModal}
-        width={920}
-        changeVisible={this.handleCancel.bind(this)}
-        loadInitPageData={this.loadInitPageData}
-        maskClosable={false}
-      />
-    );
-  }
+  //请求获取页面所有内容
+  loadInitPageData = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      // 获取拼团信息
+      type: "checkFightGroups/fetchGroupsInfo",
+      payload: { id: this.id },
+    });
+    dispatch({
+      // 获取订单信息
+      type: "checkFightGroups/fetchGroupOrders",
+      payload: {
+        id: this.id,
+        state: -1, //[-1, 空] => all
+        p: 1,
+        pc: 1000, //目前不分页，但是后台是按这种形式写的接口
+      },
+    });
+    dispatch({
+      // 获取方案明细
+      type: "checkFightGroups/fetchDetailGroupVoyage",
+      payload: { id: this.id },
+    });
+    dispatch({
+      // 获取日志信息
+      type: "checkFightGroups/fetchGroupLogs",
+      payload: {
+        uuid: this.id,
+        p: 1,
+        pc: 1000, //目前不分页，但是后台是按这种形式写的接口
+      },
+    });
+  };
 
   switchModalView() {
     const { showModal, modalConfirmLoading } = this.props.checkFightGroups;

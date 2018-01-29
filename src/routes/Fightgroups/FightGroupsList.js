@@ -1,3 +1,4 @@
+/*eslint camelcase: 0*/ //取消驼峰限制
 import React, { PureComponent } from "react";
 import { connect } from "dva";
 import { Card, List, Spin } from "antd";
@@ -9,7 +10,6 @@ import request from "../../utils/request";
 import less from "./FightGroupsList.less";
 import styles from "./Demand.less";
 
-//TODO:  cSpell 和 eslint的未使用变量都没有生效啊
 @connect(state => ({
   //目前还没用上这个，后期重构再使用，可以参考自己写的客户列表页
   fightGroupsList: state.fightGroupsList,
@@ -27,66 +27,9 @@ export default class TableList extends PureComponent {
     this.formValues = {
       //初始化formValues
       state: -1, //拼团状态验证 0、已关闭；1、拼团中；2、已成团；-1 全部
-      type: -1, //	-1 全部 0 国内 1 国外
+      type: -1, //-1 全部 0 国内 1 国外
     };
     this.loadTableData();
-  }
-
-  resetCurrPage() {
-    this.page.current = 1;
-  }
-
-  //请求table数据
-  loadTableData() {
-    const { dispatch } = this.props;
-    const params = {
-      ...this.formValues,
-      p: this.page.current,
-      pc: this.page.pageSize,
-    };
-    if (!this.props.fightGroupsList.loading) {
-      dispatch({
-        type: "fightGroupsList/fetch",
-        payload: params,
-      });
-    }
-  }
-
-  mapGroupStateToTxt(group_status) {
-    let result = {};
-    switch (group_status) {
-      case 0:
-        result = {
-          txt: "拼团关闭",
-          backgroundColor: "#999",
-        };
-        break;
-      case 1:
-        result = {
-          txt: "拼团中",
-          backgroundColor: "#df8600",
-        };
-        break;
-      case 2:
-        result = {
-          txt: "拼团完成",
-          backgroundColor: "#33cc66",
-        };
-        break;
-      case 3:
-        result = {
-          txt: "拼团成功",
-          backgroundColor: "#33cc66",
-        };
-        break;
-      default:
-        result = {
-          txt: "未知的拼团状态",
-          backgroundColor: "#ff0300",
-        };
-        break;
-    }
-    return result;
   }
 
   getGroupState(group_status) {
@@ -129,6 +72,63 @@ export default class TableList extends PureComponent {
         </div>
       </div>
     );
+  }
+
+  mapGroupStateToTxt(group_status) {
+    let result = {};
+    switch (group_status) {
+      case 0:
+        result = {
+          txt: "拼团关闭",
+          backgroundColor: "#999",
+        };
+        break;
+      case 1:
+        result = {
+          txt: "拼团中",
+          backgroundColor: "#df8600",
+        };
+        break;
+      case 2:
+        result = {
+          txt: "拼团完成",
+          backgroundColor: "#33cc66",
+        };
+        break;
+      case 3:
+        result = {
+          txt: "拼团成功",
+          backgroundColor: "#33cc66",
+        };
+        break;
+      default:
+        result = {
+          txt: "未知的拼团状态",
+          backgroundColor: "#ff0300",
+        };
+        break;
+    }
+    return result;
+  }
+
+  //请求table数据
+  loadTableData() {
+    const { dispatch } = this.props;
+    const params = {
+      ...this.formValues,
+      p: this.page.current,
+      pc: this.page.pageSize,
+    };
+    if (!this.props.fightGroupsList.loading) {
+      dispatch({
+        type: "fightGroupsList/fetch",
+        payload: params,
+      });
+    }
+  }
+
+  resetCurrPage() {
+    this.page.current = 1;
   }
 
   //生成form内容
@@ -190,11 +190,11 @@ export default class TableList extends PureComponent {
                   <Card
                     className={styles.card}
                     title={this.getGroupState(item.group_status)}
-                    extra={item.paidPeople + item.waitPeople + "人"}
+                    extra={`${item.paidPeople + item.waitPeople}人`}
                     actions={[
                       <span>处理客服:{item.creator_name}</span>,
                       <Link
-                        to={"/fightgroups/demand/checkFightGroups/" + item.id}
+                        to={`/fightgroups/demand/checkFightGroups/${item.id}`}
                       >
                         <span style={{ color: "#1890ff" }}>查看</span>
                       </Link>,
