@@ -3,7 +3,7 @@ import request from '../utils/request';
 import request_java from '../utils/request_java';
 import md5 from 'md5'
 const sleep = time => new Promise(resolve => setTimeout(resolve, time))
-export async function fakequest(params){
+export async function fakequest(params) {
   await sleep(params)
 }
 export async function queryProjectNotice() {
@@ -501,4 +501,7 @@ export async function searchCity(params) {
 }
 export async function searchPort(params) {
   return request('/api/resource/searchAirport', { method: 'POST', body: params });
+}
+export async function searchFlightCity(params) {
+  return request('/api/resource/searchCity', { method: 'POST', body: params });
 }

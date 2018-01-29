@@ -192,7 +192,7 @@ class HorizontalLoginForm extends Component {
             <Col md={24} sm={24}>
               <Col md={12} sm={24}>
                 <FormItem style={{marginBottom: "20px"}}>
-                  {getFieldDecorator('FlightDep', {
+                  {getFieldDecorator('FlightDepcode', {
                     rules: [{
                       required: true,
                       message: requiredText
@@ -206,7 +206,7 @@ class HorizontalLoginForm extends Component {
                 <FormItem
                   style={{marginLeft: "-20px", marginLeft: '-67px'}}
                 >
-                  {getFieldDecorator('FlightArr', {
+                  {getFieldDecorator('FlightArrcode', {
                     rules: [{
                       required: true,
                       message: requiredText
@@ -220,7 +220,7 @@ class HorizontalLoginForm extends Component {
             <Col md={24} sm={24}>
               <Col md={12} sm={24}>
                 <FormItem style={{marginBottom: "20px"}}>
-                  {getFieldDecorator('FlightDepcode', {
+                  {getFieldDecorator('Depcode', {
                     rules: [{
                       required: true,
                       message: requiredText
@@ -235,7 +235,7 @@ class HorizontalLoginForm extends Component {
                 <FormItem
                   style={{marginLeft: "-20px", marginLeft: '-67px'}}
                 >
-                  {getFieldDecorator('FlightArrcode', {
+                  {getFieldDecorator('Arrcode', {
                     rules: [{
                       required: true,
                       message: requiredText

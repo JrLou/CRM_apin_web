@@ -51,7 +51,6 @@ class AddForm extends Component {
       baioshi: false,
       competencese: false,
       numbering: null,
-      code: {},
     };
   }
 
@@ -65,25 +64,16 @@ class AddForm extends Component {
     if (nextProps.flightstockEdit && nextProps.flightstockEdit.details.length == 2) {
       let list = nextProps.flightstockEdit.details;
       list[0].seat_type == 0 ? list[0].seat_type = "硬切" : list[0].seat_type = "代销"
-      list[0].FlightNo = list[0].flight_no
-      list[0].FlightDepAirport = list[0].city_dep_name
-      list[0].FlightDepcode = list[0].airport_dep_name
-      // list[0].FlightDeptimePlanDate =moment(parseInt(list[0].departure_start) + parseInt(list[0].time_dep)).format("HH:mm")
-      // list[0].FlightDeptimePlanDate =moment(new Date(1516411800000),'x').format("HH:mm")
-      // list[0].FlightDeptimePlanDate = new Date(parseInt(list[0].departure_start) + parseInt(list[0].time_dep)).getMinutes()
-      list[0].FlightDeptimePlanDate = moment(list[0].time_dep).format("HH:mm")
-      list[0].FlightArrtimePlanDate = moment(list[0].time_arr).format("HH:mm")
-      list[0].FlightArrAirport = list[0].city_arr_name
-      list[0].FlightArrcode = list[0].airport_arr_name
-      list[0].FlightCompany = list[0].flight_company
-      list[1].FlightCompany = list[1].flight_company
-      list[1].FlightNo = list[1].flight_no
-      list[1].FlightDepAirport = list[1].city_dep_name
-      list[1].FlightDepcode = list[1].airport_dep_name
-      list[1].FlightDeptimePlanDate = moment(list[1].time_dep).format("HH:mm")
-      list[1].FlightArrtimePlanDate = moment(list[1].time_arr).format("HH:mm")
-      list[1].FlightArrAirport = list[1].city_arr_name
-      list[1].FlightArrcode = list[1].airport_arr_name
+      for (let i = 0; i < list.length; i++) {
+        list[i].FlightNo = list[i].flight_no
+        list[i].FlightDepAirport = list[i].city_arr_name
+        list[i].FlightDepcode = list[i].airport_dep_code
+        list[i].FlightDeptimePlanDate = moment(list[i].time_dep)
+        list[i].FlightArrtimePlanDate = moment(list[i].time_arr)
+        list[i].FlightArrAirport = list[i].city_arr_name
+        list[i].FlightArrcode = list[i].airport_arr_name
+        list[i].FlightCompany = list[i].flight_company
+      }
       flightdata.flightTimeWill = [moment(list[0].departure_start), moment(list[0].departure_end)]
       if (list[0].trip_index == 0) {
         flightdata.selectedWeekGroup[0] = list[0].week_flights
@@ -150,13 +140,17 @@ class AddForm extends Component {
             return
           }
         }
+        for (let i = 0; i < flightstockData.length; i++) {
+          flightstockData[i].FlightDeptimePlanDate = flightstockData[i].FlightDeptimePlanDate.format("YYYY-MM-DD HH:mm:ss")
+          flightstockData[i].FlightArrtimePlanDate = flightstockData[i].FlightArrtimePlanDate.format("YYYY-MM-DD HH:mm:ss")
+        }
         values.settlementPrice = values.settlementPrice * 100
         values.sellPrice = values.sellPrice * 100
         values.backAirLine = JSON.stringify([flightstockData[1]])
         values.goAirLine = JSON.stringify([flightstockData[0]])
-        values.cityArr = flightstockData[0].FlightArr
+        values.cityArr = flightstockData[0].FlightArrcode
         values.seatType == "硬切" ? values.seatType = 0 : values.seatType = 1
-        values.cityDep = flightstockData[0].FlightDep
+        values.cityDep = flightstockData[0].FlightDepcode
         values.endDate = moment(flightdata.flightTimeWill[1]).format("YYYY-MM-DD")
         values.startDate = moment(flightdata.flightTimeWill[0]).format("YYYY-MM-DD")
         values.flightNumber = flightstockData[0].FlightNo + '-' + flightstockData[1].FlightNo
@@ -256,8 +250,8 @@ class AddForm extends Component {
 
   routeSelection(e) { //查询航线结果选中
     let {flightstockAdd, flightstockData, linenubber, flightdata} = this.state
-    e.target.value.FlightDeptimePlanDate = moment(e.target.value.FlightDeptimePlanDate).format("HH:mm")
-    e.target.value.FlightArrtimePlanDate = moment(e.target.value.FlightArrtimePlanDate).format("HH:mm")
+    e.target.value.FlightDeptimePlanDate = moment(e.target.value.FlightDeptimePlanDate)
+    e.target.value.FlightArrtimePlanDate = moment(e.target.value.FlightArrtimePlanDate)
     flightstockData[flightstockAdd.numbering] = e.target.value
     linenubber[flightstockAdd.numbering] = flightstockAdd.numbering
     flightdata.selectedWeekGroup[flightstockAdd.numbering] = flightstockAdd.accurate.option.mixedFlights
@@ -271,32 +265,10 @@ class AddForm extends Component {
   mokecopen(ole) { //手动录入成功回调函数
     let {linenubber, flightdata, flightstockData, flightstockAdd, numbering} = this.state
     flightstockAdd.visible = false;
-    ole.FlightDeptimePlanDate = flightdata.flightTimeWill[0].format('YYYY-MM-DD') + " " + ole.FlightDeptimePlanDate + ':00'
-    ole.FlightArrtimePlanDate = Algorithm._caculateNewDatePartSingle(flightdata.flightTimeWill[0].format('YYYY-MM-DD'), flightdata.days - 1) + " " + ole.FlightArrtimePlanDate + ':00'
+    ole.FlightDeptimePlanDate = moment(flightdata.flightTimeWill[0].format('YYYY-MM-DD') + " " + ole.FlightDeptimePlanDate + ':00')
+    ole.FlightArrtimePlanDate = moment(Algorithm._caculateNewDatePartSingle(flightdata.flightTimeWill[0].format('YYYY-MM-DD'), flightdata.days - 1) + " " + ole.FlightArrtimePlanDate + ':00')
     flightstockData[numbering] = ole
     flightdata.selectedWeekGroup[numbering] = Algorithm.toogleToWeekStr(ole.flights)
-    linenubber[numbering] = numbering
-    flightdata.entry = false
-    this.setState({
-      code: ole,
-      flightstockAdd,
-      linenubber,
-      flightdata,
-      flightstockData,
-      flightdata: flightdata,
-      flightNumsdbdsdering: true
-    });
-  }
-
-  judgmentMokecopen() {
-    let {linenubber, flightdata, flightstockData, flightstockAdd, numbering, code} = this.state
-    flightstockAdd.visible = false;
-    code.FlightDepAirport = flightstockAdd.code[0].data[0].airport_name
-    code.FlightArrAirport = flightstockAdd.code[1].data[0].airport_name
-    code.FlightDeptimePlanDate = flightdata.flightTimeWill[0].format('YYYY-MM-DD') + " " + code.FlightDeptimePlanDate + ':00'
-    code.FlightArrtimePlanDate = Algorithm._caculateNewDatePartSingle(flightdata.flightTimeWill[0].format('YYYY-MM-DD'), flightdata.days - 1) + " " + code.FlightArrtimePlanDate + ':00'
-    flightstockData[numbering] = code
-    flightdata.selectedWeekGroup[numbering] = Algorithm.toogleToWeekStr(code.flights)
     linenubber[numbering] = numbering
     flightdata.entry = false
     this.setState({
@@ -524,7 +496,12 @@ class AddForm extends Component {
       }];
     if (flightstockEdit && flightstockEdit.details.length > 0) {
       for (let i = 0; i < flightstockEdit.details.length; i++) {
-        getFieldDecorator('names-' + flightstockEdit.details[i].trip_index, {initialValue: flightstockEdit.details[i].flight_no});
+        if (flightstockEdit.details[i].trip_index == i) {
+          getFieldDecorator('names-' + flightstockEdit.details[i].trip_index, {initialValue: flightstockEdit.details[flightstockEdit.details[i].trip_index].flight_no});
+        } else {
+          getFieldDecorator('names-0', {initialValue: flightstockEdit.details[1].flight_no});
+          getFieldDecorator('names-1', {initialValue: flightstockEdit.details[0].flight_no});
+        }
       }
       console.log(getFieldsValue())
     }
