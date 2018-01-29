@@ -77,14 +77,15 @@ export default class TableList extends PureComponent {
   };
 
   loadListData = () => {
+    if (this.props.userList.double) {
+      return;
+    }
     const { dispatch } = this.props;
     const payload = { ...this.state.formValues, ...this.page };
-    if (!this.props.userList.double) {
-      dispatch({
-        type: "userList/fetch",
-        payload,
-      });
-    }
+    dispatch({
+      type: "userList/fetch",
+      payload,
+    });
   };
 
   renderForm() {
