@@ -74,22 +74,6 @@ class AddForm extends Component {
         list[i].FlightArrcode = list[i].airport_arr_name
         list[i].FlightCompany = list[i].flight_company
       }
-      // list[0].FlightNo = list[0].flight_no
-      // list[0].FlightDepAirport = list[0].city_arr_name
-      // list[0].FlightDepcode = list[0].airport_dep_code
-      // list[0].FlightDeptimePlanDate = moment(list[0].time_dep)
-      // list[0].FlightArrtimePlanDate = moment(list[0].time_arr)
-      // list[0].FlightArrAirport = list[0].city_arr_name
-      // list[0].FlightArrcode = list[0].airport_arr_name
-      // list[0].FlightCompany = list[0].flight_company
-      // list[1].FlightCompany = list[1].flight_company
-      // list[1].FlightNo = list[1].flight_no
-      // list[1].FlightDepAirport = list[1].city_arr_name
-      // list[1].FlightDepcode = list[1].airport_dep_code
-      // list[1].FlightDeptimePlanDate = moment(list[1].time_dep)
-      // list[1].FlightArrtimePlanDate = moment(list[1].time_arr)
-      // list[1].FlightArrAirport = list[1].city_arr_name
-      // list[1].FlightArrcode = list[1].airport_arr_name
       flightdata.flightTimeWill = [moment(list[0].departure_start), moment(list[0].departure_end)]
       if (list[0].trip_index == 0) {
         flightdata.selectedWeekGroup[0] = list[0].week_flights
@@ -280,7 +264,6 @@ class AddForm extends Component {
 
   mokecopen(ole) { //手动录入成功回调函数
     let {linenubber, flightdata, flightstockData, flightstockAdd, numbering} = this.state
-    console.log(ole)
     flightstockAdd.visible = false;
     ole.FlightDeptimePlanDate = moment(flightdata.flightTimeWill[0].format('YYYY-MM-DD') + " " + ole.FlightDeptimePlanDate + ':00')
     ole.FlightArrtimePlanDate = moment(Algorithm._caculateNewDatePartSingle(flightdata.flightTimeWill[0].format('YYYY-MM-DD'), flightdata.days - 1) + " " + ole.FlightArrtimePlanDate + ':00')
