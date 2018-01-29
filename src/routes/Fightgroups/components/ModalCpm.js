@@ -403,7 +403,11 @@ class ExportPassengerModal extends Component {
           }
 
           this.setState({ fileList }); //页面不需要它,但是上传需要它，所以不能省
-          if (file.status === "done" || file.status === "error") {
+          if (
+            file.status === "done" ||
+            file.status === "error" ||
+            !file.status
+          ) {
             this.setState({ ticketLoading: false });
           }
         });
