@@ -103,6 +103,11 @@ export default class View extends PureComponent {
     }, {
       title: '拼团人数',
       dataIndex: 'paidMan',
+      render: (text, record) => {
+        let paid = text ? +text : 0;
+        let wait = record.waitMan ? +record.waitMan : 0;
+        return paid + wait;
+      },
     }, {
       title: '销售价格',
       dataIndex: 'sell_price',
