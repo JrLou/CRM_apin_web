@@ -29,9 +29,7 @@ export default {
                     payload: '',
                 });
                 yield put(routerRedux.push('/fightgroups/demand/checkFightGroups/' + response.data));
-            } else {
-                message.error(response.msg);
-            }
+            }  
             yield put({
                 type: 'changeLoading',
                 payload: false,

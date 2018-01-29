@@ -8,7 +8,7 @@ import { connect } from 'dva';
 import css from './AddFlightForm.less'
 // 手动添加航班的form
 const FormItem = Form.Item;
-import { searchPort } from '../../../services/api'
+import { searchPort, searchFlightCity } from '../../../services/api'
 @connect(state => ({
   view: state.push,
 }))
@@ -30,24 +30,45 @@ class AddFlightForm extends Component {
     // 三字码正确的情况下再掉接口
     let reg = /^[a-zA-Z]{3}$/;
     if (reg.test(e.target.value)) {
+      let codekey = isDep ? 'FlightAirDepcode' : 'FlightAirArrcode';
+      let namekey = isDep ? 'FlightDepAirport' : 'FlightArrAirport';
       searchPort({ code: e.target.value }).then((response) => {
         if (response.code == 200) {
           let airport = response.data[0] && response.data[0].airport_name;
           if (airport) {
-            let key = isDep ? 'FlightDepAirport' : 'FlightArrAirport';
-            this.props.form.setFieldsValue({ [key]: airport });
+            this.props.form.setFieldsValue({ [namekey]: airport });
           } else {
             message.warning('未查询到机场信息，请重新输入三字码')
-            let key = isDep ? 'FlightDepcode' : 'FlightArrcode';
-            this.props.form.setFieldsValue({ [key]: '' });
+            this.props.form.setFieldsValue({ [codekey]: '' });
           }
         } else {
-          let key = isDep ? 'FlightDepcode' : 'FlightArrcode';
-          this.props.form.setFieldsValue({ [key]: '' });
+          this.props.form.setFieldsValue({ [codekey]: '' });
         }
       }).catch(() => {
-        let key = isDep ? 'FlightDepcode' : 'FlightArrcode';
-        this.props.form.setFieldsValue({ [key]: '' });
+        this.props.form.setFieldsValue({ [codekey]: '' });
+      });
+    }
+  }
+  _searchCity(isDep, e) {
+    // 三字码正确的情况下再掉接口
+    let reg = /^[a-zA-Z]{3}$/;
+    if (reg.test(e.target.value)) {
+      let codekey = isDep ? 'FlightDepcode' : 'FlightArrcode';
+      let namekey = isDep ? 'FlightDep' : 'FlightArr';
+      searchFlightCity({ code: e.target.value }).then((response) => {
+        if (response.code == 200) {
+          let city = response.data[0] && response.data[0].city_name;
+          if (city) {
+            this.props.form.setFieldsValue({ [namekey]: city });
+          } else {
+            message.warning('未查询到城市信息，请重新输入三字码')
+            this.props.form.setFieldsValue({ [codekey]: '' });
+          }
+        } else {
+          this.props.form.setFieldsValue({ [codekey]: '' });
+        }
+      }).catch(() => {
+        this.props.form.setFieldsValue({ [codekey]: '' });
       });
     }
   }
@@ -149,22 +170,35 @@ class AddFlightForm extends Component {
           </FormItem>
         </div>
 
+        {getFieldDecorator('FlightDep', {
+          initialValue: ''
+        })(
+          <Input type='hidden' />
+          )}
+        {getFieldDecorator('FlightArr', {
+          initialValue: ''
+        })(
+          <Input type='hidden' />
+          )}
+
         <div className={css.myFormItem}>
-          <label htmlFor="" className={css.required} >城市：</label>
+          <label htmlFor="" className={css.required} >城市三字码：</label>
           <FormItem className={css.inlineFormItem} style={{ marginRight: '30px' }}>
-            {getFieldDecorator("FlightDep", {
-              rules: [{ required: true, message: "必填" }, { max: 20, message: "最大输入20位" }],
+            {getFieldDecorator("FlightDepcode", {
+              rules: [{ required: true, message: "必填" }, { pattern: /^[a-zA-Z]{3}$/, message: "请输入正确的三字码" }],
             })(
-              <Input placeholder="请输入城市"
+              <Input placeholder="请输入城市三字码"
+                onBlur={this._searchCity.bind(this, true)}
                 className={css.smallInput} />
               )}
           </FormItem>
           <FormItem className={css.inlineFormItem}>
             {/* <label htmlFor="" className={css.required}>到达城市：</label> */}
-            {getFieldDecorator("FlightArr", {
-              rules: [{ required: true, message: "必填" }, { max: 20, message: "最大输入20位" }],
+            {getFieldDecorator("FlightArrcode", {
+              rules: [{ required: true, message: "必填" }, { pattern: /^[a-zA-Z]{3}$/, message: "请输入正确的三字码" }],
             })(
-              <Input placeholder="请输入城市"
+              <Input placeholder="请输入城市三字码"
+                onBlur={this._searchCity.bind(this, false)}
                 className={css.smallInput} />
               )}
           </FormItem>
@@ -173,7 +207,7 @@ class AddFlightForm extends Component {
         <div className={css.myFormItem}>
           <label htmlFor="" className={css.required} >机场三字码：</label>
           <FormItem className={css.inlineFormItem} style={{ marginRight: '30px' }}>
-            {getFieldDecorator("FlightDepcode", {
+            {getFieldDecorator("FlightAirDepcode", {
               rules: [{ required: true, message: "必填" }, { pattern: /^[a-zA-Z]{3}$/, message: "请输入正确的三字码" }],
             })(
               <Input
@@ -184,7 +218,7 @@ class AddFlightForm extends Component {
           </FormItem>
           <FormItem className={css.inlineFormItem}>
             {/* <label htmlFor="" className={css.required}>机场三字码：</label> */}
-            {getFieldDecorator("FlightArrcode", {
+            {getFieldDecorator("FlightAirArrcode", {
               rules: [{ required: true, message: "必填" }, { pattern: /^[a-zA-Z]{3}$/, message: "请输入正确的三字码" }],
             })(
               <Input
