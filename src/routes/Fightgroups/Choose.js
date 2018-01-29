@@ -117,7 +117,12 @@ export default class Choose extends PureComponent {
       this.searchValue = values;
       dispatch({
         type: 'choose/fetch',
-        payload: { ...values, ...this.par, ...this.page },
+        payload: {
+          ...values,
+          ...this.page,
+          cityArr: cityArr,
+          cityDep: cityDep
+        },
       });
     });
   }

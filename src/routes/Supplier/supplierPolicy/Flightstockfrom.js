@@ -68,8 +68,8 @@ class AddForm extends Component {
         list[i].FlightNo = list[i].flight_no
         list[i].FlightDepAirport = list[i].city_arr_name
         list[i].FlightDepcode = list[i].airport_dep_code
-        list[i].FlightDeptimePlanDate = moment(list[i].time_dep)
-        list[i].FlightArrtimePlanDate = moment(list[i].time_arr)
+        list[i].FlightDeptimePlanDate = moment(list[i].departure_start + list[i].time_dep).format("YYYY-MM-DD HH:mm:ss")
+        list[i].FlightArrtimePlanDate = moment(list[i].departure_start + list[i].time_arr).format("YYYY-MM-DD HH:mm:ss")
         list[i].FlightArrAirport = list[i].city_arr_name
         list[i].FlightArrcode = list[i].airport_arr_name
         list[i].FlightCompany = list[i].flight_company
@@ -137,6 +137,10 @@ class AddForm extends Component {
           }
           if (!flightstockData[0].FlightArr) {
             message.warning('请查询并选择出发航线');
+            return
+          }
+          if (values.clearDays <= values.ticketDays) {
+            message.warning('该天数必须大于出票时间');
             return
           }
         }
@@ -465,6 +469,7 @@ class AddForm extends Component {
       },
     });
   }
+
   validatores(rule, value, callback) {
     let data = this.state.flightdata;
     if (value <= data.chupiaodays) {
@@ -472,6 +477,7 @@ class AddForm extends Component {
     }
     callback()
   }
+
   render() {
     const {getFieldDecorator, getFieldProps, getFieldsValue, getFieldValue} = this.props.form;
     const formItemLayout = {
@@ -829,15 +835,12 @@ class AddForm extends Component {
                             required: true,
                             message: requiredText
                           }, {pattern: /^[1-9]\d{0,4}$/, message: "请填写小于6位的正整数"},
-                            {
-                              validator: this.validatores.bind(this),
-
-                            }],
+                          ],
                           initialValue: flightstockEdit.details.length > 0 ? flightstockEdit.details[0].clear_days : '',
                         })
                         (< Input placeholder="请填写"
                                  disabled={this.state.flightdata.competence}
-                                 // onChange={this.valHeadquarters.bind(this, 6)}
+                                 onChange={this.valHeadquarters.bind(this, 6)}
                                  style={{
                                    width: '70px',
                                    marginLeft: '10px',

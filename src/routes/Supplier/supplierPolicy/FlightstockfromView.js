@@ -59,20 +59,16 @@ class AddForm extends Component {
     if (nextProps.flightstockView && nextProps.flightstockView.details.length > 0) {
       let list = nextProps.flightstockView.details;
       list[0].seat_type == 0 ? list[0].seat_type = "硬切" : list[0].seat_type = "代销"
-      list[0].FlightNo = list[0].flight_no
-      list[0].FlightDepAirport = list[0].city_dep_name
-      list[0].FlightDepcode = list[0].airport_dep_name
-      list[0].FlightDeptimePlanDate = moment(list[0].departure_start).format("YYYY-MM-DD")
-      list[0].FlightArrAirport = list[0].city_arr_name
-      list[0].FlightArrcode = list[0].airport_arr_name
-      list[0].FlightArrtimePlanDate = moment(list[0].departure_end).format("YYYY-MM-DD")
-      list[1].FlightNo = list[0].flight_no
-      list[1].FlightDepAirport = list[0].city_dep_name
-      list[1].FlightDepcode = list[0].airport_dep_name
-      list[1].FlightDeptimePlanDate = moment(list[0].departure_start).format("YYYY-MM-DD")
-      list[1].FlightArrAirport = list[0].city_arr_name
-      list[1].FlightArrcode = list[0].airport_arr_name
-      list[1].FlightArrtimePlanDate = moment(list[0].departure_end).format("YYYY-MM-DD")
+      for (let i = 0; i < list.length; i++) {
+        list[i].FlightNo = list[i].flight_no
+        list[i].FlightDepAirport = list[i].city_arr_name
+        list[i].FlightDepcode = list[i].airport_dep_code
+        list[i].FlightDeptimePlanDate = moment(list[i].departure_start + list[i].time_dep).format("YYYY-MM-DD HH:mm:ss")
+        list[i].FlightArrtimePlanDate = moment(list[i].departure_start +list[i].time_arr).format("YYYY-MM-DD HH:mm:ss")
+        list[i].FlightArrAirport = list[i].city_arr_name
+        list[i].FlightArrcode = list[i].airport_arr_name
+        list[i].FlightCompany = list[i].flight_company
+      }
       flightdata.flightTimeWill = [moment(list[0].departure_start), moment(list[0].departure_end)]
       if (list[0].trip_index == 0) {
         flightdata.selectedWeekGroup[0] = list[0].week_flights
