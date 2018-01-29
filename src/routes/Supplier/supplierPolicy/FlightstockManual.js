@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import {
-  Checkbox, Col, Form, Input, Select, Button, Row,
+  Checkbox, Col, Form, Input, Select, Button, Row, message
 } from 'antd'
+import {getsearchCity, getsearchAirport} from '../../../services/api'
 
 const CheckboxGroup = Checkbox.Group;
 const FormItem = Form.Item;
@@ -16,19 +17,19 @@ class HorizontalLoginForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      formLayout: 'horizontal', //from布局控件
-      fcategory: '',
+      dep: {} //城市查询结果收集
     };
   }
 
   handleSubmit(e) {
+    let {dep} = this.state
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
         values.manual = true
-        // values.fcategory=this.state.fcategory,
-        this.props.open(values);
-        // console.log('Received values of form: ', values);
+        values.FlightDep = dep.FlightDep
+        values.FlightArr = dep.FlightArr
+        this.props.open(Object.assign({...dep}, values));
       }
     });
   }
@@ -37,20 +38,40 @@ class HorizontalLoginForm extends Component {
     console.log(checkedValue);
   }
 
-  handleChange(value) {
-    this.setState({
-      fcategory: value,
+  _searchPort(ole, url, isDep, e,) {
+    let {dep} = this.state
+    url({code: e.target.value}).then((response) => {
+      if (response.code == 200 && response.data.length > 0) {
+        switch (ole) {
+          case 0:
+            dep.FlightDep = response.data[0].city_name
+            break;
+          case 1:
+            dep.FlightArr = response.data[0].city_name
+            break;
+          case 2:
+            dep.FlightDepAirport = response.data[0].airport_name
+            break;
+          case 3:
+            dep.FlightArrAirport = response.data[0].airport_name
+            break;
+        }
+        this.setState({
+          dep,
+        });
+      } else {
+        message.warning('未查询到信息，请重新输入三字码')
+        this.props.form.setFieldsValue({[isDep]: ''});
+        return
+      }
+    }).catch(() => {
+      this.props.form.setFieldsValue({[isDep]: ''});
     });
   }
 
   render() {
     const {getFieldDecorator, getFieldsError, getFieldError, isFieldTouched} = this.props.form;
-    const {formLayout} = this.state;
     const requiredText = '请填写此字段';
-    const formItemLayout = formLayout === 'horizontal' ? {
-      labelCol: {span: 6},
-      wrapperCol: {span: 17},
-    } : null;
     const optionsWithDisabled = [
       {value: 1, label: '星期一'},
       {value: 2, label: '星期二'},
@@ -75,7 +96,7 @@ class HorizontalLoginForm extends Component {
                 style={{color: 'red'}}>*</span>航空公司:</p>
             </Col>
           </Col>
-          <Col md={18} sm={24} style={{marginLeft: '-10px'}}>
+          <Col md={18} sm={24} style={{marginLeft: '-30px'}}>
             <Col md={24} sm={24}>
               <FormItem
                 style={{marginBottom: "15px"}}
@@ -110,7 +131,7 @@ class HorizontalLoginForm extends Component {
           </Col>
         </Row>
         <Row gutter={{md: 8, lg: 24, xl: 48}} style={{textAlign: 'center'}}>
-          <Col md={18} sm={24} style={{float: "right"}}>
+          <Col md={18} sm={24} style={{float: "left", marginLeft: '50px'}}>
             <Col md={12} sm={24}>
               <span style={{textAlign: 'center'}}>起飞</span>
             </Col>
@@ -127,7 +148,7 @@ class HorizontalLoginForm extends Component {
             </Col>
             <Col md={24} sm={24}>
               <p style={{textAlign: 'right', lineHeight: '40px', color: 'rgba(0, 0, 0, 0.85)'}}><span
-                style={{color: 'red'}}>*</span>城市:</p>
+                style={{color: 'red'}}>*</span>城市三字码:</p>
             </Col>
             <Col md={24} sm={24}>
               <p style={{textAlign: 'right', lineHeight: '40px', color: 'rgba(0, 0, 0, 0.85)'}}><span
@@ -140,7 +161,7 @@ class HorizontalLoginForm extends Component {
             </Col>
             }
           </Col>
-          <Col md={18} sm={24} style={{marginLeft: '-10px'}}>
+          <Col md={18} sm={24} style={{marginLeft: '-30px'}}>
             <Col md={24} sm={24}>
               <Col md={12} sm={24}>
                 <FormItem style={{marginBottom: "20px",}}>
@@ -175,9 +196,10 @@ class HorizontalLoginForm extends Component {
                     rules: [{
                       required: true,
                       message: requiredText
-                    }, {pattern: /^[\u2E80-\u9FFF]+$/, message: "请输入正确城市"}],
+                    }, {pattern: /^[a-zA-Z]{3}$/, message: "三字码格式错误"}],
                   })
-                  (<Input placeholder="请输入城市" style={{marginLeft: '-22px', width: '147px'}}/>)}
+                  (<Input onBlur={this._searchPort.bind(this, 0, getsearchCity, 'FlightDep')}
+                          placeholder="请输入城市" style={{marginLeft: '-22px', width: '147px'}}/>)}
                 </FormItem>
               </Col>
               <Col md={12} sm={24}>
@@ -188,9 +210,10 @@ class HorizontalLoginForm extends Component {
                     rules: [{
                       required: true,
                       message: requiredText
-                    }, {pattern: /^[\u2E80-\u9FFF]+$/, message: "请输入正确城市"}],
+                    }, {pattern: /^[a-zA-Z]{3}$/, message: "三字码格式错误"}],
                   })
-                  (<Input placeholder="请输入城市" style={{width: '147px'}}/>)}
+                  (<Input onBlur={this._searchPort.bind(this, 1, getsearchCity, 'FlightArr')}
+                          placeholder="请输入城市" style={{width: '147px'}}/>)}
                 </FormItem>
               </Col>
             </Col>
@@ -203,7 +226,9 @@ class HorizontalLoginForm extends Component {
                       message: requiredText
                     }, {max: 3, message: '只能输入三位'}, {pattern: /^[a-zA-Z]{3}$/, message: "请输入正确三字码"}],
                   })
-                  (<Input placeholder="机场三字码" style={{marginLeft: '-22px', width: '147px'}}/>)}
+                  (<Input placeholder="机场三字码"
+                          onBlur={this._searchPort.bind(this, 2, getsearchAirport, 'FlightDepcode')}
+                          style={{marginLeft: '-22px', width: '147px'}}/>)}
                 </FormItem>
               </Col>
               <Col md={12} sm={24}>
@@ -216,7 +241,9 @@ class HorizontalLoginForm extends Component {
                       message: requiredText
                     }, {max: 3, message: '只能输入三位'}, {pattern: /^[a-zA-Z]{3}$/, message: "请输入正确三字码"}],
                   })
-                  (<Input placeholder="机场三字码" style={{width: '147px'}}/>)}
+                  (<Input placeholder="机场三字码"
+                          onBlur={this._searchPort.bind(this, 3, getsearchAirport, 'FlightArrcode')}
+                          style={{width: '147px'}}/>)}
                 </FormItem>
               </Col>
             </Col>

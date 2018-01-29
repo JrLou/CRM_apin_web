@@ -81,11 +81,7 @@ export default class BasicProfile extends Component {
           callback: (res) => {
             if (res && res.code >= 1) {
               message.success('修改成功');
-            } else if (!res) {
-              message.error('系统异常');
             } else {
-              let msg = res.msg ? res.msg : '修改失败';
-              message.error(msg);
               this.setState({
                 inputPrice: this.price
               })
@@ -137,11 +133,6 @@ export default class BasicProfile extends Component {
               if (res && res.code >= 1) {
                 message.success('出票成功');
                 _this.getDetail();
-              } else if (!res) {
-                message.error('系统异常,票款无法自动退回,请线下操作退款');
-              } else {
-                let msg = res.msg ? res.msg : '出票失败';
-                message.error(msg);
               }
             }
           });
@@ -164,11 +155,6 @@ export default class BasicProfile extends Component {
         if (res && res.code >= 1) {
           message.success('提交成功');
           this.getDetail();
-        } else if (!res) {
-          message.error('系统异常');
-        } else {
-          let msg = res.msg ? res.msg : '提交失败';
-          message.error(msg);
         }
       }
     });
@@ -510,7 +496,7 @@ export default class BasicProfile extends Component {
                 <Divider style={{marginBottom: 32}}/>
                 <div className={styles.title}><Icon type="profile"/> 方案推送记录</div>
                 <Table
-                  style={{width: '60%'}}
+                  style={{width: '80%'}}
                   pagination={false}
                   bordered={true}
                   dataSource={orderGroup ? orderGroup : []}
@@ -566,7 +552,7 @@ class FailModal extends React.Component {
 
   handleOk() {
     let {textAreaValue} = this.state;
-    if (textAreaValue.length < 32) {
+    if (textAreaValue.length < 33) {
       this.props.failReason(textAreaValue);
       this.hideModal();
     } else {

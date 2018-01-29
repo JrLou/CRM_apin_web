@@ -117,14 +117,6 @@ class AddForm extends Component {
       this.props.addPost('flightstockAdd/judgmentesdobj', {judgmentes: false},);
       this.props.away()
     }
-    if (nextProps.flightstockAdd && nextProps.flightstockAdd.code.length > 0 && nextProps.flightstockAdd.code[0].data.length > 0) {
-      this.setState({
-        flightstockAdd: nextProps.flightstockAdd,
-      })
-      setTimeout(() => {
-        this.judgmentMokecopen()
-      }, 100)
-    }
   }
 
   componentDidMount() {
@@ -278,9 +270,21 @@ class AddForm extends Component {
 
   mokecopen(ole) { //手动录入成功回调函数
     let {linenubber, flightdata, flightstockData, flightstockAdd, numbering} = this.state
-    this.props.addPost('flightstockAdd/getsearchAirportes', {code: [ole.FlightDepcode, ole.FlightArrcode]});
+    flightstockAdd.visible = false;
+    ole.FlightDeptimePlanDate = flightdata.flightTimeWill[0].format('YYYY-MM-DD') + " " + ole.FlightDeptimePlanDate + ':00'
+    ole.FlightArrtimePlanDate = Algorithm._caculateNewDatePartSingle(flightdata.flightTimeWill[0].format('YYYY-MM-DD'), flightdata.days - 1) + " " + ole.FlightArrtimePlanDate + ':00'
+    flightstockData[numbering] = ole
+    flightdata.selectedWeekGroup[numbering] = Algorithm.toogleToWeekStr(ole.flights)
+    linenubber[numbering] = numbering
+    flightdata.entry = false
     this.setState({
       code: ole,
+      flightstockAdd,
+      linenubber,
+      flightdata,
+      flightstockData,
+      flightdata: flightdata,
+      flightNumsdbdsdering: true
     });
   }
 
@@ -303,7 +307,6 @@ class AddForm extends Component {
       flightdata: flightdata,
       flightNumsdbdsdering: true
     });
-    this.props.addPost('flightstockAdd/getsearchAirportesaddes', {},);
   }
 
   handleOk() { //弹窗确定操作回调
