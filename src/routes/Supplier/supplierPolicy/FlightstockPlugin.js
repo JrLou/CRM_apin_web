@@ -72,7 +72,7 @@ class Masking extends Component {
               {this.props.data.FlightDepAirport}
             </Col>
             {<Col
-              span={24}>{moment(this.props.data.FlightDeptimePlanDate, "YYYY-MM-DD").format("HH:mm")}</Col>}
+              span={24}>{moment(this.props.data.FlightDeptimePlanDate, "YYYY-MM-DD HH:mm:ss").format("HH:mm")}</Col>}
           </Col>
           {this.props.data.StopFlag == 1 &&
           <Col span={2} style={{fontSize: '16px'}}>
@@ -87,7 +87,7 @@ class Masking extends Component {
               {this.props.data.FlightArrAirport}
             </Col>
             {<Col
-              span={24}>{moment(this.props.data.FlightArrtimePlanDate, "YYYY-MM-DD").format('HH:mm')}</Col>}
+              span={24}>{moment(this.props.data.FlightArrtimePlanDate, "YYYY-MM-DD HH:mm:ss").format('HH:mm')}</Col>}
           </Col>
           {this.props.kyes == 0 && !this.props.h5 &&
           <Col span={24} className={css.flightArrWeek}>
