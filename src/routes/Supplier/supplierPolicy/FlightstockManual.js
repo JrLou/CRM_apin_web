@@ -26,9 +26,6 @@ class HorizontalLoginForm extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('l=oooooooooo')
-        console.log(dep)
-        console.log(Object.assign({...dep}, values))
         values.manual = true
         values.FlightDep = dep.FlightDep
         values.FlightArr = dep.FlightArr

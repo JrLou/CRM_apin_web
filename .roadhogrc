@@ -26,7 +26,7 @@
     "pathRewrite": { "^/java" : "" }
     },
      "/": {
-    "target": "http://appadmin.test.io.apin.com/",
+    "target": "http://192.168.0.32:9712/",
     "changeOrigin": true
     }
 
