@@ -51,7 +51,6 @@ class AddForm extends Component {
       numbering: null,
       flightTimeWill: null,
       identification: false,
-      code: {}
     };
   }
 
@@ -65,10 +64,10 @@ class AddForm extends Component {
       list[0].FlightNo = list[0].flight_no
       list[0].FlightDep = list[0].city_dep_name
       list[0].FlightDepAirport = list[0].airport_dep_name
-      list[0].FlightDeptimePlanDate = moment(list[0].time_dep + list[0].departure_start).format("HH:mm")
+      list[0].FlightDeptimePlanDate = moment(list[0].departure_start + list[0].time_dep).format("YYYY-MM-DD HH:mm:ss")
+      list[0].FlightArrtimePlanDate = moment(list[0].departure_start + list[0].time_arr).format("YYYY-MM-DD HH:mm:ss")
       list[0].FlightArr = list[0].city_arr_name
       list[0].FlightArrAirport = list[0].airport_arr_name
-      list[0].FlightArrtimePlanDate = moment(list[0].time_arr + list[0].departure_start).format("HH:mm")
       flightdata.flightTimeWill = moment(list[0].departure_start)
       this.setState({
         flightstockData: [list[0]],
@@ -106,29 +105,34 @@ class AddForm extends Component {
 
   handleSubmit(e, event) {  //提交时数据格式整理，数据校验
     let _this = this
-    let {flightstockData, flightdata, identification} = _this.state
+    let data = []
+    let {flightdata, identification} = _this.state
     e.preventDefault();
     _this.props.form.validateFields((err, values) => {
       if (!err) {
-        if (flightstockData.length == 0) {
+        if (this.state.flightstockData.length == 0) {
           message.warning('请查询并选择出发航线');
           return
         }
+        data = this.state.flightstockData
         if (_this.props.id && !identification) {
-          flightstockData[0].FlightDepcode = flightstockData[0].airport_dep_code
-          flightstockData[0].FlightArrcode = flightstockData[0].airport_arr_code
-          flightstockData[0].FlightCompany = flightstockData[0].flight_company
-          flightstockData[0].FlightDep = flightstockData[0].city_dep_name
-          flightstockData[0].FlightArr = flightstockData[0].city_arr_name
-          flightstockData[0].FlightDeptimePlanDate = moment(flightstockData[0].time_dep).format("YYYY-MM-DD HH:mm:ss")
-          flightstockData[0].FlightArrtimePlanDate = moment(flightstockData[0].time_arr).format("YYYY-MM-DD HH:mm:ss")
+          data[0].FlightDepcode = data[0].airport_dep_code
+          data[0].FlightArrcode = data[0].airport_arr_code
+          data[0].FlightCompany = data[0].flight_company
+          data[0].FlightDep = data[0].city_dep_name
+          data[0].FlightArr = data[0].city_arr_name
+          data[0].FlightDeptimePlanDate = moment(data[0].time_dep)
+          data[0].FlightArrtimePlanDate = moment(data[0].time_arr)
+        } else {
+          data[0].FlightDeptimePlanDate = moment(data[0].FlightDeptimePlanDate).format("YYYY-MM-DD HH:mm:ss")
+          data[0].FlightArrtimePlanDate = moment(data[0].FlightArrtimePlanDate).format("YYYY-MM-DD HH:mm:ss")
         }
         values.sellPrice = values.sellPrice * 100
-        values.goAirLine = JSON.stringify([flightstockData[0]])
-        values.cityArr = flightstockData[0].FlightArr
-        values.cityDep = flightstockData[0].FlightDep
+        values.goAirLine = JSON.stringify([data[0]])
+        values.cityArr = data[0].FlightArrcode
+        values.cityDep = data[0].FlightDepcode
         values.startDate = values.time.format("YYYY-MM-DD")
-        values.flightNumber = flightstockData[0].FlightNo + '-' + flightstockData[0].FlightNo
+        values.flightNumber = data[0].FlightNo + '-' + data[0].FlightNo
         this.setState({
           baioshi: true,
         });
@@ -220,11 +224,8 @@ class AddForm extends Component {
 
   mokecopen(ole) { //手动录入成功回调函数
     let {linenubber, flightdata, flightstockData, h5Add, numbering, code} = this.state
-    this.setState({
-      code: ole,
-    });
-    ole.FlightDeptimePlanDate = flightdata.flightTimeWill.format('YYYY-MM-DD') + " " + ole.FlightDeptimePlanDate + ':00'
-    ole.FlightArrtimePlanDate = flightdata.flightTimeWill.format('YYYY-MM-DD') + " " + ole.FlightArrtimePlanDate + ':00'
+    ole.FlightDeptimePlanDate = moment(flightdata.flightTimeWill.format('YYYY-MM-DD') + " " + ole.FlightDeptimePlanDate + ':00')
+    ole.FlightArrtimePlanDate = moment(flightdata.flightTimeWill.format('YYYY-MM-DD') + " " + ole.FlightArrtimePlanDate + ':00')
     h5Add.visible = false;
     flightstockData[numbering] = ole
     linenubber[numbering] = numbering

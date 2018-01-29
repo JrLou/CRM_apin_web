@@ -64,28 +64,30 @@ class Masking extends Component {
             {this.props.data.FlightNo}
 
           </Col>
-          <Col span={this.props.data.stopFlag ? 11 : 12}>
+          <Col span={this.props.data.StopFlag == 1 ? 11 : 12}>
             <Col span={24} className={css.flightCaption}>
               {this.props.data.FlightDep}
             </Col>
             <Col span={24}>
               {this.props.data.FlightDepAirport}
             </Col>
-            {<Col span={24}>{this.props.data.FlightDeptimePlanDate}</Col>}
+            {<Col
+              span={24}>{moment(this.props.data.FlightDeptimePlanDate, "YYYY-MM-DD HH:mm:ss").format("HH:mm")}</Col>}
           </Col>
-          {this.props.data.stopFlag &&
+          {this.props.data.StopFlag == 1 &&
           <Col span={2} style={{fontSize: '16px'}}>
             经停
           </Col>
           }
-          <Col span={this.props.data.stopFlag ? 11 : 12}>
+          <Col span={this.props.data.StopFlag == 1 ? 11 : 12}>
             <Col span={24} className={css.flightCaption}>
               {this.props.data.FlightArr}
             </Col>
             <Col span={24}>
               {this.props.data.FlightArrAirport}
             </Col>
-            {<Col span={24}>{this.props.data.FlightArrtimePlanDate}</Col>}
+            {<Col
+              span={24}>{moment(this.props.data.FlightArrtimePlanDate, "YYYY-MM-DD HH:mm:ss").format('HH:mm')}</Col>}
           </Col>
           {this.props.kyes == 0 && !this.props.h5 &&
           <Col span={24} className={css.flightArrWeek}>
