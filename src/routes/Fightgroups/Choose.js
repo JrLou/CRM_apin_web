@@ -96,7 +96,7 @@ export default class Choose extends PureComponent {
   handleSearch(e) {
     const { dispatch, form } = this.props;
     const { cityArr, cityDep } = this.par;
-    e.preventDefault();
+    e && e.preventDefault();
     form.validateFields((err, values) => {
       if (err) return;
       console.log('参数');
