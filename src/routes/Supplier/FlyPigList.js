@@ -62,6 +62,9 @@ export default class TableList extends PureComponent {
   }
 
   handleFormReset() {
+    if(this.props.flyPiglist.double){
+      return null
+    }
     this.props.form.resetFields();
     const param = this.props.form.getFieldsValue();
     this.setState({
@@ -82,7 +85,7 @@ export default class TableList extends PureComponent {
   }
 
   handleSearch() {
-    if(this.props.flyPiglist.loading){
+    if(this.props.flyPiglist.double){
       return null
     }
     const {dispatch, form} = this.props, {pagination, timeArr} = this.state;
