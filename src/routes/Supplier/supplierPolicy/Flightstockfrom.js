@@ -279,6 +279,7 @@ class AddForm extends Component {
     flightstockAdd.visible = false;
     ole.FlightDeptimePlanDate = moment(flightdata.flightTimeWill[0].format('YYYY-MM-DD') + " " + ole.FlightDeptimePlanDate + ':00')
     ole.FlightArrtimePlanDate = moment(Algorithm._caculateNewDatePartSingle(flightdata.flightTimeWill[0].format('YYYY-MM-DD'), flightdata.days - 1) + " " + ole.FlightArrtimePlanDate + ':00')
+    this.props.form.getFieldDecorator('names-' + numbering, {initialValue: ole.FlightNo});
     flightstockData[numbering] = ole
     flightdata.selectedWeekGroup[numbering] = Algorithm.toogleToWeekStr(ole.flights)
     linenubber[numbering] = numbering
