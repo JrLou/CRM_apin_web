@@ -15,7 +15,7 @@ const certType = ['身份证', '护照', '港澳通行证', '台胞证'],
   payType = ['线下支付', '支付宝', '微信', '银联', '微信公众号支付'],
   source = ['K座订单', '飞猪', '供应商', '东航'],
   time_slot = ['不限', '上午(6:00-12:00)', '下午(12:00-19:00)', '晚上(19:00-6:00)', '凌晨'],
-  user_status = ['取消', '推送', '接受', '支付超时'],
+  user_status = ['不接受', '推送', '接受', '支付超时'],
   typeArray = ["APP", "H5", "WEB"];
 let order_status;
 @connect(state => ({
@@ -81,11 +81,7 @@ export default class BasicProfile extends Component {
           callback: (res) => {
             if (res && res.code >= 1) {
               message.success('修改成功');
-            } else if (!res) {
-              message.error('系统异常');
             } else {
-              let msg = res.msg ? res.msg : '修改失败';
-              message.error(msg);
               this.setState({
                 inputPrice: this.price
               })
@@ -102,6 +98,10 @@ export default class BasicProfile extends Component {
     if (this.passengerData && this.passengerData.length > 0) {
       for (let i = 0; i < this.passengerData.length; i++) {
         let user = this.passengerData[i];
+        if (user.ticketDep && user.ticketDep.length > 32 || user.ticketArr && user.ticketArr.length > 32) {
+          message.warning('去/返票号最多32个字符');
+          return false
+        }
         if (this.orderData.group_type != 3) {
           if (((user.ticketDep && !user.ticketArr) || (!user.ticketDep && user.ticketArr))) {
             message.warning('去/返票号填写状态需保持一致');
@@ -133,11 +133,6 @@ export default class BasicProfile extends Component {
               if (res && res.code >= 1) {
                 message.success('出票成功');
                 _this.getDetail();
-              } else if (!res) {
-                message.error('系统异常,票款无法自动退回,请线下操作退款');
-              } else {
-                let msg = res.msg ? res.msg : '出票失败';
-                message.error(msg);
               }
             }
           });
@@ -160,22 +155,13 @@ export default class BasicProfile extends Component {
         if (res && res.code >= 1) {
           message.success('提交成功');
           this.getDetail();
-        } else if (!res) {
-          message.error('系统异常');
-        } else {
-          let msg = res.msg ? res.msg : '提交失败';
-          message.error(msg);
         }
       }
     });
   }
 
   ticketChange(e, record, type) {
-    if (e.target.value.length < 32) {
-      record[type] = e.target.value;
-    } else {
-      record[type] = e.target.value.slice(0, 32);
-    }
+    record[type] = e.target.value;
   }
 
   render() {
@@ -461,7 +447,8 @@ export default class BasicProfile extends Component {
                             :
                             <span className={styles.inputPrice}>{inputPrice ? inputPrice : this.price}元</span>
                         }
-                        <Button type='primary' onClick={::this.isEdit}>{isEdit ? '保存' : '修改'}</Button></span>
+                        <Button type='primary' className={styles.btn}
+                                onClick={::this.isEdit}>{isEdit ? '保存' : '修改'}</Button></span>
                     </li>
                 }
                 {
@@ -483,12 +470,12 @@ export default class BasicProfile extends Component {
                   bordered={true}
                   dataSource={payrecord ? payrecord : []}
                   columns={payColumns}
-                  rowKey={record => record.id + record.pay_time}
+                  rowKey={record => record.id + record.pay_time + Math.random() * 10000}
                 />
               </div>
           }
           {
-            (nameType === 'Entrust' && order_status == 6) || nameType === 'FlyingPig' ? null :
+            nameType === 'FlyingPig' ? null :
               <div>
                 <Divider style={{marginBottom: 32}}/>
                 <div className={styles.title}><Icon type="profile"/> K座信息</div>
@@ -503,13 +490,11 @@ export default class BasicProfile extends Component {
           }
 
           {
-            (nameType === 'Entrust' && (order_status == 0 || order_status == 1)) || nameType === 'FlyingPig' ?
-              null :
+           nameType === 'FlyingPig' ? null :
               <div>
                 <Divider style={{marginBottom: 32}}/>
                 <div className={styles.title}><Icon type="profile"/> 方案推送记录</div>
                 <Table
-                  style={{width: '60%'}}
                   pagination={false}
                   bordered={true}
                   dataSource={orderGroup ? orderGroup : []}
@@ -565,7 +550,7 @@ class FailModal extends React.Component {
 
   handleOk() {
     let {textAreaValue} = this.state;
-    if (textAreaValue.length < 32) {
+    if (textAreaValue.length < 33) {
       this.props.failReason(textAreaValue);
       this.hideModal();
     } else {

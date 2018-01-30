@@ -62,7 +62,7 @@ export default class View extends PureComponent {
       title: '状态',
       dataIndex: 'group_status',
       render: (text) => {
-        const status = ['拼团关闭', '拼团中', '已完成', '拼团成功'];
+        const status = ['拼团关闭', '拼团中', '拼团完成', '拼团成功'];
         return status[text];
       },
     }, {
@@ -103,6 +103,11 @@ export default class View extends PureComponent {
     }, {
       title: '拼团人数',
       dataIndex: 'paidMan',
+      render: (text, record) => {
+        let paid = text ? +text : 0;
+        let wait = record.waitMan ? +record.waitMan : 0;
+        return paid + wait;
+      },
     }, {
       title: '销售价格',
       dataIndex: 'sell_price',

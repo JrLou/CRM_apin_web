@@ -29,9 +29,7 @@ export default {
                     payload: '',
                 });
                 yield put(routerRedux.push('/fightgroups/demand/checkFightGroups/' + response.data));
-            } else {
-                message.error(response.msg);
-            }
+            }  
             yield put({
                 type: 'changeLoading',
                 payload: false,
@@ -123,6 +121,13 @@ export default {
                 showWhat: 'null',
                 modalTitle: '',
                 flightsTableShow: false,
+            };
+        },
+        resetCard(state, action) {
+            let key = action.payload ? 'depData' : 'arrData';
+            return {
+                ...state,
+                [key]: {},
             };
         },
         goAddFlight(state, action) {

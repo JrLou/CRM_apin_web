@@ -33,20 +33,22 @@
 //   return <AuthRoute />
 // }
 import React from 'react'
-import { Spin } from 'antd';
-import { connect } from 'dva';
+import {Spin} from 'antd';
+import {connect} from 'dva';
 import NotAuth from '../routes/Exception/403';
-import { Route } from 'dva/router'
+import {Route} from 'dva/router'
+
 export default (WrappedComponent, exacpath) => {
   class AuthRoute extends React.PureComponent {
     constructor(props) {
       super(props);
       if (this.props.routerPath.some(item => item.url == exacpath || item.url == (exacpath.replace(/^\//, '')))) {
-        this.state = { load: true, notauth: false };
+        this.state = {load: true, notauth: false};
       } else {
-        this.state = { load: false, notauth: false };
+        this.state = {load: false, notauth: false};
       }
     }
+
     componentWillMount() {
       if (!this.state.load) {
         this.props.dispatch({
@@ -55,19 +57,25 @@ export default (WrappedComponent, exacpath) => {
         });
       }
     }
+
     componentWillReceiveProps(nextProps) {
       if (this.props.routerPath !== nextProps.routerPath) {
         if (nextProps.routerPath.some(item => item.url == exacpath || item.url == (exacpath.replace(/^\//, '')))) {
-          this.setState({ load: true });
+          this.setState({load: true});
         } else {
-          this.setState({ notauth: true });
+          this.setState({notauth: true});
         }
       }
     }
+
     render() {
-      return (this.state.load ? <WrappedComponent {...this.props} /> : (this.state.notauth ? <NotAuth /> : <Spin size="large" style={{ width: "100%", margin: "40px 0 !important" }} />))
+      // return (this.state.load ? <WrappedComponent {...this.props} /> : (this.state.notauth ? <NotAuth/> :
+      //   <Spin size="large" style={{width: "100%", margin: "40px 0 !important"}}/>))
+      return (true ? <WrappedComponent {...this.props} /> : (this.state.notauth ? <NotAuth/> :
+        <Spin size="large" style={{width: "100%", margin: "40px 0 !important"}}/>))
     }
   }
+
   const A = connect(state => ({
     routerPath: state.global.routerPath,
   }))(AuthRoute)

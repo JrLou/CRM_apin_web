@@ -10,7 +10,7 @@ export default {
       option: {}
     },
     editData: {},
-    loading: true,
+    loading: false,
     banner_url: '',
     uploadSuccess: false,
   },
@@ -53,6 +53,7 @@ export default {
           type: 'changeLoading',
           payload: false,
         });
+        yield put(routerRedux.push('/operations/banner'))
       },
       * changeStatus({ payload, callback }, { call, put }) {
         //列表页，改变上架下架状态
@@ -72,6 +73,7 @@ export default {
           type: 'changeLoading',
           payload: false,
         });
+        yield put(routerRedux.push('/operations/banner'))
       },
       * toAdd({ payload }, { call, put }) {
         // 列表页，跳转到新增banner页面

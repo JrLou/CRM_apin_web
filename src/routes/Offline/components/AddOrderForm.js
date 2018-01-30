@@ -181,6 +181,7 @@ export default class AddOrderForm extends Component {
   }
   setValue = () => {
     const { offline: { schemeInfo } } = this.props;
+    console.log(schemeInfo);
     schemeInfo.map((v, k) => {
       this.props.form.setFieldsValue(
         {

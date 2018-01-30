@@ -11,20 +11,27 @@
   text-align: center;
   margin: 30px auto;
 }
+.imgBox{
+  position: relative;
+}
 
 .imgText{
-  position:relative;
-  top: -90px;
-  left:395px;
+  position:absolute;
+  top: 30px;
+  left:135px;
 }
-.ruleRequired::before{
-  display: inline-block;
-  position: absolute;
-  left: 180px;
-  top: 13px;
-  content: "*";
-  font-family: SimSun;
-  line-height: 1;
-  font-size: 14px;
-  color: #f5222d;
+.ruleRequired{
+  :global {
+    .ant-form-item-label>label::before{
+      display: inline-block;
+      position: absolute;
+      right:71px;
+      top: 2px;
+      content: "*";
+      font-family: SimSun;
+      line-height: 1;
+      font-size: 14px;
+      color: #f5222d;
+    }
+  }
 }

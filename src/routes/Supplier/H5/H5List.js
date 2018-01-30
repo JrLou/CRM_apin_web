@@ -64,11 +64,27 @@ export default class TableList extends PureComponent {
   }
 
   handleFormReset() {
+    if(this.props.h5List.loading){
+      return null
+    }
     this.props.form.resetFields();
+    if (this.props.h5List.double) {
+      return;
+    }
+    this.props.dispatch({
+      type: 'h5List/fetch',
+      payload: {
+        p: 1,
+        pc: 10,
+      },
+    });
   };
 
   handleSubmit(e) {
     e.preventDefault();
+    if(this.props.h5List.loading){
+      return null
+    }
     this.setState({
       isLoadingSearch: true
     });
@@ -85,6 +101,10 @@ export default class TableList extends PureComponent {
         this.setState({
           filter: dates,
         });
+
+        if (this.props.h5List.double) {
+          return;
+        }
         this.props.dispatch({
           type: 'h5List/fetch',
           payload: dates,
@@ -123,7 +143,7 @@ export default class TableList extends PureComponent {
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="状态">
+            <FormItem label="资源状态">
               {getFieldDecorator('validity', {
                 initialValue: '-1'
               })(
@@ -175,7 +195,7 @@ export default class TableList extends PureComponent {
         confirms({
           airlineStatus: 1,
           id: data.id,
-        }, "确定是否上架？");
+        }, "您确定要上架吗？");
         break;
       case 3:
         _this.setState({visible: true})
@@ -200,7 +220,7 @@ export default class TableList extends PureComponent {
         confirms({
           airlineStatus: 0,
           id: data.id,
-        }, "确定是否下架？");
+        }, "您确定要下架吗？");
         break;
     }
   }
@@ -247,7 +267,7 @@ export default class TableList extends PureComponent {
                 val.p = pagination.current;
                 val.pc = pagination.pageSize;
                 this.props.dispatch({
-                  type: 'H5List/fetch',
+                  type: 'h5List/fetch',
                   payload: val,
                 });
               }}
@@ -264,6 +284,9 @@ export default class TableList extends PureComponent {
                 title="航班号"
                 dataIndex="flight_no"
                 key="flight_no"
+                render={(text, record, index) => {
+                  return <div>{record.flight_no.split('/')[0]}</div>
+                }}
               />
               <Column
                 title="出发日期"
@@ -304,7 +327,7 @@ export default class TableList extends PureComponent {
                 render={(text, record, index) => {
                   switch (record.airline_status) {
                     case 0:
-                      return <div>无效</div>
+                      return <div>失效</div>
                       break;
                     case 1:
                       return <div>有效</div>
@@ -368,6 +391,7 @@ export default class TableList extends PureComponent {
               visible={this.state.visible}
               onOk={this.companyname.bind(this, 1)}
               onCancel={this.companyname.bind(this, 1)}
+              width={'600px'}
             >
               <Table pagination={false} rowKey={'id'}
                      dataSource={datalis ? datalis : []} columns={columns}/>

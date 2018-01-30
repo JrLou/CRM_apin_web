@@ -59,7 +59,17 @@ export default class TableList extends PureComponent {
   }
 
   handleFormReset() {
+    if(this.props.flightstock.double){
+      return null
+    }
     this.props.form.resetFields();
+    this.props.dispatch({
+      type: 'flightstock/fetch',
+      payload: {
+        p: 1,
+        pc: 10,
+      },
+    });
   };
 
   selectTime(date, dateString) {
@@ -73,6 +83,9 @@ export default class TableList extends PureComponent {
     this.setState({
       isLoadingSearch: true
     });
+    if(this.props.flightstock.double){
+      return null
+    }
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log(values)
@@ -154,6 +167,22 @@ export default class TableList extends PureComponent {
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
+            <FormItem label="往返天数">
+              {getFieldDecorator('days', {rules: [{max: 32, message: '最长32位'}]})
+              (
+                <Input placeholder="请输入"/>
+              )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="资源负责人">
+              {getFieldDecorator('principalName', {rules: [{max: 32, message: '最长32位'}]})
+              (
+                <Input placeholder="请输入"/>
+              )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
             <FormItem label="供应商名称">
               {getFieldDecorator('supplierName', {rules: [{max: 32, message: '最长32位'}]})
               (
@@ -201,7 +230,7 @@ export default class TableList extends PureComponent {
         confirms({
           airlineStatus: 1,
           id: data.id,
-        }, "确定是否上架？");
+        }, "您确定要上架吗？");
         break;
       case 3:
         _this.setState({visible: true})
@@ -309,7 +338,7 @@ export default class TableList extends PureComponent {
                 key="days"
               />
               <Column
-                title="航班负责人"
+                title="资源负责人"
                 dataIndex="manager"
                 key="manager"
               />
@@ -333,7 +362,7 @@ export default class TableList extends PureComponent {
                 dataIndex="time"
                 key="time"
                 render={(text, record, index) => {
-                  return <div>{moment(record.create_time).format('YYYY/MM/DD')}</div>
+                  return <div>{moment(record.create_time).format('YYYY/MM/DD HH:mm:ss')}</div>
                 }}
               />
               <Column
@@ -384,9 +413,11 @@ export default class TableList extends PureComponent {
               visible={this.state.visible}
               onOk={this.companyname.bind(this, 1)}
               onCancel={this.companyname.bind(this, 1)}
+              width={'600px'}
             >
-              <Table pagination={false} rowKey={'id'}
-                     dataSource={datalis ? datalis : []} columns={columns}/>
+              <Table  pagination={false}
+                      rowKey={'id'}
+                      dataSource={datalis ? datalis : []} columns={columns}/>
             </Modal>
           </div>
         </Card>

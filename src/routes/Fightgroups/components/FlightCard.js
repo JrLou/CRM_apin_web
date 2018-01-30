@@ -52,7 +52,7 @@ class FlightCard extends Component {
                                 </Col>
                                 <Col span={6}>
                                     <div className={css.cardDiv}>
-                                        <div style={{ lineHeight: 1.5 }} className={css.planeBox}> {this.props.cardData.stopFlag ? '经停' : null}</div>
+                                        <div style={{ lineHeight: 1.5 }} className={css.planeBox}> {+this.props.cardData.StopFlag ? '经停' : null}</div>
                                     </div>
                                 </Col>
                                 <Col span={9}>

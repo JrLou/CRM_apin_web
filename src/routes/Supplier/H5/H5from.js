@@ -39,7 +39,7 @@ class AddForm extends Component {
     super(props);
     this.state = {
       flightdata: {},
-      flightstockData: [{}, {}],//用于储蓄已添加航线
+      flightstockData: [],//用于储蓄已添加航线
       linenubber: [],//用于存储以添加航线的值的索引
       listAir: 0, //控制航班查询有数据显示数据没有数据显示手工录入(1有数据)
       flightNumbering: '',
@@ -51,7 +51,6 @@ class AddForm extends Component {
       numbering: null,
       flightTimeWill: null,
       identification: false,
-      code: {}
     };
   }
 
@@ -60,27 +59,23 @@ class AddForm extends Component {
     this.setState({
       h5Add: nextProps.h5Add ? nextProps.h5Add : {details: []},
     })
-    if (nextProps.h5Add.code.length > 0 && nextProps.h5Add.code[0].data.length > 0) {
-      this.setState({
-        h5Add: nextProps.h5Add,
-      })
-      setTimeout(() => {
-        this.judgmentMokecopen()
-      }, 100)
-    }
     if (nextProps.h5Add && nextProps.h5Add.details && nextProps.h5Add.details.length > 0 && !identification) {
       let list = nextProps.h5Add.details;
       list[0].FlightNo = list[0].flight_no
       list[0].FlightDep = list[0].city_dep_name
       list[0].FlightDepAirport = list[0].airport_dep_name
-      list[0].FlightDeptimePlanDate = moment(list[0].time_dep + list[0].departure_start).format("HH:mm")
+      list[0].FlightDeptimePlanDate = moment(list[0].departure_start + list[0].time_dep).format("YYYY-MM-DD HH:mm:ss")
+      list[0].FlightArrtimePlanDate = moment(list[0].departure_start + list[0].time_arr).format("YYYY-MM-DD HH:mm:ss")
       list[0].FlightArr = list[0].city_arr_name
       list[0].FlightArrAirport = list[0].airport_arr_name
-      list[0].FlightArrtimePlanDate = moment(list[0].time_arr + list[0].departure_start).format("HH:mm")
+      list[0].FlightDepcode = list[0].city_dep_code
+      list[0].FlightArrcode = list[0].city_arr_code
+      list[0].FlightCompany = list[0].flight_company
       flightdata.flightTimeWill = moment(list[0].departure_start)
       this.setState({
         flightstockData: [list[0]],
         linenubber: [0],
+        identification: true,
         flightdata,
         flightTimeWill: moment(list[0].departure_start)
       });
@@ -113,31 +108,34 @@ class AddForm extends Component {
 
   handleSubmit(e, event) {  //提交时数据格式整理，数据校验
     let _this = this
-    let {flightstockData, flightdata, identification} = _this.state
+    let data = []
+    let {flightdata, identification} = _this.state
     e.preventDefault();
     _this.props.form.validateFields((err, values) => {
       if (!err) {
-        if (!_this.props.id) {
-          if (!flightstockData[0].FlightNo) {
-            message.warning('请查询并选择出发航线');
-            return
-          }
+        if (this.state.flightstockData.length == 0) {
+          message.warning('请查询并选择出发航线');
+          return
         }
+        data = this.state.flightstockData
         if (_this.props.id && !identification) {
-          flightstockData[0].FlightDepcode = flightstockData[0].airport_dep_code
-          flightstockData[0].FlightArrcode = flightstockData[0].airport_arr_code
-          flightstockData[0].FlightCompany = flightstockData[0].flight_company
-          flightstockData[0].FlightDep = flightstockData[0].city_dep_name
-          flightstockData[0].FlightArr = flightstockData[0].city_arr_name
-          flightstockData[0].FlightDeptimePlanDate = moment(flightstockData[0].time_dep).format("YYYY-MM-DD HH:mm:ss")
-          flightstockData[0].FlightArrtimePlanDate = moment(flightstockData[0].time_arr).format("YYYY-MM-DD HH:mm:ss")
+          data[0].FlightDepcode = data[0].airport_dep_code
+          data[0].FlightArrcode = data[0].airport_arr_code
+          data[0].FlightCompany = data[0].flight_company
+          data[0].FlightDep = data[0].city_dep_name
+          data[0].FlightArr = data[0].city_arr_name
+          data[0].FlightDeptimePlanDate = moment(data[0].time_dep)
+          data[0].FlightArrtimePlanDate = moment(data[0].time_arr)
+        } else {
+          data[0].FlightDeptimePlanDate = moment(data[0].FlightDeptimePlanDate).format("YYYY-MM-DD HH:mm:ss")
+          data[0].FlightArrtimePlanDate = moment(data[0].FlightArrtimePlanDate).format("YYYY-MM-DD HH:mm:ss")
         }
         values.sellPrice = values.sellPrice * 100
-        values.goAirLine = JSON.stringify([flightstockData[0]])
-        values.cityArr = flightstockData[0].FlightArr
-        values.cityDep = flightstockData[0].FlightDep
+        values.goAirLine = JSON.stringify([data[0]])
+        values.cityArr = data[0].FlightArrcode
+        values.cityDep = data[0].FlightDepcode
         values.startDate = values.time.format("YYYY-MM-DD")
-        values.flightNumber = flightstockData[0].FlightNo + '-' + flightstockData[0].FlightNo
+        values.flightNumber = data[0].FlightNo + '-' + data[0].FlightNo
         this.setState({
           baioshi: true,
         });
@@ -173,37 +171,33 @@ class AddForm extends Component {
   }
 
   inquiries(ole, value, event) {  //查询航线详细信息
-    let data = this.state.flightdata
-    let {flightstockData, flightdata, linenubber} = this.state
+    let {flightdata} = this.state
     if (!value) {
       message.warning('请填写要查询的航班');
       return;
     }
-    if (data.flightTimeWill) {
-      this.props.addPost('h5Add/getsearchAirportesaddes', {},);
-      flightstockData[ole] = {}
-      linenubber[ole] = null
-      if (this.props.id) {
-        this.setState({
-          identification: true,
-        });
-      }
-      this.setState({
-        flightstockData: flightstockData,
-        flightNumbering: '航班号为：' + value + '的所有的航班',
-        flightdata: flightdata,
-        numbering: ole
-      });
+    if (!flightdata.flightTimeWill) {
+      message.warning('请先选择出发航班日期');
+      return;
+    }
+    this.props.addPost('h5Add/getsearchAirportesaddes', {},);
+    this.setState({
+      flightstockData: [],
+      linenubber: [],
+      identification: true,
+      flightdata,
+      flightNumbering: '航班号为：' + value + '的所有的航班',
+      numbering: ole
+    });
+    setTimeout(() => {
       this.props.addPost('h5Add/addAirLine', {
-        endDate: moment(data.flightTimeWill).format("YYYY-MM-DD"),
+        endDate: moment(flightdata.flightTimeWill).format("YYYY-MM-DD"),
         fnum: value,
-        startDate: moment(data.flightTimeWill).format("YYYY-MM-DD"),
+        startDate: moment(flightdata.flightTimeWill).format("YYYY-MM-DD"),
         numbering: ole,
         single: true,
-      },);
-    } else {
-      message.warning('请先选择出发航班日期');
-    }
+      },)
+    }, 100)
   }
 
   reviewerLists() {
@@ -233,27 +227,16 @@ class AddForm extends Component {
 
   mokecopen(ole) { //手动录入成功回调函数
     let {linenubber, flightdata, flightstockData, h5Add, numbering, code} = this.state
-    this.props.addPost('h5Add/getsearchAirportes', {code: [ole.FlightDepcode, ole.FlightArrcode]});
-    this.setState({
-      code: ole,
-    });
-  }
-
-  judgmentMokecopen() {
-    let {flightdata, code, h5Add, flightstockData, linenubber, numbering} = this.state
-    code.FlightDepAirport = h5Add.code[0].data[0].airport_name
-    code.FlightArrAirport = h5Add.code[1].data[0].airport_name
-    code.FlightDeptimePlanDate = flightdata.flightTimeWill.format('YYYY-MM-DD') + " " + code.FlightDeptimePlanDate + ':00'
-    code.FlightArrtimePlanDate = flightdata.flightTimeWill.format('YYYY-MM-DD') + " " + code.FlightArrtimePlanDate + ':00'
+    ole.FlightDeptimePlanDate = moment(flightdata.flightTimeWill.format('YYYY-MM-DD') + " " + ole.FlightDeptimePlanDate + ':00')
+    ole.FlightArrtimePlanDate = moment(flightdata.flightTimeWill.format('YYYY-MM-DD') + " " + ole.FlightArrtimePlanDate + ':00')
     h5Add.visible = false;
-    flightstockData[numbering] = code
+    flightstockData[numbering] = ole
     linenubber[numbering] = numbering
     this.setState({
       h5Add,
       flightstockData,
       linenubber,
     });
-    this.props.addPost('h5Add/getsearchAirportesaddes', {},);
   }
 
   handleOk() { //弹窗确定操作回调
@@ -318,6 +301,13 @@ class AddForm extends Component {
     }
   }
 
+  validatores(rule, value, callback) {
+    if (value < 51) {
+      callback('最小值为51')
+    }
+    callback()
+  }
+
   render() {
     const {getFieldDecorator, getFieldProps, getFieldsValue, getFieldValue} = this.props.form;
     const formItemLayout = {
@@ -355,7 +345,6 @@ class AddForm extends Component {
               <Search
                 placeholder="请填写航班号"
                 style={{width: '450px'}}
-                // disabled={this.state.flightdata.competence}
                 onSearch={this.inquiries.bind(this, k)}
                 enterButton
               />
@@ -393,16 +382,19 @@ class AddForm extends Component {
                   </Col>
                   <Col span={24}>
                     <FormItem
-                      label="不含税价"
+                      label="含税价"
                       {...formItemLayout}
                     >
                       {getFieldDecorator('sellPrice', {
                         rules: [{
                           required: true,
                           message: requiredText,
-                        }, {pattern: /^[1-9]\d{0,5}$/, message: "只允许输入最长6位自然数"},],
-                        initialValue: h5Add.details.length > 0 ? (parseInt(h5Add.details[0].sell_price) / 100).toString() : '',
+                        }, {pattern: /^[1-9]\d{0,5}$/, message: "只允许输入最长6位自然数"},
+                          {
+                            validator: this.validatores.bind(this),
 
+                          }],
+                        initialValue: h5Add.details.length > 0 ? (parseInt(h5Add.details[0].sell_price) / 100).toString() : '',
                       })
                       (< Input placeholder="请填写"
                                style={{width: '410px', marginRight: '10px'}}/>)}
@@ -458,9 +450,9 @@ class AddForm extends Component {
             <RadioGroup onChange={this.routeSelection.bind(this)}>
               {this.reviewerLists()}
             </RadioGroup>}
-            {!h5Add.accurate.data &&
+            {!h5Add.accurate.data && !this.state.flightdata.entry &&
             <h3 style={{textAlign: "center", marginBottom: '10px'}}>没有该航班信息</h3>}
-            {this.state.flightdata.entry && <Manual open={this.mokecopen.bind(this)}/>}
+            {this.state.flightdata.entry && <Manual h5={true} open={this.mokecopen.bind(this)}/>}
             {this.state.flightNumsdbdsdering &&
             <Button style={{marginLeft: '41%'}} type="primary"
                     onClick={this.handleOk.bind(this)}>{h5Add.ok}</Button>}

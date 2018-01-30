@@ -1,65 +1,64 @@
-import {queryFightGroupsList} from '../services/api';
-import {routerRedux} from 'dva/router';
-import {message} from 'antd';
+import { queryFightGroupsList, fakequest } from "../services/api";
 
 export default {
-  namespace: 'fightGroupsList',
+  namespace: "fightGroupsList",
   state: {
-    data: {
-      data: [],
-      msg: '',
-      option: {
-        current: 1,
-        pageSize: 8,
-      },//这里面会有分页器需要的信息： current、 pageSize、total，但需要转换
-    },
-    loading: true,
+    listData: {},
+    loading: false,
+    double: false,
   },
   effects: {
-    * fetch({payload}, {call, put}) {
+    *fetch({ payload }, { call, put }) {
       yield put({
-        type: 'changeLoading',
+        type: "changeLoading",
         payload: true,
       });
+      yield put({
+        type: "changeDouble",
+        payload: true,
+      });
+      const time1 = Date.now();
       const response = yield call(queryFightGroupsList, payload);
       if (response.code >= 1) {
-        message.success('xxx');
-
-        //下面是直接跳转
-        // yield put(routerRedux.push('/fightgroups/demand/checkFightGroups/' + payload.id));
+        yield put({
+          type: "getList",
+          payload: response,
+        });
       }
       yield put({
-        type: 'getTable',
-        payload: response,
+        type: "changeLoading",
+        payload: false,
       });
+      const time2 = Date.now();
+      if (!(time2 - time1 > 2000)) {
+        yield call(fakequest, 1000);
+      }
       yield put({
-        type: 'changeLoading',
+        type: "changeDouble",
         payload: false,
       });
     },
   },
 
   reducers: {
-    reset(state, action) {
+    getList(state, { payload }) {
       return {
         ...state,
-        ...payload,
+        listData: payload,
       };
     },
 
-    getTable(state, {payload}) {
+    changeLoading(state, { payload }) {
       return {
         ...state,
-        tableData: payload
+        loading: payload,
       };
     },
-
-    changeLoading(state, action) {
+    changeDouble(state, { payload }) {
       return {
         ...state,
-        loading: action.payload,
+        double: payload,
       };
     },
-
   },
 };

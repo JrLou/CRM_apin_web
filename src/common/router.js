@@ -101,7 +101,7 @@ export const getRouterData = (app) => {
     },
     // 查看需求池
     '/fightgroups/demand/viewDemand/:data': {
-      name: '查看需求池',
+      name: '查看历史拼团',
       component: dynamicWrapper(app, ['view'], () => import('../routes/Fightgroups/View.js')),
     },
     //推送方案-选择订单

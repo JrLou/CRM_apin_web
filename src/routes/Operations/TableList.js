@@ -4,6 +4,7 @@ import { Table,Button,message } from 'antd';
 import ImageWrapper from '../../components/ImageWrapper';
 import TimeHelp from '../../utils/TimeHelp.js';
 import styles from './TableList.less';
+import Ellipsis from '../../components/Ellipsis';
 
 @connect(state => ({
   bannerList: state.bannerList,
@@ -103,6 +104,9 @@ class StandardTable extends PureComponent {
       {
         title: '图片名称',
         dataIndex: 'title',
+        render:(text,record)=>{
+          return <Ellipsis length={10}>{record.title}</Ellipsis>
+        },
       },
       {
         title: '图片',
@@ -118,6 +122,9 @@ class StandardTable extends PureComponent {
       {
         title: '跳转链接',
         dataIndex: 'link_url',
+        render:(text,record)=>{
+          return <Ellipsis length={40}>{record.link_url}</Ellipsis>
+        },
       },
       {
         title: '有效期',
@@ -125,7 +132,7 @@ class StandardTable extends PureComponent {
         render:(text,record,index)=>{
           var timestamp = new Date().getTime();
 
-          return <span style={{color:record.state == 1?record.start_time <= timestamp && timestamp <= record.end_time ? '#52c41a' : '':''}}>{TimeHelp.getYMDHM(record.start_time)+' - '+TimeHelp.getYMDHM(record.end_time)}</span>
+          return <span style={{color:record.state == 1?record.start_time <= timestamp && timestamp <= record.end_time ? '#52c41a' : '':''}}><Ellipsis>{TimeHelp.getYMDHM(record.start_time)+' - '+TimeHelp.getYMDHM(record.end_time)}</Ellipsis></span>
         }
       },
       {
@@ -171,7 +178,7 @@ class StandardTable extends PureComponent {
 
   getBtns(text, record, index){
     return (
-      <div>
+      <div className={styles.editBtn}>
         <Button type={record.state==1?'danger':'primary'} className={styles.btn}
           onClick={()=>{
             let status = record.state==1?0:1;

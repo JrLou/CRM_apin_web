@@ -2,11 +2,13 @@ import { stringify } from 'qs';
 import request from '../utils/request';
 import request_java from '../utils/request_java';
 import md5 from 'md5'
-
+const sleep = time => new Promise(resolve => setTimeout(resolve, time))
+export async function fakequest(params) {
+  await sleep(params)
+}
 export async function queryProjectNotice() {
   return request('/api/project/notice');
 }
-
 export async function queryActivities() {
   return request('/api/activities');
 }
@@ -293,6 +295,13 @@ export async function getsearchAirport(params) {
     body: params,
   });
 }
+//查询城市
+export async function getsearchCity(params) {
+  return request('/api/resource/searchCity', {
+    method: 'POST',
+    body: params,
+  });
+}
 //冷门资源列表
 export async function geth5(params) {
   return request('/api/resource/getAirLinesRare', {
@@ -492,4 +501,7 @@ export async function searchCity(params) {
 }
 export async function searchPort(params) {
   return request('/api/resource/searchAirport', { method: 'POST', body: params });
+}
+export async function searchFlightCity(params) {
+  return request('/api/resource/searchCity', { method: 'POST', body: params });
 }

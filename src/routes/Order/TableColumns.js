@@ -62,14 +62,6 @@ export default class TableList extends PureComponent {
       type: 'flyingpigList/getList',
       payload: params,
     });
-    // this.setState({
-    //   pagination: {
-    //     p: pagination.current,
-    //     pc: pagination.pageSize,
-    //   }
-    // }, () => {
-    //   this.handleSearch();
-    // });
   }
 
   handleFormReset() {
@@ -95,32 +87,35 @@ export default class TableList extends PureComponent {
 
   handleSearch() {
     const {dispatch, form, backpath} = this.props, {pagination, timeArr} = this.state;
-    form.validateFields((err, fieldsValue) => {
-      if (!err) {
-        const values = {
-          ...fieldsValue,
-          'start_time': timeArr[0] || '',
-          'end_time': timeArr[1] || '',
-        };
-        values.group_type = backpath === 'Entrust' ? 0 : 12;
-        for (let item in values) {
-          if (values[item] === undefined) {
-            values[item] = '';
+    if(!this.props.flyingpigList.double){
+      form.validateFields((err, fieldsValue) => {
+        if (!err) {
+          const values = {
+            ...fieldsValue,
+            'start_time': timeArr[0] || '',
+            'end_time': timeArr[1] || '',
+          };
+          values.group_type = backpath === 'Entrust' ? 0 : 12;
+          for (let item in values) {
+            if (values[item] === undefined) {
+              values[item] = '';
+            }
           }
+          values.order_status = typeof values.order_status === 'string' ? '' : Number(values.order_status);
+          values.supplier_type = values.supplier_type ? Number(values.supplier_type) : '';
+          values.source = typeof values.source === 'string' ? '' : Number(values.source);
+          this.setState({
+            formValues: values,
+          });
+          let params = Object.assign(pagination, values);
+          dispatch({
+            type: 'flyingpigList/getList',
+            payload: params,
+          });
         }
-        values.order_status = typeof values.order_status === 'string' ? '' : Number(values.order_status);
-        values.supplier_type = values.supplier_type ? Number(values.supplier_type) : '';
-        values.source = typeof values.source === 'string' ? '' : Number(values.source);
-        this.setState({
-          formValues: values,
-        });
-        let params = Object.assign(pagination, values);
-        dispatch({
-          type: 'flyingpigList/getList',
-          payload: params,
-        });
-      }
-    });
+
+      });
+    }
   }
 
   renderForm() {
@@ -259,10 +254,10 @@ export default class TableList extends PureComponent {
           return this.status[text];
         },
       },
-      {title: '联系人', dataIndex: 'contact',},
+      {title: '联系人', dataIndex: 'contact', width: '8%'},
       {title: '联系电话', dataIndex: 'mobile',},
-      {title: '出发城市', dataIndex: 'city_dep',},
-      {title: '到达城市', dataIndex: 'city_arr'},
+      {title: '出发城市', dataIndex: 'city_dep', width: '8%'},
+      {title: '到达城市', dataIndex: 'city_arr', width: '8%'},
       {
         title: '出发日期', dataIndex: 'dep_yyyymm', render: (text, record) => {
           let date1 = String(text).substr(0, 4) || '', date2 = String(text).substr(4, 2) || '', day = '';
@@ -320,7 +315,7 @@ export default class TableList extends PureComponent {
         }
       }];
     if (backpath === 'Entrust') {
-      let arr1 = columns.slice(0, 7), arr2 = columns.slice(8, 10), arr3 = columns.slice(11);
+      let arr1 = columns.slice(0, 7), arr2 = columns.slice(8, 10), arr3 = columns.slice(12);
       columns = arr1.concat(arr2, arr3);
     }
     const page = {

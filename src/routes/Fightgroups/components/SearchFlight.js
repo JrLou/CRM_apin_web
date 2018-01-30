@@ -47,7 +47,7 @@ export default class SearchFlight extends PureComponent {
         let startms = moment(this.props.form.getFieldValue('startDate')).format('x');
         let endms = moment(this.props.form.getFieldValue('endDate')).format('x');
         if (startms > endms) {
-          message.warning('出发时间不能大于到达时间')
+          message.warning('起飞日期不能晚于返回日期')
           return
         }
         let idString = orderList.map((v, k) => {
@@ -61,6 +61,12 @@ export default class SearchFlight extends PureComponent {
           payload: { ...values, goAirLine: [depData], backAirLine: [arrData], idString: idString.join(',') },
         });
       }
+    });
+  }
+  changeDate = (isleft) => {
+    this.props.dispatch({
+      type: 'push/resetCard',
+      payload: isleft,
     });
   }
   searchFlight = (isLeft) => {
@@ -191,7 +197,7 @@ export default class SearchFlight extends PureComponent {
         title: '订单状态',
         dataIndex: 'order_status',
         render: (text, record) => {
-          return '委托中';
+          return 'K座中';
         }
       },
 
@@ -216,7 +222,7 @@ export default class SearchFlight extends PureComponent {
                 {getFieldDecorator('startDate', {
                   rules: [{ required: true, message: '必填' }],
                 })(
-                  <DatePicker disabledDate={this.disabledDate} />
+                  <DatePicker disabledDate={this.disabledDate} onChange={this.changeDate.bind(this, true)} />
                   )}
               </FormItem>
             </Col>
@@ -226,7 +232,7 @@ export default class SearchFlight extends PureComponent {
                   rules: [{ required: true, message: '必填' }],
 
                 })(
-                  <DatePicker disabledDate={this.disabledDate} />)}
+                  <DatePicker disabledDate={this.disabledDate} onChange={this.changeDate.bind(this, false)} />)}
               </FormItem>
             </Col>
           </Row>
@@ -247,7 +253,7 @@ export default class SearchFlight extends PureComponent {
               </FormItem>
             </Col>
             <Col span={9}>
-              <FormItem label="到达航班"  {...formItemLayout} className={styles.formItem + ' notFull'}>
+              <FormItem label="返程航班"  {...formItemLayout} className={styles.formItem + ' notFull'}>
                 {getFieldDecorator('flightNoArr', {
                   rules: [{ required: true, message: '必填' },
                   {
@@ -313,7 +319,7 @@ export default class SearchFlight extends PureComponent {
               <FormItem label="折扣"  {...formItemLayout} className={styles.formItem}>
                 {getFieldDecorator('discount', {
                   rules: [{ required: true, message: '必填' },
-                  { pattern: /^[12](\.\d{1})?$|^([3])(\.0)?$|^[0](\.[1-9]{1}){1}$/, message: '请输入0到3之间的折扣数，可以是1位小数', }],
+                  { pattern: /^[1-9](\.\d{1})?$|^(10)(\.0)?$|^[0](\.[1-9]{1}){1}$/, message: '请输入0到10之间的折扣数，可以是1位小数', }],
 
                 })(
                   <Input placeholder="请输入折扣，不可高于3折" />)

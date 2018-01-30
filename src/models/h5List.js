@@ -1,4 +1,4 @@
-import {geth5, stateAirLine, getAirLineLogs,} from '../services/api';
+import {geth5, stateAirLine, getAirLineLogs, fakequest} from '../services/api';
 import {message} from 'antd';
 
 export default {
@@ -8,7 +8,8 @@ export default {
       data: [],
       option: {},
     },
-    loading: true,
+    loading: false,
+    double: false,
     logs: {},
   },
   effects: {
@@ -17,17 +18,30 @@ export default {
         type: 'changeLoading',
         payload: true,
       });
+      yield put({
+        type: 'changeDouble',
+        payload: true,
+      });
+      const time1 = Date.now();
       const response = yield call(geth5, payload);
       if (response && response.code >= 1) {
         yield put({
           type: 'save',
           payload: response,
         });
-        yield put({
-          type: 'changeLoading',
-          payload: false,
-        });
       }
+      yield put({
+        type: 'changeLoading',
+        payload: false,
+      });
+      const time2 = Date.now();
+      if (!(time2 - time1 > 2000)) {
+        yield call(fakequest, 1000);
+      }
+      yield put({
+        type: "changeDouble",
+        payload: false,
+      });
     },
     * changeStatus({payload}, {call, put}) {
       //列表页，改变上架下架状态
@@ -37,7 +51,7 @@ export default {
       });
       const judgment = yield call(stateAirLine, payload.status);
       if (judgment && judgment.code >= 1) {
-        message.success('上架成功');
+        message.success('操作成功');
       }
       const response = yield call(geth5, payload.filter)
       if (response && response.code >= 1) {
@@ -84,6 +98,12 @@ export default {
       return {
         ...state,
         loading: action.payload,
+      };
+    },
+    changeDouble(state, action) {
+      return {
+        ...state,
+        double: action.payload,
       };
     },
   },

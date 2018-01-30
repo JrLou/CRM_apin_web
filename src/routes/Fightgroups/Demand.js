@@ -52,11 +52,12 @@ export default class Demand extends PureComponent {
   getData(values = this.searchValues) {
     const { dispatch } = this.props;
     let params = { ...values, p: this.page.page, pc: this.page.pageSize };
-    console.log(params)
-    dispatch({
-      type: 'demand/fetch',
-      payload: params,
-    });
+    if(!this.props.demand.double){
+      dispatch({
+        type: 'demand/fetch',
+        payload: params,
+      });
+    }
   };
   resetValue() {
     this.props.form.resetFields();
@@ -72,7 +73,7 @@ export default class Demand extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem label="出发城市">
               {getFieldDecorator('cityDep', {
-                rules: [{ max: 15, message: "输入位数过长" }],
+                rules: [{ max: 32, message: "输入位数过长" }],
               })(
                 <Input placeholder="请输入" />
                 )}
@@ -81,7 +82,7 @@ export default class Demand extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem label="到达城市">
               {getFieldDecorator('cityArr', {
-                rules: [{ max: 15, message: "输入位数过长" }],
+                rules: [{ max: 32, message: "输入位数过长" }],
               })(
                 <Input placeholder="请输入" />
                 )}
@@ -103,7 +104,8 @@ export default class Demand extends PureComponent {
         </Row>
         <div style={{ overflow: 'hidden' }}>
           <span style={{ float: 'right' }}>
-            <Button type="primary" style={{ marginRight: 6 }} htmlType="submit">查询</Button>
+          {/* loading={this.props.demand.loading} */}
+            <Button type="primary"  style={{ marginRight: 6 }} htmlType="submit">查询</Button>
             <Button type="default" onClick={this.resetValue.bind(this)}>重置</Button>
           </span>
         </div>
@@ -159,7 +161,7 @@ export default class Demand extends PureComponent {
                     <Card.Meta
                       description={(
                         <div>
-                          <p>3天内需要处理的订单数：<span style={{ color: '#f00' }}>{item.emergency}</span></p>
+                          {/* <p>3天内需要处理的订单数：<span style={{ color: '#f00' }}>{item.emergency}</span></p> */}
                           <p>待推方案订单数：{item.wait}</p>
                           <p>待推方案总人数：{item.wait_people}</p>
                           <p>已成团订单数：{item.finish}</p>
