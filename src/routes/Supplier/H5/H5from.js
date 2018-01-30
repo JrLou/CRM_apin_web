@@ -229,7 +229,7 @@ class AddForm extends Component {
     let {linenubber, flightdata, flightstockData, h5Add, numbering, code} = this.state
     ole.FlightDeptimePlanDate = moment(flightdata.flightTimeWill.format('YYYY-MM-DD') + " " + ole.FlightDeptimePlanDate + ':00')
     ole.FlightArrtimePlanDate = moment(flightdata.flightTimeWill.format('YYYY-MM-DD') + " " + ole.FlightArrtimePlanDate + ':00')
-    this.props.form.getFieldDecorator('names-' + numbering, {initialValue: ole.FlightNo});
+    this.props.form.setFieldsValue({['names-' + numbering]: ole.FlightNo});
     h5Add.visible = false;
     flightstockData[numbering] = ole
     linenubber[numbering] = numbering
