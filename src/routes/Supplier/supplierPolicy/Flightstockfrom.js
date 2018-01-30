@@ -139,9 +139,11 @@ class AddForm extends Component {
             message.warning('请查询并选择出发航线');
             return
           }
-          if (values.clearDays <= values.ticketDays) {
-            message.warning('该天数必须大于出票时间');
-            return
+          if (values.clearDays != 0 && values.ticketDays != 0) {
+            if (values.clearDays <= values.ticketDays) {
+              message.warning('该天数必须大于出票时间');
+              return
+            }
           }
         }
         for (let i = 0; i < flightstockData.length; i++) {
@@ -386,9 +388,11 @@ class AddForm extends Component {
         });
         break;
       case 6:
-        if (parseFloat(e.target.value) <= data.chupiaodays) {
-          message.warning('该天数必须大于出票时间');
-          return;
+        if (e.target.value != 0) {
+          if (parseFloat(e.target.value) <= data.chupiaodays) {
+            message.warning('该天数必须大于出票时间');
+            return;
+          }
         }
         break;
       case 7:
