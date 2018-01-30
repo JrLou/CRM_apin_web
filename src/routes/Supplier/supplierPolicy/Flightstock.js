@@ -59,6 +59,9 @@ export default class TableList extends PureComponent {
   }
 
   handleFormReset() {
+    if(this.props.flightstock.double){
+      return null
+    }
     this.props.form.resetFields();
     this.props.dispatch({
       type: 'h5List/fetch',
@@ -80,7 +83,7 @@ export default class TableList extends PureComponent {
     this.setState({
       isLoadingSearch: true
     });
-    if(this.props.flightstock.loading){
+    if(this.props.flightstock.double){
       return null
     }
     this.props.form.validateFields((err, values) => {
