@@ -61,7 +61,7 @@ export default class TableList extends PureComponent {
   handleFormReset() {
     this.props.form.resetFields();
     this.props.dispatch({
-      type: 'h5List/fetch',
+      type: 'flightstock/fetch',
       payload: {
         p: 1,
         pc: 10,
@@ -227,7 +227,7 @@ export default class TableList extends PureComponent {
         confirms({
           airlineStatus: 1,
           id: data.id,
-        }, "确定是否上架？");
+        }, "您确定要上架吗？");
         break;
       case 3:
         _this.setState({visible: true})

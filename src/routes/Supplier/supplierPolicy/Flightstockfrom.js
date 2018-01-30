@@ -736,7 +736,7 @@ class AddForm extends Component {
                           message: requiredText,
                         }, {
                           pattern: /^[1-9](\.\d{1})?$|^(10)(\.0)?$|^[0](\.[1-9]{1}){1}$/,
-                          message: "折扣需大于0，且最多一位小数"
+                          message: "最多输入一位小数，范围从0.1至10折"
                         }, {
                           max: 6,
                           message: "最多6位"
@@ -759,7 +759,7 @@ class AddForm extends Component {
                           rules: [{
                             required: true,
                             message: requiredText,
-                          }, , {pattern: /^[1-9]\d{0,4}$/, message: "请填写最多6位的正整数"}],
+                          }, , {pattern: /^[1-9]\d{0,5}$/, message: "请填写最多6位的正整数"}],
                           initialValue: flightstockEdit.details.length > 0 ? flightstockEdit.details[0].free_bag : '',
 
                         })
@@ -782,7 +782,7 @@ class AddForm extends Component {
                           rules: [{
                             required: true,
                             message: requiredText
-                          }, , {pattern: /^[1-9]\d{0,4}$/, message: "请填写小于6位的正整数"}],
+                          }, , {pattern: /^[1-9]\d{0,5}$/, message: "请填写小于6位的正整数"}],
                           initialValue: flightstockEdit.details.length > 0 ? flightstockEdit.details[0].weight_limit : '',
                         })
                         (< Input placeholder="请填写"
@@ -808,7 +808,7 @@ class AddForm extends Component {
                           rules: [{
                             required: true,
                             message: requiredText
-                          }, {pattern: /^[1-9]\d{0,4}$/, message: "请填写小于6位的正整数"}],
+                          }, {pattern: /^[0-9]\d{0,5}$/, message: "请填写小于6位的正整数"}],
                           initialValue: flightstockEdit.details.length > 0 ? flightstockEdit.details[0].ticket_days : '',
                         })
                         (< Input placeholder="请填写"
@@ -834,7 +834,7 @@ class AddForm extends Component {
                           rules: [{
                             required: true,
                             message: requiredText
-                          }, {pattern: /^[1-9]\d{0,4}$/, message: "请填写小于6位的正整数"},
+                          }, {pattern: /^[0-9]\d{0,5}$/, message: "请填写小于6位的正整数"},
                           ],
                           initialValue: flightstockEdit.details.length > 0 ? flightstockEdit.details[0].clear_days : '',
                         })

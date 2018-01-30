@@ -188,7 +188,7 @@ export default class TableList extends PureComponent {
         confirms({
           airlineStatus: 1,
           id: data.id,
-        }, "确定是否上架？");
+        }, "您确定要上架吗？");
         break;
       case 3:
         _this.setState({visible: true})
@@ -213,7 +213,7 @@ export default class TableList extends PureComponent {
         confirms({
           airlineStatus: 0,
           id: data.id,
-        }, "确定是否下架？");
+        }, "您确定要下架吗？");
         break;
     }
   }
@@ -320,7 +320,7 @@ export default class TableList extends PureComponent {
                 render={(text, record, index) => {
                   switch (record.airline_status) {
                     case 0:
-                      return <div>无效</div>
+                      return <div>失效</div>
                       break;
                     case 1:
                       return <div>有效</div>
