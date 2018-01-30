@@ -139,9 +139,11 @@ class AddForm extends Component {
             message.warning('请查询并选择出发航线');
             return
           }
-          if (values.clearDays <= values.ticketDays) {
-            message.warning('该天数必须大于出票时间');
-            return
+          if (values.clearDays != 0 && values.ticketDays != 0) {
+            if (values.clearDays <= values.ticketDays) {
+              message.warning('该天数必须大于出票时间');
+              return
+            }
           }
         }
         for (let i = 0; i < flightstockData.length; i++) {
@@ -217,23 +219,29 @@ class AddForm extends Component {
         message.warning('请先选择出发航班日期');
         return;
       }
-      this.props.addPost('flightstockAdd/getsearchAirportesaddes', {},);
-      flightstockData[ole] = {}
-      linenubber[ole] = null
-      flightdata.selectedWeekGroup[ole] = ''
-      this.setState({
-        flightstockData: flightstockData,
-        flightNumbering: '航班号为：' + value + '的所有的航班',
-        flightdata: flightdata,
-        numbering: ole
-      });
-      this.props.addPost('flightstockAdd/addAirLine', {
-        endDate: moment(data.flightTimeWill[1]).format("YYYY-MM-DD"),
-        fnum: value,
-        startDate: moment(data.flightTimeWill[0]).format("YYYY-MM-DD"),
-        numbering: ole,
-      },);
 
+      let reg =/^([a-zA-Z][0-9a-zA-Z]|[0-9a-zA-Z][a-zA-Z])([0-9]{1,4})$/;
+      if (reg.test(value)) {
+        this.props.addPost('flightstockAdd/getsearchAirportesaddes', {},);
+        flightstockData[ole] = {}
+        linenubber[ole] = null
+        flightdata.selectedWeekGroup[ole] = ''
+        this.setState({
+          flightstockData: flightstockData,
+          flightNumbering: '航班号为：' + value + '的所有的航班',
+          flightdata: flightdata,
+          numbering: ole
+        });
+        this.props.addPost('flightstockAdd/addAirLine', {
+          endDate: moment(data.flightTimeWill[1]).format("YYYY-MM-DD"),
+          fnum: value,
+          startDate: moment(data.flightTimeWill[0]).format("YYYY-MM-DD"),
+          numbering: ole,
+        },);
+      } else {
+        message.warning('请填写正确航班号');
+        return;
+      }
     }
   }
 
@@ -386,9 +394,11 @@ class AddForm extends Component {
         });
         break;
       case 6:
-        if (parseFloat(e.target.value) <= data.chupiaodays) {
-          message.warning('该天数必须大于出票时间');
-          return;
+        if (e.target.value != 0) {
+          if (parseFloat(e.target.value) <= data.chupiaodays) {
+            message.warning('该天数必须大于出票时间');
+            return;
+          }
         }
         break;
       case 7:

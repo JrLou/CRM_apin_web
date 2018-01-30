@@ -38,8 +38,7 @@ export default class TableList extends PureComponent {
 
   componentDidMount() {
     //加载第一页
-    const {dispatch} = this.props;
-    dispatch({
+    this.props.dispatch({
       type: 'flightstock/fetch',
       payload: {
         p: 1,
@@ -59,7 +58,7 @@ export default class TableList extends PureComponent {
   }
 
   handleFormReset() {
-    if(this.props.flightstock.double){
+    if (this.props.flightstock.double) {
       return null
     }
     this.props.form.resetFields();
@@ -80,12 +79,12 @@ export default class TableList extends PureComponent {
 
   handleSubmit(e) {
     e.preventDefault();
+    if (this.props.flightstock.double) {
+      return null
+    }
     this.setState({
       isLoadingSearch: true
     });
-    if(this.props.flightstock.double){
-      return null
-    }
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log(values)
@@ -415,9 +414,9 @@ export default class TableList extends PureComponent {
               onCancel={this.companyname.bind(this, 1)}
               width={'600px'}
             >
-              <Table  pagination={false}
-                      rowKey={'id'}
-                      dataSource={datalis ? datalis : []} columns={columns}/>
+              <Table pagination={false}
+                     rowKey={'id'}
+                     dataSource={datalis ? datalis : []} columns={columns}/>
             </Modal>
           </div>
         </Card>
