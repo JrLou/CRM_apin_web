@@ -112,6 +112,9 @@ export default class TableList extends PureComponent {
 
   //请求table数据
   loadTableData() {
+    if (this.props.fightGroupsList.double) {
+      return;
+    }
     const { dispatch } = this.props;
     const params = {
       ...this.formValues,

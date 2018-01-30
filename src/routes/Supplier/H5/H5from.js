@@ -64,8 +64,8 @@ class AddForm extends Component {
       list[0].FlightNo = list[0].flight_no
       list[0].FlightDep = list[0].city_dep_name
       list[0].FlightDepAirport = list[0].airport_dep_name
-      list[0].FlightDeptimePlanDate = moment(list[0].time_dep + list[0].departure_start)
-      list[0].FlightArrtimePlanDate = moment(list[0].time_arr + list[0].departure_start)
+      list[0].FlightDeptimePlanDate = moment(list[0].departure_start + list[0].time_dep).format("YYYY-MM-DD HH:mm:ss")
+      list[0].FlightArrtimePlanDate = moment(list[0].departure_start + list[0].time_arr).format("YYYY-MM-DD HH:mm:ss")
       list[0].FlightArr = list[0].city_arr_name
       list[0].FlightArrAirport = list[0].airport_arr_name
       flightdata.flightTimeWill = moment(list[0].departure_start)
