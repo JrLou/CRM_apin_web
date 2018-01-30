@@ -68,6 +68,9 @@ class AddForm extends Component {
       list[0].FlightArrtimePlanDate = moment(list[0].departure_start + list[0].time_arr).format("YYYY-MM-DD HH:mm:ss")
       list[0].FlightArr = list[0].city_arr_name
       list[0].FlightArrAirport = list[0].airport_arr_name
+      list[0].FlightDepcode = list[0].city_dep_code
+      list[0].FlightArrcode = list[0].city_arr_code
+      list[0].FlightCompany = list[0].flight_company
       flightdata.flightTimeWill = moment(list[0].departure_start)
       this.setState({
         flightstockData: [list[0]],

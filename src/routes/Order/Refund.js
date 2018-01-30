@@ -236,8 +236,8 @@ export default class TableList extends PureComponent {
         },
       },
       {
-        title: '退款金额', dataIndex: 'amount', render: (text) => {
-          text = text ? String(text).substr(1) : '';
+        title: '退款金额', dataIndex: 'pay_amount', render: (text) => {
+          text = text ? text < 0 ? String(text).substr(1) : text : '';
           return Number(text) / 100;
         }
       },
@@ -338,7 +338,7 @@ class RefundModal extends React.Component {
 
   render() {
     let {visible, data} = this.state;
-    let price = data.amount ? String(data.amount).substr(1) : null;
+    let price = data.pay_amount ? data.pay_amount < 0 ? String(data.pay_amount).substr(1) : data.pay_amount : null;
     let priceRel = Number(price) / 100;
     return (
       <Modal
