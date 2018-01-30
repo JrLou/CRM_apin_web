@@ -7,6 +7,7 @@ import { Link, routerRedux } from 'dva/router';
 import LogTable from './components/LogTable';
 import moment from 'moment';
 import { getPar, formatPar } from '../../utils/utils';
+import _unique from 'lodash/uniq';
 const { RangePicker } = DatePicker;
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -80,11 +81,12 @@ export default class Choose extends PureComponent {
   handleTableChange = (pagination) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
-    const { id } = this.par;
+    const { id, continueFlag, cityArr, cityDep } = this.par;
     const params = {
       p: pagination.current,
       pc: pagination.pageSize,
-      ...this.par,
+      cityArr: cityArr,
+      cityDep: cityDep,
       ...this.searchValue,
     };
     dispatch({
@@ -165,8 +167,12 @@ export default class Choose extends PureComponent {
   }
 
   selectChange(selectedRowKeys, selectedRows) {
+    let rows = selectedRows;
+    if (selectedRows.length !== selectedRowKeys.length) {
+      rows = this.state.selectRows.concat(selectedRows)
+    }
     this.setState({
-      selectRows: selectedRows,
+      selectRows: _unique(rows),
       selectedRowKeys: selectedRowKeys
     })
   }
