@@ -384,6 +384,7 @@ export default class TableList extends PureComponent {
               visible={this.state.visible}
               onOk={this.companyname.bind(this, 1)}
               onCancel={this.companyname.bind(this, 1)}
+              width={'600px'}
             >
               <Table pagination={false} rowKey={'id'}
                      dataSource={datalis ? datalis : []} columns={columns}/>
