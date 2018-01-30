@@ -68,6 +68,9 @@ export default class TableList extends PureComponent {
       return null
     }
     this.props.form.resetFields();
+    if (this.props.h5List.double) {
+      return;
+    }
     this.props.dispatch({
       type: 'h5List/fetch',
       payload: {
@@ -98,6 +101,10 @@ export default class TableList extends PureComponent {
         this.setState({
           filter: dates,
         });
+
+        if (this.props.h5List.double) {
+          return;
+        }
         this.props.dispatch({
           type: 'h5List/fetch',
           payload: dates,
