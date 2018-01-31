@@ -66,7 +66,7 @@ class AddForm extends Component {
       list[0].seat_type == 0 ? list[0].seat_type = "硬切" : list[0].seat_type = "代销"
       for (let i = 0; i < list.length; i++) {
         list[i].FlightNo = list[i].flight_no
-        list[i].FlightDepAirport = list[i].city_arr_name
+        list[i].FlightDepAirport = list[i].city_dep_name
         list[i].FlightDepcode = list[i].airport_dep_code
         list[i].FlightDeptimePlanDate = moment(list[i].departure_start + list[i].time_dep).format("YYYY-MM-DD HH:mm:ss")
         list[i].FlightArrtimePlanDate = moment(list[i].departure_start + list[i].time_arr).format("YYYY-MM-DD HH:mm:ss")
