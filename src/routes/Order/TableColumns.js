@@ -44,7 +44,12 @@ export default class TableList extends PureComponent {
   }
 
   componentDidMount() {
-    this.handleSearch();
+    let {dispatch, backpath} = this.props;
+    let type = backpath === 'Entrust' ? 0 : 12;
+    dispatch({
+      type: 'flyingpigList/getList',
+      payload: {p: 1, pc: 10, group_type: type},
+    });
   }
 
   handleTableChange(pagination) {
@@ -87,7 +92,7 @@ export default class TableList extends PureComponent {
 
   handleSearch() {
     const {dispatch, form, backpath} = this.props, {pagination, timeArr} = this.state;
-    if(!this.props.flyingpigList.double){
+    if (!this.props.flyingpigList.double) {
       form.validateFields((err, fieldsValue) => {
         if (!err) {
           const values = {
@@ -241,6 +246,7 @@ export default class TableList extends PureComponent {
   render() {
     const {flyingpigList: {loading, data: {data, option}}, backpath} = this.props;
     let Url = backpath === 'FlyingPig' ? '/order/flyingpig/detail/' : '/order/entrust/detail/';
+    let title_yyyymm = backpath === 'FlyingPig' ? '出发日期' : '出发日期（发布）';
     let columns = [
       {
         title: '订单号', dataIndex: 'id', render: (text, record) => {
@@ -259,7 +265,7 @@ export default class TableList extends PureComponent {
       {title: '出发城市', dataIndex: 'city_dep', width: '8%'},
       {title: '到达城市', dataIndex: 'city_arr', width: '8%'},
       {
-        title: '出发日期', dataIndex: 'dep_yyyymm', render: (text, record) => {
+        title: title_yyyymm, dataIndex: 'dep_yyyymm', render: (text, record) => {
           let date1 = String(text).substr(0, 4) || '', date2 = String(text).substr(4, 2) || '', day = '';
           switch (record.dep_dd) {
             case 0:
