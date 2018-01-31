@@ -24,6 +24,7 @@ class page extends Component {
     };
   }
   componentDidMount() {
+    this.addPost('h5Add/detailsadd', {});
     if (this.props.location.state) {
       this.addPost('h5Add/addtailAirLine', {id: this.props.location.state.data.id});
       this.setState({

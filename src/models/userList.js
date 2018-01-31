@@ -36,6 +36,7 @@ export default {
         payload: false,
       });
       const time2 = Date.now();
+      const time = time2 -time1
       if (!(time2 - time1 > 2000)) {
         yield call(fakequest, 1000);
       }

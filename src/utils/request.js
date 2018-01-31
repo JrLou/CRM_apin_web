@@ -79,7 +79,7 @@ export function checkCode(json) {
   }
   return json
 }
-const _fetch = (requestPromise, timeout=5000) => {
+const _fetch = (requestPromise, timeout=30000) => {
   let timeoutAction = null;
   const fun = ()=>{
     notification.error({

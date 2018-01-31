@@ -68,6 +68,9 @@ class AddForm extends Component {
       list[0].FlightArrtimePlanDate = moment(list[0].departure_start + list[0].time_arr).format("YYYY-MM-DD HH:mm:ss")
       list[0].FlightArr = list[0].city_arr_name
       list[0].FlightArrAirport = list[0].airport_arr_name
+      list[0].FlightDepcode = list[0].city_dep_code
+      list[0].FlightArrcode = list[0].city_arr_code
+      list[0].FlightCompany = list[0].flight_company
       flightdata.flightTimeWill = moment(list[0].departure_start)
       this.setState({
         flightstockData: [list[0]],
@@ -226,6 +229,7 @@ class AddForm extends Component {
     let {linenubber, flightdata, flightstockData, h5Add, numbering, code} = this.state
     ole.FlightDeptimePlanDate = moment(flightdata.flightTimeWill.format('YYYY-MM-DD') + " " + ole.FlightDeptimePlanDate + ':00')
     ole.FlightArrtimePlanDate = moment(flightdata.flightTimeWill.format('YYYY-MM-DD') + " " + ole.FlightArrtimePlanDate + ':00')
+    this.props.form.setFieldsValue({['names-' + numbering]: ole.FlightNo});
     h5Add.visible = false;
     flightstockData[numbering] = ole
     linenubber[numbering] = numbering

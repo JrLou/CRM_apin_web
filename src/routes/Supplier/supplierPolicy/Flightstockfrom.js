@@ -139,9 +139,11 @@ class AddForm extends Component {
             message.warning('请查询并选择出发航线');
             return
           }
-          if (values.clearDays <= values.ticketDays) {
-            message.warning('该天数必须大于出票时间');
-            return
+          if (values.clearDays != 0 && values.ticketDays != 0) {
+            if (values.clearDays <= values.ticketDays) {
+              message.warning('该天数必须大于出票时间');
+              return
+            }
           }
         }
         for (let i = 0; i < flightstockData.length; i++) {
@@ -217,23 +219,29 @@ class AddForm extends Component {
         message.warning('请先选择出发航班日期');
         return;
       }
-      this.props.addPost('flightstockAdd/getsearchAirportesaddes', {},);
-      flightstockData[ole] = {}
-      linenubber[ole] = null
-      flightdata.selectedWeekGroup[ole] = ''
-      this.setState({
-        flightstockData: flightstockData,
-        flightNumbering: '航班号为：' + value + '的所有的航班',
-        flightdata: flightdata,
-        numbering: ole
-      });
-      this.props.addPost('flightstockAdd/addAirLine', {
-        endDate: moment(data.flightTimeWill[1]).format("YYYY-MM-DD"),
-        fnum: value,
-        startDate: moment(data.flightTimeWill[0]).format("YYYY-MM-DD"),
-        numbering: ole,
-      },);
 
+      let reg = /^([a-zA-Z][0-9a-zA-Z]|[0-9a-zA-Z][a-zA-Z])([0-9]{1,4})$/;
+      if (reg.test(value)) {
+        this.props.addPost('flightstockAdd/getsearchAirportesaddes', {},);
+        flightstockData[ole] = {}
+        linenubber[ole] = null
+        flightdata.selectedWeekGroup[ole] = ''
+        this.setState({
+          flightstockData: flightstockData,
+          flightNumbering: '航班号为：' + value + '的所有的航班',
+          flightdata: flightdata,
+          numbering: ole
+        });
+        this.props.addPost('flightstockAdd/addAirLine', {
+          endDate: moment(data.flightTimeWill[1]).format("YYYY-MM-DD"),
+          fnum: value,
+          startDate: moment(data.flightTimeWill[0]).format("YYYY-MM-DD"),
+          numbering: ole,
+        },);
+      } else {
+        message.warning('请填写正确航班号');
+        return;
+      }
     }
   }
 
@@ -271,6 +279,7 @@ class AddForm extends Component {
     flightstockAdd.visible = false;
     ole.FlightDeptimePlanDate = moment(flightdata.flightTimeWill[0].format('YYYY-MM-DD') + " " + ole.FlightDeptimePlanDate + ':00')
     ole.FlightArrtimePlanDate = moment(Algorithm._caculateNewDatePartSingle(flightdata.flightTimeWill[0].format('YYYY-MM-DD'), flightdata.days - 1) + " " + ole.FlightArrtimePlanDate + ':00')
+    this.props.form.setFieldsValue({['names-' + numbering]: ole.FlightNo});
     flightstockData[numbering] = ole
     flightdata.selectedWeekGroup[numbering] = Algorithm.toogleToWeekStr(ole.flights)
     linenubber[numbering] = numbering
@@ -386,9 +395,11 @@ class AddForm extends Component {
         });
         break;
       case 6:
-        if (parseFloat(e.target.value) <= data.chupiaodays) {
-          message.warning('该天数必须大于出票时间');
-          return;
+        if (e.target.value != 0) {
+          if (parseFloat(e.target.value) <= data.chupiaodays) {
+            message.warning('该天数必须大于出票时间');
+            return;
+          }
         }
         break;
       case 7:
@@ -736,7 +747,7 @@ class AddForm extends Component {
                           message: requiredText,
                         }, {
                           pattern: /^[1-9](\.\d{1})?$|^(10)(\.0)?$|^[0](\.[1-9]{1}){1}$/,
-                          message: "折扣需大于0，且最多一位小数"
+                          message: "最多输入一位小数，范围从0.1至10折"
                         }, {
                           max: 6,
                           message: "最多6位"
@@ -759,7 +770,7 @@ class AddForm extends Component {
                           rules: [{
                             required: true,
                             message: requiredText,
-                          }, , {pattern: /^[1-9]\d{0,4}$/, message: "请填写最多6位的正整数"}],
+                          }, , {pattern: /^[1-9]\d{0,5}$/, message: "请填写最多6位的正整数"}],
                           initialValue: flightstockEdit.details.length > 0 ? flightstockEdit.details[0].free_bag : '',
 
                         })
@@ -782,7 +793,7 @@ class AddForm extends Component {
                           rules: [{
                             required: true,
                             message: requiredText
-                          }, , {pattern: /^[1-9]\d{0,4}$/, message: "请填写小于6位的正整数"}],
+                          }, , {pattern: /^[1-9]\d{0,5}$/, message: "请填写小于6位的正整数"}],
                           initialValue: flightstockEdit.details.length > 0 ? flightstockEdit.details[0].weight_limit : '',
                         })
                         (< Input placeholder="请填写"
@@ -808,7 +819,7 @@ class AddForm extends Component {
                           rules: [{
                             required: true,
                             message: requiredText
-                          }, {pattern: /^[1-9]\d{0,4}$/, message: "请填写小于6位的正整数"}],
+                          }, {pattern: /^[0-9]\d{0,5}$/, message: "请填写小于6位的正整数"}],
                           initialValue: flightstockEdit.details.length > 0 ? flightstockEdit.details[0].ticket_days : '',
                         })
                         (< Input placeholder="请填写"
@@ -834,7 +845,7 @@ class AddForm extends Component {
                           rules: [{
                             required: true,
                             message: requiredText
-                          }, {pattern: /^[1-9]\d{0,4}$/, message: "请填写小于6位的正整数"},
+                          }, {pattern: /^[0-9]\d{0,5}$/, message: "请填写小于6位的正整数"},
                           ],
                           initialValue: flightstockEdit.details.length > 0 ? flightstockEdit.details[0].clear_days : '',
                         })

@@ -32,6 +32,18 @@ export default class SearchFlight extends PureComponent {
       orderList = this.props.location.state.orderList;
     }
   }
+  componentDidMount() {
+    // 清空下卡片
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'push/resetCard',
+      payload: true,
+    });
+    dispatch({
+      type: 'push/resetCard',
+      payload: false,
+    });
+  }
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
