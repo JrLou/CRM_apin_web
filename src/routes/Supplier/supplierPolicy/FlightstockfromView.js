@@ -64,7 +64,7 @@ class AddForm extends Component {
         list[i].FlightDepAirport = list[i].city_arr_name
         list[i].FlightDepcode = list[i].airport_dep_code
         list[i].FlightDeptimePlanDate = moment(list[i].departure_start + list[i].time_dep).format("YYYY-MM-DD HH:mm:ss")
-        list[i].FlightArrtimePlanDate = moment(list[i].departure_start +list[i].time_arr).format("YYYY-MM-DD HH:mm:ss")
+        list[i].FlightArrtimePlanDate = moment(list[i].departure_start + list[i].time_arr).format("YYYY-MM-DD HH:mm:ss")
         list[i].FlightArrAirport = list[i].city_arr_name
         list[i].FlightArrcode = list[i].airport_arr_name
         list[i].FlightCompany = list[i].flight_company
@@ -109,6 +109,7 @@ class AddForm extends Component {
     });
     this.addDate(2);
   }
+
   showcasing(ole) {
     let data = this.state.flightstockData[ole];
     return <Col style={{width: '100%', marginTop: '10px'}} span={24}>
@@ -123,6 +124,7 @@ class AddForm extends Component {
       </div>
     </Col>
   }
+
   operating(ole, e, event) {
     let data = this.state.flightdata;
     switch (ole) {
@@ -134,6 +136,7 @@ class AddForm extends Component {
       flightdata: data,
     })
   }
+
   weekSelect(week, ole) {
     let data = this.state.flightdata;
     data.selectedWeekGroup[ole] = Algorithm.toogleToWeekStr(week);
@@ -327,7 +330,7 @@ class AddForm extends Component {
                           max: 6,
                           message: "最多6位"
                         }],
-                        initialValue: flightstockView.details.length > 0 ? flightstockView.details[0].settlement_price.toString() : '',
+                        initialValue: flightstockView.details.length > 0 ? (flightstockView.details[0].settlement_price / 100).toString() : '',
 
                       })
                       (< Input placeholder="请填写"
@@ -353,7 +356,7 @@ class AddForm extends Component {
                           max: 6,
                           message: "最多6位"
                         }],
-                        initialValue: flightstockView.details.length > 0 ? flightstockView.details[0].sell_price.toString() : '',
+                        initialValue: flightstockView.details.length > 0 ? (flightstockView.details[0].sell_price / 100).toString() : '',
                       })
                       (< Input placeholder="请填写"
                                disabled={true}
