@@ -38,8 +38,7 @@ export default class TableList extends PureComponent {
 
   componentDidMount() {
     //加载第一页
-    const {dispatch} = this.props;
-    dispatch({
+    this.props.dispatch({
       type: 'flightstock/fetch',
       payload: {
         p: 1,
@@ -59,7 +58,7 @@ export default class TableList extends PureComponent {
   }
 
   handleFormReset() {
-    if(this.props.flightstock.double){
+    if (this.props.flightstock.double) {
       return null
     }
     this.props.form.resetFields();
@@ -83,7 +82,7 @@ export default class TableList extends PureComponent {
     this.setState({
       isLoadingSearch: true
     });
-    if(this.props.flightstock.double){
+    if (this.props.flightstock.double) {
       return null
     }
     this.props.form.validateFields((err, values) => {
@@ -266,7 +265,7 @@ export default class TableList extends PureComponent {
         dataIndex: 'create_time',
         key: 'create_time',
         render: (text, data) => {
-          return moment(data.create_time).format("YYYY-MM-DD:hh:mm:ss");
+          return moment(data.create_time).format("YYYY-MM-DD hh:mm:ss");
         }
       }, {
         title: '操作内容',
@@ -415,9 +414,9 @@ export default class TableList extends PureComponent {
               onCancel={this.companyname.bind(this, 1)}
               width={'600px'}
             >
-              <Table  pagination={false}
-                      rowKey={'id'}
-                      dataSource={datalis ? datalis : []} columns={columns}/>
+              <Table pagination={false}
+                     rowKey={'id'}
+                     dataSource={datalis ? datalis : []} columns={columns}/>
             </Modal>
           </div>
         </Card>
