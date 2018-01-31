@@ -96,7 +96,7 @@ class HorizontalLoginForm extends Component {
                 style={{color: 'red'}}>*</span>航空公司:</p>
             </Col>
           </Col>
-          <Col md={18} sm={24} style={{marginLeft: '-30px'}}>
+          <Col md={18} sm={24} style={{marginLeft: '-10px'}}>
             <Col md={24} sm={24}>
               <FormItem
                 style={{marginBottom: "15px"}}
@@ -161,7 +161,7 @@ class HorizontalLoginForm extends Component {
             </Col>
             }
           </Col>
-          <Col md={18} sm={24} style={{marginLeft: '-30px'}}>
+          <Col md={18} sm={24} style={{marginLeft: '-10px'}}>
             <Col md={24} sm={24}>
               <Col md={12} sm={24}>
                 <FormItem style={{marginBottom: "20px",}}>
@@ -198,7 +198,7 @@ class HorizontalLoginForm extends Component {
                       message: requiredText
                     }, {pattern: /^[a-zA-Z]{3}$/, message: "三字码格式错误"}],
                   })
-                  (<Input onBlur={this._searchPort.bind(this, 0, getsearchCity, 'FlightDep')}
+                  (<Input onBlur={this._searchPort.bind(this, 0, getsearchCity, 'FlightDepcode')}
                           placeholder="请输入城市" style={{marginLeft: '-22px', width: '147px'}}/>)}
                 </FormItem>
               </Col>
@@ -212,7 +212,7 @@ class HorizontalLoginForm extends Component {
                       message: requiredText
                     }, {pattern: /^[a-zA-Z]{3}$/, message: "三字码格式错误"}],
                   })
-                  (<Input onBlur={this._searchPort.bind(this, 1, getsearchCity, 'FlightArr')}
+                  (<Input onBlur={this._searchPort.bind(this, 1, getsearchCity, 'FlightArrcode')}
                           placeholder="请输入城市" style={{width: '147px'}}/>)}
                 </FormItem>
               </Col>
@@ -227,7 +227,7 @@ class HorizontalLoginForm extends Component {
                     }, {max: 3, message: '只能输入三位'}, {pattern: /^[a-zA-Z]{3}$/, message: "请输入正确三字码"}],
                   })
                   (<Input placeholder="机场三字码"
-                          onBlur={this._searchPort.bind(this, 2, getsearchAirport, 'FlightDepcode')}
+                          onBlur={this._searchPort.bind(this, 2, getsearchAirport, 'Depcode')}
                           style={{marginLeft: '-22px', width: '147px'}}/>)}
                 </FormItem>
               </Col>
@@ -242,7 +242,7 @@ class HorizontalLoginForm extends Component {
                     }, {max: 3, message: '只能输入三位'}, {pattern: /^[a-zA-Z]{3}$/, message: "请输入正确三字码"}],
                   })
                   (<Input placeholder="机场三字码"
-                          onBlur={this._searchPort.bind(this, 3, getsearchAirport, 'FlightArrcode')}
+                          onBlur={this._searchPort.bind(this, 3, getsearchAirport, 'Arrcode')}
                           style={{width: '147px'}}/>)}
                 </FormItem>
               </Col>

@@ -220,7 +220,7 @@ class AddForm extends Component {
         return;
       }
 
-      let reg =/^([a-zA-Z][0-9a-zA-Z]|[0-9a-zA-Z][a-zA-Z])([0-9]{1,4})$/;
+      let reg = /^([a-zA-Z][0-9a-zA-Z]|[0-9a-zA-Z][a-zA-Z])([0-9]{1,4})$/;
       if (reg.test(value)) {
         this.props.addPost('flightstockAdd/getsearchAirportesaddes', {},);
         flightstockData[ole] = {}
@@ -279,7 +279,7 @@ class AddForm extends Component {
     flightstockAdd.visible = false;
     ole.FlightDeptimePlanDate = moment(flightdata.flightTimeWill[0].format('YYYY-MM-DD') + " " + ole.FlightDeptimePlanDate + ':00')
     ole.FlightArrtimePlanDate = moment(Algorithm._caculateNewDatePartSingle(flightdata.flightTimeWill[0].format('YYYY-MM-DD'), flightdata.days - 1) + " " + ole.FlightArrtimePlanDate + ':00')
-    this.props.form.getFieldDecorator('names-' + numbering, {initialValue: ole.FlightNo});
+    this.props.form.setFieldsValue({['names-' + numbering]: ole.FlightNo});
     flightstockData[numbering] = ole
     flightdata.selectedWeekGroup[numbering] = Algorithm.toogleToWeekStr(ole.flights)
     linenubber[numbering] = numbering
