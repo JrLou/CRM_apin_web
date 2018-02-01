@@ -164,9 +164,19 @@ class AddForm extends Component {
     const {flightstockView} = this.state
     const plainOptionsb = ['硬切', '代销'];
     const requiredText = "请填写此选项"
+    // if (flightstockView && flightstockView.details.length > 0) {
+    //   for (let i = 0; i < flightstockView.details.length; i++) {
+    //     getFieldDecorator('names-' + i, {initialValue: flightstockView.details[i].flight_no});
+    //   }
+    // }
     if (flightstockView && flightstockView.details.length > 0) {
       for (let i = 0; i < flightstockView.details.length; i++) {
-        getFieldDecorator('names-' + i, {initialValue: flightstockView.details[i].flight_no});
+        if (flightstockView.details[i].trip_index == i) {
+          getFieldDecorator('names-' + flightstockView.details[i].trip_index, {initialValue: flightstockView.details[flightstockView.details[i].trip_index].flight_no});
+        } else {
+          getFieldDecorator('names-0', {initialValue: flightstockView.details[1].flight_no});
+          getFieldDecorator('names-1', {initialValue: flightstockView.details[0].flight_no});
+        }
       }
     }
     getFieldDecorator('keys', {initialValue: []});
