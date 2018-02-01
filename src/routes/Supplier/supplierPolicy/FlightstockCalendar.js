@@ -499,6 +499,7 @@ class page extends Component {
             addPost={this.addPost.bind(this)}
             upFile={this.upLoadFile.bind(this)}
             visiblees={this.visiblees.bind(this)}
+
           />
 
         </Modal>
@@ -701,6 +702,7 @@ class BulkImportForm extends Component {
 
       if (obj.file.response && obj.file.response.code >= 1) {
         message.success('操作成功')
+        this.props.dateGetReturn();
         this.props.visiblees();
         console.log(obj)
         console.log(this.props)
