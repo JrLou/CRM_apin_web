@@ -16,7 +16,7 @@ export default {
     ],
 
     schemeInfo: [
-      { supplierName: '', adult_unitprice: '', child_unitprice: '', baby_unitprice: '', flight: '' }
+      { supplierName: '', adultUnitprice: '', childUnitprice: '', babyUnitprice: '', flight: '' }
     ],
     originalPlans: [],
     orderDetail: {},
@@ -217,7 +217,7 @@ export default {
       return {
         ...state,
         orderDetail: action.payload.data,
-        schemeInfo: action.payload.data.plans.length > 0 ? action.payload.data.plans : [{ supplierName: '', adult_unitprice: '', child_unitprice: '', baby_unitprice: '', flight: '' }],
+        schemeInfo: action.payload.data.plans.length > 0 ? action.payload.data.plans : [{ supplierName: '', adultUnitprice: '', childUnitprice: '', babyUnitprice: '', flight: '' }],
         changeInfo: newArr,
         currentOrder: action.payload.curId,
         originalPlans: action.payload.data.plans
@@ -253,7 +253,7 @@ export default {
       };
     },
     addOneScheme(state, action) {
-      state.schemeInfo.push({ supplierName: '', adult_unitprice: '', child_unitprice: '', baby_unitprice: '', flight: '', orderId: action.payload });
+      state.schemeInfo.push({ supplierName: '', adultUnitprice: '', childUnitprice: '', babyUnitprice: '', flight: '', orderId: action.payload });
       let newSchemeInfo = state.schemeInfo;
       return {
         ...state,
@@ -298,7 +298,7 @@ export default {
     resetPlansAndEndorse(state, action) {
       return {
         ...state,
-        schemeInfo: [{ supplierName: '', adult_unitprice: '', child_unitprice: '', baby_unitprice: '', flight: '' }],
+        schemeInfo: [{ supplierName: '', adultUnitprice: '', childUnitprice: '', babyUnitprice: '', flight: '' }],
         changeInfo: [],
       };
     },

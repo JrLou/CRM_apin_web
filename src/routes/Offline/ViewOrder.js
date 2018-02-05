@@ -37,6 +37,7 @@ export default class ViewOrder extends PureComponent {
         let changedDetail = orderDetail;
         changedDetail = changedDetail.order ? changedDetail.order : {};
         changedDetail = this._toMoment(changedDetail, ['arrDate', 'depDate', 'inquiryDate', 'printDate']);
+        changedDetail.records = orderDetail.records;
         return (
             <PageHeaderLayout>
                 <AddorderForm isView={true} detail={changedDetail} id={this.par} readOnly={true} />

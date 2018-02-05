@@ -138,15 +138,16 @@ export default class OfflineList extends PureComponent {
         </Row>
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
-            <FormItem label="是否出票">
-              {getFieldDecorator('isPrint', {
-                rules: [{ max: 32, message: "长度不超过32" }],
-                initialValue: ''
+            <FormItem label="订单状态">
+              {getFieldDecorator('ticketStatus', {
+                rules: [],
+                initialValue: '0'
               })(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
+                <Select placeholder="请选择" style={{ width: '100%' }} >
                   <Option value="">全部</Option>
-                  <Option value="1">是</Option>
-                  <Option value="0">否</Option>
+                  <Option value="1">已出票</Option>
+                  <Option value="0">等待</Option>
+                  <Option value="2">失败</Option>
                 </Select>
                 )}
             </FormItem>
@@ -306,8 +307,12 @@ export default class OfflineList extends PureComponent {
         dataIndex: 'numbers'
       },
       {
-        title: '是否出票',
-        dataIndex: 'isPrintStr'
+        title: '订单状态',
+        dataIndex: 'ticketStatus',// 0 等待 1已出票  2 拒绝
+        render: (text, record) => {
+          let inner_text = ['等待', '已出票', '失败'];
+          return inner_text[text];
+        }
       },
       {
         title: '出票日期',
@@ -336,7 +341,7 @@ export default class OfflineList extends PureComponent {
           return <div className={styles.handleBtn}>
             <Link to={"/offline/order/ViewOrder/" + record.id}><a href="javascript:;" type='primary'>查看</a></Link>
             <Link to={"/offline/order/EditOrder/" + record.id}><a href="javascript:;" type='primary'>修改</a></Link>
-            <a href="javascript:;" type='primary' disabled={!isLeader} onClick={this.delOrder.bind(this, record.id)}>删除</a>
+            {isLeader ? <a href="javascript:;" type='primary' onClick={this.delOrder.bind(this, record.id)}>删除</a> : null}
           </div>
         }
       },

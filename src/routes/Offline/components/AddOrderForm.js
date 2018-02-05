@@ -98,54 +98,6 @@ export default class AddOrderForm extends Component {
             </FormItem>
           </Col>
           <Col span={8}>
-            <FormItem label="成人结算价"  {...formItemLayout} className='specialLabel'>
-              {getFieldDecorator('adult_unitprice' + k, {
-                rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
-                initialValue: v.adult_unitprice
-              })(
-                <Input
-                  disabled={readOnly}
-                  style={{ width: '50%', marginRight: '5px' }}
-                  onBlur={this.changeCaulator}
-                  onChange={this.saveScheme.bind(null, k, 'adult_unitprice')} />
-
-                )}
-              <span>元/人</span>
-            </FormItem>
-          </Col>
-          <Col span={8}>
-            <FormItem label="儿童结算价"  {...formItemLayout} className='specialLabel'>
-              {getFieldDecorator('child_unitprice' + k, {
-                rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
-                initialValue: v.child_unitprice
-              })(
-                <Input
-                  disabled={readOnly}
-                  style={{ width: '50%', marginRight: '5px' }}
-                  onBlur={this.changeCaulator}
-                  onChange={this.saveScheme.bind(null, k, 'child_unitprice')} />
-
-                )}
-              <span>元/人</span>
-            </FormItem>
-          </Col>
-          <Col span={8}>
-            <FormItem label="婴儿结算价"  {...formItemLayout} className='specialLabel'>
-              {getFieldDecorator('baby_unitprice' + k, {
-                rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
-                initialValue: v.baby_unitprice
-              })(
-                <Input
-                  disabled={readOnly}
-                  style={{ width: '50%', marginRight: '5px' }}
-                  onBlur={this.changeCaulator}
-                  onChange={this.saveScheme.bind(null, k, 'baby_unitprice')} />
-
-                )}
-              <span>元/人</span>
-            </FormItem>
-          </Col>
-          <Col span={8}>
             <FormItem label="出行航班"  {...formItemLayout}>
               {getFieldDecorator('flight' + k, {
                 rules: [{ max: 200, message: "最多输入200字" }],
@@ -155,6 +107,57 @@ export default class AddOrderForm extends Component {
                   disabled={readOnly}
                   onChange={this.saveScheme.bind(null, k, 'flight')} />
                 )}
+            </FormItem>
+          </Col>
+        </Row>
+        <Row gutter={20}>
+          <Col span={6}>
+            <FormItem label="结算价"  {...formItemLayout} className='specialLabel'>
+              <span style={{ marginRight: '5px' }}>成人:</span>
+              {getFieldDecorator('adultUnitprice' + k, {
+                rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
+                initialValue: v.adultUnitprice
+              })(
+                <Input
+                  disabled={readOnly}
+                  style={{ width: '50%', marginRight: '5px' }}
+                  onBlur={this.changeCaulator.bind(null, /^[1-9][0-9]{0,4}$/)}
+                  onChange={this.saveScheme.bind(null, k, 'adultUnitprice')} />
+
+                )}
+              <span>元/人</span>
+            </FormItem>
+          </Col>
+          <Col span={6}>
+            <FormItem label="儿童"  {...formItemLayout} className='specialLabel'>
+              {getFieldDecorator('childUnitprice' + k, {
+                rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
+                initialValue: v.childUnitprice
+              })(
+                <Input
+                  disabled={readOnly}
+                  style={{ width: '50%', marginRight: '5px' }}
+                  onBlur={this.changeCaulator.bind(null, /^[1-9][0-9]{0,4}$/)}
+                  onChange={this.saveScheme.bind(null, k, 'childUnitprice')} />
+
+                )}
+              <span>元/人</span>
+            </FormItem>
+          </Col>
+          <Col span={6}>
+            <FormItem label="婴儿"  {...formItemLayout} className='specialLabel'>
+              {getFieldDecorator('babyUnitprice' + k, {
+                rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
+                initialValue: v.babyUnitprice
+              })(
+                <Input
+                  disabled={readOnly}
+                  style={{ width: '50%', marginRight: '5px' }}
+                  onBlur={this.changeCaulator.bind(null, /^[1-9][0-9]{0,4}$/)}
+                  onChange={this.saveScheme.bind(null, k, 'babyUnitprice')} />
+
+                )}
+              <span>元/人</span>
             </FormItem>
           </Col>
           <Col span={3}>
@@ -218,9 +221,9 @@ export default class AddOrderForm extends Component {
       this.props.form.setFieldsValue(
         {
           ['supplierName' + k]: v.supplierName,
-          ['adult_unitprice' + k]: v.adult_unitprice,
-          ['child_unitprice' + k]: v.child_unitprice,
-          ['baby_unitprice' + k]: v.baby_unitprice,
+          ['adultUnitprice' + k]: v.adultUnitprice,
+          ['childUnitprice' + k]: v.childUnitprice,
+          ['babyUnitprice' + k]: v.babyUnitprice,
           ['flight' + k]: v.flight,
           ['id' + k]: v.id,
           ['orderId' + k]: v.orderId,
@@ -434,7 +437,7 @@ export default class AddOrderForm extends Component {
     form.validateFields((err, values) => {
       if (!err) {
         values = this._changeToDatestr(values, ['arrDate', 'depDate', 'inquiryDate', 'printDate'])
-        values = this._changePlanValues(values, ['supplierName', 'adult_unitprice', 'child_unitprice', 'baby_unitprice', 'flight', 'id', 'orderId', 'selected', 'charge'])
+        values = this._changePlanValues(values, ['supplierName', 'adultUnitprice', 'childUnitprice', 'babyUnitprice', 'flight', 'id', 'orderId', 'selected', 'charge'])
         values.isPayoff = values.isPayoff ? '1' : '0';
         values.isSendoff = values.isSendoff ? '1' : '0';
         console.log('将要提交的参数'); console.log(values);
@@ -460,10 +463,16 @@ export default class AddOrderForm extends Component {
       }
     });
   };
-  changeCaulator = (e) => {
-    // 如果是数字且方案已选择
+  changeCaulator = (reg, e) => {
+    // 判断输入不对就清空
+    if (!reg.test(e.target.value)) {
+      this.props.form.setFieldsValue({
+        [e.target.id]: ''
+      })
+    }
+    // 如果方案已选择  
     let index = this.props.form.getFieldValue('selected');
-    if (!isNaN(e.target.value) && (index === 0 || index)) {
+    if (index === 0 || index) {
       // 重新计算
       this.changeScheme(index)
     }
@@ -473,31 +482,70 @@ export default class AddOrderForm extends Component {
     // 人数  结算价  卖价;
     if (value !== '') {
       // 人数
-      let adultcounts = +this.props.form.getFieldValue('adult_count');
-      let childcounts = +this.props.form.getFieldValue('child_count');
-      let babycounts = +this.props.form.getFieldValue('baby_count');
+      let adultCounts = +(this.props.form.getFieldValue('adultCount') || 0);
+      let childCounts = +(this.props.form.getFieldValue('childCount') || 0);
+      let babyCounts = +(this.props.form.getFieldValue('babyCount') || 0);
       // 方案结算价
-      let adultPrice = +this.props.form.getFieldValue('adult_unitprice' + value);
-      let childPrice = +this.props.form.getFieldValue('child_unitprice' + value);
-      let babyPrice = +this.props.form.getFieldValue('baby_unitprice' + value);
+      let adultPrice = +(this.props.form.getFieldValue('adultUnitprice' + value) || 0);
+      let childPrice = +(this.props.form.getFieldValue('childUnitprice' + value) || 0);
+      let babyPrice = +(this.props.form.getFieldValue('babyUnitprice' + value) || 0);
       // 卖价
-      let adultSellPrice = +this.props.form.getFieldValue('adult_sell_price');
-      let childSellPrice = +this.props.form.getFieldValue('child_sell_price');
-      let babySellPrice = +this.props.form.getFieldValue('baby_sell_price');
+      let adultSellPrice = +(this.props.form.getFieldValue('adultSellPrice') || 0);
+      let childSellPrice = +(this.props.form.getFieldValue('childSellPrice') || 0);
+      let babySellPrice = +(this.props.form.getFieldValue('babySellPrice') || 0);
 
-      if (!counts || !finalPrice || !sellPrice) {
-        message.warning('请输入人数、方案结算价、卖价再选择')
+      if (!adultCounts || !adultPrice || !adultSellPrice) {
+        message.warning('请输入成人人数、成人方案结算价、成人卖价再选择')
         setTimeout(() => {
-          this.props.form.setFieldsValue({ selected: '' })
+          this.props.form.setFieldsValue({
+            selected: '',
+            settlePrice: '',
+            totalPrice: '',
+            profit: '',
+          })
+
         }, 100);
         return
-      } else {
-        this.props.form.setFieldsValue({
-          settlePrice: finalPrice * counts,
-          totalPrice: sellPrice * counts,
-          profit: (sellPrice - finalPrice) * counts
-        })
       }
+      if (childCounts) {
+        // && childPrice childSellPrice
+        if (!childPrice || !childSellPrice) {
+          message.warning('缺少儿童方案结算价或儿童卖价')
+          setTimeout(() => {
+            this.props.form.setFieldsValue({
+              selected: '',
+              settlePrice: '',
+              totalPrice: '',
+              profit: '',
+            })
+          }, 100);
+          return
+        }
+      }
+      if (babyCounts) {
+        // && childPrice childSellPrice
+        if (!babyPrice || !babySellPrice) {
+          message.warning('缺少婴儿方案结算价或婴儿卖价')
+          setTimeout(() => {
+            this.props.form.setFieldsValue({
+              selected: '',
+              settlePrice: '',
+              totalPrice: '',
+              profit: '',
+            })
+          }, 100);
+          return
+        }
+      }
+      let price = adultCounts * adultPrice + childCounts * childPrice + babyCounts * babyPrice;
+      let sellPrice = adultCounts * adultSellPrice + childCounts * childSellPrice + babyCounts * babySellPrice;
+      // 计算出三个价钱
+      this.props.form.setFieldsValue({
+        settlePrice: price,
+        totalPrice: sellPrice,
+        profit: sellPrice - price
+      })
+
       // 选择的方案要添加 selected
       dispatch({
         type: 'offline/changeSelected',
@@ -537,6 +585,7 @@ export default class AddOrderForm extends Component {
     }
 
   }
+
   render() {
     const { getFieldDecorator } = this.props.form;
     const formItemLayout = {
@@ -562,17 +611,31 @@ export default class AddOrderForm extends Component {
     let specialFlag;
     if (this.props.isView) {
       specialFlag = true;
-    } else if (detail.isPrint == 1 && !this.props.isLeader) {//已出票，不是领导
+    } else if (detail.ticketStatus == 1 && !this.props.isLeader) {//已出票，不是领导
       specialFlag = true
     }
-    let resonText;
-    if (detail.nodealReason) {
-      resonText = detail.nodealReason
-    } else if (detail.nodealReason === 0) {
-      resonText = 0
-    } else {
-      resonText = ''
-    }
+
+    const columns = [
+      {
+        title: '序号',
+        render: (text, record, index) => {
+          return index + 1
+        }
+      },
+
+      {
+        title: '操作人',
+        dataIndex: 'createUserName',
+      },
+      {
+        title: '操作日期',
+        dataIndex: 'createTime',
+      },
+      {
+        title: '内容',
+        dataIndex: 'record',
+      }
+    ]
 
     return (
       <div>
@@ -586,7 +649,7 @@ export default class AddOrderForm extends Component {
                       <div className={styles.btnGroup}>
                         <Button
                           type="primary"
-                          disabled={detail.isPrint !== 1}
+                          disabled={detail.ticketStatus !== 1}
                           onClick={this.handleModalVisible.bind(null, true)}
                         >新增退改</Button>
                       </div> : null
@@ -716,34 +779,35 @@ export default class AddOrderForm extends Component {
                   </Row>
                   <Row gutter={20}>
                     <Col span={8}>
-                      <FormItem label="成人人数"  {...formItemLayout}>
-                        {getFieldDecorator('adult_count', {
+                      <FormItem label="人数"  {...formItemLayout}>
+                        <span style={{ marginRight: '5px' }}>成人:</span>
+                        {getFieldDecorator('adultCount', {
                           rules: [{ pattern: /^[1-9][0-9]{0,2}$/, message: "请输入1-999的整数" }],
-                          initialValue: detail.adult_count
+                          initialValue: detail.adultCount
                         })(
-                          <Input onBlur={this.changeCaulator} disabled={readOnly} style={{ width: '50%', marginRight: '5px' }} />
+                          <Input onBlur={this.changeCaulator.bind(null, /^[1-9][0-9]{0,2}$/)} disabled={readOnly} style={{ width: '50%', marginRight: '5px' }} />
                           )}
                         <span>人</span>
                       </FormItem>
                     </Col>
                     <Col span={8}>
-                      <FormItem label="儿童人数"  {...formItemLayout}>
-                        {getFieldDecorator('child_count', {
-                          rules: [{ pattern: /^[1-9][0-9]{0,2}$/, message: "请输入1-999的整数" }],
-                          initialValue: detail.child_count || '0'
+                      <FormItem label="儿童"  {...formItemLayout}>
+                        {getFieldDecorator('childCount', {
+                          rules: [{ pattern: /^[0-9]{0,3}$/, message: "请输入0-999的整数" }],
+                          initialValue: detail.childCount || '0'
                         })(
-                          <Input onBlur={this.changeCaulator} disabled={readOnly} style={{ width: '50%', marginRight: '5px' }} />
+                          <Input onBlur={this.changeCaulator.bind(null, /^[0-9]{0,3}$/)} disabled={readOnly} style={{ width: '50%', marginRight: '5px' }} />
                           )}
                         <span>人</span>
                       </FormItem>
                     </Col>
                     <Col span={8}>
-                      <FormItem label="婴儿人数"  {...formItemLayout}>
-                        {getFieldDecorator('baby_count', {
-                          rules: [{ pattern: /^[1-9][0-9]{0,2}$/, message: "请输入1-999的整数" }],
-                          initialValue: detail.baby_count || '0'
+                      <FormItem label="婴儿"  {...formItemLayout}>
+                        {getFieldDecorator('babyCount', {
+                          rules: [{ pattern: /^[0-9]{0,3}$/, message: "请输入0-999的整数" }],
+                          initialValue: detail.babyCount || '0'
                         })(
-                          <Input onBlur={this.changeCaulator} disabled={readOnly} style={{ width: '50%', marginRight: '5px' }} />
+                          <Input onBlur={this.changeCaulator.bind(null, /^[0-9]{0,3}$/)} disabled={readOnly} style={{ width: '50%', marginRight: '5px' }} />
                           )}
                         <span>人</span>
                       </FormItem>
@@ -753,7 +817,7 @@ export default class AddOrderForm extends Component {
                   <div className={styles.schemeBox}>
                     {this.createScheme()}
                     <Row gutter={20}>
-                      <Col span={6} offset={16}>
+                      <Col span={6} offset={18}>
                         {schemeInfo.length == 3 ? null : <Button type='primary' disabled={readOnly} onClick={this.addScheme}>增加方案</Button>}
                       </Col>
                     </Row>
@@ -761,26 +825,26 @@ export default class AddOrderForm extends Component {
                   <Row gutter={20}>
                     <Col span={6}>
                       <FormItem label="" {...formItemLayout}>
-                        {getFieldDecorator('isPrint', {
+                        {getFieldDecorator('ticketStatus', {
                           rules: [{ required: true, message: "必填" }],
-                          initialValue: detail.isPrint || 0
+                          initialValue: detail.ticketStatus || 0
                         })(
                           <RadioGroup onChange={this.isShowTabs} disabled={readOnly}>
-                            <Radio value={0}>未出票</Radio>
+                            <Radio value={0}>等待</Radio>
+                            <Radio value={2}>失败</Radio>
                             <Radio value={1}>已出票</Radio>
                           </RadioGroup>
                           )}
                       </FormItem>
                     </Col>
-                    {this.props.form.getFieldValue('isPrint') == 0 ?
+                    {this.props.form.getFieldValue('ticketStatus') == 2 ?
                       <Col span={8}>
                         <FormItem label="原因" {...formItemLayout}>
                           {getFieldDecorator('nodealReason', {
                             rules: [],
-                            initialValue: resonText
+                            initialValue: detail.nodealReason || 0
                           })(
                             <Select placeholder="请选择" disabled={readOnly}>
-                              <Option value=''>请选择</Option>
                               <Option value={0}>比价询单采购意愿低</Option>
                               <Option value={1}>账期结算</Option>
                               <Option value={2}>跟踪周期较长待客人确认</Option>
@@ -800,7 +864,7 @@ export default class AddOrderForm extends Component {
               </Tabs>
             </Card>
           </div>
-          {this.props.form.getFieldValue('isPrint') == 1 ?
+          {this.props.form.getFieldValue('ticketStatus') == 1 ?
             <div className={styles.module}>
               <Card bordered={false}>
                 <Tabs type="card">
@@ -820,34 +884,35 @@ export default class AddOrderForm extends Component {
                     <Row gutter={20}>
 
                       <Col span={8}>
-                        <FormItem label="成人卖价" {...formItemLayout3}>
-                          {getFieldDecorator('adult_sell_price', {
+                        <FormItem label="卖价" {...formItemLayout3}>
+                          <span style={{ marginRight: '5px' }}>成人:</span>
+                          {getFieldDecorator('adultSellPrice', {
                             rules: [{ required: true, message: "必填" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
-                            initialValue: detail.adult_sell_price
+                            initialValue: detail.adultSellPrice
                           })(
-                            <Input onBlur={this.changeCaulator} disabled={readOnly} style={{ width: '70%', marginRight: "6px" }} />
+                            <Input onBlur={this.changeCaulator.bind(null, /^[1-9][0-9]{0,4}$/)} disabled={readOnly} style={{ width: '70%', marginRight: "6px" }} />
                             )}
                           <span>元/人</span>
                         </FormItem>
                       </Col>
                       <Col span={8}>
-                        <FormItem label="儿童卖价" {...formItemLayout3}>
-                          {getFieldDecorator('child_sell_price', {
-                            rules: [{ required: true, message: "必填" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
-                            initialValue: detail.child_sell_price
+                        <FormItem label="儿童" {...formItemLayout3}>
+                          {getFieldDecorator('childSellPrice', {
+                            rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
+                            initialValue: detail.childSellPrice
                           })(
-                            <Input onBlur={this.changeCaulator} disabled={readOnly} style={{ width: '70%', marginRight: "6px" }} />
+                            <Input onBlur={this.changeCaulator.bind(null, /^[1-9][0-9]{0,4}$/)} disabled={readOnly} style={{ width: '70%', marginRight: "6px" }} />
                             )}
                           <span>元/人</span>
                         </FormItem>
                       </Col>
                       <Col span={8}>
-                        <FormItem label="婴儿卖价" {...formItemLayout3}>
-                          {getFieldDecorator('baby_sell_price', {
-                            rules: [{ required: true, message: "必填" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
-                            initialValue: detail.baby_sell_price
+                        <FormItem label="婴儿" {...formItemLayout3}>
+                          {getFieldDecorator('babySellPrice', {
+                            rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
+                            initialValue: detail.babySellPrice
                           })(
-                            <Input onBlur={this.changeCaulator} disabled={readOnly} style={{ width: '70%', marginRight: "6px" }} />
+                            <Input onBlur={this.changeCaulator.bind(null, /^[1-9][0-9]{0,4}$/)} disabled={readOnly} style={{ width: '70%', marginRight: "6px" }} />
                             )}
                           <span>元/人</span>
                         </FormItem>
@@ -938,7 +1003,7 @@ export default class AddOrderForm extends Component {
                           })(
                             <Checkbox disabled={this.props.isView ? true : specialFlag && detail.isSendoff == 1}>
                               是
-                                                    </Checkbox>
+                            </Checkbox>
                             )}
                         </FormItem>
                       </Col>
@@ -969,18 +1034,45 @@ export default class AddOrderForm extends Component {
             </div>
             : null
           }
-          {changeInfo.length > 0 && detail.isPrint == 1 ?
+          {changeInfo.length > 0 && detail.ticketStatus == 1 ?
             <div className={styles.module}>
               <Card bordered={false}>
                 <Tabs type="card">
                   <TabPane tab="退改" key="1">
-                    {detail.isPrint == 1 && this.createChangeInfo()}
+                    {detail.ticketStatus == 1 && this.createChangeInfo()}
                   </TabPane>
                 </Tabs>
               </Card>
             </div>
             : null
           }
+          <div className={styles.module}>
+            <Card bordered={false}>
+              <Tabs type="card">
+                <TabPane tab="操作备注" key="1">
+                  {detail.records ?
+                    <FormItem label="记录" {...formItemLayout2}>
+                      <Table
+                        dataSource={detail.records}
+                        columns={columns}
+                        pagination={false}
+                        bordered={true}
+                        rowKey="id"
+                      />
+                    </FormItem>
+                    : null}
+                  <FormItem label="内容" {...formItemLayout2}>
+                    {getFieldDecorator('record', {
+                      rules: [{ max: 200, message: "最多输入200字" }],
+                      initialValue: detail.record
+                    })(
+                      <TextArea disabled={this.props.isView ? true : false} rows={4} />
+                      )}
+                  </FormItem>
+                </TabPane>
+              </Tabs>
+            </Card>
+          </div>
           <Card bordered={false}>
             <div style={{ textAlign: 'center' }}>
               {this.props.isView ?

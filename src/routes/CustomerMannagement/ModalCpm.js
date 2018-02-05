@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 import { connect } from "dva";
-import { Modal, Form, Input, Button, Spin } from "antd";
+import { Modal, Form, Input, Button, Spin, message } from "antd";
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -33,6 +33,7 @@ class AddEditModal extends PureComponent {
 
     form.validateFields((err, fieldsValue) => {
       if (err) return;
+      if (!fieldsValue.mobile && !fieldsValue.wxqq) { message.warning('微信/qq、电话号码请至少填一个'); return }
       const values = {
         ...fieldsValue,
       };
@@ -128,7 +129,7 @@ class AddEditModal extends PureComponent {
             {getFieldDecorator("address", {
               //【客户名称】支持中文、英文、数字，最多50个字符；
               initialValue: this.getInitData(modalData, "address"),
-              rules: [{ max: 100, message: "最长100位" }],
+              rules: [{ required: true, message: '请输入地址' }, { max: 100, message: "最长100位" }],
             })(<Input placeholder="请输入" />)}
           </FormItem>
           <FormItem {...formItemLayout} label="联系人:">
@@ -163,7 +164,7 @@ class AddEditModal extends PureComponent {
                   placeholder="请输入"
                   autosize={{ minRows: 2, maxRows: 10 }}
                 />
-              )}
+                )}
             </FormItem>
           )}
           <FormItem {...formTailLayout}>
