@@ -116,10 +116,11 @@ class BasicLayout extends React.PureComponent {
           collapsed={collapsed}
           location={location}
           dispatch={dispatch}
+
           // menus={this.props.menus}
           menus={this.props.env ? getMenuData() : this.props.menus}
         />
-        <Layout>
+        <Layout style={{marginLeft:collapsed?"80px":'246px'}}>
           <GlobalHeader
             currentUser={currentUser}
             collapsed={collapsed}
