@@ -117,7 +117,7 @@ class StandardTable extends PureComponent {
                     payload: { deleteItemId: record.id },
                   });
                 }}
-              >
+              > 
                 删除
               </Button>
             </div>
