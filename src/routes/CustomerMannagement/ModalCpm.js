@@ -229,7 +229,7 @@ class DeleteModal extends PureComponent {
     const {
       dispatch,
       formValues: searchFormValues,
-      customerMannagement: { showModal, modalConfirmLoading, deleteItemId },
+      customerMannagement: { showModal, modalConfirmLoading, deleteItemId, data: {data: dataList} },
       page,
     } = this.props;
     return (
@@ -252,6 +252,10 @@ class DeleteModal extends PureComponent {
                 type: "customerMannagement/fetchDelete",
                 payload: { id: deleteItemId },
                 succCB: () => {
+                  //添加条件，当不为第1页 && 仅为1条数据的的时候
+                  if (page.pageNum > 1 && dataList.length === 1) {
+                    page.pageNum -= 1;
+                  }
                   dispatch({
                     type: "customerMannagement/fetch",
                     payload: {
