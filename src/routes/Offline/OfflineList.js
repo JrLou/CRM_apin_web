@@ -74,6 +74,7 @@ export default class OfflineList extends PureComponent {
   delOrder(id) {
     let listParams = { ... this.searchValues, pageNum: this.page.page, pageSize: this.page.pageSize };
     const { dispatch } = this.props;
+    const { offline: { list } } = this.props;
     confirm({
       title: '注意',
       content: '你确定要删除本条订单吗？',
@@ -83,7 +84,7 @@ export default class OfflineList extends PureComponent {
       onOk: () => {
         dispatch({
           type: 'offline/delOrder',
-          payload: { id: id, listParams: listParams },
+          payload: { id: id, listParams: listParams, currentCount: list.data && list.data.length },
         });
         // 请求数据
         // this.getData()
@@ -197,7 +198,7 @@ export default class OfflineList extends PureComponent {
             <FormItem label="询价日期">
               {getFieldDecorator('inquiryDate', {
               })(
-                <RangePicker allowClear={false} />
+                <RangePicker />
                 )}
             </FormItem>
           </Col>
@@ -205,7 +206,7 @@ export default class OfflineList extends PureComponent {
             <FormItem label="出票日期">
               {getFieldDecorator('printDate', {
               })(
-                <RangePicker allowClear={false} />
+                <RangePicker />
                 )}
             </FormItem>
           </Col>
@@ -213,7 +214,7 @@ export default class OfflineList extends PureComponent {
             <FormItem label="退改日期">
               {getFieldDecorator('endorseDate', {
               })(
-                <RangePicker allowClear={false} />
+                <RangePicker />
                 )}
             </FormItem>
           </Col>

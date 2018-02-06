@@ -33,7 +33,7 @@ class AddEditModal extends PureComponent {
 
     form.validateFields((err, fieldsValue) => {
       if (err) return;
-      if (!fieldsValue.mobile && !fieldsValue.wxqq) { message.warning('微信/qq、电话号码请至少填一个'); return }
+      if (!fieldsValue.mobile && !fieldsValue.wxqq) { message.warning('微信/QQ、电话号码请至少填一个'); return }
       const values = {
         ...fieldsValue,
       };
