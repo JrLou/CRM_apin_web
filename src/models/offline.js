@@ -67,6 +67,10 @@ export default {
         message.success('操作成功');
         // 重获数据
         let params = payload.listParams;
+        // 判断当前页是否只有一条
+        if (payload.currentCount === 1 && params.pageNum !== 1) {
+          params.pageNum = params.pageNum - 1;
+        }
         yield put({
           type: 'fetch',
           payload: params,

@@ -215,7 +215,7 @@ export const getRouterData = (app) => {
       component: dynamicWrapper(app, ['customerMannagement'], () => import('../routes/CustomerMannagement/CustomerMannagement.js')),
     },
     '/offline/supporterMannagement': {
-      name: '客户（旅行社）管理',
+      name: '供应商管理',
       component: dynamicWrapper(app, ['customerMannagement'], () => import('../routes/SupporterMannagement/SupporterMannagement.js')),
     },
   };
