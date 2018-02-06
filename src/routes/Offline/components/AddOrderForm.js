@@ -76,6 +76,8 @@ export default class AddOrderForm extends Component {
       labelCol: { span: 6 },
       wrapperCol: { span: 16 },
     };
+    const child = +this.props.form.getFieldValue('childCount');
+    const baby = +this.props.form.getFieldValue('babyCount');
     const { offline: { usernameData, supplierData, schemeInfo } } = this.props;
     let schemes = schemeInfo.map((v, k) => {
       return (<div key={'scheme' + k} className={styles.schemeContainer}>
@@ -131,7 +133,7 @@ export default class AddOrderForm extends Component {
           <Col span={6}>
             <FormItem label="儿童"  {...formItemLayout} className='specialLabel'>
               {getFieldDecorator('childUnitprice' + k, {
-                rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
+                rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }, { required: child, message: '必填' }],
                 initialValue: v.childUnitprice
               })(
                 <Input
@@ -147,7 +149,7 @@ export default class AddOrderForm extends Component {
           <Col span={6}>
             <FormItem label="婴儿"  {...formItemLayout} className='specialLabel'>
               {getFieldDecorator('babyUnitprice' + k, {
-                rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
+                rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }, { required: baby, message: '必填' }],
                 initialValue: v.babyUnitprice
               })(
                 <Input
@@ -636,7 +638,8 @@ export default class AddOrderForm extends Component {
         dataIndex: 'record',
       }
     ]
-
+    const childRequire = +this.props.form.getFieldValue('childCount');
+    const babyRequire = +this.props.form.getFieldValue('babyCount');
     return (
       <div>
         <Form onSubmit={this.handleSearch} className={styles.addOrderForm}>
@@ -898,7 +901,7 @@ export default class AddOrderForm extends Component {
                       <Col span={8}>
                         <FormItem label="儿童" {...formItemLayout3}>
                           {getFieldDecorator('childSellPrice', {
-                            rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
+                            rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }, { required: childRequire, message: '必填' }],
                             initialValue: detail.childSellPrice
                           })(
                             <Input onBlur={this.changeCaulator.bind(null, /^[1-9][0-9]{0,4}$/)} disabled={readOnly} style={{ width: '70%', marginRight: "6px" }} />
@@ -909,7 +912,7 @@ export default class AddOrderForm extends Component {
                       <Col span={8}>
                         <FormItem label="婴儿" {...formItemLayout3}>
                           {getFieldDecorator('babySellPrice', {
-                            rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
+                            rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }, { required: babyRequire, message: '必填' }],
                             initialValue: detail.babySellPrice
                           })(
                             <Input onBlur={this.changeCaulator.bind(null, /^[1-9][0-9]{0,4}$/)} disabled={readOnly} style={{ width: '70%', marginRight: "6px" }} />
