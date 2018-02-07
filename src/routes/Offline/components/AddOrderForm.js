@@ -644,7 +644,7 @@ export default class AddOrderForm extends Component {
     const columns = [
       {
         title: '序号',
-        width: 50,
+        width: 100,
         render: (text, record, index) => {
           return index + 1
         }
