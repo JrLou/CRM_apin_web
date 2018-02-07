@@ -34,8 +34,8 @@ export default class OfflineList extends PureComponent {
   _handleDate(values, idsArr) {
     idsArr.map((v, k) => {
       if (values[v]) {
-        values[v + 'Start'] = moment(values[v][0]).format('YYYY-MM-DD');
-        values[v + 'End'] = moment(values[v][1]).format('YYYY-MM-DD');
+        values[v + 'Start'] = values[v][0] ? moment(values[v][0]).format('YYYY-MM-DD') : '';
+        values[v + 'End'] = values[v][1] ? moment(values[v][1]).format('YYYY-MM-DD') : '';
         delete values[v];
       }
     })
