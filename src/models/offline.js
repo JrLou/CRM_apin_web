@@ -63,7 +63,7 @@ export default {
         payload: true,
       });
       const response = yield call(delOrder, { id: payload.id });
-      if (response.code >= 1) {
+      if (response.code == 200) {
         message.success('操作成功');
         // 重获数据
         let params = payload.listParams;
@@ -88,7 +88,7 @@ export default {
         payload: true,
       });
       const response = yield call(addOrder, payload);
-      if (response.code >= 1) {
+      if (response.code == 200) {
         message.success('操作成功');
         yield put(routerRedux.push('/offline/order'));
       }
@@ -104,7 +104,7 @@ export default {
         payload: true,
       });
       const response = yield call(updateOrder, payload);
-      if (response.code >= 1) {
+      if (response.code == 200) {
         message.success('修改成功');
         yield put(routerRedux.push('/offline/order'));
       }
@@ -120,7 +120,7 @@ export default {
         payload: true,
       });
       const response = yield call(addChange, payload);
-      if (response.code >= 1) {
+      if (response.code == 200) {
         message.success('操作成功');
         yield put({
           type: 'getOneChange',
@@ -143,7 +143,7 @@ export default {
         payload: true,
       });
       const response = yield call(outExcel, payload);
-      if (response.code >= 1) {
+      if (response.code == 200) {
         message.success('操作成功');
         window.location.href = response.data.url;
       }
@@ -155,7 +155,7 @@ export default {
     },
     *searchCustomer({ payload }, { call, put }) {
       const response = yield call(searchCustomer, payload);
-      if (response.code >= 1) {
+      if (response.code == 200) {
         let nameArr = response.data.map((v, k) => {
           return v.name
         })
@@ -171,7 +171,7 @@ export default {
       let nameArr = response.data.map((v, k) => {
         return v.name;
       });
-      if (response && response.code >= 1) {
+      if (response && response.code == 200) {
         yield put({
           type: 'getSupplier',
           payload: { nameArr: nameArr, totalSupplier: response.data },
@@ -182,7 +182,7 @@ export default {
     *searchCity({ payload }, { call, put }) {
 
       const response = yield call(searchCity, { condition: payload.condition });
-      if (response && response.code >= 1) {
+      if (response && response.code == 200) {
         if (response.data.length > 10) { response.data = response.data.splice(0, 10); }
         let citiesArr = response.data.map((v, k) => {
           return v.cityName;
@@ -196,7 +196,7 @@ export default {
     *delOneSchemeWithid({ payload }, { call, put }) {
       const response = yield call(delSchemeWithid, { id: payload.id });
 
-      if (response && response.code >= 1) {
+      if (response && response.code == 200) {
         yield put({
           type: 'delOneScheme',
           payload: payload.index,

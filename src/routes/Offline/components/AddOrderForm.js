@@ -77,6 +77,7 @@ export default class AddOrderForm extends Component {
       labelCol: { span: 6 },
       wrapperCol: { span: 16 },
     };
+    const adult = +this.props.form.getFieldValue('adultCount');
     const child = +this.props.form.getFieldValue('childCount');
     const baby = +this.props.form.getFieldValue('babyCount');
     const { offline: { usernameData, supplierData, schemeInfo } } = this.props;
@@ -118,7 +119,7 @@ export default class AddOrderForm extends Component {
             <FormItem label="结算价"  {...formItemLayout} className='specialLabel'>
               <span style={{ marginRight: '5px' }}>成人:</span>
               {getFieldDecorator('adultUnitprice' + k, {
-                rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
+                rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }, { required: adult, message: '必填' }],
                 initialValue: v.adultUnitprice
               })(
                 <Input
@@ -665,6 +666,7 @@ export default class AddOrderForm extends Component {
         dataIndex: 'record',
       }
     ]
+    const adultRequire = +this.props.form.getFieldValue('adultCount');
     const childRequire = +this.props.form.getFieldValue('childCount');
     const babyRequire = +this.props.form.getFieldValue('babyCount');
     return (
@@ -776,10 +778,10 @@ export default class AddOrderForm extends Component {
                           initialValue: detail.type
                         })(
                           <Select placeholder="请选择" disabled={readOnly}>
-                            <Option value="0">国内散客</Option>
-                            <Option value="1">国内团队</Option>
-                            <Option value="2">国际散客</Option>
-                            <Option value="3">国际团队</Option>
+                            <Option value={0}>国内散客</Option>
+                            <Option value={1}>国内团队</Option>
+                            <Option value={2}>国际散客</Option>
+                            <Option value={3}>国际团队</Option>
                           </Select>
                           )}
                       </FormItem>
@@ -917,7 +919,7 @@ export default class AddOrderForm extends Component {
                         <FormItem label="卖价" {...formItemLayout3}>
                           <span style={{ marginRight: '5px' }}>成人:</span>
                           {getFieldDecorator('adultSellPrice', {
-                            rules: [{ required: true, message: "必填" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
+                            rules: [{ required: true, message: "必填" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }, { required: adultRequire, message: '必填' }],
                             initialValue: detail.adultSellPrice
                           })(
                             <Input onChange={this.changeCaulator.bind(null, /^[1-9][0-9]{0,4}$/)} disabled={readOnly} style={{ width: '70%', marginRight: "6px" }} />
