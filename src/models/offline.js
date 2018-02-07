@@ -293,6 +293,8 @@ export default {
       };
     },
     getSupplier(state, action) {
+      console.log('xxxxxxxxxxxxxxxxxxxxxxx');
+      console.log(action.payload.nameArr);
       return {
         ...state,
         supplierData: action.payload.nameArr,

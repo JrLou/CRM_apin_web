@@ -119,7 +119,7 @@ export default class AddOrderForm extends Component {
             <FormItem label="结算价"  {...formItemLayout} className='specialLabel'>
               <span style={{ marginRight: '5px' }}>成人:</span>
               {getFieldDecorator('adultUnitprice' + k, {
-                rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }, { required: adult, message: '必填' }],
+                rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
                 initialValue: v.adultUnitprice
               })(
                 <Input
@@ -135,7 +135,7 @@ export default class AddOrderForm extends Component {
           <Col span={6}>
             <FormItem label="儿童"  {...formItemLayout} className='specialLabel'>
               {getFieldDecorator('childUnitprice' + k, {
-                rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }, { required: child, message: '必填' }],
+                rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
                 initialValue: v.childUnitprice
               })(
                 <Input
@@ -151,7 +151,7 @@ export default class AddOrderForm extends Component {
           <Col span={6}>
             <FormItem label="婴儿"  {...formItemLayout} className='specialLabel'>
               {getFieldDecorator('babyUnitprice' + k, {
-                rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }, { required: baby, message: '必填' }],
+                rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
                 initialValue: v.babyUnitprice
               })(
                 <Input
@@ -723,6 +723,7 @@ export default class AddOrderForm extends Component {
                             dataSource={usernameData}
                             onBlur={this.onBlurCheck.bind(null, 'customerName', usernameData, '')} />
                           )}
+
                       </FormItem>
                       {getFieldDecorator('charge', {
                         initialValue: detail.charge
@@ -932,7 +933,7 @@ export default class AddOrderForm extends Component {
                       <Col span={8}>
                         <FormItem label="儿童" {...formItemLayout3}>
                           {getFieldDecorator('childSellPrice', {
-                            rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }, { required: childRequire, message: '必填' }],
+                            rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
                             initialValue: detail.childSellPrice
                           })(
                             <Input onChange={this.changeCaulator.bind(null, /^[1-9][0-9]{0,4}$/)} disabled={readOnly} style={{ width: '70%', marginRight: "6px" }} />
@@ -943,7 +944,7 @@ export default class AddOrderForm extends Component {
                       <Col span={8}>
                         <FormItem label="婴儿" {...formItemLayout3}>
                           {getFieldDecorator('babySellPrice', {
-                            rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }, { required: babyRequire, message: '必填' }],
+                            rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
                             initialValue: detail.babySellPrice
                           })(
                             <Input onChange={this.changeCaulator.bind(null, /^[1-9][0-9]{0,4}$/)} disabled={readOnly} style={{ width: '70%', marginRight: "6px" }} />
