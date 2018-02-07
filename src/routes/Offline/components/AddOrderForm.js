@@ -497,7 +497,9 @@ export default class AddOrderForm extends Component {
     let index = this.props.form.getFieldValue('selected');
     if (index === 0 || index) {
       // 重新计算
-      this.changeScheme(index)
+      setTimeout(() => {
+        this.changeScheme(index)
+      }, 200);
     }
   }
   changeScheme = (value) => {
