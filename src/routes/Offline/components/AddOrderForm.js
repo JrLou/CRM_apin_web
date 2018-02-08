@@ -199,6 +199,12 @@ export default class AddOrderForm extends Component {
   }
   delOneSche = (k) => {
     const { dispatch, offline: { schemeInfo } } = this.props;
+    // 判断删除的方案是不是当前选择的
+    let currentSelect = this.props.form.getFieldValue('selected');
+    if (k == currentSelect) {
+      message.warning('此方案为出票选择方案,无法删除');
+      return
+    }
     if (schemeInfo[k].id) {
       dispatch({
         type: 'offline/delOneSchemeWithid',
@@ -236,7 +242,7 @@ export default class AddOrderForm extends Component {
   saveScheme = (k, inputId, reg, e) => {
     // 计算价格先
     this.changeCaulator(reg, e)
-    
+
     const { dispatch, offline: { schemeInfo } } = this.props;
     let newSchemeInfo = schemeInfo;
     newSchemeInfo[k][inputId] = e.target ? e.target.value : e;
