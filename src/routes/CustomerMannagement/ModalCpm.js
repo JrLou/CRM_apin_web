@@ -115,7 +115,7 @@ class AddEditModal extends PureComponent {
               rules: [
                 { max: 50, message: "最长50位" },
                 { required: true, message: `请输入${this.getPageName()}名称` },
-                { pattern: /^\s*\S+$/, message: '不能输入纯空格' }
+                { pattern: /^\s*\S+[\s\S]*$/, message: '不能输入纯空格' },
               ],
             })(<Input placeholder="请输入" />)}
           </FormItem>
@@ -130,7 +130,7 @@ class AddEditModal extends PureComponent {
             {getFieldDecorator("address", {
               //【客户名称】支持中文、英文、数字，最多50个字符；
               initialValue: this.getInitData(modalData, "address"),
-              rules: [{ required: true, message: '请输入地址' }, { max: 100, message: "最长100位" }, { pattern: /^\s*\S+$/, message: '不能输入纯空格' }],
+              rules: [{ required: true, message: '请输入地址' }, { max: 100, message: "最长100位" }, { pattern: /^\s*\S+[\s\S]*$/, message: '不能输入纯空格' }],
             })(<Input placeholder="请输入" />)}
           </FormItem>
           <FormItem {...formItemLayout} label="联系人:">
@@ -144,14 +144,14 @@ class AddEditModal extends PureComponent {
             {getFieldDecorator("mobile", {
               //【电话号码】支持数字，允许输入特殊字符，最多50个字符；
               initialValue: this.getInitData(modalData, "mobile"),
-              rules: [{ max: 50, message: "最长50位" }, { pattern: /^\s*\S+$/, message: '不能输入纯空格' }],
+              rules: [{ max: 50, message: "最长50位" }, { pattern: /^\s*\S+[\s\S]*$/, message: '不能输入纯空格' }],
             })(<Input placeholder="请输入" />)}
           </FormItem>
           <FormItem {...formItemLayout} label="微信/QQ:">
             {getFieldDecorator("wxqq", {
               //【微信/QQ】支持中文、英文、数字，允许输入特殊字符，小写英文自动转换为大写，最多100个字符
               initialValue: this.getInitData(modalData, "wxqq"),
-              rules: [{ max: 100, message: "最长100位" }, { pattern: /^\s*\S+$/, message: '不能输入纯空格' }],
+              rules: [{ max: 100, message: "最长100位" }, { pattern: /^\s*\S+[\s\S]*$/, message: '不能输入纯空格' }],
             })(<Input placeholder="请输入" />)}
           </FormItem>
           {pageType === "c" ? null : (
