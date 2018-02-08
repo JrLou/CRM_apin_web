@@ -96,7 +96,7 @@ export default class AddOrderForm extends Component {
                   onSearch={this.autoCompSearch.bind(null, 'supplierName')}
                   dataSource={supplierData}
                   onBlur={this.onBlurCheck.bind(null, 'supplierName', supplierData, k)}
-                  onChange={this.saveScheme.bind(null, k, 'supplierName')}
+                  onChange={this.saveScheme.bind(null, k, 'supplierName', '')}
                 />
                 )}
             </FormItem>
@@ -109,7 +109,7 @@ export default class AddOrderForm extends Component {
               })(
                 <TextArea
                   disabled={readOnly}
-                  onChange={this.saveScheme.bind(null, k, 'flight')} />
+                  onChange={this.saveScheme.bind(null, k, 'flight', '')} />
                 )}
             </FormItem>
           </Col>
@@ -241,7 +241,7 @@ export default class AddOrderForm extends Component {
   }
   saveScheme = (k, inputId, reg, e) => {
     // 计算价格先
-    this.changeCaulator(reg, e)
+    reg && this.changeCaulator(reg, e)
 
     const { dispatch, offline: { schemeInfo } } = this.props;
     let newSchemeInfo = schemeInfo;
@@ -494,6 +494,7 @@ export default class AddOrderForm extends Component {
   };
   changeCaulator = (reg, e) => {
     // 判断输入不对就清空
+    console.log('e:' + e);
     if (!reg.test(e.target.value)) {
       this.props.form.setFieldsValue({
         [e.target.id]: ''
