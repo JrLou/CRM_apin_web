@@ -14,8 +14,9 @@ export default {
     isDill: false,
     changeInfo: [
     ],
+
     schemeInfo: [
-      { supplierName: '', unitprice: '', flight: '' }
+      { supplierName: '', adultUnitprice: '', childUnitprice: '', babyUnitprice: '', flight: '' }
     ],
     originalPlans: [],
     orderDetail: {},
@@ -62,10 +63,14 @@ export default {
         payload: true,
       });
       const response = yield call(delOrder, { id: payload.id });
-      if (response.code >= 1) {
+      if (response.code == 200) {
         message.success('操作成功');
         // 重获数据
         let params = payload.listParams;
+        // 判断当前页是否只有一条
+        if (payload.currentCount === 1 && params.pageNum !== 1) {
+          params.pageNum = params.pageNum - 1;
+        }
         yield put({
           type: 'fetch',
           payload: params,
@@ -83,7 +88,7 @@ export default {
         payload: true,
       });
       const response = yield call(addOrder, payload);
-      if (response.code >= 1) {
+      if (response.code == 200) {
         message.success('操作成功');
         yield put(routerRedux.push('/offline/order'));
       }
@@ -99,7 +104,7 @@ export default {
         payload: true,
       });
       const response = yield call(updateOrder, payload);
-      if (response.code >= 1) {
+      if (response.code == 200) {
         message.success('修改成功');
         yield put(routerRedux.push('/offline/order'));
       }
@@ -115,7 +120,7 @@ export default {
         payload: true,
       });
       const response = yield call(addChange, payload);
-      if (response.code >= 1) {
+      if (response.code == 200) {
         message.success('操作成功');
         yield put({
           type: 'getOneChange',
@@ -138,7 +143,7 @@ export default {
         payload: true,
       });
       const response = yield call(outExcel, payload);
-      if (response.code >= 1) {
+      if (response.code == 200) {
         message.success('操作成功');
         window.location.href = response.data.url;
       }
@@ -150,7 +155,7 @@ export default {
     },
     *searchCustomer({ payload }, { call, put }) {
       const response = yield call(searchCustomer, payload);
-      if (response.code >= 1) {
+      if (response.code == 200) {
         let nameArr = response.data.map((v, k) => {
           return v.name
         })
@@ -166,7 +171,7 @@ export default {
       let nameArr = response.data.map((v, k) => {
         return v.name;
       });
-      if (response && response.code >= 1) {
+      if (response && response.code == 200) {
         yield put({
           type: 'getSupplier',
           payload: { nameArr: nameArr, totalSupplier: response.data },
@@ -177,7 +182,7 @@ export default {
     *searchCity({ payload }, { call, put }) {
 
       const response = yield call(searchCity, { condition: payload.condition });
-      if (response && response.code >= 1) {
+      if (response && response.code == 200) {
         if (response.data.length > 10) { response.data = response.data.splice(0, 10); }
         let citiesArr = response.data.map((v, k) => {
           return v.cityName;
@@ -191,7 +196,7 @@ export default {
     *delOneSchemeWithid({ payload }, { call, put }) {
       const response = yield call(delSchemeWithid, { id: payload.id });
 
-      if (response && response.code >= 1) {
+      if (response && response.code == 200) {
         yield put({
           type: 'delOneScheme',
           payload: payload.index,
@@ -216,7 +221,7 @@ export default {
       return {
         ...state,
         orderDetail: action.payload.data,
-        schemeInfo: action.payload.data.plans.length > 0 ? action.payload.data.plans : [{ supplierName: '', unitprice: '', flight: '' }],
+        schemeInfo: action.payload.data.plans.length > 0 ? action.payload.data.plans : [{ supplierName: '', adultUnitprice: '', childUnitprice: '', babyUnitprice: '', flight: '' }],
         changeInfo: newArr,
         currentOrder: action.payload.curId,
         originalPlans: action.payload.data.plans
@@ -252,7 +257,7 @@ export default {
       };
     },
     addOneScheme(state, action) {
-      state.schemeInfo.push({ supplierName: '', unitprice: '', flight: '', orderId: action.payload });
+      state.schemeInfo.push({ supplierName: '', adultUnitprice: '', childUnitprice: '', babyUnitprice: '', flight: '', orderId: action.payload });
       let newSchemeInfo = state.schemeInfo;
       return {
         ...state,
@@ -288,6 +293,8 @@ export default {
       };
     },
     getSupplier(state, action) {
+      console.log('xxxxxxxxxxxxxxxxxxxxxxx');
+      console.log(action.payload.nameArr);
       return {
         ...state,
         supplierData: action.payload.nameArr,
@@ -297,7 +304,7 @@ export default {
     resetPlansAndEndorse(state, action) {
       return {
         ...state,
-        schemeInfo: [{ supplierName: '', unitprice: '', flight: '' }],
+        schemeInfo: [{ supplierName: '', adultUnitprice: '', childUnitprice: '', babyUnitprice: '', flight: '' }],
         changeInfo: [],
       };
     },

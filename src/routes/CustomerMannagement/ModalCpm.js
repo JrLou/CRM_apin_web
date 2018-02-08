@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 import { connect } from "dva";
-import { Modal, Form, Input, Button, Spin } from "antd";
+import { Modal, Form, Input, Button, Spin, message } from "antd";
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -33,6 +33,7 @@ class AddEditModal extends PureComponent {
 
     form.validateFields((err, fieldsValue) => {
       if (err) return;
+      if (!fieldsValue.mobile && !fieldsValue.wxqq) { message.warning('微信/QQ、电话号码请至少填一个'); return; }
       const values = {
         ...fieldsValue,
       };
@@ -114,6 +115,7 @@ class AddEditModal extends PureComponent {
               rules: [
                 { max: 50, message: "最长50位" },
                 { required: true, message: `请输入${this.getPageName()}名称` },
+                { pattern: /^\s*\S+[\s\S]*$/, message: '不能输入纯空格' },
               ],
             })(<Input placeholder="请输入" />)}
           </FormItem>
@@ -128,7 +130,7 @@ class AddEditModal extends PureComponent {
             {getFieldDecorator("address", {
               //【客户名称】支持中文、英文、数字，最多50个字符；
               initialValue: this.getInitData(modalData, "address"),
-              rules: [{ max: 100, message: "最长100位" }],
+              rules: [{ required: true, message: '请输入地址' }, { max: 100, message: "最长100位" }, { pattern: /^\s*\S+[\s\S]*$/, message: '不能输入纯空格' }],
             })(<Input placeholder="请输入" />)}
           </FormItem>
           <FormItem {...formItemLayout} label="联系人:">
@@ -142,14 +144,14 @@ class AddEditModal extends PureComponent {
             {getFieldDecorator("mobile", {
               //【电话号码】支持数字，允许输入特殊字符，最多50个字符；
               initialValue: this.getInitData(modalData, "mobile"),
-              rules: [{ max: 50, message: "最长50位" }],
+              rules: [{ max: 50, message: "最长50位" }, { pattern: /^\s*\S+[\s\S]*$/, message: '不能输入纯空格' }],
             })(<Input placeholder="请输入" />)}
           </FormItem>
           <FormItem {...formItemLayout} label="微信/QQ:">
             {getFieldDecorator("wxqq", {
               //【微信/QQ】支持中文、英文、数字，允许输入特殊字符，小写英文自动转换为大写，最多100个字符
               initialValue: this.getInitData(modalData, "wxqq"),
-              rules: [{ max: 100, message: "最长100位" }],
+              rules: [{ max: 100, message: "最长100位" }, { pattern: /^\s*\S+[\s\S]*$/, message: '不能输入纯空格' }],
             })(<Input placeholder="请输入" />)}
           </FormItem>
           {pageType === "c" ? null : (
@@ -163,7 +165,7 @@ class AddEditModal extends PureComponent {
                   placeholder="请输入"
                   autosize={{ minRows: 2, maxRows: 10 }}
                 />
-              )}
+                )}
             </FormItem>
           )}
           <FormItem {...formTailLayout}>
@@ -228,7 +230,7 @@ class DeleteModal extends PureComponent {
     const {
       dispatch,
       formValues: searchFormValues,
-      customerMannagement: { showModal, modalConfirmLoading, deleteItemId },
+      customerMannagement: { showModal, modalConfirmLoading, deleteItemId, data: { data: dataList } },
       page,
     } = this.props;
     return (
@@ -251,6 +253,10 @@ class DeleteModal extends PureComponent {
                 type: "customerMannagement/fetchDelete",
                 payload: { id: deleteItemId },
                 succCB: () => {
+                  //添加条件，当不为第1页 && 仅为1条数据的的时候
+                  if (page.pageNum > 1 && dataList.length === 1) {
+                    page.pageNum -= 1;
+                  }
                   dispatch({
                     type: "customerMannagement/fetch",
                     payload: {

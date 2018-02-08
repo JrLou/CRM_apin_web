@@ -34,8 +34,8 @@ export default class OfflineList extends PureComponent {
   _handleDate(values, idsArr) {
     idsArr.map((v, k) => {
       if (values[v]) {
-        values[v + 'Start'] = moment(values[v][0]).format('YYYY-MM-DD');
-        values[v + 'End'] = moment(values[v][1]).format('YYYY-MM-DD');
+        values[v + 'Start'] = values[v][0] ? moment(values[v][0]).format('YYYY-MM-DD') : '';
+        values[v + 'End'] = values[v][1] ? moment(values[v][1]).format('YYYY-MM-DD') : '';
         delete values[v];
       }
     })
@@ -74,6 +74,7 @@ export default class OfflineList extends PureComponent {
   delOrder(id) {
     let listParams = { ... this.searchValues, pageNum: this.page.page, pageSize: this.page.pageSize };
     const { dispatch } = this.props;
+    const { offline: { list } } = this.props;
     confirm({
       title: '注意',
       content: '你确定要删除本条订单吗？',
@@ -83,7 +84,7 @@ export default class OfflineList extends PureComponent {
       onOk: () => {
         dispatch({
           type: 'offline/delOrder',
-          payload: { id: id, listParams: listParams },
+          payload: { id: id, listParams: listParams, currentCount: list.data && list.data.length },
         });
         // 请求数据
         // this.getData()
@@ -138,15 +139,16 @@ export default class OfflineList extends PureComponent {
         </Row>
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
-            <FormItem label="是否出票">
-              {getFieldDecorator('isPrint', {
-                rules: [{ max: 32, message: "长度不超过32" }],
-                initialValue: ''
+            <FormItem label="订单状态">
+              {getFieldDecorator('ticketStatus', {
+                rules: [],
+                initialValue: '0'
               })(
-                <Select placeholder="请选择" style={{ width: '100%' }}>
+                <Select placeholder="请选择" style={{ width: '100%' }} >
                   <Option value="">全部</Option>
-                  <Option value="1">是</Option>
-                  <Option value="0">否</Option>
+                  <Option value="1">已出票</Option>
+                  <Option value="0">等待</Option>
+                  <Option value="2">失败</Option>
                 </Select>
                 )}
             </FormItem>
@@ -196,7 +198,7 @@ export default class OfflineList extends PureComponent {
             <FormItem label="询价日期">
               {getFieldDecorator('inquiryDate', {
               })(
-                <RangePicker allowClear={false} />
+                <RangePicker />
                 )}
             </FormItem>
           </Col>
@@ -204,7 +206,7 @@ export default class OfflineList extends PureComponent {
             <FormItem label="出票日期">
               {getFieldDecorator('printDate', {
               })(
-                <RangePicker allowClear={false} />
+                <RangePicker />
                 )}
             </FormItem>
           </Col>
@@ -212,7 +214,7 @@ export default class OfflineList extends PureComponent {
             <FormItem label="退改日期">
               {getFieldDecorator('endorseDate', {
               })(
-                <RangePicker allowClear={false} />
+                <RangePicker />
                 )}
             </FormItem>
           </Col>
@@ -306,8 +308,12 @@ export default class OfflineList extends PureComponent {
         dataIndex: 'numbers'
       },
       {
-        title: '是否出票',
-        dataIndex: 'isPrintStr'
+        title: '订单状态',
+        dataIndex: 'ticketStatus',// 0 等待 1已出票  2 拒绝
+        render: (text, record) => {
+          let inner_text = ['等待', '已出票', '失败'];
+          return inner_text[text];
+        }
       },
       {
         title: '出票日期',
@@ -336,7 +342,7 @@ export default class OfflineList extends PureComponent {
           return <div className={styles.handleBtn}>
             <Link to={"/offline/order/ViewOrder/" + record.id}><a href="javascript:;" type='primary'>查看</a></Link>
             <Link to={"/offline/order/EditOrder/" + record.id}><a href="javascript:;" type='primary'>修改</a></Link>
-            <a href="javascript:;" type='primary' disabled={!isLeader} onClick={this.delOrder.bind(this, record.id)}>删除</a>
+            {isLeader ? <a href="javascript:;" type='primary' onClick={this.delOrder.bind(this, record.id)}>删除</a> : null}
           </div>
         }
       },
