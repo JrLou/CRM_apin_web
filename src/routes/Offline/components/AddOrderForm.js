@@ -199,12 +199,14 @@ export default class AddOrderForm extends Component {
   }
   delOneSche = (k) => {
     const { dispatch, offline: { schemeInfo } } = this.props;
-    // 判断删除的方案是不是当前选择的
-    let currentSelect = this.props.form.getFieldValue('selected');
-    if (k == currentSelect) {
-      message.warning('此方案为出票选择方案,无法删除');
-      return
-    }
+    // 每次删除方案重新填写
+    this.props.form.setFieldsValue({
+      selected: '',
+      settlePrice: '',
+      totalPrice: '',
+      profit: '',
+    })
+
     if (schemeInfo[k].id) {
       dispatch({
         type: 'offline/delOneSchemeWithid',
@@ -929,7 +931,7 @@ export default class AddOrderForm extends Component {
                         <FormItem label="卖价" {...formItemLayout3}>
                           <span style={{ marginRight: '5px' }}>成人:</span>
                           {getFieldDecorator('adultSellPrice', {
-                            rules: [{ required: true, message: "必填" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }, { required: adultRequire, message: '必填' }],
+                            rules: [{ required: true, message: "必填" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
                             initialValue: detail.adultSellPrice
                           })(
                             <Input onChange={this.changeCaulator.bind(null, /^[1-9][0-9]{0,4}$/)} disabled={readOnly} style={{ width: '70%', marginRight: "6px" }} />
