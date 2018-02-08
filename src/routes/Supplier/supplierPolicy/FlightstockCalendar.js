@@ -499,6 +499,7 @@ class page extends Component {
             addPost={this.addPost.bind(this)}
             upFile={this.upLoadFile.bind(this)}
             visiblees={this.visiblees.bind(this)}
+
           />
 
         </Modal>
@@ -701,11 +702,10 @@ class BulkImportForm extends Component {
 
       if (obj.file.response && obj.file.response.code >= 1) {
         message.success('操作成功')
+        this.props.dateGetReturn();
         this.props.visiblees();
         console.log(obj)
         console.log(this.props)
-      } else {
-        message.success(obj.file.response.msg)
       }
       this.setState({
         fileList: obj.fileList
@@ -792,7 +792,7 @@ class BulkImportForm extends Component {
           )
           }
           <span>文件大小不能超过4MB，<a
-            href="http://voucher.apin.com/%E4%BB%B7%E6%A0%BC%E5%AF%BC%E5%85%A5%E6%A8%A1%E6%9D%BF.xlsx">模板下载</a></span>
+            href="/api/resource/exportTemp">模板下载</a></span>
         </FormItem>
         <FormItem
           wrapperCol={{span: 8, offset: 1}}

@@ -66,7 +66,7 @@ class AddForm extends Component {
       list[0].seat_type == 0 ? list[0].seat_type = "硬切" : list[0].seat_type = "代销"
       for (let i = 0; i < list.length; i++) {
         list[i].FlightNo = list[i].flight_no
-        list[i].FlightDepAirport = list[i].city_arr_name
+        list[i].FlightDepAirport = list[i].city_dep_name
         list[i].FlightDepcode = list[i].airport_dep_code
         list[i].FlightDeptimePlanDate = moment(list[i].departure_start + list[i].time_dep).format("YYYY-MM-DD HH:mm:ss")
         list[i].FlightArrtimePlanDate = moment(list[i].departure_start + list[i].time_arr).format("YYYY-MM-DD HH:mm:ss")
@@ -220,7 +220,7 @@ class AddForm extends Component {
         return;
       }
 
-      let reg =/^([a-zA-Z][0-9a-zA-Z]|[0-9a-zA-Z][a-zA-Z])([0-9]{1,4})$/;
+      let reg = /^([a-zA-Z][0-9a-zA-Z]|[0-9a-zA-Z][a-zA-Z])([0-9]{1,4})$/;
       if (reg.test(value)) {
         this.props.addPost('flightstockAdd/getsearchAirportesaddes', {},);
         flightstockData[ole] = {}
@@ -279,6 +279,7 @@ class AddForm extends Component {
     flightstockAdd.visible = false;
     ole.FlightDeptimePlanDate = moment(flightdata.flightTimeWill[0].format('YYYY-MM-DD') + " " + ole.FlightDeptimePlanDate + ':00')
     ole.FlightArrtimePlanDate = moment(Algorithm._caculateNewDatePartSingle(flightdata.flightTimeWill[0].format('YYYY-MM-DD'), flightdata.days - 1) + " " + ole.FlightArrtimePlanDate + ':00')
+    this.props.form.setFieldsValue({['names-' + numbering]: ole.FlightNo});
     flightstockData[numbering] = ole
     flightdata.selectedWeekGroup[numbering] = Algorithm.toogleToWeekStr(ole.flights)
     linenubber[numbering] = numbering

@@ -21,7 +21,7 @@ export default {
                 payload: true,
             });
             const response = yield call(postGroupData, payload);
-            if (response.code >= 1) {
+            if (response && response.code >= 1) {
                 message.success('推送成功，将进入拼团查看页面');
                 // 成功后清空
                 yield put({
@@ -29,7 +29,7 @@ export default {
                     payload: '',
                 });
                 yield put(routerRedux.push('/fightgroups/demand/checkFightGroups/' + response.data));
-            }  
+            }
             yield put({
                 type: 'changeLoading',
                 payload: false,
@@ -41,7 +41,7 @@ export default {
                 payload: true,
             });
             const response = yield call(searchFlights, payload);
-            if (response.code >= 1) {
+            if (response && response.code >= 1) {
                 message.success('操作成功');
                 yield put({
                     type: 'getFlights',
