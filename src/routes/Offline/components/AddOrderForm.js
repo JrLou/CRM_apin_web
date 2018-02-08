@@ -125,8 +125,7 @@ export default class AddOrderForm extends Component {
                 <Input
                   disabled={readOnly}
                   style={{ width: '50%', marginRight: '5px' }}
-                  onChange={this.changeCaulator.bind(null, /^[1-9][0-9]{0,4}$/)}
-                  onChange={this.saveScheme.bind(null, k, 'adultUnitprice')} />
+                  onChange={this.saveScheme.bind(null, k, 'adultUnitprice', /^[1-9][0-9]{0,4}$/)} />
 
                 )}
               <span>元/人</span>
@@ -141,8 +140,7 @@ export default class AddOrderForm extends Component {
                 <Input
                   disabled={readOnly}
                   style={{ width: '50%', marginRight: '5px' }}
-                  onChange={this.changeCaulator.bind(null, /^[1-9][0-9]{0,4}$/)}
-                  onChange={this.saveScheme.bind(null, k, 'childUnitprice')} />
+                  onChange={this.saveScheme.bind(null, k, 'childUnitprice', /^[1-9][0-9]{0,4}$/)} />
 
                 )}
               <span>元/人</span>
@@ -157,8 +155,7 @@ export default class AddOrderForm extends Component {
                 <Input
                   disabled={readOnly}
                   style={{ width: '50%', marginRight: '5px' }}
-                  onChange={this.changeCaulator.bind(null, /^[1-9][0-9]{0,4}$/)}
-                  onChange={this.saveScheme.bind(null, k, 'babyUnitprice')} />
+                  onChange={this.saveScheme.bind(null, k, 'babyUnitprice', /^[1-9][0-9]{0,4}$/)} />
 
                 )}
               <span>元/人</span>
@@ -236,7 +233,10 @@ export default class AddOrderForm extends Component {
       )
     })
   }
-  saveScheme = (k, inputId, e) => {
+  saveScheme = (k, inputId, reg, e) => {
+    // 计算价格先
+    this.changeCaulator(reg, e)
+    
     const { dispatch, offline: { schemeInfo } } = this.props;
     let newSchemeInfo = schemeInfo;
     newSchemeInfo[k][inputId] = e.target ? e.target.value : e;
