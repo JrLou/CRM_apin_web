@@ -53,7 +53,7 @@ export default class OfflineList extends PureComponent {
             values[item] = '';
           }
         }
-        values = this._handleDate(values, ['endorseDate', 'inquiryDate', 'printDate'])
+        values = this._handleDate(values, ['endorseDate', 'inquiryDate', 'printDate', 'receiptDate', 'payoffDate'])
         // 保留搜索参数
         this.searchValues = values;
         // 搜索或重置置为第1页
@@ -213,6 +213,22 @@ export default class OfflineList extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem label="退改日期">
               {getFieldDecorator('endorseDate', {
+              })(
+                <RangePicker />
+                )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="打款日期">
+              {getFieldDecorator('payoffDate', {
+              })(
+                <RangePicker />
+                )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="收款日期">
+              {getFieldDecorator('receiptDate', {
               })(
                 <RangePicker />
                 )}

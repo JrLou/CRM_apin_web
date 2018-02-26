@@ -505,3 +505,7 @@ export async function searchPort(params) {
 export async function searchFlightCity(params) {
   return request('/api/resource/searchCity', { method: 'POST', body: params });
 }
+// 0226
+export async function uploadImg(params) {
+  return request_java('/java/offline/order/upload', { method: 'POST', body: params, formData: true });
+}

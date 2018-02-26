@@ -6,6 +6,7 @@ import { Link } from 'dva/router';
 import styles from '../Offline.less';
 import moment from 'moment';
 import AddChangeForm from './AddChangeForm';
+import { uploadImg } from '../../../services/api';
 // import TicketForm from './TiketForm';
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -21,7 +22,7 @@ export default class AddOrderForm extends Component {
     super()
     this.state = {
       modalVisible: false,
-      activeKey: '1'
+      activeKey: '0'
     }
   }
   componentDidMount() {
@@ -467,11 +468,13 @@ export default class AddOrderForm extends Component {
       }
 
       if (!err) {
-        values = this._changeToDatestr(values, ['arrDate', 'depDate', 'inquiryDate', 'printDate'])
+        values = this._changeToDatestr(values, ['arrDate', 'depDate', 'inquiryDate', 'printDate', 'payoffDate', 'receiptDate'])
         values = this._changePlanValues(values, ['supplierName', 'adultUnitprice', 'childUnitprice', 'babyUnitprice', 'flight', 'id', 'orderId', 'selected', 'charge'])
         values.isPayoff = values.isPayoff ? '1' : '0';
         values.isSendoff = values.isSendoff ? '1' : '0';
         console.log('将要提交的参数'); console.log(values);
+        // 凭证
+        // values.receiptVoucher = values.receiptVoucher.fileList.join(',');
         // 判断编辑还是新增
         if (this.props.id) {
           // 转化格式
@@ -622,6 +625,11 @@ export default class AddOrderForm extends Component {
   changeTab = (activeKey) => {
     this.setState({
       activeKey: activeKey
+    })
+  }
+  getFileList = (imgList) => {
+    this.props.form.setFieldsValue({
+      receiptVoucher: imgList
     })
   }
   render() {
@@ -949,11 +957,11 @@ export default class AddOrderForm extends Component {
                       <Col span={24} >
                         <FormItem label="上传图片" {...formItemLayout5}>
                           {getFieldDecorator('receiptVoucher', {
-                            valuePropName: 'file',
-                            initialValue: { file: { test: 123 } },
                             rules: [{ required: true, message: "必填" }],
-                          })(
-                            <UpImg />
+                            initialValue: detail.receiptVoucher
+                          },
+                          )(
+                            <UpImg disabled={readOnly} getFileList={this.getFileList} imgList={detail.receiptVoucher} />
                             )}
 
                         </FormItem>
@@ -1205,9 +1213,19 @@ class UpImg extends Component {
     super(props);
     this.state = {
       loading: false,
-      imgList: [],
+      imgList: []
     };
   }
+
+  componentWillMount() {
+    // 如果有详情
+    if (this.props.imgList) {
+      this.setState({
+        imgList: this.props.imgList.split(',')
+      })
+    }
+  }
+
   handlePreview(file) {
     //显示图片
   }
@@ -1224,13 +1242,20 @@ class UpImg extends Component {
     if (info.file.status === 'done') {
       // Get this url from response in real world.
       this.getBase64(info.file.originFileObj, imageUrl => {
+        // 在这里请求接口 
         let imgList = this.state.imgList;
-        imgList.push(imageUrl);
-        this.setState({
-          imgList,
-          loading: false,
-        }, () => {
-          this.props.file.fileList = imgList;
+        uploadImg({ img: imageUrl }).then((response) => {
+          if (response.code == 200) {
+            imgList.push(response.data.url);
+            this.setState({
+              imgList,
+              loading: false,
+            },
+              () => {
+                this.props.getFileList(imgList.join(','));
+              })
+          }
+
         })
       });
     }
@@ -1267,45 +1292,52 @@ class UpImg extends Component {
     return (
       <div style={{ width: "100%", background: "transparent" }}  >
         {imgList.map((url, key) => {
-          return <span className={styles.uploadBox}>
+          return <span className={styles.uploadBox} key={key}>
             <div style={{ width: 102, height: 102, marginBottom: 20, position: "relative" }}
               onClick={() => {
-                alert(url);
+                // alert(url);
               }}
             >
               <img key={key} style={{ width: "100%", height: "100%" }} src={url} />
-              <div style={{
-                position: "absolute", bottom: 0, left: 0, right: 0, background: 'rgba(0, 0, 0, 0.3)',
-                lineHeight: "30px", height: "30px", textAlign: "center", color: "#fff", fontSize: 16,
-                cursor: 'pointer'
-              }}
-                onClick={(ev) => {
-                  //del img
-                  imgList.splice(key);
-                  this.setState({ imgList });
-                  try {
-                    let oEvent = ev;
-                    //js阻止事件冒泡
-                    oEvent.cancelBubble = true;
-                    oEvent.stopPropagation();
-                    //js阻止链接默认行为，没有停止冒泡
-                    oEvent.preventDefault();
-                    return false;
-                  } catch (e) {
+              {
+                this.props.disabled ? null :
+                  <div style={{
+                    position: "absolute", bottom: 0, left: 0, right: 0, background: 'rgba(0, 0, 0, 0.3)',
+                    lineHeight: "30px", height: "30px", textAlign: "center", color: "#fff", fontSize: 16,
+                    cursor: 'pointer'
+                  }}
+                    onClick={(ev) => {
+                      //del img
+                      imgList.splice(key, 1);
+                      this.setState({ imgList },
+                        () => {
+                          this.props.getFileList(imgList.join(','));
+                        });
+                      try {
+                        let oEvent = ev;
+                        //js阻止事件冒泡
+                        oEvent.cancelBubble = true;
+                        oEvent.stopPropagation();
+                        //js阻止链接默认行为，没有停止冒泡
+                        oEvent.preventDefault();
+                        return false;
+                      } catch (e) {
 
-                  }
+                      }
 
-                }}
-              >
-                删除
+                    }}
+                  >
+                    删除
               </div>
-
+              }
             </div>
           </span>;
         })}
 
         <span className={styles.uploadBox}>
           <Upload
+            style={{ cursor: this.props.disabled ? 'not-allowed' : 'default' }}
+            disabled={this.props.disabled}
             onRemove={true}
             action=""
             listType="picture-card"
@@ -1316,7 +1348,7 @@ class UpImg extends Component {
 
           >
             {this.state.imgList.length == 6 ? null : uploadButton}
-          </Upload>
+          </Upload >
         </span>
       </div>
     )

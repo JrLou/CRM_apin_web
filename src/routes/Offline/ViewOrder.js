@@ -36,7 +36,7 @@ export default class ViewOrder extends PureComponent {
         const { offline: { orderDetail } } = this.props;
         let changedDetail = orderDetail;
         changedDetail = changedDetail.order ? changedDetail.order : {};
-        changedDetail = this._toMoment(changedDetail, ['arrDate', 'depDate', 'inquiryDate', 'printDate']);
+        changedDetail = this._toMoment(changedDetail, ['arrDate', 'depDate', 'inquiryDate', 'printDate', 'payoffDate', 'receiptDate']);
         changedDetail.records = orderDetail.records;
         return (
             <PageHeaderLayout>

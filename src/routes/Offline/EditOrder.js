@@ -41,7 +41,7 @@ export default class EditOrder extends PureComponent {
     const { offline: { orderDetail } } = this.props;
     let changedDetail = orderDetail;
     changedDetail = changedDetail.order ? changedDetail.order : {};
-    changedDetail = this._toMoment(changedDetail, ['arrDate', 'depDate', 'inquiryDate', 'printDate']);
+    changedDetail = this._toMoment(changedDetail, ['arrDate', 'depDate', 'inquiryDate', 'printDate', 'payoffDate', 'receiptDate']);
     changedDetail.records = orderDetail.records;
     // 客服总监
     let isLeader = this.currentUser.split(',').indexOf('716103936e1a461ab79dcb7283a979b8') !== -1;
