@@ -1,7 +1,7 @@
 //需求池页面
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Card, Button, List, Form, Input, Select, Row, Col, Table, DatePicker, AutoComplete, Radio, Icon, Tabs, Checkbox, Modal, message } from 'antd';
+import { Card, Button, List, Form, Input, Select, Row, Col, Table, DatePicker, AutoComplete, Radio, Icon, Tabs, Checkbox, Modal, message, Upload } from 'antd';
 import { Link } from 'dva/router';
 import styles from '../Offline.less';
 import moment from 'moment';
@@ -638,6 +638,14 @@ export default class AddOrderForm extends Component {
       labelCol: { span: 8 },
       wrapperCol: { span: 16 },
     };
+    const formItemLayout4 = {
+      labelCol: { span: 3 },
+      wrapperCol: { span: 5 },
+    };
+    const formItemLayout5 = {
+      labelCol: { span: 3 },
+      wrapperCol: { span: 21 },
+    };
     const { readOnly, offline: { usernameData, totalCustomer, supplierData, cityData, cityData2, changeInfo, schemeInfo, isShowModal } } = this.props;
     let detail = this.props.detail ? this.props.detail : {};
     schemeInfo.map((v, k) => {
@@ -661,7 +669,6 @@ export default class AddOrderForm extends Component {
           return index + 1
         }
       },
-
       {
         title: '操作人',
         dataIndex: 'createUserName',
@@ -912,6 +919,47 @@ export default class AddOrderForm extends Component {
             <div className={styles.module}>
               <Card bordered={false}>
                 <Tabs type="card" activeKey={this.state.activeKey} onChange={this.changeTab}>
+                  <TabPane tab="收款凭证" key="0" >
+                    <Row gutter={20}>
+                      <Col span={24}>
+                        <FormItem label="收款日期" {...formItemLayout4}>
+                          {getFieldDecorator('receiptDate', {
+                            rules: [{ required: true, message: "必填" }],
+                            initialValue: detail.receiptDate
+                          })(
+                            <DatePicker disabled={readOnly} />
+                            )}
+                        </FormItem>
+                      </Col>
+                    </Row>
+                    <Row gutter={20} >
+                      <Col span={24}>
+                        <FormItem label="收款金额" {...formItemLayout4}>
+                          {getFieldDecorator('receiptAmount', {
+                            rules: [{ required: true, message: "必填" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
+                            initialValue: detail.receiptAmount
+                          })(
+                            <Input disabled={readOnly} style={{ width: '70%', marginRight: "6px" }} />
+                            )}
+                          <span>元</span>
+                        </FormItem>
+                      </Col>
+                    </Row>
+                    <Row gutter={20} >
+                      <Col span={24} >
+                        <FormItem label="上传图片" {...formItemLayout5}>
+                          {getFieldDecorator('receiptVoucher', {
+                            valuePropName: 'file',
+                            initialValue: { file: { test: 123 } },
+                            rules: [{ required: true, message: "必填" }],
+                          })(
+                            <UpImg />
+                            )}
+
+                        </FormItem>
+                      </Col>
+                    </Row>
+                  </TabPane>
                   <TabPane tab="出票" key="1">
                     <Row gutter={20}>
                       <Col span={8}>
@@ -1025,13 +1073,23 @@ export default class AddOrderForm extends Component {
                   </TabPane>
                   <TabPane tab="结算" key="2">
                     <Row gutter={20}>
-                      <Col span={12}>
+                      <Col span={8}>
                         <FormItem label="汇款给供应商" {...formItemLayout}>
                           {getFieldDecorator('isPayoff', {
                             valuePropName: 'checked',
                             initialValue: detail.isPayoff == 1 ? true : false
                           })(
                             <Checkbox disabled={this.props.isView ? true : specialFlag && detail.isPayoff == 1}>是</Checkbox>
+                            )}
+                        </FormItem>
+                      </Col>
+                      <Col span={8}>
+                        <FormItem label="打款日期" {...formItemLayout}>
+                          {getFieldDecorator('payoffDate ', {
+                            rules: [{ required: this.props.form.getFieldValue('isPayoff'), message: '必填' }],
+                            initialValue: detail.payoffDate
+                          })(
+                            <DatePicker disabled={readOnly} />
                             )}
                         </FormItem>
                       </Col>
@@ -1141,6 +1199,129 @@ export default class AddOrderForm extends Component {
   }
 }
 
+
+class UpImg extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: false,
+      imgList: [],
+    };
+  }
+  handlePreview(file) {
+    //显示图片
+  }
+  getBase64(img, callback) {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result));
+    reader.readAsDataURL(img);
+  }
+  onChange(info) {
+    if (info.file.status === 'uploading') {
+      this.setState({ loading: true });
+      return;
+    }
+    if (info.file.status === 'done') {
+      // Get this url from response in real world.
+      this.getBase64(info.file.originFileObj, imageUrl => {
+        let imgList = this.state.imgList;
+        imgList.push(imageUrl);
+        this.setState({
+          imgList,
+          loading: false,
+        }, () => {
+          this.props.file.fileList = imgList;
+        })
+      });
+    }
+  }
+
+
+  beforeUpload = (file, fl) => {
+    if (file) {
+
+      if (!/.+(.JPEG|.jpeg|.JPG|.jpg|.PNG|.png)$/.test(file.type)) {
+        message.error("图片格式仅支持jpg、jpeg和png");
+        return false;
+      }
+      if (file.size >= 1024000) {
+        message.error("图片过大，最大允许1M。");
+        return false;
+      }
+      if (file.status === "error") {
+        message.error("图片(" + file.name + ")上传错误,请重新上传。");
+        return false;
+      }
+    }
+    return true
+  }
+  render() {
+    const uploadButton = (
+      <div>
+        <Icon type={this.state.loading ? 'loading' : 'plus'} />
+        <div className="ant-upload-text">上传</div>
+      </div>
+    );
+    const imgList = this.state.imgList;
+    console.log(imgList)
+    return (
+      <div style={{ width: "100%", background: "transparent" }}  >
+        {imgList.map((url, key) => {
+          return <span className={styles.uploadBox}>
+            <div style={{ width: 102, height: 102, marginBottom: 20, position: "relative" }}
+              onClick={() => {
+                alert(url);
+              }}
+            >
+              <img key={key} style={{ width: "100%", height: "100%" }} src={url} />
+              <div style={{
+                position: "absolute", bottom: 0, left: 0, right: 0, background: 'rgba(0, 0, 0, 0.3)',
+                lineHeight: "30px", height: "30px", textAlign: "center", color: "#fff", fontSize: 16,
+                cursor: 'pointer'
+              }}
+                onClick={(ev) => {
+                  //del img
+                  imgList.splice(key);
+                  this.setState({ imgList });
+                  try {
+                    let oEvent = ev;
+                    //js阻止事件冒泡
+                    oEvent.cancelBubble = true;
+                    oEvent.stopPropagation();
+                    //js阻止链接默认行为，没有停止冒泡
+                    oEvent.preventDefault();
+                    return false;
+                  } catch (e) {
+
+                  }
+
+                }}
+              >
+                删除
+              </div>
+
+            </div>
+          </span>;
+        })}
+
+        <span className={styles.uploadBox}>
+          <Upload
+            onRemove={true}
+            action=""
+            listType="picture-card"
+            showUploadList={false}
+            onPreview={this.handlePreview.bind(this)}
+            onChange={this.onChange.bind(this)}
+            beforeUpload={this.beforeUpload.bind(this)}
+
+          >
+            {this.state.imgList.length == 6 ? null : uploadButton}
+          </Upload>
+        </span>
+      </div>
+    )
+  }
+}
 
 
 
