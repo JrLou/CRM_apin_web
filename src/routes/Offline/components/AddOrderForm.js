@@ -1308,8 +1308,8 @@ class UpImg extends Component {
         message.error("图片格式仅支持jpg、jpeg和png");
         return false;
       }
-      if (file.size >= 1024000) {
-        message.error("图片过大，最大允许1M。");
+      if (file.size >= 5120000) {
+        message.error("图片过大，最大允许5M。");
         return false;
       }
       if (file.status === "error") {
