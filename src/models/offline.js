@@ -46,7 +46,7 @@ export default {
         payload: true,
       });
       const response = yield call(orderDetail, payload);
-      if (response && response.code >= 1) {
+      if (response && response.code == 200) {
         yield put({
           type: 'getDetail',
           payload: { ...response, curId: payload.id },

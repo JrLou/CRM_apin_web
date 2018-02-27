@@ -7,7 +7,7 @@ import styles from '../Offline.less';
 import moment from 'moment';
 import AddChangeForm from './AddChangeForm';
 import { uploadImg } from '../../../services/api';
-// import TicketForm from './TiketForm';
+// import TicketForm from './TiketForm'; 
 const FormItem = Form.Item;
 const { Option } = Select;
 const { TextArea } = Input;
@@ -25,6 +25,13 @@ export default class AddOrderForm extends Component {
       activeKey: '0'
     }
   }
+  // componentWillReceiveProps(nextProps) {
+  //   if (nextProps.detail) {
+  //     this.setState({
+  //       detail:nextProps.detail
+  //     })
+  //   }
+  // }
   componentDidMount() {
     const { dispatch } = this.props;
     // 获取默认的三个自动补全数组
@@ -226,7 +233,7 @@ export default class AddOrderForm extends Component {
   }
   setValue = () => {
     const { offline: { schemeInfo } } = this.props;
-    console.log(schemeInfo);
+    // console.log(schemeInfo);
     schemeInfo.map((v, k) => {
       this.props.form.setFieldsValue(
         {
@@ -253,7 +260,7 @@ export default class AddOrderForm extends Component {
       type: 'offline/changeSchemeInfo',
       payload: newSchemeInfo,
     })
-    console.log(schemeInfo)
+    // console.log(schemeInfo)
   }
   isShowTabs = (e) => {
     const { dispatch } = this.props;
@@ -484,7 +491,7 @@ export default class AddOrderForm extends Component {
         values.isPayoff = values.isPayoff ? '1' : '0';
         values.isReceipt = values.isReceipt ? '1' : '0';
         values.isSendoff = values.isSendoff ? '1' : '0';
-        console.log('将要提交的参数'); console.log(values);
+        // console.log('将要提交的参数'); console.log(values);
         // 凭证
         // values.receiptVoucher = values.receiptVoucher.fileList.join(',');
         // 判断编辑还是新增
@@ -511,7 +518,7 @@ export default class AddOrderForm extends Component {
   };
   changeCaulator = (reg, e) => {
     // 判断输入不对就清空
-    console.log('e:' + e);
+    // console.log('e:' + e);
     if (!reg.test(e.target.value)) {
       this.props.form.setFieldsValue({
         [e.target.id]: ''
@@ -959,7 +966,7 @@ export default class AddOrderForm extends Component {
                             rules: [{ required: this.props.form.getFieldValue('isReceipt'), message: "必填" }],
                             initialValue: detail.receiptDate
                           })(
-                            <DatePicker disabled={readOnly} />
+                            <DatePicker disabled={this.props.isView ? true : specialFlag && detail.isReceipt == 1} />
                             )}
                         </FormItem>
                       </Col>
@@ -971,7 +978,7 @@ export default class AddOrderForm extends Component {
                             rules: [{ required: this.props.form.getFieldValue('isReceipt'), message: "必填" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
                             initialValue: detail.receiptAmount
                           })(
-                            <Input disabled={readOnly} style={{ width: '70%', marginRight: "6px" }} />
+                            <Input disabled={this.props.isView ? true : specialFlag && detail.isReceipt == 1} style={{ width: '70%', marginRight: "6px" }} />
                             )}
                           <span>元</span>
                         </FormItem>
@@ -985,7 +992,7 @@ export default class AddOrderForm extends Component {
                             initialValue: detail.receiptVoucher
                           },
                           )(
-                            <UpImg disabled={readOnly} getFileList={this.getFileList} imgList={detail.receiptVoucher} />
+                            <UpImg disabled={this.props.isView ? true : specialFlag && detail.isReceipt == 1} getFileList={this.getFileList} imgList={detail.receiptVoucher} />
                             )}
 
                         </FormItem>
@@ -1121,7 +1128,7 @@ export default class AddOrderForm extends Component {
                             rules: [{ required: this.props.form.getFieldValue('isPayoff'), message: '必填' }],
                             initialValue: detail.payoffDate
                           })(
-                            <DatePicker disabled={readOnly} />
+                            <DatePicker disabled={this.props.isView ? true : specialFlag && detail.isPayoff == 1} />
                             )}
                         </FormItem>
                       </Col>
@@ -1240,16 +1247,24 @@ class UpImg extends Component {
       imgList: []
     };
   }
-
-  componentWillMount() {
-    // 如果有详情
+  componentWillReceiveProps(nextProps) {
+    // console.log('next!!!!!!!!!!!!!!!!');
+    // console.log(nextProps.imgList);
+    // console.log('cur!!!!!!!');
+    // console.log(this.props.imgList);
+    if (this.props.imgList !== nextProps.imgList) {
+      this.setState({
+        imgList: nextProps.imgList.split(',')
+      })
+    }
+  }
+  componentDidMount() {
     if (this.props.imgList) {
       this.setState({
         imgList: this.props.imgList.split(',')
       })
     }
   }
-
   handlePreview(file) {
     //显示图片
   }
@@ -1312,7 +1327,7 @@ class UpImg extends Component {
       </div>
     );
     const imgList = this.state.imgList;
-    console.log(imgList)
+    // console.log(imgList)
     return (
       <div style={{ width: "100%", background: "transparent" }}  >
         {imgList.map((url, key) => {

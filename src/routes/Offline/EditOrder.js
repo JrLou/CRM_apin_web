@@ -52,8 +52,8 @@ export default class EditOrder extends PureComponent {
       flag = isLeader ? false : true;
     }
 
-    console.log('可编辑否？', flag);
-    console.log(changedDetail);
+    // console.log('可编辑否？', flag);
+    // console.log(changedDetail);
     return (
       <PageHeaderLayout>
         <AddorderForm isEdit={true} isLeader={isLeader} detail={changedDetail} id={this.par} readOnly={flag} />

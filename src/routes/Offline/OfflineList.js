@@ -356,8 +356,8 @@ export default class OfflineList extends PureComponent {
         title: '操作',
         render: (text, record) => {
           return <div className={styles.handleBtn}>
-            <Link to={"/offline/order/ViewOrder/" + record.id}><a href="javascript:;" type='primary'>查看</a></Link>
-            <Link to={"/offline/order/EditOrder/" + record.id}><a href="javascript:;" type='primary'>修改</a></Link>
+            <Link to={"/offline/order/ViewOrder/" + record.id}> 查看 </Link>
+            <Link to={"/offline/order/EditOrder/" + record.id}> 修改 </Link>
             {isLeader ? <a href="javascript:;" type='primary' onClick={this.delOrder.bind(this, record.id)}>删除</a> : null}
           </div>
         }
