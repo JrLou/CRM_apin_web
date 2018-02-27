@@ -1253,8 +1253,9 @@ class UpImg extends Component {
     // console.log('cur!!!!!!!');
     // console.log(this.props.imgList);
     if (this.props.imgList !== nextProps.imgList) {
+      console.log('hello');
       this.setState({
-        imgList: nextProps.imgList.split(',')
+        imgList: nextProps.imgList ? nextProps.imgList.split(',') : []
       })
     }
   }
@@ -1319,6 +1320,11 @@ class UpImg extends Component {
     }
     return true
   }
+  handleCancel = () => {
+    this.setState({
+      visible: false
+    })
+  }
   render() {
     const uploadButton = (
       <div>
@@ -1335,6 +1341,10 @@ class UpImg extends Component {
             <div style={{ width: 102, height: 102, marginBottom: 20, position: "relative" }}
               onClick={() => {
                 // alert(url);
+                this.setState({
+                  visible: true,
+                  showImg: url
+                })
               }}
             >
               <img key={key} style={{ width: "100%", height: "100%" }} src={url} />
@@ -1386,9 +1396,12 @@ class UpImg extends Component {
             beforeUpload={this.beforeUpload.bind(this)}
 
           >
-            {this.state.imgList.length == 6 ? null : uploadButton}
+            {this.state.imgList.length == 6 || this.props.disabled ? null : uploadButton}
           </Upload >
         </span>
+        <Modal visible={this.state.visible} footer={null} onCancel={this.handleCancel} width={800} style={{ textAlign: 'center' }}>
+          <img style={{ maxWidth: '100%' }} src={this.state.showImg} />
+        </Modal>
       </div>
     )
   }
