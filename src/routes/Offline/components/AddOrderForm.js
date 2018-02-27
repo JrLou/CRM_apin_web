@@ -460,7 +460,18 @@ export default class AddOrderForm extends Component {
           this.setState({
             activeKey: '3'
           })
-        } else {
+        }
+        else if (errorArr.indexOf('receiptDate') !== -1 || errorArr.indexOf('receiptAmount') !== -1 || errorArr.indexOf('receiptVoucher') !== -1) {
+          this.setState({
+            activeKey: '0'
+          })
+        }
+        else if (errorArr.indexOf('payoffDate') !== -1) {
+          this.setState({
+            activeKey: '2'
+          })
+        }
+        else {
           this.setState({
             activeKey: '1'
           })
@@ -471,6 +482,7 @@ export default class AddOrderForm extends Component {
         values = this._changeToDatestr(values, ['arrDate', 'depDate', 'inquiryDate', 'printDate', 'payoffDate', 'receiptDate'])
         values = this._changePlanValues(values, ['supplierName', 'adultUnitprice', 'childUnitprice', 'babyUnitprice', 'flight', 'id', 'orderId', 'selected', 'charge'])
         values.isPayoff = values.isPayoff ? '1' : '0';
+        values.isReceipt = values.isReceipt ? '1' : '0';
         values.isSendoff = values.isSendoff ? '1' : '0';
         console.log('将要提交的参数'); console.log(values);
         // 凭证
@@ -930,9 +942,21 @@ export default class AddOrderForm extends Component {
                   <TabPane tab="收款凭证" key="0" >
                     <Row gutter={20}>
                       <Col span={24}>
+                        <FormItem label="是否已收款" {...formItemLayout4}>
+                          {getFieldDecorator('isReceipt', {
+                            valuePropName: 'checked',
+                            initialValue: detail.isReceipt == 1 ? true : false
+                          })(
+                            <Checkbox disabled={this.props.isView ? true : specialFlag && detail.isReceipt == 1}>是</Checkbox>
+                            )}
+                        </FormItem>
+                      </Col>
+                    </Row>
+                    <Row gutter={20}>
+                      <Col span={24}>
                         <FormItem label="收款日期" {...formItemLayout4}>
                           {getFieldDecorator('receiptDate', {
-                            rules: [{ required: true, message: "必填" }],
+                            rules: [{ required: this.props.form.getFieldValue('isReceipt'), message: "必填" }],
                             initialValue: detail.receiptDate
                           })(
                             <DatePicker disabled={readOnly} />
@@ -944,7 +968,7 @@ export default class AddOrderForm extends Component {
                       <Col span={24}>
                         <FormItem label="收款金额" {...formItemLayout4}>
                           {getFieldDecorator('receiptAmount', {
-                            rules: [{ required: true, message: "必填" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
+                            rules: [{ required: this.props.form.getFieldValue('isReceipt'), message: "必填" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
                             initialValue: detail.receiptAmount
                           })(
                             <Input disabled={readOnly} style={{ width: '70%', marginRight: "6px" }} />
@@ -957,7 +981,7 @@ export default class AddOrderForm extends Component {
                       <Col span={24} >
                         <FormItem label="上传图片" {...formItemLayout5}>
                           {getFieldDecorator('receiptVoucher', {
-                            rules: [{ required: true, message: "必填" }],
+                            rules: [{ required: this.props.form.getFieldValue('isReceipt'), message: "必填" }],
                             initialValue: detail.receiptVoucher
                           },
                           )(
@@ -1082,7 +1106,7 @@ export default class AddOrderForm extends Component {
                   <TabPane tab="结算" key="2">
                     <Row gutter={20}>
                       <Col span={8}>
-                        <FormItem label="汇款给供应商" {...formItemLayout}>
+                        <FormItem label="打款给供应商" {...formItemLayout}>
                           {getFieldDecorator('isPayoff', {
                             valuePropName: 'checked',
                             initialValue: detail.isPayoff == 1 ? true : false
@@ -1093,7 +1117,7 @@ export default class AddOrderForm extends Component {
                       </Col>
                       <Col span={8}>
                         <FormItem label="打款日期" {...formItemLayout}>
-                          {getFieldDecorator('payoffDate ', {
+                          {getFieldDecorator('payoffDate', {
                             rules: [{ required: this.props.form.getFieldValue('isPayoff'), message: '必填' }],
                             initialValue: detail.payoffDate
                           })(
