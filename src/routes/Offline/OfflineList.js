@@ -146,7 +146,7 @@ export default class OfflineList extends PureComponent {
               })(
                 <Select placeholder="请选择" style={{ width: '100%' }} >
                   <Option value="">全部</Option>
-                  <Option value="1">已出票</Option>
+                  <Option value="1">出票</Option>
                   <Option value="0">等待</Option>
                   <Option value="2">失败</Option>
                 </Select>
@@ -327,7 +327,7 @@ export default class OfflineList extends PureComponent {
         title: '订单状态',
         dataIndex: 'ticketStatus',// 0 等待 1已出票  2 拒绝
         render: (text, record) => {
-          let inner_text = ['等待', '已出票', '失败'];
+          let inner_text = ['等待', '出票', '失败'];
           return inner_text[text];
         }
       },
