@@ -146,7 +146,7 @@ export default class OfflineList extends PureComponent {
               })(
                 <Select placeholder="请选择" style={{ width: '100%' }} >
                   <Option value="">全部</Option>
-                  <Option value="1">出票完成</Option>
+                  <Option value="1">出票</Option>
                   <Option value="0">等待</Option>
                   <Option value="2">失败</Option>
                 </Select>
