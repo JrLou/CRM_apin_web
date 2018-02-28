@@ -910,7 +910,7 @@ export default class AddOrderForm extends Component {
                           <RadioGroup onChange={this.isShowTabs} disabled={readOnly}>
                             <Radio value={0}>等待</Radio>
                             <Radio value={2}>失败</Radio>
-                            <Radio value={1}>已出票</Radio>
+                            <Radio value={1}>出票</Radio>
                           </RadioGroup>
                           )}
                       </FormItem>
@@ -966,7 +966,7 @@ export default class AddOrderForm extends Component {
                             rules: [{ required: this.props.form.getFieldValue('isReceipt'), message: "必填" }],
                             initialValue: detail.receiptDate
                           })(
-                            <DatePicker disabled={this.props.isView ? true : specialFlag && detail.isReceipt == 1} />
+                            <DatePicker disabled={this.props.isView ? true : specialFlag && detail.receiptDate} />
                             )}
                         </FormItem>
                       </Col>
@@ -978,7 +978,7 @@ export default class AddOrderForm extends Component {
                             rules: [{ required: this.props.form.getFieldValue('isReceipt'), message: "必填" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
                             initialValue: detail.receiptAmount
                           })(
-                            <Input disabled={this.props.isView ? true : specialFlag && detail.isReceipt == 1} style={{ width: '70%', marginRight: "6px" }} />
+                            <Input disabled={this.props.isView ? true : specialFlag && detail.receiptAmount} style={{ width: '70%', marginRight: "6px" }} />
                             )}
                           <span>元</span>
                         </FormItem>
@@ -992,7 +992,7 @@ export default class AddOrderForm extends Component {
                             initialValue: detail.receiptVoucher
                           },
                           )(
-                            <UpImg disabled={this.props.isView ? true : specialFlag && detail.isReceipt == 1} getFileList={this.getFileList} imgList={detail.receiptVoucher} />
+                            <UpImg disabled={this.props.isView ? true : specialFlag && detail.receiptVoucher} getFileList={this.getFileList} imgList={detail.receiptVoucher} />
                             )}
 
                         </FormItem>
@@ -1004,10 +1004,10 @@ export default class AddOrderForm extends Component {
                       <Col span={8}>
                         <FormItem label="出票日期" {...formItemLayout3}>
                           {getFieldDecorator('printDate', {
-                            rules: [{ required: true, message: "必填" }],
+                            rules: [],
                             initialValue: detail.printDate
                           })(
-                            <DatePicker disabled={readOnly} />
+                            <DatePicker disabled={this.props.isView ? true : specialFlag && detail.printDate} />
                             )}
                         </FormItem>
                       </Col>
@@ -1018,10 +1018,11 @@ export default class AddOrderForm extends Component {
                         <FormItem label="卖价" {...formItemLayout3}>
                           <span style={{ marginRight: '5px' }}>成人:</span>
                           {getFieldDecorator('adultSellPrice', {
-                            rules: [{ required: true, message: "必填" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
+                            rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
                             initialValue: detail.adultSellPrice
                           })(
-                            <Input onChange={this.changeCaulator.bind(null, /^[1-9][0-9]{0,4}$/)} disabled={readOnly} style={{ width: '70%', marginRight: "6px" }} />
+                            <Input onChange={this.changeCaulator.bind(null, /^[1-9][0-9]{0,4}$/)}
+                              disabled={this.props.isView ? true : specialFlag && detail.adultSellPrice} style={{ width: '70%', marginRight: "6px" }} />
                             )}
                           <span>元/人</span>
                         </FormItem>
@@ -1032,7 +1033,8 @@ export default class AddOrderForm extends Component {
                             rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
                             initialValue: detail.childSellPrice
                           })(
-                            <Input onChange={this.changeCaulator.bind(null, /^[1-9][0-9]{0,4}$/)} disabled={readOnly} style={{ width: '70%', marginRight: "6px" }} />
+                            <Input onChange={this.changeCaulator.bind(null, /^[1-9][0-9]{0,4}$/)}
+                              disabled={this.props.isView ? true : specialFlag && detail.childSellPrice} style={{ width: '70%', marginRight: "6px" }} />
                             )}
                           <span>元/人</span>
                         </FormItem>
@@ -1043,7 +1045,8 @@ export default class AddOrderForm extends Component {
                             rules: [{ pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
                             initialValue: detail.babySellPrice
                           })(
-                            <Input onChange={this.changeCaulator.bind(null, /^[1-9][0-9]{0,4}$/)} disabled={readOnly} style={{ width: '70%', marginRight: "6px" }} />
+                            <Input onChange={this.changeCaulator.bind(null, /^[1-9][0-9]{0,4}$/)}
+                              disabled={this.props.isView ? true : specialFlag && detail.babySellPrice} style={{ width: '70%', marginRight: "6px" }} />
                             )}
                           <span>元/人</span>
                         </FormItem>
@@ -1053,11 +1056,11 @@ export default class AddOrderForm extends Component {
                       <Col span={8}>
                         <FormItem label="请选择方案" {...formItemLayout3}>
                           {getFieldDecorator('selected', {
-                            rules: [{ required: true, message: "必填" }],
+                            rules: [],
                             initialValue: detail.selected
                           })(
                             <Select placeholder="请选择"
-                              disabled={readOnly}
+                              disabled={this.props.isView ? true : specialFlag && detail.selected !== undefined}
                               onChange={this.changeScheme}>
                               {this.createOptions()}
                             </Select>
@@ -1101,10 +1104,10 @@ export default class AddOrderForm extends Component {
                       <Col span={8}>
                         <FormItem label="票号" {...formItemLayout3}>
                           {getFieldDecorator('ticketNo', {
-                            rules: [{ required: true, message: "必填" }, { max: 200, message: "最大输入200位" }],
+                            rules: [{ max: 200, message: "最大输入200位" }],
                             initialValue: detail.ticketNo
                           })(
-                            <Input disabled={readOnly} />
+                            <Input disabled={this.props.isView ? true : specialFlag && detail.ticketNo} />
                             )}
                         </FormItem>
                       </Col>
