@@ -63,13 +63,20 @@ export default class AddFlightForm extends Component {
           <Col span={10}>
             <FormItem label="发生费用"  {...formItemLayout}>
               {getFieldDecorator('fee', {
-                rules: [{ required: true, message: "必填" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
+                rules: [{ required: true, message: "必填" }, { pattern: /^[-]?[1-9][0-9]{0,4}$/, message: "请输入-99999-99999的整数" }],
                 initialValue: ''
               })(
-                <Input />
+                <Input placeholder="" />
                 )}
             </FormItem>
           </Col>
+          <Col span={10} style={{marginLeft:'-37px'}}>
+            <FormItem>
+              <span style={{ color: '#aaa' }}>收客户的费用录正数，退客户的录负数</span>
+            </FormItem>
+          </Col>
+        </Row>
+        <Row gutter={20}>
           <Col span={10}>
             <FormItem label="退改利润"  {...formItemLayout}>
               {getFieldDecorator('profit', {
