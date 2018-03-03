@@ -1,10 +1,10 @@
-import React, { PureComponent } from "react";
-import { connect } from "dva";
-import { Card, Form, Input, Button, Row, Col } from "antd";
-import StandardTable from "./TableList";
-import PageHeaderLayout from "../../layouts/PageHeaderLayout";
-import AllModal from "./ModalCpm";
-import styles from "./Template.less";
+import React, { PureComponent } from 'react';
+import { connect } from 'dva';
+import { Card, Form, Input, Button, Row, Col } from 'antd';
+import StandardTable from './TableList';
+import PageHeaderLayout from '../../layouts/PageHeaderLayout';
+import AllModal from './ModalCpm';
+import styles from './Template.less';
 
 const FormItem = Form.Item;
 
@@ -17,7 +17,7 @@ export default class TableList extends PureComponent {
     super(props);
     this.state = {
       formValues: {},
-      modalType: "add", //add、 edit、 delete
+      modalType: 'add', //add、 edit、 delete
     };
     this.page = {
       pageNum: 1,
@@ -27,7 +27,7 @@ export default class TableList extends PureComponent {
 
   componentDidMount() {
     this.props.dispatch({
-      type: "customerMannagement/fetch",
+      type: 'customerMannagement/fetch',
       payload: this.page,
     });
   }
@@ -36,13 +36,13 @@ export default class TableList extends PureComponent {
     //还原redux中modal的数据
     const { dispatch } = this.props;
     dispatch({
-      type: "customerMannagement/clear",
+      type: 'customerMannagement/clear',
     });
   }
 
   getPageName = () => {
     const { customerMannagement: { pageType } } = this.props;
-    return pageType === "s" ? "供应商" : "客户";
+    return pageType === 's' ? '供应商' : '客户';
   };
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
@@ -55,7 +55,7 @@ export default class TableList extends PureComponent {
     });
 
     dispatch({
-      type: "customerMannagement/fetch",
+      type: 'customerMannagement/fetch',
       payload: {
         ...this.page,
         ...this.state.formValues,
@@ -76,7 +76,7 @@ export default class TableList extends PureComponent {
       this.setState({ formValues }, () => {
         this.resetCurrentPage();
         dispatch({
-          type: "customerMannagement/fetch",
+          type: 'customerMannagement/fetch',
           payload: {
             ...this.page,
             ...this.state.formValues,
@@ -95,7 +95,7 @@ export default class TableList extends PureComponent {
       this.setState({ formValues }, () => {
         this.resetCurrentPage();
         dispatch({
-          type: "customerMannagement/fetch",
+          type: 'customerMannagement/fetch',
           payload: {
             ...this.page,
             ...this.state.formValues,
@@ -109,7 +109,7 @@ export default class TableList extends PureComponent {
     const { dispatch } = this.props;
     this.setState({ modalType }, () => {
       dispatch({
-        type: "customerMannagement/extendAll", //modalConfirmLoading
+        type: 'customerMannagement/extendAll', //modalConfirmLoading
         payload: { showModal: true }, //传过去的参数
       });
     });
@@ -127,56 +127,56 @@ export default class TableList extends PureComponent {
         <Row gutter={layoutForm}>
           <Col md={8} sm={24}>
             <FormItem label={`${this.getPageName()}名称`}>
-              {getFieldDecorator("name", {
+              {getFieldDecorator('name', {
                 //【客户名称】支持中文、英文、数字，最多50个字符；
-                initialValue: "",
-                rules: [{ max: 50, message: "最长50位" }],
+                initialValue: '',
+                rules: [{ max: 50, message: '最长50位' }],
               })(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="负责人:">
-              {getFieldDecorator("charge", {
+              {getFieldDecorator('charge', {
                 //【负责人】支持模糊搜索，最长字符可输入10个。
-                initialValue: "",
-                rules: [{ max: 10, message: "最长10位" }],
+                initialValue: '',
+                rules: [{ max: 10, message: '最长10位' }],
               })(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="联系人:">
-              {getFieldDecorator("contacts", {
+              {getFieldDecorator('contacts', {
                 //【联系人】支持中文、英文，允许输入特殊字符，小写英文自动转换为大写，最多20个字符；
-                initialValue: "",
-                rules: [{ max: 20, message: "最长20位" }],
+                initialValue: '',
+                rules: [{ max: 20, message: '最长20位' }],
               })(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="电话号码:">
-              {getFieldDecorator("mobile", {
+              {getFieldDecorator('mobile', {
                 //【电话号码】支持数字，允许输入特殊字符，最多50个字符；
-                initialValue: "",
-                rules: [{ max: 50, message: "最长50位" }],
+                initialValue: '',
+                rules: [{ max: 50, message: '最长50位' }],
               })(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="微信/QQ:">
-              {getFieldDecorator("wxqq", {
+              {getFieldDecorator('wxqq', {
                 //【微信/QQ】支持中文、英文、数字，允许输入特殊字符，小写英文自动转换为大写，最多100个字符
-                initialValue: "",
-                rules: [{ max: 100, message: "最长100位" }],
+                initialValue: '',
+                rules: [{ max: 100, message: '最长100位' }],
               })(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
-          {pageType === "c" ? null : (
+          {pageType === 'c' ? null : (
             <Col md={8} sm={24}>
               <FormItem label="优势线路:">
-                {getFieldDecorator("predominantLine", {
+                {getFieldDecorator('predominantLine', {
                   //【微信/QQ】支持中文、英文、数字，允许输入特殊字符，小写英文自动转换为大写，最多100个字符
-                  initialValue: "",
-                  rules: [{ max: 200, message: "最长200位" }],
+                  initialValue: '',
+                  rules: [{ max: 200, message: '最长200位' }],
                 })(<Input placeholder="请输入" />)}
               </FormItem>
             </Col>
@@ -186,12 +186,12 @@ export default class TableList extends PureComponent {
           <Col span={12}>
             <Button
               type="primary"
-              onClick={() => this.handleShowModalSwitch("add")}
+              onClick={() => this.handleShowModalSwitch('add')}
             >
               新增{this.getPageName()}
             </Button>
           </Col>
-          <Col span={12} style={{ textAlign: "right" }}>
+          <Col span={12} style={{ textAlign: 'right' }}>
             <FormItem>
               <Button type="primary" htmlType="submit">
                 查询
@@ -210,7 +210,7 @@ export default class TableList extends PureComponent {
     const { customerMannagement: { loading, data }, showModal } = this.props;
     return (
       <PageHeaderLayout>
-        <Card bordered={false} style={{ minWidth: "780px" }}>
+        <Card bordered={false} style={{ minWidth: '780px' }}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderForm()}</div>
             <p>共搜索到{data.option}条数据</p>
