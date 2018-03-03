@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
+import { Link } from 'dva/router';
 import { Card, Form, Input, Button, Row, Col } from 'antd';
 import StandardTable from './TableList';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
@@ -184,12 +185,16 @@ export default class TableList extends PureComponent {
         </Row>
         <Row>
           <Col span={12}>
-            <Button
-              type="primary"
-              onClick={() => this.handleShowModalSwitch('add')}
-            >
-              新增客户
-            </Button>
+            <Link to="/offline/customerMannagement/add">
+              <Button
+                type="primary"
+                onClick={() => {
+                  //this.handleShowModalSwitch('add');
+                }}
+              >
+                新增客户
+              </Button>
+            </Link>
           </Col>
           <Col span={12} style={{ textAlign: 'right' }}>
             <FormItem>

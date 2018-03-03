@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
+import { Link } from 'dva/router';
 import { Table, Button } from 'antd';
 import { Base64 } from 'js-base64';
 import CookieHelp from '../../utils/cookies';
@@ -38,6 +39,7 @@ class StandardTable extends PureComponent {
         .split(',')
         .indexOf('716103936e1a461ab79dcb7283a979b8') !== -1;
     const columnsForS = [
+      //供应商
       {
         title: `${this.getPageName()}名称`,
         dataIndex: 'name',
@@ -126,11 +128,16 @@ class StandardTable extends PureComponent {
       },
     ];
     const columnsForC = [
+      //客户（旅行社）
       {
         title: `${this.getPageName()}名称`,
         dataIndex: 'name',
         width: '12%',
-        // render: (text, record) => <Link to={"/offline/order/ViewOrder/" + record.id}>{text}</Link>,
+        render: (text, record) => (
+          <Link to={`/offline/customerMannagement/detail/${record.id}`}>
+            {text}
+          </Link>
+        ),
       },
       {
         title: '负责人',
@@ -177,19 +184,21 @@ class StandardTable extends PureComponent {
         render: (text, record) => {
           return (
             <div style={{ whiteSpace: 'nowrap' }}>
-              <Button
-                disabled={!isLeader}
-                type="primary"
-                onClick={() => {
-                  handleShowModalSwitch('edit');
-                  dispatch({
-                    type: 'customerMannagement/fetchQueryOne',
-                    payload: { id: record.id },
-                  });
-                }}
-              >
-                修改
-              </Button>
+              <Link to={`/offline/customerMannagement/edit/${record.id}`}>
+                <Button
+                  disabled={!isLeader}
+                  type="primary"
+                  onClick={() => {
+                    // handleShowModalSwitch('edit');
+                    // dispatch({
+                    //   type: 'customerMannagement/fetchQueryOne',
+                    //   payload: { id: record.id },
+                    // });
+                  }}
+                >
+                  修改
+                </Button>
+              </Link>
               &nbsp;&nbsp;&nbsp;
               <Button
                 disabled={!isLeader}

@@ -214,6 +214,18 @@ export const getRouterData = (app) => {
       name: '客户（旅行社）管理',
       component: dynamicWrapper(app, ['customerMannagement'], () => import('../routes/CustomerMannagement/CustomerMannagement.js')),
     },
+    '/offline/customerMannagement/add': {
+      name: '新增客户',
+      component: dynamicWrapper(app, ['customerMannagement'], () => import('../routes/CustomerMannagement/AddCustomer.js')),
+    },
+    '/offline/customerMannagement/edit/:id': {
+      name: '修改客户',
+      component: dynamicWrapper(app, ['customerMannagement'], () => import('../routes/CustomerMannagement/EditCustomer.js')),
+    },
+    '/offline/customerMannagement/detail/:id': {
+      name: '客户详情页',
+      component: dynamicWrapper(app, ['customerMannagement'], () => import('../routes/CustomerMannagement/Detail.js')),
+    },
     '/offline/supporterMannagement': {
       name: '供应商管理',
       component: dynamicWrapper(app, ['customerMannagement'], () => import('../routes/SupporterMannagement/SupporterMannagement.js')),
