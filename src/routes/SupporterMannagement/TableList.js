@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import { Table, Button } from 'antd';
 import { Base64 } from 'js-base64';
 import CookieHelp from '../../utils/cookies';
-import styles from './TableList.less';
+import styles from '../CustomerMannagement/TableList.less';
 
 @connect(state => ({
   customerMannagement: state.customerMannagement,
@@ -130,7 +130,6 @@ class StandardTable extends PureComponent {
         title: `${this.getPageName()}名称`,
         dataIndex: 'name',
         width: '12%',
-        // render: (text, record) => <Link to={"/offline/order/ViewOrder/" + record.id}>{text}</Link>,
       },
       {
         title: '负责人',
