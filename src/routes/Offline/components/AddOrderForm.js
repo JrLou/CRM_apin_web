@@ -1,3 +1,4 @@
+/*eslint-disable*/
 //需求池页面
 import React, { Component } from 'react';
 import { connect } from 'dva';

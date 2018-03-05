@@ -63,6 +63,7 @@ const transferRes = (pageType, methodName) => {
   return response;
 };
 
+let connectInfoKey = 0; //给connectInfo的每一项提供的key
 const initState = () => {
   return {
     pageType: 'c', //c=>客户 s=>供应商
@@ -72,6 +73,8 @@ const initState = () => {
       option: 0,
     },
     loading: true,
+
+    connectInfo: [{ contacts: '', mobile: '', wxqq: '', key: connectInfoKey }], //给新增的表达使用
 
     modalData: {
       data: {},
@@ -235,6 +238,39 @@ export default {
     clear() {
       //页面卸载时重置
       return initState();
+    },
+    //V1.3的更改
+    addOneConnect(state, action) {
+      const { connectInfo } = state;
+      const newConnectInfo = [
+        ...connectInfo,
+        {
+          contacts: '',
+          mobile: '',
+          wxqq: '',
+          key: (connectInfoKey += 1),
+        },
+      ];
+      return {
+        ...state,
+        connectInfo: newConnectInfo,
+      };
+    },
+    delOneConnect(state, { payload }) {
+      const { connectInfo } = state;
+      const newConnectInfo = connectInfo.filter(currV => {
+        return currV.key !== payload.key;
+      });
+      return {
+        ...state,
+        connectInfo: newConnectInfo,
+      };
+    },
+    changeConnectInfo(state, { payload }) {
+      return {
+        ...state,
+        connectInfo: payload,
+      };
     },
   },
 };

@@ -1,8 +1,9 @@
 import React, { PureComponent } from 'react';
+import AddCustomer from './AddCustomer';
 
 class EditCustomer extends PureComponent {
   render() {
-    return <div>修改页</div>;
+    return <AddCustomer />;
   }
 }
 
