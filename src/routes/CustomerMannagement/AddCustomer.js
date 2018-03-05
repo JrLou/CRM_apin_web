@@ -8,6 +8,8 @@ import styles from './Template.less';
 const { TabPane } = Tabs;
 const { Item: FormItem } = Form;
 
+let uuid = 0;
+
 @connect(state => ({
   customerMannagement: state.customerMannagement,
 }))
@@ -17,9 +19,38 @@ class AddCustomer extends PureComponent {
     super(props);
     this.delKey = 0; //删除的key值
   }
+
   getInitData = (data, key) => {
     if (!data) return;
     return data[key] || '';
+  };
+
+  add = () => {
+    uuid += 1;
+    const { form } = this.props;
+    // can use data-binding to get
+    const keys = form.getFieldValue('keys');
+    const nextKeys = keys.concat(uuid);
+    // can use data-binding to set
+    // important! notify form to detect changes
+    form.setFieldsValue({
+      keys: nextKeys,
+    });
+  };
+
+  remove = k => {
+    const { form } = this.props;
+    // can use data-binding to get
+    const keys = form.getFieldValue('keys');
+    // We need at least one passenger
+    if (keys.length === 1) {
+      return;
+    }
+
+    // can use data-binding to set
+    form.setFieldsValue({
+      keys: keys.filter(key => key !== k),
+    });
   };
 
   handleSubmit = e => {
@@ -27,23 +58,25 @@ class AddCustomer extends PureComponent {
 
     const {
       dispatch,
-      form,
+      form: { getFieldValue, validateFields },
       handlePageFormReset,
       modalType,
       customerMannagement: { modalData: { data: modalData } },
     } = this.props;
 
-    form.validateFields((err, fieldsValue) => {
+    const keys = getFieldValue('keys');
+
+    validateFields((err, fieldsValue) => {
       console.log('fieldsValue', fieldsValue);
       if (err) return;
 
       const { customerMannagement: { connectInfo } } = this.props;
 
       // 添加 微信 qq 的验证
-      for (const k in connectInfo) {
+      for (let i = 0; i < keys.length; i += 1) {
         if (
-          !fieldsValue[`mobile-${connectInfo[k].key}`] &&
-          !fieldsValue[`wxqq-${connectInfo[k].key}`]
+          !fieldsValue[`mobile-${keys[i]}`] &&
+          !fieldsValue[`wxqq-${keys[i]}`]
         ) {
           message.warning('微信/QQ、电话号码请至少填一个');
           return;
@@ -86,7 +119,7 @@ class AddCustomer extends PureComponent {
   createNewConnect = (modalData, getFieldDecorator, layoutForm) => {
     const {
       dispatch,
-      form: { setFieldsValue },
+      form: { getFieldValue },
       customerMannagement: { connectInfo },
     } = this.props;
     const itemSpan = 5;
@@ -95,66 +128,42 @@ class AddCustomer extends PureComponent {
       return [...accumulator, ...Object.keys(v)];
     }, []);
 
-    // setFieldsValue({
-    //   keys: newKeys,
-    // });
-
-    const formItems = connectInfo.map(currObj => {
-      const { key } = currObj;
+    getFieldDecorator('keys', { initialValue: [0] }); //TODO: 这里的init改成与返回的值关联即可， 记得把上版本的冗余代码删除
+    const keys = getFieldValue('keys');
+    const formItems = keys.map((key, index) => {
       return (
         <Row gutter={layoutForm} key={key}>
           <Col span={itemSpan}>
             <FormItem label="联系人:">
               {getFieldDecorator(`contacts-${key}`, {
                 //【联系人】支持中文、英文，允许输入特殊字符，小写英文自动转换为大写，最多20个字符；
-                initialValue: currObj.contacts,
+                // initialValue: currObj.contacts,
                 rules: [{ max: 20, message: '最长20位' }],
-              })(
-                <Input
-                  placeholder="请输入"
-                  onChange={e => {
-                    this.saveChange(e, key, 'contacts');
-                  }}
-                />
-              )}
+              })(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col span={itemSpan}>
             <FormItem label="电话号码:">
               {getFieldDecorator(`mobile-${key}`, {
                 //【联系人】支持中文、英文，允许输入特殊字符，小写英文自动转换为大写，最多20个字符；
-                initialValue: currObj.mobile,
+                // initialValue: currObj.mobile,
                 rules: [
                   { max: 50, message: '最长50位' },
                   { pattern: /^\s*\S+[\s\S]*$/, message: '不能输入纯空格' },
                 ],
-              })(
-                <Input
-                  placeholder="请输入"
-                  onChange={e => {
-                    this.saveChange(e, key, 'mobile');
-                  }}
-                />
-              )}
+              })(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col span={itemSpan}>
             <FormItem label="微信/QQ:">
               {getFieldDecorator(`wxqq-${key}`, {
                 //【联系人】支持中文、英文，允许输入特殊字符，小写英文自动转换为大写，最多20个字符；
-                initialValue: currObj.wxqq,
+                // initialValue: currObj.wxqq,
                 rules: [
                   { max: 100, message: '最长100位' },
                   { pattern: /^\s*\S+[\s\S]*$/, message: '不能输入纯空格' },
                 ],
-              })(
-                <Input
-                  placeholder="请输入"
-                  onChange={e => {
-                    this.saveChange(e, key, 'wxqq');
-                  }}
-                />
-              )}
+              })(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col span={3} style={{ textAlign: 'center' }}>
@@ -164,7 +173,7 @@ class AddCustomer extends PureComponent {
             <FormItem>
               <Button
                 onClick={() => {
-                  this.delKey = currObj.key;
+                  this.delKey = key;
                   dispatch({
                     type: 'customerMannagement/extendAll',
                     payload: { showModal: true },
@@ -186,15 +195,7 @@ class AddCustomer extends PureComponent {
           <Col span={21} />
           <Col span={3}>
             <FormItem>
-              <Button
-                onClick={() => {
-                  dispatch({
-                    type: 'customerMannagement/addOneConnect',
-                  });
-                }}
-              >
-                新增联系人
-              </Button>
+              <Button onClick={this.add}>新增联系人</Button>
             </FormItem>
           </Col>
         </Row>
@@ -216,7 +217,7 @@ class AddCustomer extends PureComponent {
 
   renderForm() {
     const {
-      form: { getFieldDecorator },
+      form: { getFieldDecorator, getFieldValue },
       customerMannagement: { modalConfirmLoading, modalData },
     } = this.props;
     const layoutForm = { md: 8, lg: 24, xl: 48 };
@@ -303,30 +304,13 @@ class AddCustomer extends PureComponent {
               <ConfirmModal
                 title="是否确认删除"
                 handleOK={() => {
-                  console.log(this.delKey);
-                  dispatch({
-                    type: `customerMannagement/delOneConnect`,
-                    payload: { key: this.delKey },
-                  });
-
-                  const { customerMannagement: { connectInfo } } = this.props;
-                  connectInfo.forEach((v, k) => {
-                    console.log('v', v);
-                    this.props.form.setFieldsValue({
-                      [`contacts-${k}`]: v.contacts,
-                      [`mobile-${k}`]: v.mobile,
-                      [`wxqq-${k}`]: v.wxqq,
-                      // key: v.key,
-                    });
-                  });
-
+                  this.remove(this.delKey);
                   dispatch({
                     type: 'customerMannagement/extendAll',
                     payload: { showModal: false },
                   });
                 }}
               />
-              {/* <DynamicFieldSet /> */}
             </TabPane>
           </Tabs>
         </Card>
@@ -335,7 +319,6 @@ class AddCustomer extends PureComponent {
   }
 }
 
-let uuid = 0;
 @Form.create()
 class DynamicFieldSet extends React.Component {
   remove = k => {
