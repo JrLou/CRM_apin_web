@@ -74,7 +74,7 @@ const initState = () => {
     },
     loading: true,
 
-    connectInfo: [{ contacts: '', mobile: '', wxqq: '', key: connectInfoKey }], //给新增的表达使用
+    connectInfo: [{ contacts: '', mobile: '', wxqq: '', key: connectInfoKey }], //TODO: 这里看看是否多余了
 
     modalData: {
       data: {},

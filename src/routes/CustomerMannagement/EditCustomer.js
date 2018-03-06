@@ -1,9 +1,18 @@
+import { connect } from 'dva';
 import React, { PureComponent } from 'react';
-import AddCustomer from './AddCustomer';
+import PageHeaderLayout from '../../layouts/PageHeaderLayout';
+import BasicDetailForm from './components/BasicDetailForm';
 
+@connect(state => ({
+  customerMannagement: state.customerMannagement,
+}))
 class EditCustomer extends PureComponent {
   render() {
-    return <AddCustomer />;
+    return (
+      <PageHeaderLayout>
+        <BasicDetailForm />
+      </PageHeaderLayout>
+    );
   }
 }
 
