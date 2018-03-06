@@ -1,10 +1,10 @@
 import { connect } from 'dva';
 import React, { PureComponent } from 'react';
-import { Tabs, Card, Row, Col, Form, Input, Button, message } from 'antd';
+import { Card, Row, Col, Form, Input, Button, message } from 'antd';
+import SingleBlock from './SingleBlock';
 import ConfirmModal from './ConfirmModal';
 import styles from '../Template.less';
 
-const { TabPane } = Tabs;
 const { Item: FormItem } = Form;
 
 let uuid = 0;
@@ -306,66 +306,56 @@ class BasicDetailForm extends PureComponent {
 
     return (
       <Form onSubmit={this.handleSubmit} layout="inline">
-        <div style={{ marginBottom: '20px' }}>
-          <Card bordered={false}>
-            <Tabs type="card">
-              <TabPane tab="基础信息" key="0">
-                <Row gutter={layoutForm}>
-                  <Col md={8} sm={24}>
-                    <FormItem label="客户名称">
-                      {getFieldDecorator('name', {
-                        //【客户名称】支持中文、英文、数字，最多50个字符；
-                        initialValue: this.getInitData(modalData, 'name'),
-                        rules: [
-                          { max: 50, message: '最长50位' },
-                          {
-                            required: true,
-                            message: `请输入客户名称`,
-                          },
-                          {
-                            pattern: /^\s*\S+[\s\S]*$/,
-                            message: '不能输入纯空格',
-                          },
-                        ],
-                      })(<Input placeholder="请输入" />)}
-                    </FormItem>
-                  </Col>
-                  <Col md={8} sm={24}>
-                    <FormItem label="负责人:">
-                      {getFieldDecorator('charge', {
-                        //【负责人】支持模糊搜索，最长字符可输入10个。
-                        initialValue: this.getInitData(modalData, 'charge'),
-                        rules: [{ max: 10, message: '最长10位' }],
-                      })(<Input placeholder="请输入" />)}
-                    </FormItem>
-                  </Col>
-                  <Col md={8} sm={24}>
-                    <FormItem label="地址:">
-                      {getFieldDecorator('address', {
-                        //【客户名称】支持中文、英文、数字，最多50个字符；
-                        initialValue: this.getInitData(modalData, 'address'),
-                        rules: [
-                          { required: true, message: '请输入地址' },
-                          { max: 100, message: '最长100位' },
-                          {
-                            pattern: /^\s*\S+[\s\S]*$/,
-                            message: '不能输入纯空格',
-                          },
-                        ],
-                      })(<Input placeholder="请输入" />)}
-                    </FormItem>
-                  </Col>
-                </Row>
-                {/* 可编辑的联系人部分 */}
-                {this.createNewConnect(
-                  modalData,
-                  getFieldDecorator,
-                  layoutForm
-                )}
-              </TabPane>
-            </Tabs>
-          </Card>
-        </div>
+        <SingleBlock tab="基础信息">
+          <Row gutter={layoutForm}>
+            <Col md={8} sm={24}>
+              <FormItem label="客户名称">
+                {getFieldDecorator('name', {
+                  //【客户名称】支持中文、英文、数字，最多50个字符；
+                  initialValue: this.getInitData(modalData, 'name'),
+                  rules: [
+                    { max: 50, message: '最长50位' },
+                    {
+                      required: true,
+                      message: `请输入客户名称`,
+                    },
+                    {
+                      pattern: /^\s*\S+[\s\S]*$/,
+                      message: '不能输入纯空格',
+                    },
+                  ],
+                })(<Input placeholder="请输入" />)}
+              </FormItem>
+            </Col>
+            <Col md={8} sm={24}>
+              <FormItem label="负责人:">
+                {getFieldDecorator('charge', {
+                  //【负责人】支持模糊搜索，最长字符可输入10个。
+                  initialValue: this.getInitData(modalData, 'charge'),
+                  rules: [{ max: 10, message: '最长10位' }],
+                })(<Input placeholder="请输入" />)}
+              </FormItem>
+            </Col>
+            <Col md={8} sm={24}>
+              <FormItem label="地址:">
+                {getFieldDecorator('address', {
+                  //【客户名称】支持中文、英文、数字，最多50个字符；
+                  initialValue: this.getInitData(modalData, 'address'),
+                  rules: [
+                    { required: true, message: '请输入地址' },
+                    { max: 100, message: '最长100位' },
+                    {
+                      pattern: /^\s*\S+[\s\S]*$/,
+                      message: '不能输入纯空格',
+                    },
+                  ],
+                })(<Input placeholder="请输入" />)}
+              </FormItem>
+            </Col>
+          </Row>
+          {/* 可编辑的联系人部分 */}
+          {this.createNewConnect(modalData, getFieldDecorator, layoutForm)}
+        </SingleBlock>
         <Card bordered={false}>
           <div style={{ textAlign: 'center' }}>
             <Button
