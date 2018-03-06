@@ -38,96 +38,8 @@ class StandardTable extends PureComponent {
       this.currentUser
         .split(',')
         .indexOf('716103936e1a461ab79dcb7283a979b8') !== -1;
-    const columnsForS = [
-      //供应商
-      {
-        title: `${this.getPageName()}名称`,
-        dataIndex: 'name',
-        width: '10%',
-      },
-      {
-        title: '负责人',
-        dataIndex: 'charge',
-        width: '5%',
-      },
-      {
-        title: '地址',
-        dataIndex: 'address',
-        width: '13%',
-      },
-      {
-        title: '联系人',
-        dataIndex: 'contacts',
-        width: '10%',
-      },
-      {
-        title: '电话号码',
-        dataIndex: 'mobile',
-        width: '11%',
-      },
-      {
-        title: '微信/QQ',
-        dataIndex: 'wxqq',
-        width: '10%',
-      },
-      {
-        title: '优势线路',
-        dataIndex: 'predominantLine',
-        width: '20%',
-      },
-      {
-        title: '操作日期',
-        dataIndex: 'updateTime',
-        render: text => (
-          <span style={{ whiteSpace: 'nowrap' }}>
-            {typeof text === 'string' && text.substring(0, 10)}
-          </span>
-        ),
-      },
-      {
-        title: '操作人',
-        dataIndex: 'updateUserName',
-        render: text => <span style={{ whiteSpace: 'nowrap' }}>{text}</span>,
-      },
-      {
-        title: '编辑',
-        dataIndex: 'operation',
-        render: (text, record) => {
-          return (
-            <div style={{ whiteSpace: 'nowrap' }}>
-              <Button
-                disabled={!isLeader}
-                type="primary"
-                onClick={() => {
-                  handleShowModalSwitch('edit');
-                  dispatch({
-                    type: 'customerMannagement/fetchQueryOne',
-                    payload: { id: record.id },
-                  });
-                }}
-              >
-                修改
-              </Button>
-              &nbsp;&nbsp;&nbsp;
-              <Button
-                disabled={!isLeader}
-                type="primary"
-                onClick={() => {
-                  handleShowModalSwitch('delete');
-                  dispatch({
-                    type: 'customerMannagement/extendAll',
-                    payload: { deleteItemId: record.id },
-                  });
-                }}
-              >
-                删除
-              </Button>
-            </div>
-          );
-        },
-      },
-    ];
-    const columnsForC = [
+
+    const columns = [
       //客户（旅行社）
       {
         title: `${this.getPageName()}名称`,
@@ -218,7 +130,6 @@ class StandardTable extends PureComponent {
         },
       },
     ];
-    const columns = pageType === 's' ? columnsForS : columnsForC;
     const pageProps = {
       current: page.pageNum,
       pageSize: page.pageSize,

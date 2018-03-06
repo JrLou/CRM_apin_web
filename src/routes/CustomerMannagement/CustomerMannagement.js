@@ -1,13 +1,14 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Link } from 'dva/router';
-import { Card, Form, Input, Button, Row, Col } from 'antd';
+import { Card, Form, Input, Button, Row, Col, Select } from 'antd';
 import StandardTable from './TableList';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import AllModal from './ModalCpm';
 import styles from './CustomerMannagement.less';
 
 const FormItem = Form.Item;
+const { Option } = Select;
 
 @connect(state => ({
   customerMannagement: state.customerMannagement,
@@ -136,6 +137,22 @@ export default class TableList extends PureComponent {
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
+            <FormItem label="客户类型">
+              {getFieldDecorator('type', {
+                //【客户名称】支持中文、英文、数字，最多50个字符；
+                initialValue: '',
+                // rules: [{ max: 50, message: '最长50位' }],
+              })(
+                //1-沉积客户、2-激活客户、3-活跃客户',
+                <Select>
+                  <Option value={1}>沉积客户</Option>
+                  <Option value={2}>激活客户</Option>
+                  <Option value={3}>活跃客户</Option>
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
             <FormItem label="负责人:">
               {getFieldDecorator('charge', {
                 //【负责人】支持模糊搜索，最长字符可输入10个。
@@ -228,6 +245,8 @@ export default class TableList extends PureComponent {
             />
           </div>
         </Card>
+
+        {/* TODO:仅仅是给【删除】用 后期可以重构，使用ConfirmModal*/}
         <AllModal
           modalType={this.state.modalType}
           page={this.page}

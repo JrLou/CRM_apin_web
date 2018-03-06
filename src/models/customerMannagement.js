@@ -1,5 +1,6 @@
 /*eslint no-unused-expressions: 0*/
 import { message } from 'antd';
+import { routerRedux } from 'dva/router';
 import {
   //客户管理
   offlineCustomerList,
@@ -7,6 +8,7 @@ import {
   offlineCustomerQuery,
   offlineCustomerEdit,
   offlineCustomerDelete,
+  offlineCustomerByCustomerList,
 
   //供应商管理
   offlineSupporterList,
@@ -76,6 +78,11 @@ const initState = () => {
 
     connectInfo: [{ contacts: '', mobile: '', wxqq: '', key: connectInfoKey }], //TODO: 这里看看是否多余了
 
+    //form用
+    formData: {
+      data: {},
+    },
+
     modalData: {
       data: {},
       message: '',
@@ -114,6 +121,30 @@ export default {
         payload: false,
       });
     },
+    //v1.3新增
+    *fetchCustomerList({ payload, succCB }, { call, put, select }) {
+      //这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
+      yield put({
+        type: 'changeLoading',
+        payload: true,
+      });
+      const pageType = yield select(
+        state => state.customerMannagement.pageType
+      );
+      //eslint-disable-next-line
+      const response = yield call(offlineCustomerByCustomerList, payload); //offlineSupporterList,offlineCustomerList
+      if (response && response.code === 200) {
+        yield put({
+          type: 'saveTableData',
+          payload: response,
+        });
+        succCB && succCB(response.data);
+      }
+      yield put({
+        type: 'changeLoading',
+        payload: false,
+      });
+    },
     *fetchAdd({ payload, succCB }, { call, put, select }) {
       //这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
       yield put({
@@ -129,6 +160,12 @@ export default {
           type: 'extendAll',
           payload: { showModal: false },
         });
+
+        //跳转 客户管理页,这里由于两个交互不一致，但有放在了一起，所以有点混乱，后期另一个页面改过来后，再处理
+        if (pageType === 'c') {
+          yield put(routerRedux.push('/offline/customerMannagement'));
+        }
+
         message.success(response.message);
         succCB && succCB();
       }
@@ -141,22 +178,29 @@ export default {
       //这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
       yield put({
         type: 'extendAll',
-        payload: { modalFormLoading: true },
+        payload: { modalFormLoading: true, loading: true },
       });
       const pageType = yield select(
         state => state.customerMannagement.pageType
       );
       const response = yield call(transferRes(pageType, 'query'), payload); //offlineSupporterList,offlineCustomerList
       if (response && response.code === 200) {
-        yield put({
-          type: 'extendAll',
-          payload: { modalData: response },
-        });
+        if (pageType === 'c') {
+          yield put({
+            type: 'extendAll',
+            payload: { formData: response },
+          });
+        } else {
+          yield put({
+            type: 'extendAll',
+            payload: { modalData: response },
+          });
+        }
         succCB && succCB(response.data);
       }
       yield put({
         type: 'extendAll',
-        payload: { modalFormLoading: false },
+        payload: { modalFormLoading: false, loading: false },
       });
     },
     *fetchEdit({ payload, succCB }, { call, put, select }) {

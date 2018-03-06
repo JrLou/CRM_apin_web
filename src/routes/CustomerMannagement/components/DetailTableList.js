@@ -18,6 +18,7 @@ class DetailStandardTable extends PureComponent {
       page,
       dispatch,
     } = this.props;
+    console.log('data', data);
 
     const columns = [
       {
@@ -52,42 +53,42 @@ class DetailStandardTable extends PureComponent {
       },
       {
         title: '去程日期',
-        dataIndex: 'wxqq',
+        dataIndex: 'wxqq1',
         //width: '11%',
       },
       {
         title: '人数',
-        dataIndex: 'wxqq',
+        dataIndex: 'wxqq2',
         //width: '11%',
       },
       {
         title: '订单状态',
-        dataIndex: 'wxqq',
+        dataIndex: 'wxqq3',
         //width: '11%',
       },
       {
         title: '出票日期',
-        dataIndex: 'wxqq',
+        dataIndex: 'wxqq4',
         //width: '11%',
       },
       {
         title: '卖价总价',
-        dataIndex: 'wxqq',
+        dataIndex: 'wxqq5',
         //width: '11%',
       },
       {
         title: '结算总价',
-        dataIndex: 'wxqq',
+        dataIndex: 'wxqq6',
         //width: '11%',
       },
       {
         title: '利润',
-        dataIndex: 'wxqq',
+        dataIndex: 'wxqq7',
         //width: '11%',
       },
       {
         title: '供应商',
-        dataIndex: 'wxqq',
+        dataIndex: 'wxqq8',
         //width: '11%',
       },
     ];

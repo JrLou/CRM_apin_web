@@ -479,6 +479,10 @@ export async function offlineCustomerEdit(params) {
 export async function offlineCustomerDelete(params) {
   return request_java('/java/offline/customer/delete', { method: 'POST', body: params });
 }
+//v1.3新增的：订单列表接口
+export async function offlineCustomerByCustomerList(params) {
+  return request_java('/java/offline/order/byCustomer/list', { method: 'POST', body: params });
+}
 //线下 供应商管理
 export async function offlineSupporterList(params) {
   return request_java('/java/offline/supplier/v1.0/list', { method: 'POST', body: params });

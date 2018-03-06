@@ -1,12 +1,12 @@
 import { connect } from 'dva';
 import React, { PureComponent } from 'react';
-import { Tabs } from 'antd';
 import BasicDetailForm from './components/BasicDetailForm';
 import DetailStandardTable from './components/DetailTableList';
+import LogTableList from './components/LogTableList';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import SingleBlock from './components/SingleBlock';
+import { getPar } from '../../utils/utils';
 
-const { TabPane } = Tabs;
 @connect(state => ({
   customerMannagement: state.customerMannagement,
 }))
@@ -17,6 +17,18 @@ class Detail extends PureComponent {
       pageNum: 1,
       pageSize: 10,
     };
+  }
+
+  componentDidMount() {
+    this.id = getPar(this, 'id');
+    this.props.dispatch({
+      type: 'customerMannagement/fetchQueryOne',
+      payload: { id: this.id },
+    });
+    this.props.dispatch({
+      type: 'customerMannagement/fetchCustomerList',
+      payload: { id: this.id },
+    });
   }
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
@@ -38,15 +50,22 @@ class Detail extends PureComponent {
   };
 
   render() {
+    const forBasicDetailFormProps = {
+      needOperateBtn: false,
+      isReadOnly: true,
+    };
     return (
       <PageHeaderLayout>
-        <BasicDetailForm />
+        <BasicDetailForm {...forBasicDetailFormProps} />
         <SingleBlock tab="订单信息">
           <p>共搜索到{3}条数据</p>
           <DetailStandardTable
             onChange={this.handleStandardTableChange}
             page={this.page}
           />
+        </SingleBlock>
+        <SingleBlock tab="日志信息">
+          <LogTableList />
         </SingleBlock>
       </PageHeaderLayout>
     );
