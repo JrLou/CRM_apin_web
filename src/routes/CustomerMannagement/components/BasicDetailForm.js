@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import { Card, Row, Col, Form, Input, Button, message } from 'antd';
 import SingleBlock from './SingleBlock';
 import ConfirmModal from './ConfirmModal';
-import styles from '../Template.less';
+import styles from '../CustomerMannagement.less';
 
 const { Item: FormItem } = Form;
 

@@ -4,7 +4,7 @@ import { Card, Form, Input, Button, Row, Col } from 'antd';
 import StandardTable from './TableList';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import AllModal from './ModalCpm';
-import styles from '../CustomerMannagement/Template.less';
+import styles from '../CustomerMannagement/CustomerMannagement.less';
 
 const FormItem = Form.Item;
 
