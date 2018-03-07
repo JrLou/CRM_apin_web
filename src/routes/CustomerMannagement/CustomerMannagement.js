@@ -244,7 +244,7 @@ export default class TableList extends PureComponent {
           </div>
         </Card>
 
-        {/* TODO:仅仅是给【删除】用 后期可以重构，使用ConfirmModal*/}
+        {/* FIXME:仅仅是给【删除】用 后期可以重构，使用ConfirmModal*/}
         <AllModal
           modalType={this.state.modalType}
           page={this.page}

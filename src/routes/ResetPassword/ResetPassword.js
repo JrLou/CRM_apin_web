@@ -14,7 +14,7 @@ class ResetPassword extends PureComponent {
       ? Base64.decode(CookieHelp.getCookieInfo(key))
       : '';
   };
-  
+
   fetchResetPassword = () => {
     //发起请求
     this.props.dispatch({
@@ -128,16 +128,7 @@ class ResetPassword extends PureComponent {
                 message: '请输入你的新密码',
               },
               {
-                //TODO: 这个正则太恶心了，而且还没有位数,而且还不对
-                pattern: /^([a-zA-Z]+[0-9]+[a-zA-Z0-9]*)|([0-9]+[a-zA-Z]+[a-zA-Z0-9]*)$/,
-                message: '需输入6至20位密码，含有数字及字母',
-              },
-              {
-                max: 20,
-                message: '需输入6至20位密码，含有数字及字母',
-              },
-              {
-                min: 6,
+                pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/,
                 message: '需输入6至20位密码，含有数字及字母',
               },
               {

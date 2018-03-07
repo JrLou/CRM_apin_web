@@ -305,8 +305,6 @@ class BasicDetailForm extends PureComponent {
       console.log('fieldsValue', fieldsValue);
       if (err) return;
 
-      // const { customerMannagement: { connectInfo } } = this.props;
-
       // 添加 微信 qq 的验证
       for (let i = 0; i < keysArr.length; i += 1) {
         const { key } = keysArr[i];
@@ -350,7 +348,7 @@ class BasicDetailForm extends PureComponent {
     const nextKeysArr = form.getFieldValue('keysArr');
     const hasIsMain = nextKeysArr.some(currV => currV.isMain);
     if (!hasIsMain) {
-      nextKeysArr[0].isMain = true;
+      nextKeysArr[0].isMain = 1;
       form.setFieldsValue({
         keysArr: nextKeysArr,
       });
@@ -367,18 +365,6 @@ class BasicDetailForm extends PureComponent {
     // important! notify form to detect changes
     form.setFieldsValue({
       keysArr: newKeysArr,
-    });
-  };
-
-  saveChange = (e, key, keyName) => {
-    debugger;
-    const { customerMannagement: { connectInfo }, dispatch } = this.props;
-    const value = e && e.target && e.target.value;
-    const targetObj = connectInfo.find(obj => obj.key === key);
-    targetObj[keyName] = value;
-    dispatch({
-      type: 'customerMannagement/extendAll',
-      payload: { connectInfo },
     });
   };
 
