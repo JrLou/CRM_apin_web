@@ -12,20 +12,22 @@ class LogTableList extends PureComponent {
   };
 
   render() {
-    const { customerMannagement: { loading, data: { data } } } = this.props;
+    const {
+      customerMannagement: { recordData: { data, loading } },
+    } = this.props;
 
     const columns = [
       {
         title: '操作时间',
-        dataIndex: 'address',
+        dataIndex: 'createTime',
       },
       {
         title: '操作人',
-        dataIndex: 'contacts',
+        dataIndex: 'createUserName',
       },
       {
         title: '操作内容',
-        dataIndex: 'mobile',
+        dataIndex: 'record',
       },
     ];
 
@@ -36,6 +38,7 @@ class LogTableList extends PureComponent {
           rowKey={record => record.id}
           dataSource={data}
           columns={columns}
+          pagination={false}
         />
       </div>
     );

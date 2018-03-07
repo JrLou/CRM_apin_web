@@ -24,6 +24,10 @@ export default {
           CookieHelp.saveUserInfo('_u',userName,true);
           const roles = Base64.encodeURI(response.data.user.roles)
           CookieHelp.saveUserInfo('_r',roles,true);
+          const mobile = Base64.encodeURI(response.data.user.mobile)
+          CookieHelp.saveUserInfo('_m',mobile,true);
+          const account = Base64.encodeURI(response.data.user.account)
+          CookieHelp.saveUserInfo('_c',account,true);
           SetItem('refreshToken',response.data.token.refreshToken)
         }finally{
           callBack()

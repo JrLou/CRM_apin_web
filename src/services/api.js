@@ -338,6 +338,9 @@ export async function AccountLogin(params) {
     });
   }
 }
+export async function resetPassword(params) {
+  return request('/api/user/modifyPasswd', { method: 'POST', body: params });
+}
 export async function queryMenus() {
   return request('/api/user/getNavigators', {
     method: 'POST',

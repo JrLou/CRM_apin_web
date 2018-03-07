@@ -93,6 +93,7 @@ const initState = () => {
     //recordData 日志信息
     recordData: {
       data: [],
+      loading: false,
     },
 
     modalData: {
@@ -154,6 +155,10 @@ export default {
       });
     },
     *fetchRecordQuery({ payload, succCB }, { call, put }) {
+      yield put({
+        type: 'saveRecordData',
+        payload: { loading: true },
+      });
       //eslint-disable-next-line
       const response = yield call(offlineCustomerRecordQuery, payload); //offlineSupporterList,offlineCustomerList
       if (response && response.code === 200) {
@@ -163,6 +168,10 @@ export default {
         });
         succCB && succCB(response.data);
       }
+      yield put({
+        type: 'saveRecordData',
+        payload: { loading: false },
+      });
     },
     *fetchAdd({ payload, succCB }, { call, put, select }) {
       //这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
@@ -238,6 +247,9 @@ export default {
           payload: { showModal: false },
         });
         message.success(response.message);
+        if (pageType === 'c') {
+          yield put(routerRedux.push('/offline/customerMannagement'));
+        }
         succCB && succCB();
       }
       yield put({

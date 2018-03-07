@@ -139,12 +139,10 @@ export default class TableList extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem label="客户类型">
               {getFieldDecorator('type', {
-                //【客户名称】支持中文、英文、数字，最多50个字符；
                 initialValue: '',
-                // rules: [{ max: 50, message: '最长50位' }],
               })(
                 //1-沉积客户、2-激活客户、3-活跃客户',
-                <Select>
+                <Select placeholder="请选择">
                   <Option value={1}>沉积客户</Option>
                   <Option value={2}>激活客户</Option>
                   <Option value={3}>活跃客户</Option>

@@ -295,6 +295,8 @@ class BasicDetailForm extends PureComponent {
       form: { getFieldValue, validateFields },
       handlePageFormReset,
       customerMannagement: { formData: { data: formData } },
+      isEdit,
+      id,
     } = this.props;
 
     const keysArr = getFieldValue('keysArr');
@@ -316,8 +318,15 @@ class BasicDetailForm extends PureComponent {
 
       const payload = this.transferData(fieldsValue);
 
+      let urlTail = 'fetchAdd';
+
+      if (isEdit) {
+        urlTail = 'fetchEdit';
+        Object.assign(payload, { id });
+      }
+
       dispatch({
-        type: `customerMannagement/fetchAdd`,
+        type: `customerMannagement/${urlTail}`,
         payload,
       });
     });
@@ -491,11 +500,13 @@ class BasicDetailForm extends PureComponent {
 BasicDetailForm.defaultProps = {
   needOperateBtn: true,
   isReadOnly: false,
+  isEdit: false,
 };
 
 BasicDetailForm.propTypes = {
   needOperateBtn: PropTypes.bool, //是否显示form的【返回】【保存】
   isReadOnly: PropTypes.bool,
+  isEdit: PropTypes.bool,
 };
 
 export default BasicDetailForm;

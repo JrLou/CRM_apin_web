@@ -21,7 +21,7 @@ class EditCustomer extends PureComponent {
     return (
       <Spin spinning={loading}>
         <PageHeaderLayout>
-          <BasicDetailForm />
+          <BasicDetailForm isEdit id={this.id} />
         </PageHeaderLayout>
       </Spin>
     );

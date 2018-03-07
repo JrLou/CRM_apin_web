@@ -12,71 +12,53 @@ class DetailStandardTable extends PureComponent {
     this.props.onChange(pagination, filters, sorter);
   };
 
+  transferState = ticketStatus => {
+    let result = '';
+    switch (ticketStatus) {
+      case 0:
+        result = '等待';
+        break;
+      case 1:
+        result = '成功';
+        break;
+      case 2:
+        result = '失败';
+        break;
+      default:
+        break;
+    }
+    return result;
+  };
+
   render() {
     const {
       customerMannagement: { loading, detailTableData: { data, option } },
       page,
     } = this.props;
-    /* cityArr
-:
-"1"
-cityDep
-:
-null
-createUserName
-:
-"普通客服"
-customerName
-:
-"1"
-depDate
-:
-null
-flight
-:
-""
-id
-:
-"f3c0b2e6a9904896afc21b69cd42da7d"
-inquiryDate
-:
-"2018-01-19"
-isPrintStr
-:
-null
-numbers
-:
-2
-printDate
-:
-"2018-01-19"
-profit
-:
-0
-serialNo
-:
-"2018011812160201"
-settlePrice
-:
-4
-supplierName
-:
-null
-ticketStatus
-:
-1
-totalPrice
-:
-4 */
+    /*
+    订单号            "serialNo": "2018011615425201",
+    联系人            "contacts": "aaa",
+    客服              "createUserName": "变态管理员",
+    航线              "flight": "北京 - 上海",
+    询价日期          "inquiryDate": "2018-01-16",
+    去程日期          "depDate": "2018-01-16",
+    人数              "numbers": 2,
+    订单状态          "ticketStatus": 1,    状态，0等待，1成功，2失败
+    出票日期          "printDate": "2018-01-16",
+    卖价总价          "totalPrice": 1,
+    结算总价          "settlePrice": 1,
+    利润              "profit": 1,
+    供应商            "supplierName": null
+    */
     const columns = [
       {
         title: `订单号`,
-        dataIndex: 'id',
+        dataIndex: 'serialNo',
         //width: '12%',
       },
       {
         title: '联系人',
-        dataIndex: 'charge',
+        dataIndex: 'contacts',
         //width: '5%',
       },
       {
@@ -86,42 +68,42 @@ totalPrice
       },
       {
         title: '航线',
-        dataIndex: 'contacts',
+        dataIndex: 'flight',
         //width: '12%',
       },
       {
         title: '询价日期',
-        dataIndex: 'mobile',
+        dataIndex: 'inquiryDate',
         //width: '14%',
       },
       {
         title: '去程日期',
-        dataIndex: 'wxqq1',
+        dataIndex: 'depDate',
         //width: '11%',
       },
       {
         title: '人数',
-        dataIndex: 'wxqq2',
+        dataIndex: 'numbers',
         //width: '11%',
       },
       {
         title: '订单状态',
-        dataIndex: 'wxqq3',
-        //width: '11%',
+        dataIndex: 'ticketStatus',
+        render: record => this.transferState(record),
       },
       {
         title: '出票日期',
-        dataIndex: 'wxqq4',
+        dataIndex: 'printDate',
         //width: '11%',
       },
       {
         title: '卖价总价',
-        dataIndex: 'wxqq5',
+        dataIndex: 'totalPrice',
         //width: '11%',
       },
       {
         title: '结算总价',
-        dataIndex: 'totalPrice',
+        dataIndex: 'settlePrice',
         //width: '11%',
       },
       {
