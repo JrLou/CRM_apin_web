@@ -2,6 +2,8 @@ import { connect } from 'dva';
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import { Card, Row, Col, Form, Input, Button, message } from 'antd';
+import { Base64 } from 'js-base64';
+import CookieHelp from '../../../utils/cookies';
 import SingleBlock from './SingleBlock';
 import ConfirmModal from './ConfirmModal';
 import styles from '../CustomerMannagement.less';
@@ -9,6 +11,8 @@ import styles from '../CustomerMannagement.less';
 const { Item: FormItem } = Form;
 
 let uuid = 0;
+
+const MAXCONTACTS = 10; //最多联系人为10个
 
 @connect(state => ({
   customerMannagement: state.customerMannagement,
@@ -18,6 +22,9 @@ class BasicDetailForm extends PureComponent {
   constructor(props) {
     super(props);
     this.pageModalType = { action: 'del', chooseKey: 0 }; //action => 模态框是【删除】 OR 【设置】, chooseKey => 操作的项
+    this.currentUser = CookieHelp.getCookieInfo('_r')
+      ? Base64.decode(CookieHelp.getCookieInfo('_r'))
+      : null;
   }
 
   // componentWillUnmount() {
@@ -52,8 +59,7 @@ class BasicDetailForm extends PureComponent {
           const { form: { getFieldValue, setFieldsValue } } = this.props;
           const keysArr = getFieldValue('keysArr');
 
-          debugger;
-          console.log('keysArr', keysArr);
+          // console.log('keysArr', keysArr);
 
           const newKeysArr = keysArr.map(currObj => {
             if (currObj.isMain && currObj.key !== chooseKey) {
@@ -89,7 +95,7 @@ class BasicDetailForm extends PureComponent {
       result = contactsList.map(currObj => {
         innerUuid += 1;
         uuid = innerUuid;
-        console.log('执行了getInitKeysArr,uuid', uuid);
+        // console.log('执行了getInitKeysArr,uuid', uuid);
         return { ...currObj, key: innerUuid };
       });
     } else {
@@ -106,17 +112,12 @@ class BasicDetailForm extends PureComponent {
     setFieldsValue,
     layoutForm
   ) => {
-    const {
-      dispatch,
-      form: { getFieldValue },
-      customerMannagement: { connectInfo },
-      isReadOnly,
-    } = this.props;
+    const { dispatch, form: { getFieldValue }, isReadOnly } = this.props;
     const itemSpan = 5;
 
     const initialValue = this.getInitKeysArr(formData);
 
-    getFieldDecorator('keysArr', { initialValue }); //TODO: 这里的init改成与返回的值关联即可， 记得把上版本的冗余代码删除
+    getFieldDecorator('keysArr', { initialValue });
     const keysArr = getFieldValue('keysArr');
     const formItems = keysArr.map((obj, index) => {
       const { key } = obj;
@@ -162,8 +163,6 @@ class BasicDetailForm extends PureComponent {
           </Col>
           <Col span={3} style={{ textAlign: 'center' }}>
             <FormItem>
-              {console.log('key', key)}
-              {console.log('this.pageModalType', this.pageModalType)}
               {obj.isMain ? (
                 <span style={{ color: '#f00' }}>主要联系人</span>
               ) : !isReadOnly ? (
@@ -205,7 +204,11 @@ class BasicDetailForm extends PureComponent {
 
     const addContactBtn = !isReadOnly ? (
       <FormItem style={{ float: 'right', zIndex: 2 }}>
-        <Button type="primary" onClick={this.add}>
+        <Button
+          type="primary"
+          onClick={this.add}
+          disabled={keysArr.length >= MAXCONTACTS}
+        >
           新增联系人
         </Button>
       </FormItem>
@@ -239,7 +242,7 @@ class BasicDetailForm extends PureComponent {
     //   charge: 'sonkia',
     //   contactsList: [
     //     {
-    //       id: '' TODO: 后台返回了此值，就原样返回，如果是新增的联系人，否则就返回{id:""}
+    //       id: ''
     //       contacts: 'AAA',
     //       mobile: '123',
     //       wxqq: 'aa',
@@ -382,6 +385,12 @@ class BasicDetailForm extends PureComponent {
     } = this.props;
     const layoutForm = { md: 8, lg: 24, xl: 48 };
 
+    const isLeader =
+      !!this.currentUser &&
+      this.currentUser
+        .split(',')
+        .indexOf('716103936e1a461ab79dcb7283a979b8') !== -1;
+
     return (
       <Form onSubmit={this.handleSubmit} layout="inline">
         <SingleBlock tab="基础信息">
@@ -402,7 +411,7 @@ class BasicDetailForm extends PureComponent {
                       message: '不能输入纯空格',
                     },
                   ],
-                })(<Input disabled={isReadOnly} />)}
+                })(<Input disabled={isReadOnly || !isLeader} />)}
               </FormItem>
             </Col>
             <Col md={8} sm={24}>
@@ -411,7 +420,7 @@ class BasicDetailForm extends PureComponent {
                   //【负责人】支持模糊搜索，最长字符可输入10个。
                   initialValue: this.getInitData(formData, 'charge'),
                   rules: [{ max: 10, message: '最长10位' }],
-                })(<Input disabled={isReadOnly} />)}
+                })(<Input disabled={isReadOnly || !isLeader} />)}
               </FormItem>
             </Col>
             <Col md={8} sm={24}>

@@ -222,7 +222,7 @@ export const getRouterData = (app) => {
       name: '修改客户',
       component: dynamicWrapper(app, ['customerMannagement'], () => import('../routes/CustomerMannagement/EditCustomer.js')),
     },
-    '/offline/customerMannagement/detail/:id': {
+    '/offline/customerMannagement/detail/:data': {
       name: '客户详情页',
       component: dynamicWrapper(app, ['customerMannagement'], () => import('../routes/CustomerMannagement/Detail.js')),
     },

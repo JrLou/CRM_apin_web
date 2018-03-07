@@ -26,6 +26,26 @@ class StandardTable extends PureComponent {
     this.props.onChange(pagination, filters, sorter);
   };
 
+  //1-沉积客户、2-激活客户、3-活跃客户',
+  transferCustomType = typeNum => {
+    let result = '';
+    switch (typeNum) {
+      case 1:
+        result = '沉积客户';
+        break;
+      case 2:
+        result = '激活客户';
+        break;
+      case 3:
+        result = '活跃客户';
+        break;
+      default:
+        result = '未知的客户类型';
+        break;
+    }
+    return result;
+  };
+
   render() {
     const {
       customerMannagement: { pageType, loading, data: { data, option } },
@@ -45,16 +65,34 @@ class StandardTable extends PureComponent {
         title: `${this.getPageName()}名称`,
         dataIndex: 'name',
         width: '12%',
-        render: (text, record) => (
-          <Link to={`/offline/customerMannagement/detail/${record.id}`}>
-            {text}
-          </Link>
+        render: (text, record) => {
+          const jsonData = {
+            id: record.id,
+            customerName: record.name,
+          };
+          const params = JSON.stringify(jsonData);
+          return (
+            <Link to={`/offline/customerMannagement/detail/${params}`}>
+              {text}
+            </Link>
+          );
+        },
+      },
+      {
+        title: '客户类型',
+        dataIndex: 'type',
+        width: '5%',
+        render: text => (
+          <span style={{ whiteSpace: 'nowrap' }}>
+            {this.transferCustomType(text)}
+          </span>
         ),
       },
       {
         title: '负责人',
         dataIndex: 'charge',
         width: '5%',
+        render: text => <span style={{ whiteSpace: 'nowrap' }}>{text}</span>,
       },
       {
         title: '地址',
@@ -98,7 +136,6 @@ class StandardTable extends PureComponent {
             <div style={{ whiteSpace: 'nowrap' }}>
               <Link to={`/offline/customerMannagement/edit/${record.id}`}>
                 <Button
-                  disabled={!isLeader}
                   type="primary"
                   onClick={() => {
                     // handleShowModalSwitch('edit');

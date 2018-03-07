@@ -9,6 +9,7 @@ import {
   offlineCustomerEdit,
   offlineCustomerDelete,
   offlineCustomerByCustomerList,
+  offlineCustomerRecordQuery, //日志查询
 
   //供应商管理
   offlineSupporterList,
@@ -83,6 +84,17 @@ const initState = () => {
       data: {},
     },
 
+    //详情TableData 详情表格用
+    detailTableData: {
+      data: [],
+      option: {},
+    },
+
+    //recordData 日志信息
+    recordData: {
+      data: [],
+    },
+
     modalData: {
       data: {},
       message: '',
@@ -122,20 +134,16 @@ export default {
       });
     },
     //v1.3新增
-    *fetchCustomerList({ payload, succCB }, { call, put, select }) {
-      //这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
+    *fetchCustomerList({ payload, succCB }, { call, put }) {
       yield put({
         type: 'changeLoading',
         payload: true,
       });
-      const pageType = yield select(
-        state => state.customerMannagement.pageType
-      );
       //eslint-disable-next-line
       const response = yield call(offlineCustomerByCustomerList, payload); //offlineSupporterList,offlineCustomerList
       if (response && response.code === 200) {
         yield put({
-          type: 'saveTableData',
+          type: 'saveDetailTableData',
           payload: response,
         });
         succCB && succCB(response.data);
@@ -144,6 +152,17 @@ export default {
         type: 'changeLoading',
         payload: false,
       });
+    },
+    *fetchRecordQuery({ payload, succCB }, { call, put }) {
+      //eslint-disable-next-line
+      const response = yield call(offlineCustomerRecordQuery, payload); //offlineSupporterList,offlineCustomerList
+      if (response && response.code === 200) {
+        yield put({
+          type: 'saveRecordData',
+          payload: response,
+        });
+        succCB && succCB(response.data);
+      }
     },
     *fetchAdd({ payload, succCB }, { call, put, select }) {
       //这里的 { call, put } 好像相当于 { ???, mapDispatchToProps}
@@ -256,6 +275,24 @@ export default {
         ...state,
         data: {
           ...state.data,
+          ...action.payload,
+        },
+      };
+    },
+    saveDetailTableData(state, action) {
+      return {
+        ...state,
+        detailTableData: {
+          ...state.detailTableData,
+          ...action.payload,
+        },
+      };
+    },
+    saveRecordData(state, action) {
+      return {
+        ...state,
+        recordData: {
+          ...state.recordData,
           ...action.payload,
         },
       };

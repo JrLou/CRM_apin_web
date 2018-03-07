@@ -483,6 +483,9 @@ export async function offlineCustomerDelete(params) {
 export async function offlineCustomerByCustomerList(params) {
   return request_java('/java/offline/order/byCustomer/list', { method: 'POST', body: params });
 }
+export async function offlineCustomerRecordQuery(params) {
+  return request_java('/java/offline/customer/record/query', { method: 'POST', body: params });
+}
 //线下 供应商管理
 export async function offlineSupporterList(params) {
   return request_java('/java/offline/supplier/v1.0/list', { method: 'POST', body: params });

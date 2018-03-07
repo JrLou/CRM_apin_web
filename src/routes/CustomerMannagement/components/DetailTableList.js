@@ -14,22 +14,65 @@ class DetailStandardTable extends PureComponent {
 
   render() {
     const {
-      customerMannagement: { pageType, loading, data: { data, option } },
+      customerMannagement: { loading, detailTableData: { data, option } },
       page,
-      dispatch,
     } = this.props;
-    console.log('data', data);
-
+    /* cityArr
+:
+"1"
+cityDep
+:
+null
+createUserName
+:
+"普通客服"
+customerName
+:
+"1"
+depDate
+:
+null
+flight
+:
+""
+id
+:
+"f3c0b2e6a9904896afc21b69cd42da7d"
+inquiryDate
+:
+"2018-01-19"
+isPrintStr
+:
+null
+numbers
+:
+2
+printDate
+:
+"2018-01-19"
+profit
+:
+0
+serialNo
+:
+"2018011812160201"
+settlePrice
+:
+4
+supplierName
+:
+null
+ticketStatus
+:
+1
+totalPrice
+:
+4 */
     const columns = [
       {
         title: `订单号`,
-        dataIndex: 'name',
+        dataIndex: 'id',
         //width: '12%',
-        render: (text, record) => (
-          <Link to={`/offline/customerMannagement/detail/${record.id}`}>
-            {text}
-          </Link>
-        ),
       },
       {
         title: '联系人',
@@ -38,7 +81,7 @@ class DetailStandardTable extends PureComponent {
       },
       {
         title: '客服',
-        dataIndex: 'address',
+        dataIndex: 'createUserName',
         //width: '24%',
       },
       {
@@ -78,17 +121,17 @@ class DetailStandardTable extends PureComponent {
       },
       {
         title: '结算总价',
-        dataIndex: 'wxqq6',
+        dataIndex: 'totalPrice',
         //width: '11%',
       },
       {
         title: '利润',
-        dataIndex: 'wxqq7',
+        dataIndex: 'profit',
         //width: '11%',
       },
       {
         title: '供应商',
-        dataIndex: 'wxqq8',
+        dataIndex: 'supplierName',
         //width: '11%',
       },
     ];
@@ -102,7 +145,7 @@ class DetailStandardTable extends PureComponent {
       showSizeChanger: true,
       showQuickJumper: true,
       ...pageProps,
-      total: option,
+      total: option.totalCount,
     };
 
     return (
