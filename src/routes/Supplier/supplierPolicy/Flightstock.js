@@ -153,6 +153,8 @@ export default class TableList extends PureComponent {
                   <Option value='-1' key='-1'>全部</Option>
                   <Option value='1' key='1'>上架</Option>
                   <Option value='0' key='0'>待上架</Option>
+                  <Option value='2' key='2'>下架</Option>
+                  <Option value='3' key='3'>过期</Option>
                 </Select>
               )}
             </FormItem>
@@ -353,6 +355,12 @@ export default class TableList extends PureComponent {
                     case 1:
                       return <div>上架</div>
                       break;
+                    case 2:
+                      return <div>下架</div>
+                      break;
+                    case 3:
+                      return <div>过期</div>
+                      break;
                   }
                 }}
               />
@@ -396,6 +404,34 @@ export default class TableList extends PureComponent {
                         <a
                           style={{cursor: "pointer", margin: "6px"}}
                           onClick={this.operating.bind(this, record, 4,)}>查看
+                        </a>
+                        <Divider type="vertical"/>
+                        <a style={{cursor: "pointer", margin: "6px"}}
+                           onClick={this.operating.bind(this, record, 3)}>日志
+                        </a>
+                      </div>
+                      break;
+                    case 2:
+                      return <div>
+                        <a
+                          style={{cursor: "pointer", margin: "6px"}}
+                          onClick={this.operating.bind(this, record, 0,)}>编辑
+                        </a>
+                        <Divider type="vertical"/>
+                        <a style={{cursor: "pointer", margin: "6px"}}
+                           onClick={this.operating.bind(this, record, 1)}>上架
+                        </a>
+                        <Divider type="vertical"/>
+                        <a style={{cursor: "pointer", margin: "6px"}}
+                           onClick={this.operating.bind(this, record, 3)}>日志
+                        </a>
+                      </div>
+                      break;
+                    case 3:
+                      return <div>
+                        <Divider type="vertical"/>
+                        <a style={{cursor: "pointer", margin: "6px"}}
+                           onClick={this.operating.bind(this, record, 1)}>查看
                         </a>
                         <Divider type="vertical"/>
                         <a style={{cursor: "pointer", margin: "6px"}}

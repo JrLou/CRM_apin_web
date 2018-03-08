@@ -26,7 +26,7 @@ class page extends Component {
 
   componentDidMount() {
     if (this.props.location.state) {
-      this.addPost('flightstockEdit/addtailAirLine', {id: this.props.location.state.data.id});
+      // this.addPost('flightstockEdit/addtailAirLine', {id: this.props.location.state.data.id});
       this.setState({
         data: this.props.location.state.data,
       });
