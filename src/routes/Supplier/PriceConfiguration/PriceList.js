@@ -121,7 +121,7 @@ export default class TableList extends PureComponent {
         <Row gutter={{md: 8, lg: 24, xl: 48}}>
           <Col md={8} sm={24}>
             <FormItem label="机票资源号">
-              {getFieldDecorator('city_dep', {rules: [{max: 32, message: '最长32位'}]})
+              {getFieldDecorator('id', {rules: [{max: 32, message: '最长32位'}]})
               (<Input placeholder="请输入"/>)}
             </FormItem>
           </Col>

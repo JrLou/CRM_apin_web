@@ -3,7 +3,7 @@ import {
   Calendar, Checkbox, Col, Form, Input, Select, Button, Row, message, Radio
 } from 'antd'
 import AllocationCalendar from '../supplierPolicy/AllocationCalendar/MultipleSelectCalendar.js';
-import {editPriceConfig, getpriceAirline} from '../../../services/api'
+import {editPriceConfig, getpriceAirline, addPriceConfig} from '../../../services/api'
 
 const RadioGroup = Radio.Group;
 const FormItem = Form.Item;
@@ -50,7 +50,7 @@ class BulkImportForm extends PureComponent {
     this.setState({
       currentData: nextProps.currentData,
     });
-    switch (this.props.condition) {
+    switch (nextProps.condition) {
       case 0:
         this.judgment(nextProps.currentData)
         break;
@@ -70,7 +70,7 @@ class BulkImportForm extends PureComponent {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
-        values.id = currentData.airline_id
+        values.id = values.airline_id ? values.airline_id : currentData.airline_id
         values.config_id = currentData.id
         values.price = values.price * 100
         values.price_group = values.price_group * 100
@@ -92,15 +92,20 @@ class BulkImportForm extends PureComponent {
         switch (this.props.condition) {
           case 0:
             data.state = 1
+            this._searchPort(editPriceConfig, data, 0)
             break;
           case 2:
-            data.data = this.state.datesArr.join(',')
+            data.date = this.state.datesArr.join(',')
+            this._searchPort(editPriceConfig, data, 0)
+            break;
+          case 3:
+            data.date = this.state.datesArr.join(',')
+            this._searchPort(addPriceConfig, data, 0)
             break;
         }
         console.log(this.state.datesArr)
         console.log(this.state.selectedTips)
-        console.log('整理后的', data);
-        this._searchPort(editPriceConfig, data, 0)
+        console.log('整理后的', data)
         this.props.form.resetFields()
         this.setState({
           value: null,
@@ -268,7 +273,7 @@ class BulkImportForm extends PureComponent {
                 label="机票资源号"
                 {...formItemLayout}
               >
-                {getFieldDecorator('resoufsdfsdfsdrceIndex', {
+                {getFieldDecorator('airline_id', {
                   initialValue: this.props.currentData.airline_id
                 })
                 (< Input onBlur={this.calendar.bind(this)} style={{width: '280px', marginRight: '10px'}}/>)}
@@ -433,7 +438,7 @@ class BulkImportForm extends PureComponent {
                 {getFieldDecorator('state', {
                   initialValue: this.props.currentData.state
                 })
-                (<RadioGroup onChange={this.onChange}>
+                (<RadioGroup>
                   <Radio value={1}>启用</Radio>
                   <Radio value={0}>停用</Radio>
                 </RadioGroup>)}

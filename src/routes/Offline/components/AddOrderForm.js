@@ -8,7 +8,7 @@ import styles from '../Offline.less';
 import moment from 'moment';
 import AddChangeForm from './AddChangeForm';
 import { uploadImg } from '../../../services/api';
-// import TicketForm from './TiketForm'; 
+// import TicketForm from './TiketForm';
 const FormItem = Form.Item;
 const { Option } = Select;
 const { TextArea } = Input;
@@ -458,7 +458,7 @@ export default class AddOrderForm extends Component {
     const { dispatch, form } = this.props;
     const { offline: { changeInfo } } = this.props;
     form.validateFields((err, values) => {
-      // 判断标签页。/ 
+      // 判断标签页。/
       if (values.ticketStatus == 1) {
         let errorArr = []
         for (const key in err) {
@@ -527,7 +527,7 @@ export default class AddOrderForm extends Component {
         [e.target.id]: ''
       })
     }
-    // 如果方案已选择  
+    // 如果方案已选择
     let index = this.props.form.getFieldValue('selected');
     if (index === 0 || index) {
       // 重新计算
@@ -790,7 +790,7 @@ export default class AddOrderForm extends Component {
                             onSearch={this.autoCompSearch.bind(null, 'customerName')}
                             disabled={readOnly}
                             dataSource={usernameData}
-                            onBlur={this.onBlurCheck.bind(null, 'customerName', usernameData, '')} 
+                            onBlur={this.onBlurCheck.bind(null, 'customerName', usernameData, '')}
                             onSelect={(value) => {
                               const targetObj = nameWithMoreInfo.find(obj => obj.name === value);
                               const { type } = targetObj;
@@ -1321,7 +1321,7 @@ class UpImg extends Component {
     if (info.file.status === 'done') {
       // Get this url from response in real world.
       this.getBase64(info.file.originFileObj, imageUrl => {
-        // 在这里请求接口 
+        // 在这里请求接口
         let imgList = this.state.imgList;
         uploadImg({ img: imageUrl }).then((response) => {
           if (response.code == 200) {
