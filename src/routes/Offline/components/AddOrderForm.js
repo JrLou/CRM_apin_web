@@ -1,3 +1,4 @@
+/*eslint-disable*/
 //需求池页面
 import React, { Component } from 'react';
 import { connect } from 'dva';
@@ -22,7 +23,9 @@ export default class AddOrderForm extends Component {
     super()
     this.state = {
       modalVisible: false,
-      activeKey: '0'
+      activeKey: '0',
+      typeNum: 0, //1-沉积客户、2-激活客户、3-活跃客户', 0就是暂时没有
+      contactsArr: [], //联系人数组， 第一个为【主联系人】
     }
   }
   // componentWillReceiveProps(nextProps) {
@@ -651,6 +654,25 @@ export default class AddOrderForm extends Component {
       receiptVoucher: imgList
     })
   }
+  transferType = type => {
+    //'类型，1-沉积客户、2-激活客户、3-活跃客户',
+    let result = '';
+    switch (type) {
+      case 1:
+        result = '沉积客户';
+        break;
+      case 2:
+        result = '激活客户';
+        break;
+      case 3:
+        result = '活跃客户';
+        break;
+      default:
+        break;
+    }
+    return result;
+  };
+
   render() {
     const { getFieldDecorator } = this.props.form;
     const formItemLayout = {
@@ -673,7 +695,7 @@ export default class AddOrderForm extends Component {
       labelCol: { span: 3 },
       wrapperCol: { span: 21 },
     };
-    const { readOnly, offline: { usernameData, totalCustomer, supplierData, cityData, cityData2, changeInfo, schemeInfo, isShowModal } } = this.props;
+    const { readOnly, offline: { usernameData, nameWithMoreInfo, totalCustomer, supplierData, cityData, cityData2, changeInfo, schemeInfo, isShowModal } } = this.props;
     let detail = this.props.detail ? this.props.detail : {};
     schemeInfo.map((v, k) => {
       if (v.selected == 1) {
@@ -714,6 +736,9 @@ export default class AddOrderForm extends Component {
     const adultRequire = +this.props.form.getFieldValue('adultCount');
     const childRequire = +this.props.form.getFieldValue('childCount');
     const babyRequire = +this.props.form.getFieldValue('babyCount');
+
+    const {contactsArr, typeNum} = this.state;
+
     return (
       <div>
         <Form onSubmit={this.handleSearch} className={styles.addOrderForm}>
@@ -761,18 +786,35 @@ export default class AddOrderForm extends Component {
                           initialValue: detail.customerName
                         })(
                           <AutoComplete
+                            style={{ width: '60%', marginRight: '5px' }}
                             onSearch={this.autoCompSearch.bind(null, 'customerName')}
                             disabled={readOnly}
                             dataSource={usernameData}
-                            onBlur={this.onBlurCheck.bind(null, 'customerName', usernameData, '')} />
+                            onBlur={this.onBlurCheck.bind(null, 'customerName', usernameData, '')} 
+                            onSelect={(value) => {
+                              const targetObj = nameWithMoreInfo.find(obj => obj.name === value);
+                              const { type } = targetObj;
+                              const { contacts } = targetObj;
+                              this.setState({typeNum: type, contactsArr: contacts});
+                            }}
+                          />
                           )}
-
+                        <span style={{color: '#f00'}}>{this.transferType(typeNum || detail.customerType)}</span>
                       </FormItem>
                       {getFieldDecorator('charge', {
                         initialValue: detail.charge
                       })(
                         <Input type='hidden' />
                         )}
+                    </Col>
+                    <Col span={8}>
+                      <FormItem label="联系人"  {...formItemLayout}>
+                        {getFieldDecorator('contacts', {initialValue: contactsArr[0] || detail.contacts})(
+                          <Select disabled={readOnly}>
+                            {contactsArr.map((currV, i) => <Option value={currV} key={`${currV}${i}`}>{currV}</Option>)}
+                          </Select>
+                          )}
+                      </FormItem>
                     </Col>
                     <Col span={8}>
                       <FormItem label="是否匹配切位" className='specialLabel' {...formItemLayout}>
@@ -787,8 +829,6 @@ export default class AddOrderForm extends Component {
                           )}
                       </FormItem>
                     </Col>
-                  </Row>
-                  <Row gutter={20}>
                     <Col span={8}>
                       <FormItem label="出发城市" {...formItemLayout}>
                         {getFieldDecorator('cityDep', {
@@ -832,8 +872,6 @@ export default class AddOrderForm extends Component {
                           )}
                       </FormItem>
                     </Col>
-                  </Row>
-                  <Row gutter={20}>
                     <Col span={8}>
                       <FormItem label="去程日期" {...formItemLayout}>
                         {getFieldDecorator('depDate', {
@@ -854,8 +892,6 @@ export default class AddOrderForm extends Component {
                           )}
                       </FormItem>
                     </Col>
-                  </Row>
-                  <Row gutter={20}>
                     <Col span={8}>
                       <FormItem label="人数"  {...formItemLayout}>
                         <span style={{ marginRight: '5px' }}>成人:</span>
