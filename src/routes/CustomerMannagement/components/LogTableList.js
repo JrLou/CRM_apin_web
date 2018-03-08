@@ -20,10 +20,12 @@ class LogTableList extends PureComponent {
       {
         title: '操作时间',
         dataIndex: 'createTime',
+        render: text => <span style={{ whiteSpace: 'nowrap' }}>{text}</span>,
       },
       {
         title: '操作人',
         dataIndex: 'createUserName',
+        render: text => <span style={{ whiteSpace: 'nowrap' }}>{text}</span>,
       },
       {
         title: '操作内容',

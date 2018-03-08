@@ -72,7 +72,7 @@ export default class OfflineList extends PureComponent {
     });
   }
   delOrder(id) {
-    let listParams = { ... this.searchValues, pageNum: this.page.page, pageSize: this.page.pageSize };
+    let listParams = { ...this.searchValues, pageNum: this.page.page, pageSize: this.page.pageSize };
     const { dispatch } = this.props;
     const { offline: { list } } = this.props;
     confirm({
@@ -234,18 +234,33 @@ export default class OfflineList extends PureComponent {
                 )}
             </FormItem>
           </Col>
-          {isLeader ?
-            <Col md={8} sm={24}>
-              <FormItem label="客服">
-                {getFieldDecorator('createUserName', {
-                  rules: [{ max: 32, message: "长度不超过32" }],
-                })(
-                  <Input />
-                  )}
-              </FormItem>
-            </Col>
-            : null
+          {//【客服】支持模糊搜索，只在总监权限下能看到，客服权限不能看到。
+            isLeader ?
+              <Col md={8} sm={24}>
+                <FormItem label="客服">
+                  {getFieldDecorator('createUserName', {
+                    rules: [{ max: 32, message: "长度不超过32" }],
+                  })(
+                    <Input />
+                    )}
+                </FormItem>
+              </Col>
+              : null
           }
+          <Col md={8} sm={24}>
+            <FormItem label="客户类型">
+              {getFieldDecorator('customerType', {
+                initialValue: -1,
+              })(
+                <Select placeholder="请选择" style={{ width: '100%' }}>
+                  <Option value={-1}>全部</Option>
+                  <Option value={2}>激活客户</Option>
+                  <Option value={3}>活跃客户</Option>
+                  <Option value={1}>沉积客户</Option>
+                </Select>
+                )}
+            </FormItem>
+          </Col>
         </Row>
         <div style={{ overflow: 'hidden' }}>
           <span style={{ float: 'right' }}>
@@ -265,6 +280,24 @@ export default class OfflineList extends PureComponent {
       type: 'offline/outExcel',
       payload: this.searchValues,
     });
+  }
+  transferType = (type) => {
+    //'类型，1-沉积客户、2-激活客户、3-活跃客户',
+    let result = '';
+    switch (type) {
+      case 1:
+        result = "沉积客户";
+        break;
+      case 2:
+        result = "激活客户";
+        break;
+      case 3:
+        result = "活跃客户";
+        break;
+      default:
+        break;
+    }
+    return result;
   }
   render() {
     const { offline: { list, loading } } = this.props;
@@ -295,6 +328,12 @@ export default class OfflineList extends PureComponent {
         dataIndex: 'serialNo',
         width: 150,
         render: (text, record) => <Link to={"/offline/order/ViewOrder/" + record.id}>{text}</Link>,
+      },
+      {
+        title: '客户类型',
+        dataIndex: 'type',
+        width: 100,
+        render: text => this.transferType(text),
       },
 
       {
