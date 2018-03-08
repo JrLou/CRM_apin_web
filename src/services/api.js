@@ -302,6 +302,41 @@ export async function getsearchCity(params) {
     body: params,
   });
 }
+//通用价格配置
+export async function priceCommon(params) {
+  return request('/api/resource/priceCommon', {
+    method: 'POST',
+    body: params,
+  });
+}
+//通用特殊加价配置
+export async function priceSpecial(params) {
+  return request('/api/resource/priceSpecial', {
+    method: 'POST',
+    body: params,
+  });
+}
+//通用价格配置日志
+export async function priceLogs(params) {
+  return request('/api/resource/priceLogs', {
+    method: 'POST',
+    body: params,
+  });
+}
+//通用价格配置日志上架
+export async function statePrice(params) {
+  return request('/api/resource/statePrice', {
+    method: 'POST',
+    body: params,
+  });
+}
+//通用价格配置日志上架
+export async function editPriceConfig(params) {
+  return request('/api/resource/editPriceConfig', {
+    method: 'POST',
+    body: params,
+  });
+}
 //冷门资源列表
 export async function geth5(params) {
   return request('/api/resource/getAirLinesRare', {

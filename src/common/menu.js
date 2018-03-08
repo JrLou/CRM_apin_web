@@ -23,12 +23,15 @@ const menuData = [{
     //   name: '编辑',
     //   path: 'supplier/supplierPolicy/flightstockEdit',
     // }],
-  },{
+  }, {
     name: '冷门资源',
     path: 'supplier/supplierPolicy/h5',
   }, {
     name: '第三方资源',
     path: 'supplier/flyPigList',
+  }, {
+    name: '加价配置',
+    path: 'supplier/supplierPolicy/priceList',
   }],
 }, {
   name: '拼团管理',
@@ -98,17 +101,17 @@ const menuData = [{
     // }]
   }],
 },
-{
+  {
     name: '线下订单管理',
     icon: 'table',
     path: 'offline',
     children: [{
       name: '线下订单列表',
       path: 'offline/order',
-    },{
+    }, {
       name: '客户（旅行社）管理',
       path: 'offline/customerMannagement',
-    },{
+    }, {
       name: '供应商管理',
       path: 'offline/supporterMannagement',
     }],

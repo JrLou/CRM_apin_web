@@ -147,6 +147,11 @@ export const getRouterData = (app) => {
       name: '查看供应商',
       component: dynamicWrapper(app, ['flightstockView'], () => import('../routes/Supplier/supplierPolicy/FlightstockView')),
     },
+    //加价配置
+    '/supplier/supplierPolicy/priceList': {
+      name: '加价配置',
+      component: dynamicWrapper(app, ['priceList'], () => import('../routes/Supplier/PriceConfiguration/PriceList')),
+    },
     //飞猪资源
     '/supplier/flyPigList': {
       component: dynamicWrapper(app, ['flypiglist'], () => import('../routes/Supplier/FlyPigList')),

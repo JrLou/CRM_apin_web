@@ -11,6 +11,10 @@ class CalendarHeader extends Component {
             colunms: {}
         }
     }
+  componentDidMount() {
+    console.log('看看有没有传过来wwww')
+    console.log(this.props.canPick)
+  }
     addPicks(currenMonth, addCol) {
         let year = this.props.year,
             month = this.props.month,
@@ -29,7 +33,7 @@ class CalendarHeader extends Component {
                             // let currentDay = this.props.year + '-' + (this.props.month + 1) + '-' + _v;
                             // if (+new Date().getTime() > +moment(currentDay, "YYYY-MM-DD").format('x')+(24*60*60*1000)) {
                             //     return
-                            // } 
+                            // }
                             // 可选区间内才让选
                             let currentDay = this.props.year + '-' + (this.props.month + 1) + '-' + _v;
                             let currentDayMs = moment(currentDay, 'YYYY-MM-DD').format('x');
@@ -105,7 +109,7 @@ class CalendarHeader extends Component {
         let originPicked = Object.assign({}, pickedInfo)
         let originPickedDays = originPicked[year][month + 1] ? originPicked[year][month + 1]['days'] : [];
         let originPickedStocks = originPicked[year][month + 1] ? originPicked[year][month + 1]['stocks'] : [];
-        // 去掉勾勾的时候肯定会取到所以不用判断 
+        // 去掉勾勾的时候肯定会取到所以不用判断
         if (pickedInfo[year][month + 1]) {
             pickedInfo[year][month + 1]['days'].map((v, k) => {
                 // if (dayReduces.indexOf(v) > -1) {
@@ -115,7 +119,7 @@ class CalendarHeader extends Component {
                 //     pickedInfo[year][month + 1]['stocks'] = pickedInfo[year][month + 1]['stocks'].filter((_v, _k) => {
                 //         return _v !== originPicked[year][month + 1]['stocks'][k]
                 //     })
-                // } 
+                // }
             })
         }
         dayReduces.map((v, k) => {
@@ -176,12 +180,12 @@ class CalendarHeader extends Component {
         oldColunms.map((v, k) => {
             checkedValues.indexOf(v) == -1 ? reduceCol.push(v) : null;
         })
-        // 计算增加的列日期 
+        // 计算增加的列日期
         addCol.length > 0 ? pickedInfo = this.addPicks(currenMonth, addCol) : null;
-        // 计算减少的列日期 
+        // 计算减少的列日期
         reduceCol.length > 0 ? pickedInfo = this.reducePicks(currenMonth, reduceCol) : null;
         this.props.getNewPicks(pickedInfo)
-        // 保存当前勾选状态 和年月映射起来 
+        // 保存当前勾选状态 和年月映射起来
         let newColInfo = this.setMonthObj(this.state.colunms, year, month, checkedValues)
         this.setState({
             colunms: newColInfo
