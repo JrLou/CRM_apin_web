@@ -287,14 +287,23 @@ class BasicDetailForm extends PureComponent {
     return jsonObj;
   };
 
+  hasSameContacts = contactsList => {
+    for (let i = 0; i < contactsList.length; i += 1) {
+      for (let k = i + 1; k < contactsList.length; k += 1) {
+        if (contactsList[i].contacts === contactsList[k].contacts) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
   handleSubmit = e => {
     e.preventDefault();
 
     const {
       dispatch,
       form: { getFieldValue, validateFields },
-      handlePageFormReset,
-      customerMannagement: { formData: { data: formData } },
       isEdit,
       id,
     } = this.props;
@@ -302,7 +311,6 @@ class BasicDetailForm extends PureComponent {
     const keysArr = getFieldValue('keysArr');
 
     validateFields((err, fieldsValue) => {
-      console.log('fieldsValue', fieldsValue);
       if (err) return;
 
       // 添加 微信 qq 的验证
@@ -315,6 +323,12 @@ class BasicDetailForm extends PureComponent {
       }
 
       const payload = this.transferData(fieldsValue);
+
+      //验证是否有同名的联系人，有则提示
+      if (this.hasSameContacts(payload.contactsList)) {
+        message.warning('联系人不能相同');
+        return;
+      }
 
       let urlTail = 'fetchAdd';
 
