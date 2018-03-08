@@ -7,6 +7,7 @@ export default {
   state: {
     list: {},
     usernameData: [],
+    nameWithMoreInfo: [], //用于显示【客户类型】
     supplierData: [],
     cityData: [],
     cityData2: [],
@@ -156,15 +157,17 @@ export default {
     *searchCustomer({ payload }, { call, put }) {
       const response = yield call(searchCustomer, payload);
       if (response.code == 200) {
-        let nameArr = response.data.map((v, k) => {
-          return v.name
-        })
+        const nameArr = response.data.map((v, k) => {
+          return v.name;
+        });
+        const nameWithMoreInfo = response.data.map(v => {
+          return {name: v.name, type: v.type, contacts: v.contacts};
+        });
         yield put({
           type: 'getCustomers',
-          payload: { nameArr: nameArr, totalCustomer: response.data },
+          payload: { nameArr, totalCustomer: response.data, nameWithMoreInfo },
         });
       }
-
     },
     *searchSupplier({ payload }, { call, put }) {
       const response = yield call(searchSupplier, payload);
@@ -282,7 +285,8 @@ export default {
       return {
         ...state,
         usernameData: action.payload.nameArr,
-        totalCustomer: action.payload.totalCustomer
+        nameWithMoreInfo: action.payload.nameWithMoreInfo,
+        totalCustomer: action.payload.totalCustomer,
       };
     },
     getCity(state, action) {
