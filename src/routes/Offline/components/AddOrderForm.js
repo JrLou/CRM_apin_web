@@ -428,11 +428,13 @@ export default class AddOrderForm extends Component {
     })
   }
   handleSelect = (value) => {
-    const { offline: { nameWithMoreInfo } } = this.props;    
+    const { offline: { nameWithMoreInfo }, form: { setFieldsValue } } = this.props;    
     const targetObj = nameWithMoreInfo.find(obj => obj.name === value);
     const { type } = targetObj;
     const { contacts } = targetObj;
     this.setState({typeNum: type, contactsArr: contacts});
+    //应该直接设置后面那个Select的值
+    setFieldsValue({contacts: contacts[0]});
   };
 
   handleModalVisible = (bool) => {
@@ -755,10 +757,6 @@ export default class AddOrderForm extends Component {
 
     const {contactsArr, typeNum} = this.state;
 
-    // if (detail.customerName) {
-    //   this.handleSelect(detail.customerName, nameWithMoreInfo);
-    // }
-    console.log("nameWithMoreInfo", nameWithMoreInfo);
     return (
       <div>
         <Form onSubmit={this.handleSearch} className={styles.addOrderForm}>
