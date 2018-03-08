@@ -18,7 +18,7 @@ export default class EditOrder extends PureComponent {
     this.par = getPar(this, 'id')
     this.currentUser = CookieHelp.getCookieInfo('_r') ? Base64.decode(CookieHelp.getCookieInfo('_r')) : null;
   }
-  componentDidMount() {
+  componentWillMount() { //之所以在componentWillMount钩子出发请求，是因为子组件需在自己的请求完成前到这个值，
     const { dispatch } = this.props;
     if (this.par) {
       dispatch({

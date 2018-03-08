@@ -88,19 +88,22 @@ class BasicDetailForm extends PureComponent {
   getInitKeysArr = formData => {
     const { contactsList } = formData;
     let result = [];
-    let innerUuid = -1; //TODO: 这里有坑，如果直接用uuid会有bug，但是找不到原因
+    let innerUuid = -1; //TODO: 这里有坑，如果直接用uuid会有bug，但是找不到原因(现在这样写的很恶心，但是没有办法)
 
     if (Array.isArray(contactsList)) {
       //有值
       result = contactsList.map(currObj => {
         innerUuid += 1;
-        uuid = innerUuid;
+        if (!this.hasAdd) {
+          //由于这整个个函数
+          uuid = innerUuid;
+        }
         // console.log('执行了getInitKeysArr,uuid', uuid);
         return { ...currObj, key: innerUuid };
       });
     } else {
       //没值
-      result = [{ key: 0, isMain: 1 }];
+      result = [{ key: uuid, isMain: 1 }];
     }
     return result;
   };
@@ -119,6 +122,7 @@ class BasicDetailForm extends PureComponent {
 
     getFieldDecorator('keysArr', { initialValue });
     const keysArr = getFieldValue('keysArr');
+    console.log('keysArr', keysArr);
     const formItems = keysArr.map((obj, index) => {
       const { key } = obj;
       const contactTailTxt = index + 1;
@@ -287,14 +291,23 @@ class BasicDetailForm extends PureComponent {
     return jsonObj;
   };
 
+  hasSameContacts = contactsList => {
+    for (let i = 0; i < contactsList.length; i += 1) {
+      for (let k = i + 1; k < contactsList.length; k += 1) {
+        if (contactsList[i].contacts === contactsList[k].contacts) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
   handleSubmit = e => {
     e.preventDefault();
 
     const {
       dispatch,
       form: { getFieldValue, validateFields },
-      handlePageFormReset,
-      customerMannagement: { formData: { data: formData } },
       isEdit,
       id,
     } = this.props;
@@ -302,7 +315,6 @@ class BasicDetailForm extends PureComponent {
     const keysArr = getFieldValue('keysArr');
 
     validateFields((err, fieldsValue) => {
-      console.log('fieldsValue', fieldsValue);
       if (err) return;
 
       // 添加 微信 qq 的验证
@@ -315,6 +327,12 @@ class BasicDetailForm extends PureComponent {
       }
 
       const payload = this.transferData(fieldsValue);
+
+      //验证是否有同名的联系人，有则提示
+      if (this.hasSameContacts(payload.contactsList)) {
+        message.warning('联系人不能相同');
+        return;
+      }
 
       let urlTail = 'fetchAdd';
 
@@ -356,6 +374,7 @@ class BasicDetailForm extends PureComponent {
   };
 
   add = () => {
+    this.hasAdd = true;
     uuid += 1;
     const { form } = this.props;
     // can use data-binding to get
