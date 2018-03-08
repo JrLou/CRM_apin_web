@@ -88,19 +88,22 @@ class BasicDetailForm extends PureComponent {
   getInitKeysArr = formData => {
     const { contactsList } = formData;
     let result = [];
-    let innerUuid = -1; //TODO: 这里有坑，如果直接用uuid会有bug，但是找不到原因
+    let innerUuid = -1; //TODO: 这里有坑，如果直接用uuid会有bug，但是找不到原因(现在这样写的很恶心，但是没有办法)
 
     if (Array.isArray(contactsList)) {
       //有值
       result = contactsList.map(currObj => {
         innerUuid += 1;
-        uuid = innerUuid;
+        if (!this.hasAdd) {
+          //由于这整个个函数
+          uuid = innerUuid;
+        }
         // console.log('执行了getInitKeysArr,uuid', uuid);
         return { ...currObj, key: innerUuid };
       });
     } else {
       //没值
-      result = [{ key: 0, isMain: 1 }];
+      result = [{ key: uuid, isMain: 1 }];
     }
     return result;
   };
@@ -119,6 +122,7 @@ class BasicDetailForm extends PureComponent {
 
     getFieldDecorator('keysArr', { initialValue });
     const keysArr = getFieldValue('keysArr');
+    console.log('keysArr', keysArr);
     const formItems = keysArr.map((obj, index) => {
       const { key } = obj;
       const contactTailTxt = index + 1;
@@ -370,6 +374,7 @@ class BasicDetailForm extends PureComponent {
   };
 
   add = () => {
+    this.hasAdd = true;
     uuid += 1;
     const { form } = this.props;
     // can use data-binding to get
