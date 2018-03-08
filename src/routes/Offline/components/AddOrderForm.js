@@ -36,11 +36,17 @@ export default class AddOrderForm extends Component {
   //   }
   // }
   componentDidMount() {
-    const { dispatch } = this.props;
+    const { dispatch, offline: { nameWithMoreInfo } } = this.props;    
     // 获取默认的三个自动补全数组
     dispatch({
       type: 'offline/searchCustomer',
       payload: { name: '' },
+      succCb: () => {
+        const { detail = {} } = this.props;
+        if (detail.customerName) { //仅当有customerName的时候才执行，也就是editOrder页面的时候
+          this.handleSelect(detail.customerName);
+        }
+      },
     });
     dispatch({
       type: 'offline/searchSupplier',
@@ -421,6 +427,14 @@ export default class AddOrderForm extends Component {
       )
     })
   }
+  handleSelect = (value) => {
+    const { offline: { nameWithMoreInfo } } = this.props;    
+    const targetObj = nameWithMoreInfo.find(obj => obj.name === value);
+    const { type } = targetObj;
+    const { contacts } = targetObj;
+    this.setState({typeNum: type, contactsArr: contacts});
+  };
+
   handleModalVisible = (bool) => {
     const { dispatch } = this.props;
     // this.setState({
@@ -674,6 +688,7 @@ export default class AddOrderForm extends Component {
   };
 
   render() {
+    
     const { getFieldDecorator } = this.props.form;
     const formItemLayout = {
       labelCol: { span: 6 },
@@ -740,6 +755,10 @@ export default class AddOrderForm extends Component {
 
     const {contactsArr, typeNum} = this.state;
 
+    // if (detail.customerName) {
+    //   this.handleSelect(detail.customerName, nameWithMoreInfo);
+    // }
+    console.log("nameWithMoreInfo", nameWithMoreInfo);
     return (
       <div>
         <Form onSubmit={this.handleSearch} className={styles.addOrderForm}>
@@ -792,12 +811,7 @@ export default class AddOrderForm extends Component {
                             disabled={readOnly}
                             dataSource={usernameData}
                             onBlur={this.onBlurCheck.bind(null, 'customerName', usernameData, '')} 
-                            onSelect={(value) => {
-                              const targetObj = nameWithMoreInfo.find(obj => obj.name === value);
-                              const { type } = targetObj;
-                              const { contacts } = targetObj;
-                              this.setState({typeNum: type, contactsArr: contacts});
-                            }}
+                            onSelect={this.handleSelect}
                           />
                           )}
                         <span style={{color: '#f00'}}>{this.transferType(typeNum || detail.customerType)}</span>

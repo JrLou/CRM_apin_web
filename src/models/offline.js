@@ -154,7 +154,7 @@ export default {
         payload: false,
       });
     },
-    *searchCustomer({ payload }, { call, put }) {
+    *searchCustomer({ payload, succCb }, { call, put }) {
       const response = yield call(searchCustomer, payload);
       if (response.code == 200) {
         const nameArr = response.data.map((v, k) => {
@@ -167,6 +167,7 @@ export default {
           type: 'getCustomers',
           payload: { nameArr, totalCustomer: response.data, nameWithMoreInfo },
         });
+        succCb && succCb();
       }
     },
     *searchSupplier({ payload }, { call, put }) {
