@@ -16,11 +16,6 @@ class MultipleSelectCalendar extends Component {
     };
   }
 
-  componentDidMount() {
-    console.log('看看有没有传过来sss')
-    console.log(this.props.canPick)
-  }
-
   showCalendar() {
     this.setState({visible: !this.state.visible})
   }

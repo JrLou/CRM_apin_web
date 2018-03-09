@@ -73,29 +73,38 @@ class page extends Component {
       payload: data,
     });
   }
-  dateGet() {  //初始化获取要展示的日期
-    let dates = moment(new Date()).format("YYYY-MM");
-    let b = new Date().getTime();
-    let a = moment(this.props.listdata.departure_start, "YYYY-MM").format('x');
-    let c = moment(this.props.listdata.departure_end, "YYYY-MM").format('x');
-    if (b > a && b < c) {
-      this.loadData('flightstockEdit/getpriceAirline', {
-        date: moment(this.props.listdata.departure_start).format('YYYY-MM'),
-        id: this.props.listdata.id,
-      },);
-      this.setState({
-        dateSelect: moment(this.props.listdata.departure_start),
-      })
 
-    } else {
-      this.loadData('flightstockEdit/getpriceAirline', {
-        date: dates,
-        id: this.props.listdata.id,
-      },);
-      this.setState({
-        dateSelect: moment(dates),
-      })
-    }
+  dateGet() {  //初始化获取要展示的日期
+    // let dates = moment(new Date()).format("YYYY-MM");
+    // let b = new Date().getTime();
+    // let a = moment(this.props.listdata.departure_start, "YYYY-MM").format('x');
+    // let c = moment(this.props.listdata.departure_end, "YYYY-MM").format('x');
+    // if (b > a && b < c) {
+    //   this.loadData('flightstockEdit/getpriceAirline', {
+    //     date: moment(this.props.listdata.departure_start).format('YYYY-MM'),
+    //     id: this.props.listdata.id,
+    //   },);
+    //   this.setState({
+    //     dateSelect: moment(this.props.listdata.departure_start),
+    //   })
+    //
+    // } else {
+    //   this.loadData('flightstockEdit/getpriceAirline', {
+    //     date: dates,
+    //     id: this.props.listdata.id,
+    //   },);
+    //   this.setState({
+    //     dateSelect: moment(dates),
+    //   })
+    // }
+    this.loadData('flightstockEdit/getpriceAirline', {
+      date: moment(this.props.listdata.departure_start).format('YYYY-MM'),
+      id: this.props.listdata.id,
+    },);
+    this.setState({
+      dateSelect: moment(this.props.listdata.departure_start),
+    })
+
   }
 
   dateGetReturn() {
@@ -442,9 +451,9 @@ class page extends Component {
     // 库存
     const {flightstockEdit: {airline}} = this.props;
     let [year, month, day] = [
-      +moment(this.props.listdata.flightDate, "YYYY-MM-DD").format('YYYY'),
-      +moment(this.props.listdata.flightDate, "YYYY-MM-DD").format('MM') - 1,
-      +moment(this.props.listdata.flightDate, "YYYY-MM-DD").format('DD')
+      +moment(this.props.listdata.departure_start, "YYYY-MM-DD").format('YYYY'),
+      +moment(this.props.listdata.departure_start, "YYYY-MM-DD").format('MM'),
+      +moment(this.props.listdata.departure_start, "YYYY-MM-DD").format('DD')
     ]
     let canPick = airline.map((v, k) => {
       return v.flight_date;
