@@ -58,7 +58,7 @@ class Masking extends Component {
     return (
       <div>
         {!this.state.visible &&
-        <ul className={this.props.criticalPoint?css.eventsjg:css.events}>
+        <ul className={this.props.listData.criticalPoint?css.eventsjg:css.events}>
           {
             this.props.listData.list.map(function (item) {
               return (

@@ -164,13 +164,6 @@ class page extends Component {
     }
     listData.list = list
     listData.criticalPoint = criticalPoint
-    // return listData || {
-    //   tishi: false,
-    //   list: [
-    //     {content: '暂无班期'},
-    //   ],
-    //   tishis: 0,
-    // };
     return list.length > 0 ? listData: {
       tishi: false,
       list: [{content: '暂无班期'}],
