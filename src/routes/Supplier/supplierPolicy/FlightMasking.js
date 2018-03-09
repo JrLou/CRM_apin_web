@@ -61,7 +61,7 @@ class Masking extends Component {
                   {item.type ? <span className={css[`event-${item.type}`]}>●</span> : <span></span>}
                   {item.content == "暂无班期" ? <span className={css.air}>{item.content}</span> :
                     <span className={css.event}>{item.content}</span>}
-                  <span style={{fontSize: '16px', lineHeight: '11PX'}}> {item.price}</span>
+                  <span style={{fontSize: '12px', lineHeight: '11PX'}}> {item.price}</span>
                 </li>
               )
             })

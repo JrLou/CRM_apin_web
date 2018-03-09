@@ -337,6 +337,13 @@ export async function editPriceConfig(params) {
     body: params,
   });
 }
+//添加价格配置
+  export async function addPriceConfig(params) {
+  return request('/api/resource/addPriceConfig', {
+    method: 'POST',
+    body: params,
+  });
+}
 //冷门资源列表
 export async function geth5(params) {
   return request('/api/resource/getAirLinesRare', {
