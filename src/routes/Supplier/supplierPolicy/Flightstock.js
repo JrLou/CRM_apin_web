@@ -389,6 +389,11 @@ export default class TableList extends PureComponent {
                            onClick={this.operating.bind(this, record, 1)}>上架
                         </a>
                         <Divider type="vertical"/>
+                        <a
+                          style={{cursor: "pointer", margin: "6px"}}
+                          onClick={this.operating.bind(this, record, 4,)}>查看
+                        </a>
+                        <Divider type="vertical"/>
                         <a style={{cursor: "pointer", margin: "6px"}}
                            onClick={this.operating.bind(this, record, 3)}>日志
                         </a>
