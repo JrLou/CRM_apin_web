@@ -65,6 +65,9 @@ class Masking extends Component {
       case 2:
         csss = css.eventsjgs
         break;
+      case 3:
+        csss = css.eventsjgb
+        break;
     }
     // csss = css.events
     return csss

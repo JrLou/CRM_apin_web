@@ -157,7 +157,7 @@ class page extends Component {
             },
           ]
         }
-        if (parseInt((( s1 - s2.getTime()  ) / (1000 * 60 * 60 * 24))) < 3 && parseInt((( s1 - s2.getTime()  ) / (1000 * 60 * 60 * 24))) > 0) {
+        if (parseInt((( s1 - s2.getTime()) / (1000 * 60 * 60 * 24))) < 3 && parseInt((( s1 - s2.getTime()) / (1000 * 60 * 60 * 24))) > 0) {
           criticalPoint = 3
         }
         if (this.props.airline_status == 1 && parseInt((( s1 - s2.getTime()  ) / (1000 * 60 * 60 * 24))) > 0) {
