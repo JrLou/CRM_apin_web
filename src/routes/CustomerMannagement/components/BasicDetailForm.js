@@ -396,6 +396,7 @@ class BasicDetailForm extends PureComponent {
       },
       needOperateBtn,
       isReadOnly,
+      isEdit,
     } = this.props;
     const layoutForm = { md: 8, lg: 24, xl: 48 };
 
@@ -404,6 +405,8 @@ class BasicDetailForm extends PureComponent {
       this.currentUser
         .split(',')
         .indexOf('716103936e1a461ab79dcb7283a979b8') !== -1;
+
+    const isDisabled = isReadOnly || (isEdit && !isLeader);
 
     return (
       <Form onSubmit={this.handleSubmit} layout="inline">
@@ -425,7 +428,7 @@ class BasicDetailForm extends PureComponent {
                       message: '不能输入纯空格',
                     },
                   ],
-                })(<Input disabled={isReadOnly || !isLeader} />)}
+                })(<Input disabled={isDisabled} />)}
               </FormItem>
             </Col>
             <Col md={8} sm={24}>
@@ -434,7 +437,7 @@ class BasicDetailForm extends PureComponent {
                   //【负责人】支持模糊搜索，最长字符可输入10个。
                   initialValue: this.getInitData(formData, 'charge'),
                   rules: [{ max: 10, message: '最长10位' }],
-                })(<Input disabled={isReadOnly || !isLeader} />)}
+                })(<Input disabled={isDisabled} />)}
               </FormItem>
             </Col>
             <Col md={8} sm={24}>

@@ -100,7 +100,7 @@ class StandardTable extends PureComponent {
         width: '24%',
       },
       {
-        title: '联系人',
+        title: '主要联系人',
         dataIndex: 'contacts',
         width: '12%',
       },
