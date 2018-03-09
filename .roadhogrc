@@ -21,7 +21,7 @@
   },
   "proxy": {
      "/java": {
-    "target": "http://appadmin.pre.io.apin.com/",
+    "target": "http://192.168.7.141:9712",
     "changeOrigin": true,
     "pathRewrite": { "^/java" : "" }
     },
