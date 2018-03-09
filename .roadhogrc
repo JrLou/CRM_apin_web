@@ -26,11 +26,7 @@
     "pathRewrite": { "^/java" : "" }
     },
      "/": {
-<<<<<<< HEAD
-    "target": "http://192.168.7.141:9712/",
-=======
     "target": "http://192.168.7.141:9712",
->>>>>>> 6bc3ed617bc05f6567b81241393437cb42d321ed
     "changeOrigin": true
     }
 
