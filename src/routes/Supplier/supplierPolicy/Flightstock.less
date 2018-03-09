@@ -59,6 +59,7 @@
   line-height: 26px;
   border-radius: 4px;
 }
+
 .AgenciesView_box {
   padding: 30px;
 }
@@ -241,31 +242,36 @@
   }
 }
 
-.events {
+.eventsjg {
+  background-color: #ff4d4fe8;
+  li span {
+    color: #fff;
+  }
+}
+
+.events, .eventsjg {
   line-height: 24px;
   list-style: none;
   margin: 0;
   padding: 0;
-}
+  li {
+    color: #999;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-bottom: -6px;
+  }
+  li span {
+    vertical-align: middle;
+    vertical-align: baseline;
+    font-size: 12px;
+  }
 
-.events li {
-  color: #999;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin-bottom: -6px;
-}
-
-.events li span {
-  vertical-align: middle;
-  vertical-align: baseline;
-  font-size: 12px;
-}
-
-.events li span:first-child {
-  font-size: 9px;
-  margin-right: 4px;
-  vertical-align: baseline;
+  li span:first-child {
+    font-size: 9px;
+    margin-right: 4px;
+    vertical-align: baseline;
+  }
 }
 
 .event-warning {
@@ -386,10 +392,11 @@
     overflow: hidden;
     background-color: #fff;
   }
-  .ant-fullcalendar-fullscreen .ant-fullcalendar-header .ant-radio-group{
+  .ant-fullcalendar-fullscreen .ant-fullcalendar-header .ant-radio-group {
     display: none;
   }
 }
+
 .tableList {
   .tableListOperator {
     margin-bottom: 16px;
@@ -398,6 +405,7 @@
     }
   }
 }
+
 .tableList {
   .tableListOperator {
     margin-bottom: 16px;
@@ -406,6 +414,7 @@
     }
   }
 }
+
 .tableListForm {
   :global {
     .ant-form-item {
@@ -416,9 +425,9 @@
         width: auto;
         line-height: 32px;
         padding-right: 8px;
-        label{
-          width:80px;
-          display:inline-block;
+        label {
+          width: 80px;
+          display: inline-block;
         }
       }
     }
