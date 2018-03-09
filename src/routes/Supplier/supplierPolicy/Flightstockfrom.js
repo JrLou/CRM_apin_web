@@ -112,10 +112,16 @@ class AddForm extends Component {
             list[0].seat_type == 0 ? list[0].seat_type = "硬切" : list[0].seat_type = "代销"
             if (list[0].flight_type == 1) {
               this.addDate(1);
+              this.setState({
+                flight_type: 1,
+              });
               list[0].flight_type = "单程"
             } else {
               this.addDate(2);
-              list[0].flight_type = "往返"
+              this.setState({
+                flight_type: 2,
+              });
+              list[0].flight_type = "往返";
             }
             // list[0].flight_type == 1 ? list[0].flight_type = "单程" : list[0].flight_type = "往返"
             switch (list[0].airline_type) {
@@ -221,7 +227,7 @@ class AddForm extends Component {
         }
         values.settlementPrice = values.settlementPrice * 100
         values.settlementPriceChild = values.settlementPriceChild * 100
-        values.backAirLine = values.flight_type == 2 ? JSON.stringify([flightstockData[1]]) : []
+        values.backAirLine = this.state.flight_type == 2 ? JSON.stringify([flightstockData[1]]) : []
         values.goAirLine = JSON.stringify([flightstockData[0]])
         values.cityArr = flightstockData[0].FlightArrcode
         values.seatType == "硬切" ? values.seatType = 0 : values.seatType = 1
@@ -742,7 +748,7 @@ class AddForm extends Component {
                         initialValue: returnData.length > 0 ? returnData[0].airline_type : '',
                       })
                       (<RadioGroup options={plainOptionsd}
-                                   disabled={(this.state.flightdata.competence && this.state.flightdata.competenceEdit)}/>)}
+                                   disabled={(this.state.flightdata.competence)}/>)}
                     </FormItem>
                   </Col>
                   <Col span={24}>
@@ -755,7 +761,7 @@ class AddForm extends Component {
                         initialValue: returnData.length > 0 ? returnData[0].seat_type : '',
                       })
                       (<RadioGroup options={plainOptionsb}
-                                   disabled={(this.state.flightdata.competence && this.state.flightdata.competenceEdit)}/>)}
+                                   disabled={(this.state.flightdata.competence)}/>)}
                     </FormItem>
                   </Col>
                   {!this.props.id &&

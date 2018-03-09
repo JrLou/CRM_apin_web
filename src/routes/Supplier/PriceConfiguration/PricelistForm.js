@@ -95,11 +95,11 @@ class BulkImportForm extends PureComponent {
             this._searchPort(editPriceConfig, data, 0)
             break;
           case 2:
-            data.date = this.state.datesArr.join(',')
+            data.date = this.state.datesArr.length > 0 ? this.state.datesArr.join(',') : -1
             this._searchPort(editPriceConfig, data, 0)
             break;
           case 3:
-            data.date = this.state.datesArr.join(',')
+            data.date = this.state.datesArr.length > 0 ? this.state.datesArr.join(',') : -1
             this._searchPort(addPriceConfig, data, 0)
             break;
         }
