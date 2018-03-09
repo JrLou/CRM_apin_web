@@ -24,7 +24,7 @@ import Algorithm from './FlightstockAlgorithm.js';
 import Manual from './FlightstockManual.js';
 import FlightstockCalendar from './FlightstockCalendar.js';
 import FlightstockShow from './FlightstockShow.js';
-import {getdetailAirLine, geteditAirline} from '../../../services/api'
+import {getdetailAirLine, geteditAirline, searchSupplier} from '../../../services/api'
 
 const {TextArea} = Input;
 const {Column,} = Table;
@@ -53,7 +53,8 @@ class AddForm extends Component {
       competencese: false,
       numbering: null,
       flight_type: null,
-      returnData: [] //回显数据
+      returnData: [], //回显数据
+      supplier: [], //供应商数据
     };
   }
 
@@ -91,6 +92,8 @@ class AddForm extends Component {
       data.competence = true
       data.competenceEdit = false
       this._searchPort(getdetailAirLine, {id: this.props.id}, 0)
+    } else {
+      this._searchPort(searchSupplier, {name: ''}, 2)
     }
     this.setState({
       flightdata: data,
@@ -159,6 +162,11 @@ class AddForm extends Component {
               pathname: '/supplier/supplierPolicy/flightstock',
             });
             return
+            break;
+          case 2:
+            this.setState({
+              supplier: response.data,
+            });
             break;
         }
       } else {
@@ -577,6 +585,56 @@ class AddForm extends Component {
     }
   }
 
+  handleSvloe(value, option) { //供应商选择后的回调
+    let data = this.state.flightdata;
+    data.managerId = value.split(',')[0];
+    data.supplierName = value.split(',')[1];
+    if (value.split(',')[2] != 'null') {
+      this.props.form.setFieldsValue({'manager': value.split(',')[2]})
+    } else {
+      this.props.form.setFieldsValue({'manager': ''})
+
+    }
+    this.setState({
+      flightdata: data,
+    });
+  }
+
+  handleSearch(value) {  //加载供应商选择数据
+    let data = this.state.flightdata;
+    this._searchPort(searchSupplier, {name: value}, 2)
+    // HttpTool.post(APILXF.baseapi_v_supliers_query,
+    //   (code, msg, json, option) => {
+    //     console.log(json);
+    //     data.userList = json;
+    //     this.setState({
+    //       flightdata: data,
+    //     });
+    //     if (code == 403) {
+    //       message.success(msg);
+    //     }
+    //   },
+    //   (code, msg, option) => {
+    //   }
+    //   , {
+    //     condition: value,
+    //     // status: 3,
+    //   }
+    // )
+  }
+
+  reviewerListsadd() {
+    let options = []
+    let {supplier} = this.state
+    if (supplier) {
+      supplier.map((v, k) => {
+        options.push(<Option style={{height: "32px"}} key={k}
+                             value={v.id + "," + v.name + "," + v.charge}>{v.name}</Option>)
+      })
+    }
+    return options
+  }
+
   render() {
     const {getFieldDecorator, getFieldProps, getFieldsValue, getFieldValue} = this.props.form;
     const formItemLayout = {
@@ -730,9 +788,15 @@ class AddForm extends Component {
                         initialValue: returnData.length > 0 ? returnData[0].supplier_name : '',
                       })
                       (
-                        < Input placeholder="请填写供应商"
-                                disabled={(this.state.flightdata.competence)}
-                                style={{width: '450px', marginRight: '10px'}}/>
+                        <AutoComplete
+                          style={{width: 450}}
+                          onSearch={this.handleSearch.bind(this)}
+                          disabled={(this.state.flightdata.competence)}
+                          onSelect={this.handleSvloe.bind(this)}
+                          placeholder="请选择供应商"
+                        >
+                          {this.reviewerListsadd()}
+                        </AutoComplete>
                       )}
                     </FormItem>
                   </Col>
