@@ -39,7 +39,7 @@ class BulkImportForm extends PureComponent {
       case 2:
         this._searchPort(getpriceAirline, {
           id: this.props.currentData.airline_id,
-          date: moment(this.props.currentData.detail[0]).format("YYYY-MM")
+          date: moment(this.props.currentData.detail ? this.props.currentData.detail[0] : new Date()).format("YYYY-MM")
         }, 1)
         break;
     }
@@ -57,7 +57,7 @@ class BulkImportForm extends PureComponent {
       case 2:
         this._searchPort(getpriceAirline, {
           id: nextProps.currentData.airline_id,
-          date: moment(nextProps.currentData.detail[0]).format("YYYY-MM")
+          date: moment(nextProps.currentData.detail ? nextProps.currentData.detail[0] : new Date()).format("YYYY-MM")
         }, 1)
         break;
     }

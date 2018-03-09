@@ -59,6 +59,13 @@ class AddForm extends Component {
     if (nextProps.flightstockView && nextProps.flightstockView.details.length > 0) {
       let list = nextProps.flightstockView.details;
       list[0].seat_type == 0 ? list[0].seat_type = "硬切" : list[0].seat_type = "代销"
+      if (list[0].flight_type == 1) {
+        this.addDate(1);
+        list[0].flight_type = "单程"
+      } else {
+        this.addDate(2);
+        list[0].flight_type = "往返"
+      }
       for (let i = 0; i < list.length; i++) {
         list[i].FlightNo = list[i].flight_no
         list[i].FlightDepAirport = list[i].city_dep_name
@@ -107,7 +114,6 @@ class AddForm extends Component {
     this.setState({
       flightdata: data,
     });
-    this.addDate(2);
   }
 
   showcasing(ole) {
@@ -154,7 +160,19 @@ class AddForm extends Component {
         break;
     }
   }
-
+  auxiliary(e) {
+    if (e.target.value == '单程') {
+      this.addDate(1);
+      this.setState({
+        flight_type: 1,
+      });
+    } else {
+      this.addDate(2);
+      this.setState({
+        flight_type: 2,
+      });
+    }
+  }
   render() {
     const {getFieldDecorator, getFieldProps, getFieldsValue, getFieldValue} = this.props.form;
     const formItemLayout = {
@@ -163,6 +181,8 @@ class AddForm extends Component {
     };
     const {flightstockView} = this.state
     const plainOptionsb = ['硬切', '代销'];
+    const plainOptionsc = ['单程', '往返'];
+    const plainOptionsd = ['国际长线', '国际短线', '国内航线'];
     const requiredText = "请填写此选项"
     // if (flightstockView && flightstockView.details.length > 0) {
     //   for (let i = 0; i < flightstockView.details.length; i++) {
@@ -221,6 +241,33 @@ class AddForm extends Component {
             <Form layout={'horizontal'}>
               <div className={css.AgenciesView_box_list}>
                 <Row>
+                  <Col span={24}>
+                    <FormItem
+                      label="航班类型"
+                      {...formItemLayout}
+                    >
+                      {getFieldDecorator('flight_type', {
+                        rules: [{required: true, message: requiredText}],
+                        initialValue:flightstockView.details.length > 0 ? flightstockView.details[0].flight_type : '',
+                      })
+                      (<RadioGroup options={plainOptionsc}
+                                   onChange={this.auxiliary.bind(this)}
+                                   disabled={this.state.flightdata.competence}/>)}
+                    </FormItem>
+                  </Col>
+                  <Col span={24}>
+                    <FormItem
+                      label="航线类型"
+                      {...formItemLayout}
+                    >
+                      {getFieldDecorator('airline_type', {
+                        rules: [{required: true, message: requiredText}],
+                        initialValue:flightstockView.details.length > 0 ? flightstockView.details[0].airline_type : '',
+                      })
+                      (<RadioGroup options={plainOptionsd}
+                                   disabled={(this.state.flightdata.competence && this.state.flightdata.competenceEdit)}/>)}
+                    </FormItem>
+                  </Col>
 
                   <Col span={24}>
                     <FormItem
