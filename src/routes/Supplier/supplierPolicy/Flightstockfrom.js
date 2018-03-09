@@ -161,7 +161,6 @@ class AddForm extends Component {
             this.props.history.push({
               pathname: '/supplier/supplierPolicy/flightstock',
             });
-            return
             break;
           case 2:
             this.setState({
@@ -601,26 +600,7 @@ class AddForm extends Component {
   }
 
   handleSearch(value) {  //加载供应商选择数据
-    let data = this.state.flightdata;
     this._searchPort(searchSupplier, {name: value}, 2)
-    // HttpTool.post(APILXF.baseapi_v_supliers_query,
-    //   (code, msg, json, option) => {
-    //     console.log(json);
-    //     data.userList = json;
-    //     this.setState({
-    //       flightdata: data,
-    //     });
-    //     if (code == 403) {
-    //       message.success(msg);
-    //     }
-    //   },
-    //   (code, msg, option) => {
-    //   }
-    //   , {
-    //     condition: value,
-    //     // status: 3,
-    //   }
-    // )
   }
 
   reviewerListsadd() {
