@@ -139,10 +139,11 @@ export default class TableList extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem label="客户类型">
               {getFieldDecorator('type', {
-                initialValue: '',
+                initialValue: "",
               })(
                 //1-沉积客户、2-激活客户、3-活跃客户',
                 <Select placeholder="请选择">
+                  <Option value="">全部</Option>
                   <Option value={1}>沉积客户</Option>
                   <Option value={2}>激活客户</Option>
                   <Option value={3}>活跃客户</Option>
