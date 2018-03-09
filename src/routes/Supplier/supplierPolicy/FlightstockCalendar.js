@@ -57,6 +57,14 @@ class page extends Component {
     // 库存
     const dateStart = moment(this.props.listdata.departure_start, "YYYY-MM-DD").format('YYYY/MM/DD');
     let [year, month, day] = [new Date(dateStart).getFullYear(), new Date(dateStart).getMonth(), new Date(dateStart).getDate()]
+    // this.dateDiff("2018-03-10")
+    // console.log('dddddddd')
+    let s1 = '2018-03-6';
+    s1 = new Date(s1.replace(/-/g, "/"));
+    let s2 = new Date();
+    let days = s2.getTime() - s1.getTime();
+    let time = parseInt((days / (1000 * 60 * 60 * 24)));
+    console.log(time)
   }
 
   loadData(url, data) {
@@ -65,7 +73,6 @@ class page extends Component {
       payload: data,
     });
   }
-
   dateGet() {  //初始化获取要展示的日期
     let dates = moment(new Date()).format("YYYY-MM");
     let b = new Date().getTime();
@@ -108,13 +115,20 @@ class page extends Component {
             list: [
               {
                 type: 'warning',
-                content: '销售价',
-                price: parseInt(airline[i].sell_price) / 100
+                content: '结算价:',
+                price: parseInt(airline[i].settlement_price) / 100 + "元(成)" + "/" + parseInt(airline[i].settlement_price_child) / 100 + "元(儿)"
+
+              },
+              {
+                type: 'errors',
+                content: '销售价:',
+                price: parseInt(airline[i].sell_price) / 100 + "元(成)" + "/" + parseInt(airline[i].sell_price_child) / 100 + "元(儿)"
               },
               {
                 type: 'error',
-                content: '结算价',
-                price: parseInt(airline[i].settlement_price) / 100
+                content: '销售价(团):',
+                price: parseInt(airline[i].sell_price_group) / 100 + "元(成)" + "/" + parseInt(airline[i].sell_price_group_child) / 100 + "元(儿)"
+
               },
               {
                 type: 'normal',
@@ -127,6 +141,7 @@ class page extends Component {
                 price: moment(airline[i].clear_date).format("YYYY-MM-DD")
               },
             ]
+
           };
         }
       }
