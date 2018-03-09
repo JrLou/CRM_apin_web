@@ -121,7 +121,7 @@ class page extends Component {
     const {flightstockEdit: {airline}} = this.props;
     let listData = {};
     let list = [];
-    let criticalPoint = false
+    let criticalPoint = null;
     let s2 = new Date();
     if (airline.length > 0) {
       for (let i = 0; i < airline.length; i++) {
@@ -158,16 +158,22 @@ class page extends Component {
           ]
         }
         if (parseInt((( s1 - s2.getTime()  ) / (1000 * 60 * 60 * 24))) < 3 && parseInt((( s1 - s2.getTime()  ) / (1000 * 60 * 60 * 24))) > 0) {
-          criticalPoint = true
+          criticalPoint = 3
         }
+        if (this.props.airline_status == 1 && parseInt((( s1 - s2.getTime()  ) / (1000 * 60 * 60 * 24))) > 0) {
+          criticalPoint = 1
+        } else {
+          criticalPoint = 2
+        }
+
       }
     }
     listData.list = list
     listData.criticalPoint = criticalPoint
-    return list.length > 0 ? listData: {
+    return list.length > 0 ? listData : {
       tishi: false,
       list: [{content: '暂无班期'}],
-      criticalPoint: criticalPoint,
+      criticalPoint: 5,
       tishis: 0
     }
   }

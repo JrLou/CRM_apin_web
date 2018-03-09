@@ -52,13 +52,29 @@ class Masking extends Component {
     return date;
   }
 
+  dome() {
+    let data = this.props.listData.criticalPoint
+    let csss = null;
+    switch (data) {
+      case 5:
+        csss = css.events
+        break;
+      case 1:
+        csss = css.eventsjg
+        break;
+      case 2:
+        csss = css.eventsjgs
+        break;
+    }
+    // csss = css.events
+    return csss
+  }
+
   render() {
-
-
     return (
       <div>
         {!this.state.visible &&
-        <ul className={this.props.listData.criticalPoint?css.eventsjg:css.events}>
+        <ul className={this.dome()}>
           {
             this.props.listData.list.map(function (item) {
               return (

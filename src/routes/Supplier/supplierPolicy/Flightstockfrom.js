@@ -98,6 +98,7 @@ class AddForm extends Component {
     this.setState({
       flightdata: data,
     });
+    console.log(this.props)
   }
 
   _searchPort(url, value, ole) {
@@ -1052,6 +1053,7 @@ class AddForm extends Component {
             <FlightstockCalendar
               disabledadd={this.state.competencese}
               listdata={this.props.information}
+              airline_status={this.props.location.state.data.airline_status}
               // date={[moment(returnData[0].departure_start).format("YYYY-MM-DD"), moment(returnData[0].departure_end).format("YYYY-MM-DD")]}
               {...this.props}
             />
