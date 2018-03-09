@@ -237,6 +237,13 @@ class BulkImportForm extends PureComponent {
     }
   }
 
+  validatores(rule, value, callback) {
+    if (value > 1000 || value < -100) {
+      callback('范围为-100-1000')
+    }
+    callback()
+  }
+
   render() {
     // let airline = [{flight_date:'1521072000000',sale_count:100,seat_count:1111,sell_price:1111,settlement_price:1222}]
     const {getFieldDecorator} = this.props.form;
@@ -348,8 +355,10 @@ class BulkImportForm extends PureComponent {
                       {...formItemLayout}
                     >
                       {getFieldDecorator('percent', {
-                        rules: [{required: value == 0 ? true : false, message: '请填写次字段'}],
-                        initialValue: this.state.currentData.percent ? this.state.currentData.percent : ''
+                        rules: [{required: value == 0 ? true : false, message: '请填写次字段'}, {
+                          validator: this.validatores.bind(this),
+                        }],
+                        initialValue: this.state.currentData.percent ? this.state.currentData.percent : 0
                       })
                       (< Input addonAfter={'%'}
                                disabled={value == 0 ? false : true}
@@ -366,7 +375,11 @@ class BulkImportForm extends PureComponent {
                       {...formItemLayout}
                     >
                       {getFieldDecorator('price', {
-                        initialValue: this.state.currentData.price ? parseInt(this.state.currentData.price) / 100 : ''
+                        rules: [{required: value == 0 ? true : false, message: '请填写次字段'}, {
+                          max: 6,
+                          message: "最多6位"
+                        },],
+                        initialValue: this.state.currentData.price ? parseInt(this.state.currentData.price) / 100 : 0
                       })
                       (< Input addonAfter={'元'}
                                disabled={value == 1 ? false : true}
@@ -396,7 +409,10 @@ class BulkImportForm extends PureComponent {
                       {...formItemLayout}
                     >
                       {getFieldDecorator('percent_group', {
-                        initialValue: this.state.currentData.percent_group ? this.state.currentData.percent_group : ''
+                        rules: [{required: values == 0 ? true : false, message: '请填写次字段'}, {
+                          validator: this.validatores.bind(this),
+                        }],
+                        initialValue: this.state.currentData.percent_group ? this.state.currentData.percent_group : 0
                       })
                       (< Input addonAfter={'%'}
                                disabled={values == 0 ? false : true}
@@ -413,7 +429,11 @@ class BulkImportForm extends PureComponent {
                       {...formItemLayout}
                     >
                       {getFieldDecorator('price_group', {
-                        initialValue: this.state.currentData.price_group ? parseInt(this.state.currentData.price_group) / 100 : ''
+                        rules: [{required: values == 0 ? true : false, message: '请填写次字段'}, {
+                          max: 6,
+                          message: "最多6位"
+                        },],
+                        initialValue: this.state.currentData.price_group ? parseInt(this.state.currentData.price_group) / 100 : 0
                       })
                       (< Input addonAfter={'元'}
                                disabled={values == 1 ? false : true}
