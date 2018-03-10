@@ -507,7 +507,7 @@ class AddForm extends Component {
                           max: 6,
                           message: "最多6位"
                         }],
-                        initialValue: returnData.length > 0 ? (returnData[0].sell_price / 100).toString() : '',
+                        initialValue: returnData.length > 0 ? (returnData[0].settlement_price_child / 100).toString() : '',
                       })
                       (< Input placeholder="请填写"
                                disabled={true}
@@ -653,6 +653,7 @@ class AddForm extends Component {
             <FlightstockCalendar
               disabledadd={this.state.competencese}
               listdata={this.props.information}
+              airline_status={this.props.location.state.data.airline_status}
               // date={[moment(returnData[0].departure_start).format("YYYY-MM-DD"), moment(returnData[0].departure_end).format("YYYY-MM-DD")]}
               {...this.props}
             />

@@ -249,6 +249,17 @@ class BulkImportForm extends PureComponent {
     callback()
   }
 
+  validatoresb(rule, value, callback) {
+    if (value > 999999 || value < -999999) {
+      callback('范围为-999999-999999')
+    }
+    callback()
+  }
+  //
+  // guanb() {
+  //   this.props.guab()
+  // }
+
   render() {
     // let airline = [{flight_date:'1521072000000',sale_count:100,seat_count:1111,sell_price:1111,settlement_price:1222}]
     const {getFieldDecorator} = this.props.form;
@@ -362,6 +373,9 @@ class BulkImportForm extends PureComponent {
                       {getFieldDecorator('percent', {
                         rules: [{required: value == 0 ? true : false, message: '请填写次字段'}, {
                           validator: this.validatores.bind(this),
+                        }, {
+                          pattern: /^[0-9]+([.][0-9]{1}){0,1}$/,
+                          message: "最多一位小数"
                         }],
                         initialValue: this.state.currentData.percent ? this.state.currentData.percent : 0
                       })
@@ -381,9 +395,8 @@ class BulkImportForm extends PureComponent {
                     >
                       {getFieldDecorator('price', {
                         rules: [{required: value == 0 ? true : false, message: '请填写次字段'}, {
-                          max: 6,
-                          message: "最多6位"
-                        },],
+                          validator: this.validatoresb.bind(this),
+                        }],
                         initialValue: this.state.currentData.price ? parseInt(this.state.currentData.price) / 100 : 0
                       })
                       (< Input addonAfter={'元'}
@@ -435,9 +448,8 @@ class BulkImportForm extends PureComponent {
                     >
                       {getFieldDecorator('price_group', {
                         rules: [{required: values == 0 ? true : false, message: '请填写次字段'}, {
-                          max: 6,
-                          message: "最多6位"
-                        },],
+                          validator: this.validatoresb.bind(this),
+                        }],
                         initialValue: this.state.currentData.price_group ? parseInt(this.state.currentData.price_group) / 100 : 0
                       })
                       (< Input addonAfter={'元'}
@@ -471,7 +483,6 @@ class BulkImportForm extends PureComponent {
               {...formItemLayout}
             >
               <Button style={{marginLeft: '35%', marginRight: "20px"}} type="primary" htmlType="submit">确认</Button>
-              <Button>取消</Button>
             </FormItem>
           </Col>
         </Row>

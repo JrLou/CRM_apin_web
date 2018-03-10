@@ -206,10 +206,10 @@ class AddForm extends Component {
             }
           }
         }
-        for (let i = 0; i < flightstockData.length; i++) {
-          flightstockData[i].FlightDeptimePlanDate = moment(flightstockData[i].FlightDeptimePlanDate, "YYYY-MM-DD").format("YYYY-MM-DD HH:mm:ss")
-          flightstockData[i].FlightArrtimePlanDate = moment(flightstockData[i].FlightArrtimePlanDate, "YYYY-MM-DD").format("YYYY-MM-DD HH:mm:ss")
-        }
+        // for (let i = 0; i < flightstockData.length; i++) {
+        //   flightstockData[i].FlightDeptimePlanDate = moment(flightstockData[i].FlightDeptimePlanDate, "YYYY-MM-DD").format("YYYY-MM-DD HH:mm:ss")
+        //   flightstockData[i].FlightArrtimePlanDate = moment(flightstockData[i].FlightArrtimePlanDate, "YYYY-MM-DD").format("YYYY-MM-DD HH:mm:ss")
+        // }
         switch (values.airline_type) {
           case "国际长线":
             values.airline_type = 1
@@ -232,6 +232,7 @@ class AddForm extends Component {
         values.cityArr = flightstockData[0].FlightArrcode
         values.seatType == "硬切" ? values.seatType = 0 : values.seatType = 1
         values.cityDep = flightstockData[0].FlightDepcode
+        values.supplierName = flightdata.supplierName;
         values.endDate = moment(flightdata.flightTimeWill[1]).format("YYYY-MM-DD")
         values.startDate = moment(flightdata.flightTimeWill[0]).format("YYYY-MM-DD")
         values.flightNumber = values.flight_type == 1 ? flightstockData[0].FlightNo : flightstockData[0].FlightNo + '-' + flightstockData[1].FlightNo
@@ -899,7 +900,7 @@ class AddForm extends Component {
                           max: 6,
                           message: "最多6位"
                         }],
-                        initialValue: returnData.length > 0 ? (returnData[0].sell_price / 100).toString() : '',
+                        initialValue: returnData.length > 0 ? (returnData[0].settlement_price_child / 100).toString() : '',
                       })
                       (< Input placeholder="请填写"
                                disabled={this.state.flightdata.competence}

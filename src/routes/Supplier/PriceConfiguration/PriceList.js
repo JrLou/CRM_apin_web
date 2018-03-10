@@ -240,6 +240,16 @@ export default class TableList extends PureComponent {
         pc: 10,
       },
     });
+    this.props.dispatch({
+      type: 'priceList/fetchs',
+      payload: {
+        p: 1,
+        pc: 10,
+      },
+    });
+    this.setState({
+      visible: false,
+    });
   }
 
   render() {
