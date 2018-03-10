@@ -436,7 +436,12 @@ class BasicDetailForm extends PureComponent {
                 {getFieldDecorator('charge', {
                   //【负责人】支持模糊搜索，最长字符可输入10个。
                   initialValue: this.getInitData(formData, 'charge'),
-                  rules: [{ max: 10, message: '最长10位' }],
+                  rules: [
+                    {
+                      pattern: /^[\u4e00-\u9fa5]{1,10}$/,
+                      message: '请填写10个字以内的中文',
+                    },
+                  ],
                 })(<Input disabled={isDisabled} />)}
               </FormItem>
             </Col>
