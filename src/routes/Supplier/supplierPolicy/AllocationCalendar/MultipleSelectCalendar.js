@@ -28,6 +28,13 @@ class MultipleSelectCalendar extends Component {
     this.inner && this.inner.resetCalendar()
   }
 
+  updateMonthStock(obj, ole) {
+    this.props.updateMonthStock(obj, ole)
+    console.log('9999999')
+    console.log(obj)
+    console.log(ole)
+  }
+
   render() {
     return (
       <span>
@@ -56,6 +63,7 @@ class MultipleSelectCalendar extends Component {
                       month={this.props.month}
                       day={this.props.day}
                       currenMonthStocks={this.props.currenMonthStocks}
+                      updateMonthStock={this.updateMonthStock.bind(this)}
                       canPick={this.props.canPick}
                       toogleShow={this.showCalendar.bind(this)}
                       getPickInfo={this.getPickInfo.bind(this)}/>

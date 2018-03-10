@@ -54,20 +54,14 @@ class page extends Component {
 
   componentDidMount() {
     this.dateGet();
-    // 库存
-    const dateStart = moment(this.props.listdata.departure_start, "YYYY-MM-DD").format('YYYY/MM/DD');
-    let [year, month, day] = [new Date(dateStart).getFullYear(), new Date(dateStart).getMonth(), new Date(dateStart).getDate()]
-    // this.dateDiff("2018-03-10")
-    // console.log('dddddddd')
-    let s1 = '2018-04-12';
-    s1 = new Date(s1.replace(/-/g, "/"));
+    let s1 = moment('2018-03-22').format("x")
     let s2 = new Date();
-    let days = s1.getTime() - s2.getTime();
-    let time = parseInt((days / (1000 * 60 * 60 * 24)));
-    console.log(time)
-    if (time < 3 && time > 0) {
+    // 库存
+    // const dateStart = moment(this.props.listdata.departure_start, "YYYY-MM-DD").format('YYYY/MM/DD');
+    // let [year, month, day] = [new Date(dateStart).getFullYear(), new Date(dateStart).getMonth(), new Date(dateStart).getDate()]
+    console.log(parseInt((( s1 - s2.getTime()) / (1000 * 60 * 60 * 24)) + 1))
+    console.log(this.props.airline_status)
 
-    }
   }
 
   loadData(url, data) {
@@ -157,13 +151,13 @@ class page extends Component {
             },
           ]
         }
-        if (parseInt((( s1 - s2.getTime()) / (1000 * 60 * 60 * 24))) < 3 && parseInt((( s1 - s2.getTime()) / (1000 * 60 * 60 * 24))) > 0) {
-          criticalPoint = 3
-        }
-        if (this.props.airline_status == 1 && parseInt((( s1 - s2.getTime()  ) / (1000 * 60 * 60 * 24))) > 0) {
+        criticalPoint = 2
+
+        if (this.props.airline_status == 1 && (parseInt((( s1 - s2.getTime()) / (1000 * 60 * 60 * 24))) + 1) >= 0) {
           criticalPoint = 1
-        } else {
-          criticalPoint = 2
+        }
+        if ((parseInt((( s1 - s2.getTime()) / (1000 * 60 * 60 * 24))) + 1) < 3) {
+          criticalPoint = 3
         }
 
       }
@@ -463,6 +457,13 @@ class page extends Component {
     )
   }
 
+  updateMonthStock(obj, ole) {
+    this.loadData('flightstockEdit/getpriceAirline', {
+      date: obj + '-' + ((ole + 1) < 9 ? "0" + (ole + 1) : (ole + 1)),
+      id: this.props.listdata.id,
+    },);
+  }
+
   render() {
     // 库存
     const {flightstockEdit: {airline}} = this.props;
@@ -508,6 +509,7 @@ class page extends Component {
                   day={day}
                   currenMonthStocks={this.state.currenMonthStocks}
                   canPick={canPick}
+                  updateMonthStock={this.updateMonthStock.bind(this)}
                   placeholder={this.state.selectedTips.length > 0 ? '已选择' : '选择分配时间'}
                   upPickInfo={this.showPickInfo.bind(this)}
                 />
