@@ -25,7 +25,7 @@ class page extends Component {
   }
   componentDidMount() {
     if (this.props.location.state) {
-      this.addPost('flightstockView/addtailAirLine', {id: this.props.location.state.data.id});
+      // this.addPost('flightstockView/addtailAirLine', {id: this.props.location.state.data.id});
       this.setState({
         data: this.props.location.state.data,
       });
@@ -51,7 +51,7 @@ class page extends Component {
             <WrappedAddForm
               showLoad={this.showLoad.bind(this)}
               addPost={this.addPost.bind(this)}
-              id={this.state.data.id}
+              id={this.props.location.state ? this.props.location.state.data.id : ''}
               information={this.state.data}
               {...this.props}
             />

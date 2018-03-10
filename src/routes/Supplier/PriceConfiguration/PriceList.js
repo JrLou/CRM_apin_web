@@ -384,7 +384,7 @@ export default class TableList extends PureComponent {
       render: (text, row, index) => {
         return {
           children:
-            <span>{row.percent ? row.percent + "%" + " / " : ''}{row.price ? (row.price / 100) + "元" : ''}</span>,
+            <span>{row.percent ? "+" + row.percent + "%" : ''}{(row.price && row.percent ) ? " / " : ''}{row.price ? "+￥" + (row.price / 100) : ''}</span>,
         };
       },
     }, {
@@ -393,7 +393,7 @@ export default class TableList extends PureComponent {
       render: (text, row, index) => {
         return {
           children:
-            <span>{row.percent_group ? row.percent_group + "%" + " / " : ''}{row.price_group ? (row.price_group / 100) + "元" : ''}</span>,
+            <span>{row.percent_group ? "+" + row.percent_group + "%" : ''}{(row.percent_group && row.price_group) ? " / " : ''}{row.price_group ? "+￥" + (row.price_group / 100) : ''}</span>,
         };
       },
     }, {

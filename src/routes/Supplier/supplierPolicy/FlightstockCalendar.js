@@ -34,7 +34,7 @@ class page extends Component {
       selectedTips: [],
       datesArr: [],
       flightstockEdit: {},
-      judgment: null
+      judgment: null,
     }
   }
 
@@ -59,12 +59,15 @@ class page extends Component {
     let [year, month, day] = [new Date(dateStart).getFullYear(), new Date(dateStart).getMonth(), new Date(dateStart).getDate()]
     // this.dateDiff("2018-03-10")
     // console.log('dddddddd')
-    let s1 = '2018-03-6';
+    let s1 = '2018-04-12';
     s1 = new Date(s1.replace(/-/g, "/"));
     let s2 = new Date();
-    let days = s2.getTime() - s1.getTime();
+    let days = s1.getTime() - s2.getTime();
     let time = parseInt((days / (1000 * 60 * 60 * 24)));
     console.log(time)
+    if (time < 3 && time > 0) {
+
+    }
   }
 
   loadData(url, data) {
@@ -73,29 +76,38 @@ class page extends Component {
       payload: data,
     });
   }
-  dateGet() {  //初始化获取要展示的日期
-    let dates = moment(new Date()).format("YYYY-MM");
-    let b = new Date().getTime();
-    let a = moment(this.props.listdata.departure_start, "YYYY-MM").format('x');
-    let c = moment(this.props.listdata.departure_end, "YYYY-MM").format('x');
-    if (b > a && b < c) {
-      this.loadData('flightstockEdit/getpriceAirline', {
-        date: moment(this.props.listdata.departure_start).format('YYYY-MM'),
-        id: this.props.listdata.id,
-      },);
-      this.setState({
-        dateSelect: moment(this.props.listdata.departure_start),
-      })
 
-    } else {
-      this.loadData('flightstockEdit/getpriceAirline', {
-        date: dates,
-        id: this.props.listdata.id,
-      },);
-      this.setState({
-        dateSelect: moment(dates),
-      })
-    }
+  dateGet() {  //初始化获取要展示的日期
+    // let dates = moment(new Date()).format("YYYY-MM");
+    // let b = new Date().getTime();
+    // let a = moment(this.props.listdata.departure_start, "YYYY-MM").format('x');
+    // let c = moment(this.props.listdata.departure_end, "YYYY-MM").format('x');
+    // if (b > a && b < c) {
+    //   this.loadData('flightstockEdit/getpriceAirline', {
+    //     date: moment(this.props.listdata.departure_start).format('YYYY-MM'),
+    //     id: this.props.listdata.id,
+    //   },);
+    //   this.setState({
+    //     dateSelect: moment(this.props.listdata.departure_start),
+    //   })
+    //
+    // } else {
+    //   this.loadData('flightstockEdit/getpriceAirline', {
+    //     date: dates,
+    //     id: this.props.listdata.id,
+    //   },);
+    //   this.setState({
+    //     dateSelect: moment(dates),
+    //   })
+    // }
+    this.loadData('flightstockEdit/getpriceAirline', {
+      date: moment(this.props.listdata.departure_start).format('YYYY-MM'),
+      id: this.props.listdata.id,
+    },);
+    this.setState({
+      dateSelect: moment(this.props.listdata.departure_start),
+    })
+
   }
 
   dateGetReturn() {
@@ -107,50 +119,63 @@ class page extends Component {
 
   getListData(value) {
     const {flightstockEdit: {airline}} = this.props;
-    let listData;
+    let listData = {};
+    let list = [];
+    let criticalPoint = null;
+    let s2 = new Date();
     if (airline.length > 0) {
       for (let i = 0; i < airline.length; i++) {
+        let s1 = airline[i].clear_date
         if (moment(airline[i].flight_date).format("YYYY-MM-DD") == value.format("YYYY-MM-DD")) {
-          listData = {
-            list: [
-              {
-                type: 'warning',
-                content: '结算价:',
-                price: parseInt(airline[i].settlement_price) / 100 + "元(成)" + "/" + parseInt(airline[i].settlement_price_child) / 100 + "元(儿)"
+          list = [
+            {
+              type: 'warning',
+              content: '结算价:',
+              price: parseInt(airline[i].settlement_price) / 100 + "元(成)" + "/" + parseInt(airline[i].settlement_price_child) / 100 + "元(儿)"
 
-              },
-              {
-                type: 'errors',
-                content: '销售价:',
-                price: parseInt(airline[i].sell_price) / 100 + "元(成)" + "/" + parseInt(airline[i].sell_price_child) / 100 + "元(儿)"
-              },
-              {
-                type: 'error',
-                content: '销售价(团):',
-                price: parseInt(airline[i].sell_price_group) / 100 + "元(成)" + "/" + parseInt(airline[i].sell_price_group_child) / 100 + "元(儿)"
+            },
+            {
+              type: 'errors',
+              content: '销售价:',
+              price: parseInt(airline[i].sell_price) / 100 + "元(成)" + "/" + parseInt(airline[i].sell_price_child) / 100 + "元(儿)"
+            },
+            {
+              type: 'error',
+              content: '销售价(团):',
+              price: parseInt(airline[i].sell_price_group) / 100 + "元(成)" + "/" + parseInt(airline[i].sell_price_group_child) / 100 + "元(儿)"
 
-              },
-              {
-                type: 'normal',
-                content: '库存(已售/总):',
-                price: airline[i].sale_count + '/' + airline[i].seat_count
-              },
-              {
-                type: 'errorss',
-                content: '清位时间',
-                price: moment(airline[i].clear_date).format("YYYY-MM-DD")
-              },
-            ]
-
-          };
+            },
+            {
+              type: 'normal',
+              content: '库存(已售/总):',
+              price: airline[i].sale_count + '/' + airline[i].seat_count
+            },
+            {
+              type: 'errorss',
+              content: '清位时间',
+              price: moment(airline[i].clear_date).format("YYYY-MM-DD")
+            },
+          ]
         }
+        if (parseInt((( s1 - s2.getTime()) / (1000 * 60 * 60 * 24))) < 3 && parseInt((( s1 - s2.getTime()) / (1000 * 60 * 60 * 24))) > 0) {
+          criticalPoint = 3
+        }
+        if (this.props.airline_status == 1 && parseInt((( s1 - s2.getTime()  ) / (1000 * 60 * 60 * 24))) > 0) {
+          criticalPoint = 1
+        } else {
+          criticalPoint = 2
+        }
+
       }
     }
-    return listData || {
-      tishi: false, list: [
-        {content: '暂无班期'},
-      ], tishis: 0,
-    };
+    listData.list = list
+    listData.criticalPoint = criticalPoint
+    return list.length > 0 ? listData : {
+      tishi: false,
+      list: [{content: '暂无班期'}],
+      criticalPoint: 5,
+      tishis: 0
+    }
   }
 
   addPost(url, data) {
@@ -442,9 +467,9 @@ class page extends Component {
     // 库存
     const {flightstockEdit: {airline}} = this.props;
     let [year, month, day] = [
-      +moment(this.props.listdata.flightDate, "YYYY-MM-DD").format('YYYY'),
-      +moment(this.props.listdata.flightDate, "YYYY-MM-DD").format('MM') - 1,
-      +moment(this.props.listdata.flightDate, "YYYY-MM-DD").format('DD')
+      +moment(this.props.listdata.departure_start, "YYYY-MM-DD").format('YYYY'),
+      +moment(this.props.listdata.departure_start, "YYYY-MM-DD").format('MM'),
+      +moment(this.props.listdata.departure_start, "YYYY-MM-DD").format('DD')
     ]
     let canPick = airline.map((v, k) => {
       return v.flight_date;

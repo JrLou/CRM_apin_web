@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
-import { DatePicker, Checkbox,} from 'antd'
+import {DatePicker, Checkbox,} from 'antd'
+
 const CheckboxGroup = Checkbox.Group;
 const {RangePicker} = DatePicker;
 import css from './Flightstock.less';
@@ -22,6 +23,9 @@ class Masking extends Component {
   }
 
   componentDidMount() {
+    // if(this.props.listData.list[0].type){
+    //   console.log(this.props)
+    // }
   }
 
   maskings(olr, value, event) {
@@ -41,19 +45,39 @@ class Masking extends Component {
       this.props.in(this.maskings.bind(this));
     }
   }
+
   getDate(datestr) {
     var temp = datestr.split("/");
     var date = new Date(temp[0], temp[1], temp[2]);
     return date;
   }
 
+  dome() {
+    let data = this.props.listData.criticalPoint
+    let csss = null;
+    switch (data) {
+      case 5:
+        csss = css.events
+        break;
+      case 1:
+        csss = css.eventsjg
+        break;
+      case 2:
+        csss = css.eventsjgs
+        break;
+      case 3:
+        csss = css.eventsjgb
+        break;
+    }
+    // csss = css.events
+    return csss
+  }
+
   render() {
-
-
     return (
       <div>
         {!this.state.visible &&
-        <ul className={css.events}>
+        <ul className={this.dome()}>
           {
             this.props.listData.list.map(function (item) {
               return (
