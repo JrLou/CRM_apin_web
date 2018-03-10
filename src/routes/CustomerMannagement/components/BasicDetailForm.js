@@ -475,7 +475,9 @@ class BasicDetailForm extends PureComponent {
             <div style={{ textAlign: 'center' }}>
               <Button
                 onClick={() => {
-                  history.go(-1);
+                  const { toggleCurrPage } = this.props;
+                  toggleCurrPage({ action: 'mainPage' });
+                  // history.go(-1);
                 }}
               >
                 返回

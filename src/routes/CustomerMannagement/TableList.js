@@ -72,9 +72,18 @@ class StandardTable extends PureComponent {
           };
           const params = JSON.stringify(jsonData);
           return (
-            <Link to={`/offline/customerMannagement/detail/${params}`}>
+            // <Link to={`/offline/customerMannagement/detail/${params}`}>
+            <a
+              onClick={() =>
+                this.props.toggleCurrPage({
+                  action: 'detailPage',
+                  payload: jsonData,
+                })
+              }
+            >
               {text}
-            </Link>
+            </a>
+            //</Link>
           );
         },
       },
@@ -134,20 +143,24 @@ class StandardTable extends PureComponent {
         render: (text, record) => {
           return (
             <div style={{ whiteSpace: 'nowrap' }}>
-              <Link to={`/offline/customerMannagement/edit/${record.id}`}>
-                <Button
-                  type="primary"
-                  onClick={() => {
-                    // handleShowModalSwitch('edit');
-                    // dispatch({
-                    //   type: 'customerMannagement/fetchQueryOne',
-                    //   payload: { id: record.id },
-                    // });
-                  }}
-                >
-                  修改
-                </Button>
-              </Link>
+              {/* <Link to={`/offline/customerMannagement/edit/${record.id}`}> */}
+              <Button
+                type="primary"
+                onClick={() => {
+                  this.props.toggleCurrPage({
+                    action: 'editPage',
+                    payload: { id: record.id },
+                  });
+                  // handleShowModalSwitch('edit');
+                  // dispatch({
+                  //   type: 'customerMannagement/fetchQueryOne',
+                  //   payload: { id: record.id },
+                  // });
+                }}
+              >
+                修改
+              </Button>
+              {/* </Link> */}
               &nbsp;&nbsp;&nbsp;
               <Button
                 disabled={!isLeader}

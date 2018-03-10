@@ -6,7 +6,7 @@ import DetailStandardTable from './components/DetailTableList';
 import LogTableList from './components/LogTableList';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import SingleBlock from './components/SingleBlock';
-import { getPar } from '../../utils/utils';
+// import { getPar } from '../../utils/utils';
 
 @connect(state => ({
   customerMannagement: state.customerMannagement,
@@ -18,11 +18,11 @@ class Detail extends PureComponent {
       pageNum: 1,
       pageSize: 10,
     };
-    this.data = getPar(this, 'data');
+    // this.data = getPar(this, 'data');
   }
 
   componentDidMount() {
-    const { id, customerName } = this.data;
+    const { id, customerName } = this.props.data;
     this.props.dispatch({
       type: 'customerMannagement/fetchQueryOne',
       payload: { id },
@@ -34,6 +34,14 @@ class Detail extends PureComponent {
     this.props.dispatch({
       type: 'customerMannagement/fetchRecordQuery',
       payload: { id },
+    });
+  }
+
+  componentWillUnmount() {
+    //还原redux中相关数据
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'customerMannagement/clearDetailTableData',
     });
   }
 
@@ -67,7 +75,13 @@ class Detail extends PureComponent {
     return (
       <PageHeaderLayout>
         <Card bordered={false}>
-          <Button type="primary" onClick={() => history.go(-1)}>
+          <Button
+            type="primary"
+            onClick={() => {
+              //history.go(-1)
+              this.props.toggleCurrPage({ action: 'mainPage' });
+            }}
+          >
             返回
           </Button>
         </Card>

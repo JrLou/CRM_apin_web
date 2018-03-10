@@ -7,10 +7,18 @@ import BasicDetailForm from './components/BasicDetailForm';
   customerMannagement: state.customerMannagement,
 }))
 class AddCustomer extends PureComponent {
+  componentWillUnmount() {
+    //还原redux中modal的数据
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'customerMannagement/clearFormData',
+    });
+  }
+
   render() {
     return (
       <PageHeaderLayout>
-        <BasicDetailForm />
+        <BasicDetailForm {...this.props} />
       </PageHeaderLayout>
     );
   }

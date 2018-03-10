@@ -4,6 +4,9 @@ import { Link } from 'dva/router';
 import { Card, Form, Input, Button, Row, Col, Select } from 'antd';
 import StandardTable from './TableList';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
+import AddCustomer from './AddCustomer';
+import EditCustomer from './EditCustomer';
+import Detail from './Detail';
 import AllModal from './ModalCpm';
 import styles from './CustomerMannagement.less';
 
@@ -20,6 +23,7 @@ export default class TableList extends PureComponent {
     this.state = {
       formValues: {},
       modalType: 'add', //add、 edit、 delete
+      currentPage: { action: 'mainPage', payload: {} },
     };
     this.page = {
       pageNum: 1,
@@ -40,12 +44,64 @@ export default class TableList extends PureComponent {
   }
 
   componentWillUnmount() {
-    //还原redux中modal的数据
+    //还原redux中的数据
     const { dispatch } = this.props;
     dispatch({
       type: 'customerMannagement/clear',
     });
   }
+
+  getMainPage = () => {
+    const { customerMannagement: { loading, data } } = this.props;
+    return (
+      <PageHeaderLayout>
+        <Card bordered={false} style={{ minWidth: '780px' }}>
+          <div className={styles.tableList}>
+            <div className={styles.tableListForm}>{this.renderForm()}</div>
+            <p>共搜索到{data.option}条数据</p>
+            <StandardTable
+              loading={loading}
+              data={data}
+              onChange={this.handleStandardTableChange}
+              handleShowModalSwitch={this.handleShowModalSwitch}
+              page={this.page}
+              toggleCurrPage={this.toggleCurrPage}
+            />
+          </div>
+        </Card>
+
+        {/* FIXME:仅仅是给【删除】用 后期可以重构，使用ConfirmModal*/}
+        <AllModal
+          modalType={this.state.modalType}
+          page={this.page}
+          resetCurrentPage={this.resetCurrentPage}
+          handlePageFormReset={this.handleFormReset}
+          formValues={this.state.formValues}
+        />
+      </PageHeaderLayout>
+    );
+  };
+
+  getPage = ({ action, payload }) => {
+    switch (action) {
+      case 'mainPage':
+        return this.getMainPage();
+      case 'addPage':
+        return <AddCustomer toggleCurrPage={this.toggleCurrPage} />;
+      case 'editPage':
+        return (
+          <EditCustomer toggleCurrPage={this.toggleCurrPage} id={payload.id} />
+        );
+      case 'detailPage':
+        return <Detail toggleCurrPage={this.toggleCurrPage} data={payload} />;
+      default:
+        break;
+    }
+  };
+
+  toggleCurrPage = ({ action, payload }) => {
+    this.setState({ currentPage: { action, payload } });
+  };
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     //分页、排序、筛选变化时触发
@@ -71,25 +127,15 @@ export default class TableList extends PureComponent {
   };
 
   handleFormReset = () => {
-    const { form, dispatch } = this.props;
+    const { form } = this.props;
     form.resetFields();
-    form.validateFields((err, formValues) => {
-      if (err) return;
-      this.setState({ formValues }, () => {
-        this.resetCurrentPage();
-        dispatch({
-          type: 'customerMannagement/fetch',
-          payload: {
-            ...this.page,
-            ...this.state.formValues,
-          },
-        });
-      });
-    });
+    this.handleSearch();
   };
 
   handleSearch = e => {
-    e.preventDefault();
+    if (e && typeof e.preventDefault === 'function') {
+      e.preventDefault();
+    }
     const { dispatch, form } = this.props;
 
     form.validateFields((err, formValues) => {
@@ -102,6 +148,11 @@ export default class TableList extends PureComponent {
             ...this.page,
             ...this.state.formValues,
           },
+        });
+        dispatch({
+          //每次保存的时候都缓存formData
+          type: 'customerMannagement/saveCacheSearchFormData',
+          payload: formValues,
         });
       });
     });
@@ -120,7 +171,7 @@ export default class TableList extends PureComponent {
   renderForm() {
     const {
       form: { getFieldDecorator },
-      customerMannagement: { pageType },
+      customerMannagement: { pageType, cacheSearchFormData },
     } = this.props;
     const layoutForm = { md: 8, lg: 24, xl: 48 };
 
@@ -131,7 +182,7 @@ export default class TableList extends PureComponent {
             <FormItem label="客户名称">
               {getFieldDecorator('name', {
                 //【客户名称】支持中文、英文、数字，最多50个字符；
-                initialValue: '',
+                initialValue: cacheSearchFormData.name,
                 rules: [{ max: 50, message: '最长50位' }],
               })(<Input placeholder="请输入" />)}
             </FormItem>
@@ -139,7 +190,7 @@ export default class TableList extends PureComponent {
           <Col md={8} sm={24}>
             <FormItem label="客户类型">
               {getFieldDecorator('type', {
-                initialValue: "",
+                initialValue: cacheSearchFormData.type,
               })(
                 //1-沉积客户、2-激活客户、3-活跃客户',
                 <Select placeholder="请选择">
@@ -155,7 +206,7 @@ export default class TableList extends PureComponent {
             <FormItem label="负责人:">
               {getFieldDecorator('charge', {
                 //【负责人】支持模糊搜索，最长字符可输入10个。
-                initialValue: '',
+                initialValue: cacheSearchFormData.charge,
                 rules: [{ max: 10, message: '最长10位' }],
               })(<Input placeholder="请输入" />)}
             </FormItem>
@@ -164,7 +215,7 @@ export default class TableList extends PureComponent {
             <FormItem label="联系人:">
               {getFieldDecorator('contacts', {
                 //【联系人】支持中文、英文，允许输入特殊字符，小写英文自动转换为大写，最多20个字符；
-                initialValue: '',
+                initialValue: cacheSearchFormData.contacts,
                 rules: [{ max: 20, message: '最长20位' }],
               })(<Input placeholder="请输入" />)}
             </FormItem>
@@ -173,7 +224,7 @@ export default class TableList extends PureComponent {
             <FormItem label="电话号码:">
               {getFieldDecorator('mobile', {
                 //【电话号码】支持数字，允许输入特殊字符，最多50个字符；
-                initialValue: '',
+                initialValue: cacheSearchFormData.mobile,
                 rules: [{ max: 50, message: '最长50位' }],
               })(<Input placeholder="请输入" />)}
             </FormItem>
@@ -182,7 +233,7 @@ export default class TableList extends PureComponent {
             <FormItem label="微信/QQ:">
               {getFieldDecorator('wxqq', {
                 //【微信/QQ】支持中文、英文、数字，允许输入特殊字符，小写英文自动转换为大写，最多100个字符
-                initialValue: '',
+                initialValue: cacheSearchFormData.wxqq,
                 rules: [{ max: 100, message: '最长100位' }],
               })(<Input placeholder="请输入" />)}
             </FormItem>
@@ -201,16 +252,17 @@ export default class TableList extends PureComponent {
         </Row>
         <Row>
           <Col span={12}>
-            <Link to="/offline/customerMannagement/add">
-              <Button
-                type="primary"
-                onClick={() => {
-                  //this.handleShowModalSwitch('add');
-                }}
-              >
-                新增客户
-              </Button>
-            </Link>
+            {/* <Link to="/offline/customerMannagement/add"> */}
+            {/* TODO: router 中的页面都没有删除 */}
+            <Button
+              type="primary"
+              onClick={() => {
+                this.toggleCurrPage({ action: 'addPage' });
+              }}
+            >
+              新增客户
+            </Button>
+            {/* </Link> */}
           </Col>
           <Col span={12} style={{ textAlign: 'right' }}>
             <FormItem>
@@ -228,32 +280,6 @@ export default class TableList extends PureComponent {
   }
 
   render() {
-    const { customerMannagement: { loading, data }, showModal } = this.props;
-    return (
-      <PageHeaderLayout>
-        <Card bordered={false} style={{ minWidth: '780px' }}>
-          <div className={styles.tableList}>
-            <div className={styles.tableListForm}>{this.renderForm()}</div>
-            <p>共搜索到{data.option}条数据</p>
-            <StandardTable
-              loading={loading}
-              data={data}
-              onChange={this.handleStandardTableChange}
-              handleShowModalSwitch={this.handleShowModalSwitch}
-              page={this.page}
-            />
-          </div>
-        </Card>
-
-        {/* FIXME:仅仅是给【删除】用 后期可以重构，使用ConfirmModal*/}
-        <AllModal
-          modalType={this.state.modalType}
-          page={this.page}
-          resetCurrentPage={this.resetCurrentPage}
-          handlePageFormReset={this.handleFormReset}
-          formValues={this.state.formValues}
-        />
-      </PageHeaderLayout>
-    );
+    return this.getPage(this.state.currentPage);
   }
 }
