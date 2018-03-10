@@ -101,7 +101,7 @@ export default class SiderMenu extends PureComponent {
                   </span>
                 ) : item.name
               }
-              key={ item.id || item.path }
+              key={ item.key || item.path }
             >
               {this.getNavMenuItems(item.children)}
             </SubMenu>
