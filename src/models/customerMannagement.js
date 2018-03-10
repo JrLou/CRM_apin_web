@@ -66,6 +66,19 @@ const transferRes = (pageType, methodName) => {
   return response;
 };
 
+const initFormState = () => ({
+  //form用
+  formData: {
+    data: {},
+  },
+});
+const initDetailTableDataState = () => ({
+  detailTableData: {
+    data: [],
+    option: {},
+  },
+});
+
 const initState = () => {
   return {
     pageType: 'c', //c=>客户 s=>供应商
@@ -76,9 +89,13 @@ const initState = () => {
     },
     loading: true,
 
-    //form用
-    formData: {
-      data: {},
+    cacheSearchFormData: {
+      charge: '',
+      contacts: '',
+      mobile: '',
+      name: '',
+      type: '',
+      wxqq: '',
     },
 
     //详情TableData 详情表格用
@@ -101,6 +118,9 @@ const initState = () => {
     modalFormLoading: false, //模态框中的table的loading
     modalConfirmLoading: false,
     deleteItemId: '', //点击删除的时候存储该值
+
+    ...initFormState(), //form用
+    ...initDetailTableDataState(),
   };
 };
 
@@ -325,9 +345,28 @@ export default {
         ...payload,
       };
     },
+    saveCacheSearchFormData(state, { payload }) {
+      return {
+        ...state,
+        cacheSearchFormData: payload,
+      };
+    },
     clear() {
       //页面卸载时重置
       return initState();
+    },
+    clearFormData(state) {
+      //add和edit页面卸载时重置
+      return {
+        ...state,
+        ...initFormState(),
+      };
+    },
+    clearDetailTableData(state) {
+      return {
+        ...state,
+        ...initDetailTableDataState(),
+      };
     },
   },
 };

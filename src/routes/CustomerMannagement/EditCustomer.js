@@ -3,27 +3,36 @@ import React, { PureComponent } from 'react';
 import { Spin } from 'antd';
 import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import BasicDetailForm from './components/BasicDetailForm';
-import { getPar } from '../../utils/utils';
+// import { getPar } from '../../utils/utils';
 
 @connect(state => ({
   customerMannagement: state.customerMannagement,
 }))
 class EditCustomer extends PureComponent {
   componentDidMount() {
-    this.id = getPar(this, 'id');
+    // this.id = getPar(this, 'id');
     this.props.dispatch({
       type: 'customerMannagement/fetchQueryOne',
-      payload: { id: this.id },
+      payload: { id: this.props.id },
     });
   }
+
+  componentWillUnmount() {
+    //还原redux中modal的数据
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'customerMannagement/clearFormData',
+    });
+  }
+
   render() {
     const { loading } = this.props.customerMannagement;
     return (
-      <Spin spinning={loading}>
-        <PageHeaderLayout>
-          <BasicDetailForm isEdit id={this.id} />
-        </PageHeaderLayout>
-      </Spin>
+      <PageHeaderLayout>
+        <Spin spinning={loading}>
+          <BasicDetailForm isEdit {...this.props} />
+        </Spin>
+      </PageHeaderLayout>
     );
   }
 }
