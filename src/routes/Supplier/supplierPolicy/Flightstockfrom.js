@@ -24,7 +24,7 @@ import Algorithm from './FlightstockAlgorithm.js';
 import Manual from './FlightstockManual.js';
 import FlightstockCalendar from './FlightstockCalendar.js';
 import FlightstockShow from './FlightstockShow.js';
-import {getdetailAirLine, geteditAirline, searchSupplier} from '../../../services/api'
+import {getdetailAirLine, geteditAirline, searchSupplier, stateAirLine} from '../../../services/api'
 
 const {TextArea} = Input;
 const {Column,} = Table;
@@ -57,7 +57,13 @@ class AddForm extends Component {
       supplier: [], //供应商数据
     };
   }
-
+//组件将被卸载
+  componentWillUnmount(){
+    //重写组件的setState方法，直接返回空
+    this.setState = (state,callback)=>{
+      return;
+    };
+  }
   componentWillReceiveProps(nextProps) {
     let {flightdata} = this.state
     if (nextProps.flightstockEdit && nextProps.flightstockEdit.details.length > 0) {
@@ -109,7 +115,7 @@ class AddForm extends Component {
         switch (ole) {
           case 0:
             list = response.data
-            list[0].seat_type == 0 ? list[0].seat_type = "硬切" : list[0].seat_type = "代销"
+            list[0].seat_type == 1 ? list[0].seat_type = "硬切" : list[0].seat_type = "代销"
             if (list[0].flight_type == 1) {
               this.addDate(1);
               this.setState({
@@ -164,7 +170,7 @@ class AddForm extends Component {
             });
             break;
           case 1:
-            message.success(response.msg)
+            message.success('操作成功')
             this.props.history.push({
               pathname: '/supplier/supplierPolicy/flightstock',
             });
@@ -173,6 +179,13 @@ class AddForm extends Component {
             this.setState({
               supplier: response.data,
             });
+            break;
+          case 3:
+            this._searchPort(getdetailAirLine, {id: this.props.id}, 0)
+            this.props.history.push({
+              pathname: '/supplier/supplierPolicy/flightstock',
+            });
+            message.success('操作成功')
             break;
         }
       } else {
@@ -206,10 +219,12 @@ class AddForm extends Component {
             }
           }
         }
-        // for (let i = 0; i < flightstockData.length; i++) {
-        //   flightstockData[i].FlightDeptimePlanDate = moment(flightstockData[i].FlightDeptimePlanDate, "YYYY-MM-DD").format("YYYY-MM-DD HH:mm:ss")
-        //   flightstockData[i].FlightArrtimePlanDate = moment(flightstockData[i].FlightArrtimePlanDate, "YYYY-MM-DD").format("YYYY-MM-DD HH:mm:ss")
-        // }
+        if (!_this.props.id) {
+          for (let i = 0; i < flightstockData.length; i++) {
+            flightstockData[i].FlightDeptimePlanDate = moment(flightstockData[i].FlightDeptimePlanDate, "YYYY-MM-DD").format("YYYY-MM-DD HH:mm:ss")
+            flightstockData[i].FlightArrtimePlanDate = moment(flightstockData[i].FlightArrtimePlanDate, "YYYY-MM-DD").format("YYYY-MM-DD HH:mm:ss")
+          }
+        }
         switch (values.airline_type) {
           case "国际长线":
             values.airline_type = 1
@@ -230,7 +245,7 @@ class AddForm extends Component {
         values.backAirLine = this.state.flight_type == 2 ? JSON.stringify([flightstockData[1]]) : []
         values.goAirLine = JSON.stringify([flightstockData[0]])
         values.cityArr = flightstockData[0].FlightArrcode
-        values.seatType == "硬切" ? values.seatType = 0 : values.seatType = 1
+        values.seatType == "硬切" ? values.seatType = 1 : values.seatType = 2
         values.cityDep = flightstockData[0].FlightDepcode
         values.supplierName = flightdata.supplierName;
         values.endDate = moment(flightdata.flightTimeWill[1]).format("YYYY-MM-DD")
@@ -557,10 +572,14 @@ class AddForm extends Component {
     confirm({
       title: '您确定要' + data + '吗？',
       onOk() {
-        _this.props.addPost('flightstockEdit/getstateAirLines', {
+        _this._searchPort(stateAirLine, {
           id: _this.props.id,
           airlineStatus: data == "上架" ? 1 : 0,
-        },);
+        }, 3)
+        // _this.props.addPost('flightstockEdit/getstateAirLines', {
+        //   id: _this.props.id,
+        //   airlineStatus: data == "上架" ? 1 : 0,
+        // },);
         _this.setState({
           baioshi: true,
         });
@@ -915,7 +934,7 @@ class AddForm extends Component {
                     >
                       {getFieldDecorator('discount', {
                         rules: [{
-                          required: true,
+                          required: false,
                           message: requiredText,
                         }, {
                           pattern: /^[1-9](\.\d{1})?$|^(10)(\.0)?$|^[0](\.[1-9]{1}){1}$/,

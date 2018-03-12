@@ -78,36 +78,24 @@ class page extends Component {
   }
 
   dateGet() {  //初始化获取要展示的日期
-    // let dates = moment(new Date()).format("YYYY-MM");
-    // let b = new Date().getTime();
-    // let a = moment(this.props.listdata.departure_start, "YYYY-MM").format('x');
-    // let c = moment(this.props.listdata.departure_end, "YYYY-MM").format('x');
-    // if (b > a && b < c) {
-    //   this.loadData('flightstockView/getpriceAirline', {
-    //     date: moment(this.props.listdata.departure_start).format('YYYY-MM'),
-    //     id: this.props.listdata.id,
-    //   },);
-    //   this.setState({
-    //     dateSelect: moment(this.props.listdata.departure_start),
-    //   })
-    //
-    // } else {
-    //   this.loadData('flightstockView/getpriceAirline', {
-    //     date: dates,
-    //     id: this.props.listdata.id,
-    //   },);
-    //   this.setState({
-    //     dateSelect: moment(dates),
-    //   })
-    // }
-    this.loadData('flightstockView/getpriceAirline', {
-      date: moment(this.props.listdata.departure_start).format('YYYY-MM'),
-      id: this.props.listdata.id,
-    },);
-    this.setState({
-      dateSelect: moment(this.props.listdata.departure_start),
-    })
+    if (this.props.airline_status == 3) {
+      this.loadData('flightstockView/getpriceAirline', {
+        date: moment(this.props.listdata.departure_end).format('YYYY-MM'),
+        id: this.props.listdata.id,
+      },);
+      this.setState({
+        dateSelect: moment(this.props.listdata.departure_end),
+      })
 
+    } else {
+      this.loadData('flightstockView/getpriceAirline', {
+        date: moment(this.props.listdata.departure_start).format('YYYY-MM'),
+        id: this.props.listdata.id,
+      },);
+      this.setState({
+        dateSelect: moment(this.props.listdata.departure_start),
+      })
+    }
   }
 
   dateGetReturn() {
@@ -157,13 +145,13 @@ class page extends Component {
             },
           ]
         }
-        if (parseInt((( s1 - s2.getTime()) / (1000 * 60 * 60 * 24))) < 3 && parseInt((( s1 - s2.getTime()) / (1000 * 60 * 60 * 24))) > 0) {
-          criticalPoint = 3
-        }
-        if (this.props.airline_status == 1 && parseInt((( s1 - s2.getTime()  ) / (1000 * 60 * 60 * 24))) > 0) {
+        criticalPoint = 2
+
+        if (this.props.airline_status == 1 && (parseInt((( s1 - s2.getTime()) / (1000 * 60 * 60 * 24))) + 1) >= 0) {
           criticalPoint = 1
-        } else {
-          criticalPoint = 2
+        }
+        if ((parseInt((( s1 - s2.getTime()) / (1000 * 60 * 60 * 24))) + 1) < 3) {
+          criticalPoint = 3
         }
 
       }

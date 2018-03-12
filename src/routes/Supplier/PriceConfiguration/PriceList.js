@@ -60,7 +60,7 @@ export default class TableList extends PureComponent {
         this.setState({visible: true, condition: 3, currentData: {detail: [new Date().getTime()]}})
         break;
       case 1: //弹窗确认按钮所调函数
-        this.setState({visible: false})
+        this.setState({visible: false,condition:4})
     }
   }
 
@@ -106,10 +106,18 @@ export default class TableList extends PureComponent {
         this.setState({
           filter: dates,
         });
-        this.props.dispatch({
-          type: 'priceList/fetch',
-          payload: dates,
-        });
+        if(this.state.keys==1){
+          this.props.dispatch({
+            type: 'priceList/fetch',
+            payload: dates,
+          });
+        } else {
+          this.props.dispatch({
+            type: 'priceList/fetchs',
+            payload: dates,
+          });
+        }
+
       }
     });
   }

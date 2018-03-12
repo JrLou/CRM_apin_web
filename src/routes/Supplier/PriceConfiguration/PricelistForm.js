@@ -3,7 +3,7 @@ import {
   Calendar, Checkbox, Col, Form, Input, Select, Button, Row, message, Radio
 } from 'antd'
 import AllocationCalendar from '../supplierPolicy/AllocationCalendar/MultipleSelectCalendar.js';
-import {editPriceConfig, getpriceAirline, addPriceConfig} from '../../../services/api'
+import {editPriceConfig, getpriceAirline, addPriceConfig,} from '../../../services/api'
 
 const RadioGroup = Radio.Group;
 const FormItem = Form.Item;
@@ -25,6 +25,7 @@ class BulkImportForm extends PureComponent {
       order: '',
       data: [],
       datesArr: [],
+      id: null,
     }
   }
 
@@ -41,6 +42,9 @@ class BulkImportForm extends PureComponent {
           id: this.props.currentData.airline_id,
           date: moment(this.props.currentData.detail ? this.props.currentData.detail[0] : new Date()).format("YYYY-MM")
         }, 1)
+        break;
+      case 4:
+        this.props.form.resetFields();
         break;
     }
 
@@ -59,6 +63,9 @@ class BulkImportForm extends PureComponent {
           id: nextProps.currentData.airline_id,
           date: moment(nextProps.currentData.detail ? nextProps.currentData.detail[0] : new Date()).format("YYYY-MM")
         }, 1)
+        break;
+      case 4:
+        this.props.form.resetFields();
         break;
     }
   }
@@ -232,10 +239,14 @@ class BulkImportForm extends PureComponent {
 
   calendar(e) {
     if (e.target.value) {
+
       this._searchPort(getpriceAirline, {
         id: e.target.value,
         date: moment(new Date().getTime()).format("YYYY-MM")
       }, 1)
+      this.setState({
+        id: e.target.value,
+      })
     } else {
       message.warning('请填写航班资源号')
       return
@@ -255,10 +266,24 @@ class BulkImportForm extends PureComponent {
     }
     callback()
   }
+
   //
   // guanb() {
   //   this.props.guab()
   // }
+  updateMonthStock(obj, ole) {
+    console.log(obj)
+    console.log(ole)
+    if (this.state.id) {
+      this._searchPort(getpriceAirline, {
+        id: this.state.id,
+        date: obj + "-" + ((ole + 1) < 9 ? "0" + (ole + 1) : (ole + 1))
+      }, 1)
+    } else {
+      message.warning('请填写航班资源号')
+      return
+    }
+  }
 
   render() {
     // let airline = [{flight_date:'1521072000000',sale_count:100,seat_count:1111,sell_price:1111,settlement_price:1222}]
@@ -311,6 +336,7 @@ class BulkImportForm extends PureComponent {
                   month={month}
                   day={day}
                   currenMonthStocks={this.state.currenMonthStocks}
+                  updateMonthStock={this.updateMonthStock.bind(this)}
                   canPick={canPick}
                   placeholder={this.state.selectedTips.length > 0 ? '已选择' : '选择分配时间'}
                   upPickInfo={this.showPickInfo.bind(this)}
@@ -468,6 +494,7 @@ class BulkImportForm extends PureComponent {
                 {...formItemLayout}
               >
                 {getFieldDecorator('state', {
+                  rules: [{required: true, message: '请填写次字段'}],
                   initialValue: this.props.currentData.state
                 })
                 (<RadioGroup>

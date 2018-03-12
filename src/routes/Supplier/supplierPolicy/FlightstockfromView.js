@@ -88,7 +88,7 @@ class AddForm extends Component {
         switch (ole) {
           case 0:
             list = response.data
-            list[0].seat_type == 0 ? list[0].seat_type = "硬切" : list[0].seat_type = "代销"
+            list[0].seat_type == 1 ? list[0].seat_type = "硬切" : list[0].seat_type = "代销"
             if (list[0].flight_type == 1) {
               this.addDate(1);
               list[0].flight_type = "单程"

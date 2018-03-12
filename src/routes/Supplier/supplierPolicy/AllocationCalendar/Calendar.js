@@ -54,7 +54,7 @@ const displayDaysPerMonth = (year) => {
     })
 }
 
-class Calendar extends Component {
+class   Calendar extends Component {
   constructor(props) {
     //继承React.Component
     super()
@@ -99,14 +99,14 @@ class Calendar extends Component {
   nextMonth() {
     if (this.state.month === 11) {
       // 更新库存
-      // this.props.updateMonthStocks(this.state.year + 1, 0)
+      this.props.updateMonthStock(this.state.year + 1, 0)
       this.setState({
         year: ++this.state.year,
         month: 0
       })
     } else {
       // 更新库存
-      // this.props.updateMonthStocks(this.state.year, this.state.month + 1)
+      this.props.updateMonthStock(this.state.year, this.state.month + 1)
       this.setState({
         month: ++this.state.month
       })
@@ -121,14 +121,14 @@ class Calendar extends Component {
 
     if (this.state.month === 0) {
       // 更新库存
-      // this.props.updateMonthStocks(this.state.year - 1, 11)
+      this.props.updateMonthStock(this.state.year - 1, 11)
       this.setState({
         year: --this.state.year,
         month: 11
       })
     } else {
       // 更新库存
-      // this.props.updateMonthStocks(this.state.year, this.state.month - 1)
+      this.props.updateMonthStock(this.state.year, this.state.month - 1)
       this.setState({
         month: --this.state.month
       })
@@ -210,6 +210,9 @@ class Calendar extends Component {
       colsToMonth: totalObj
     })
   }
+  updateMonthStock(obj,ole){
+    this.props.updateMonthStock(obj,ole)
+  }
   render() {
     let publicProps = {
       viewData: displayDaysPerMonth(this.state.year),
@@ -231,6 +234,7 @@ class Calendar extends Component {
                            saveChecked={this.saveChecked.bind(this)}
                            stocks={this.props.currenMonthStocks}
                            canPick={this.props.canPick}
+                           updateMonthStock={this.updateMonthStock.bind(this)}
                            selcetedInfo={this.state.selcetedDays}
                            getNewPicks={this.setNewPicks.bind(this)}
                            prevMonth={this.prevMonth.bind(this)}

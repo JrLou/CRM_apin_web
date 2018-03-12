@@ -436,7 +436,7 @@ export default class TableList extends PureComponent {
                       return <div>
                         <Divider type="vertical"/>
                         <a style={{cursor: "pointer", margin: "6px"}}
-                           onClick={this.operating.bind(this, record, 1)}>查看
+                           onClick={this.operating.bind(this, record, 4)}>查看
                         </a>
                         <Divider type="vertical"/>
                         <a style={{cursor: "pointer", margin: "6px"}}
