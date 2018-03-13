@@ -27,9 +27,19 @@ class ResetPassword extends PureComponent {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        this.props.dispatch({
+        const { dispatch } = this.props;
+        dispatch({
           type: 'resetPassword/fetch',
           payload: values,
+          succCB: () => {
+            setTimeout(() => {
+              const { pathname } = this.props.location;
+              dispatch({
+                type: 'login/logout',
+                payload: pathname,
+              });
+            }, 1000);
+          },
         });
       }
     });
