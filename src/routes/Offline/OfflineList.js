@@ -376,10 +376,12 @@ export default class OfflineList extends PureComponent {
       {
         title: '询价日期',
         dataIndex: 'inquiryDate',
+        render: text => <span style={{ whiteSpace: 'nowrap' }}>{text}</span>,
       },
       {
         title: '去程日期',
         dataIndex: 'depDate',
+        render: text => <span style={{ whiteSpace: 'nowrap' }}>{text}</span>,
       },
       {
         title: '人数',
