@@ -72,34 +72,28 @@ class page extends Component {
   }
 
   dateGet() {  //初始化获取要展示的日期
-    // let dates = moment(new Date()).format("YYYY-MM");
-    // let b = new Date().getTime();
-    // let a = moment(this.props.listdata.departure_start, "YYYY-MM").format('x');
-    // let c = moment(this.props.listdata.departure_end, "YYYY-MM").format('x');
-    // if (b > a && b < c) {
-    //   this.loadData('flightstockEdit/getpriceAirline', {
-    //     date: moment(this.props.listdata.departure_start).format('YYYY-MM'),
-    //     id: this.props.listdata.id,
-    //   },);
-    //   this.setState({
-    //     dateSelect: moment(this.props.listdata.departure_start),
-    //   })
-    //
-    // } else {
-    //   this.loadData('flightstockEdit/getpriceAirline', {
-    //     date: dates,
-    //     id: this.props.listdata.id,
-    //   },);
-    //   this.setState({
-    //     dateSelect: moment(dates),
-    //   })
-    // }
+    let date = null
+    let j = 0
+    const {flightstockEdit: {airline}} = this.props;
+    let s2 = new Date().getTime();
+    if (this.props.listdata.departure_start >= s2) {
+      date = moment(this.props.listdata.departure_start).format('YYYY-MM')
+    } else {
+      for (let i = 0; i < airline.lenght; i++) {
+        if (airline[i].flight_date > s2) {
+          j++
+          if (j == 1) {
+            date = moment(airline[i].flight_date).format('YYYY-MM')
+          }
+        }
+      }
+    }
     this.loadData('flightstockEdit/getpriceAirline', {
-      date: moment(this.props.listdata.departure_start).format('YYYY-MM'),
+      date: date,
       id: this.props.listdata.id,
     },);
     this.setState({
-      dateSelect: moment(this.props.listdata.departure_start),
+      dateSelect: moment(date),
     })
 
   }
@@ -116,10 +110,10 @@ class page extends Component {
     let listData = {};
     let list = [];
     let criticalPoint = null;
-    // let s2 = new Date();
+    let s2 = new Date();
     if (airline.length > 0) {
       for (let i = 0; i < airline.length; i++) {
-        // let s1 = airline[i].clear_date
+        let s1 = airline[i].clear_date
         if (moment(airline[i].flight_date).format("YYYY-MM-DD") == value.format("YYYY-MM-DD")) {
           list = [
             {
