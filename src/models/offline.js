@@ -184,6 +184,14 @@ export default {
 
     },
     *searchCity({ payload }, { call, put }) {
+      //当payload.condition === ""空，则不去请求，直接设置为[]；（更合理的交互是，要请求【空】，此时后台返回  热门城市数组）
+      if (payload.condition.trim() === "") {
+        yield put({
+          type: 'getCity',
+          payload: { data: [], arrFlag: payload.arrFlag },
+        });
+        return;
+      }
 
       const response = yield call(searchCity, { condition: payload.condition });
       if (response && response.code == 200) {

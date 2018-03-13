@@ -921,7 +921,7 @@ export default class AddOrderForm extends Component {
                       <FormItem label="儿童"  {...formItemLayout}>
                         {getFieldDecorator('childCount', {
                           rules: [{ pattern: /^[0-9]{0,3}$/, message: "请输入0-999的整数" }],
-                          initialValue: detail.childCount || '0'
+                          initialValue: detail.childCount
                         })(
                           <Input onChange={this.changeCaulator.bind(null, /^[0-9]{0,3}$/)} disabled={readOnly} style={{ width: '50%', marginRight: '5px' }} />
                           )}
@@ -932,7 +932,7 @@ export default class AddOrderForm extends Component {
                       <FormItem label="婴儿"  {...formItemLayout}>
                         {getFieldDecorator('babyCount', {
                           rules: [{ pattern: /^[0-9]{0,3}$/, message: "请输入0-999的整数" }],
-                          initialValue: detail.babyCount || '0'
+                          initialValue: detail.babyCount
                         })(
                           <Input onChange={this.changeCaulator.bind(null, /^[0-9]{0,3}$/)} disabled={readOnly} style={{ width: '50%', marginRight: '5px' }} />
                           )}
