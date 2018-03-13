@@ -9,7 +9,7 @@ export default {
   },
 
   effects: {
-    *fetch({ payload }, { call, put }) {
+    *fetch({ payload, succCB = () => {} }, { call, put }) {
       yield put({
         type: 'changeLoading',
         payload: true,
@@ -17,6 +17,7 @@ export default {
       const response = yield call(resetPassword, payload);
       if (response && response.code > 0) {
         message.success(response.msg);
+        succCB();
       }
       yield put({
         type: 'changeLoading',
