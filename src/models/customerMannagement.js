@@ -208,7 +208,7 @@ export default {
 
         //跳转 客户管理页,这里由于两个交互不一致，但有放在了一起，所以有点混乱，后期另一个页面改过来后，再处理
         if (pageType === 'c') {
-          yield put(routerRedux.push('/offline/customerMannagement'));
+          yield put(routerRedux.push('/offline_data/customerMannagement'));
         }
 
         message.success(response.message);
@@ -265,7 +265,7 @@ export default {
         });
         message.success(response.message);
         if (pageType === 'c') {
-          yield put(routerRedux.push('/offline/customerMannagement'));
+          yield put(routerRedux.push('/offline_data/customerMannagement'));
         }
         succCB && succCB();
       }
