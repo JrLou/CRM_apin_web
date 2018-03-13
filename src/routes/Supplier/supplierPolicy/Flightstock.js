@@ -306,11 +306,13 @@ export default class TableList extends PureComponent {
                 title="机票资源号"
                 dataIndex="id"
                 key="id"
+                width='150px'
               />
               <Column
                 title="供应商名称"
                 dataIndex="supplier_name"
                 key="supplier_name"
+                width='150px'
               />
               <Column
                 title="出发/回程城市"
