@@ -57,13 +57,15 @@ class AddForm extends Component {
       supplier: [], //供应商数据
     };
   }
+
 //组件将被卸载
-  componentWillUnmount(){
+  componentWillUnmount() {
     //重写组件的setState方法，直接返回空
-    this.setState = (state,callback)=>{
+    this.setState = (state, callback) => {
       return;
     };
   }
+
   componentWillReceiveProps(nextProps) {
     let {flightdata} = this.state
     if (nextProps.flightstockEdit && nextProps.flightstockEdit.details.length > 0) {
@@ -236,7 +238,7 @@ class AddForm extends Component {
             values.airline_type = 3
             break;
         }
-        values.flight_type = "单程" ? values.flight_type = 1 : values.flight_type = 2
+        values.flight_type == "单程" ? values.flight_type = 1 : values.flight_type = 2
         if (values.flight_type == 1) {
           values.days = 0
         }
@@ -253,7 +255,7 @@ class AddForm extends Component {
         values.flightNumber = values.flight_type == 1 ? flightstockData[0].FlightNo : flightstockData[0].FlightNo + '-' + flightstockData[1].FlightNo
         values.weekFlights = flightdata.selectedWeekGroup[0]
         values.managerId = 0
-        console.log("整理后的", values)
+        // console.log("整理后的", values)
         this.setState({
           baioshi: true,
         });
@@ -574,7 +576,7 @@ class AddForm extends Component {
       onOk() {
         _this._searchPort(stateAirLine, {
           id: _this.props.id,
-          airlineStatus: data == "上架" ? 1 : 0,
+          airlineStatus: data == "上架" ? 1 : 4,
         }, 3)
         // _this.props.addPost('flightstockEdit/getstateAirLines', {
         //   id: _this.props.id,
