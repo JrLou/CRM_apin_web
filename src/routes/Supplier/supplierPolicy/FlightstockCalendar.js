@@ -116,10 +116,10 @@ class page extends Component {
     let listData = {};
     let list = [];
     let criticalPoint = null;
-    let s2 = new Date();
+    // let s2 = new Date();
     if (airline.length > 0) {
       for (let i = 0; i < airline.length; i++) {
-        let s1 = airline[i].clear_date
+        // let s1 = airline[i].clear_date
         if (moment(airline[i].flight_date).format("YYYY-MM-DD") == value.format("YYYY-MM-DD")) {
           list = [
             {
@@ -156,9 +156,9 @@ class page extends Component {
         if (this.props.airline_status == 1 && (parseInt((( s1 - s2.getTime()) / (1000 * 60 * 60 * 24))) + 1) >= 0) {
           criticalPoint = 1
         }
-        if ((parseInt((( s1 - s2.getTime()) / (1000 * 60 * 60 * 24))) + 1) < 3) {
-          criticalPoint = 3
-        }
+        // if ((parseInt((( s1 - s2.getTime()) / (1000 * 60 * 60 * 24))) + 1) < 3) {
+        //   criticalPoint = 3
+        // }
 
       }
     }
@@ -561,8 +561,8 @@ class ModifyPriceFrom extends Component {
       if (!err) {
         console.log('Received values of form: ', values);
         // this.props.dateArr
-        values.sellPrice = parseInt(values.sellPrice) * 100;
         values.settlementPrice = parseInt(values.settlementPrice) * 100;
+        values.settlementPrice_child = parseInt(values.settlementPrice_child) * 100;
         this.props.modifyData(values)
 
       }
@@ -577,11 +577,11 @@ class ModifyPriceFrom extends Component {
         {this.props.row == 'addStage' || this.props.row == 'modifyPrice' ?
           <div>
             <FormItem
-              label="销售价"
+              label='成人价'
               labelCol={{span: 6}}
               wrapperCol={{span: 9}}
             >
-              {getFieldDecorator('sellPrice', {
+              {getFieldDecorator('settlementPrice', {
                 rules: [{required: true, message: '必填'}, {
                   pattern: /^[1-9]\d{0,4}$/,
                   message: "请输入小于6位的正整数"
@@ -592,11 +592,11 @@ class ModifyPriceFrom extends Component {
             </FormItem>
             {/* <hr className={css.hr} /> */}
             <FormItem
-              label="结算价"
+              label="儿童价"
               labelCol={{span: 6}}
               wrapperCol={{span: 9}}
             >
-              {getFieldDecorator('settlementPrice', {
+              {getFieldDecorator('settlementPrice_child', {
                 rules: [{required: true, message: '必填'}, {
                   pattern: /^[1-9]\d{0,4}$/,
                   message: "请输入小于6位的正整数"
@@ -785,7 +785,7 @@ class BulkImportForm extends Component {
               {...formItemLayout}
             >
               {getFieldDecorator('resourceIndex', {
-                initialValue: this.props.listdata && this.props.listdata.is_invalid
+                initialValue: this.props.listdata && this.props.listdata.id
               })
               (< Input className={css.notEdit} placeholder="" readOnly
                        style={{width: '150px', marginRight: '10px'}}/>)}
