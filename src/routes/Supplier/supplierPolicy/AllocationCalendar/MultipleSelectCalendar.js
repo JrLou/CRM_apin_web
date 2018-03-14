@@ -30,9 +30,6 @@ class MultipleSelectCalendar extends Component {
 
   updateMonthStock(obj, ole) {
     this.props.updateMonthStock(obj, ole)
-    console.log('9999999')
-    console.log(obj)
-    console.log(ole)
   }
 
   render() {

@@ -11,6 +11,7 @@ import md5 from 'md5';
 import {connect, Link} from 'dva';
 // 推荐在入口文件全局设置 locale
 import 'moment/locale/zh-cn';
+
 moment.locale('zh-cn');
 
 @connect(state => ({
@@ -24,39 +25,45 @@ class page extends Component {
       flightstockView: {},
     }
   }
+
   componentWillReceiveProps(nextProps) {
     this.setState({
       flightstockView: nextProps.flightstockView ? nextProps.flightstockView : {}
     });
   }
+
   componentDidMount() {
     this.dateGet();// 库存
   }
+
   loadData(url, data) {
     this.props.dispatch({
       type: url,
       payload: data,
     });
   }
-  dateGet() {  //初始化获取要展示的日期
-    if (this.props.airline_status == 3) {
-      this.loadData('flightstockView/getpriceAirline', {
-        date: moment(this.props.listdata.departure_end).format('YYYY-MM'),
-        id: this.props.listdata.id,
-      },);
-      this.setState({
-        dateSelect: moment(this.props.listdata.departure_end),
-      })
 
+  dateGet() {  //初始化获取要展示的日期
+    let date = null
+    let j = 0
+    const {flightstockEdit: {airline}} = this.props;
+    let s2 = new Date().getTime();
+    if (this.props.airline_status == 3) {
+      date = moment(this.props.listdata.departure_end).format('YYYY-MM')
     } else {
-      this.loadData('flightstockView/getpriceAirline', {
-        date: moment(this.props.listdata.departure_start).format('YYYY-MM'),
-        id: this.props.listdata.id,
-      },);
-      this.setState({
-        dateSelect: moment(this.props.listdata.departure_start),
-      })
+      if(this.props.valid_date){
+        date = moment(this.props.valid_date).format('YYYY-MM')
+      } else {
+        date = moment(this.props.listdata.departure_end).format('YYYY-MM')
+      }
     }
+    this.loadData('flightstockView/getpriceAirline', {
+      date: date,
+      id: this.props.listdata.id,
+    },);
+    this.setState({
+      dateSelect: moment(date),
+    })
   }
 
   getListData(value) {
@@ -64,10 +71,10 @@ class page extends Component {
     let listData = {};
     let list = [];
     let criticalPoint = null;
-    // let s2 = new Date();
+    let s2 = new Date();
     if (airline.length > 0) {
       for (let i = 0; i < airline.length; i++) {
-        // let s1 = airline[i].clear_date
+        let s1 = airline[i].clear_date
         if (moment(airline[i].flight_date).format("YYYY-MM-DD") == value.format("YYYY-MM-DD")) {
           list = [
             {
@@ -125,6 +132,7 @@ class page extends Component {
       payload: data,
     });
   }
+
   ObtainloadData() {
     this.loadData("/apinAirline/calendarInfo", {
       airlineId: this.props.post.id,

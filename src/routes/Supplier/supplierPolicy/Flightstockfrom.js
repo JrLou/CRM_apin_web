@@ -1082,6 +1082,7 @@ class AddForm extends Component {
               disabledadd={this.state.competencese}
               listdata={this.props.information}
               airline_status={this.props.location.state.data.airline_status}
+              valid_date={this.props.location.state.data.valid_date}
               // date={[moment(returnData[0].departure_start).format("YYYY-MM-DD"), moment(returnData[0].departure_end).format("YYYY-MM-DD")]}
               {...this.props}
             />

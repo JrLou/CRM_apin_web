@@ -274,7 +274,7 @@ class BulkImportForm extends PureComponent {
   updateMonthStock(obj, ole) {
     console.log(obj)
     console.log(ole)
-    if (this.state.id) {
+    if (this.state.id ) {
       this._searchPort(getpriceAirline, {
         id: this.state.id,
         date: obj + "-" + ((ole + 1) < 9 ? "0" + (ole + 1) : (ole + 1))

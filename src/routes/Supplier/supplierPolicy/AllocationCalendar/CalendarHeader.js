@@ -37,6 +37,7 @@ class CalendarHeader extends Component {
                             // 可选区间内才让选
                             let currentDay = this.props.year + '-' + (this.props.month + 1) + '-' + _v;
                             let currentDayMs = moment(currentDay, 'YYYY-MM-DD').format('x');
+
                             if (this.props.canPick.indexOf(currentDayMs) < 0) {
                                 return
                             }
