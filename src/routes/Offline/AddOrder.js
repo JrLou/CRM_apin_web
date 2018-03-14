@@ -22,6 +22,11 @@ export default class AddOrder extends PureComponent {
       payload: '',
     });
   }
+  componentWillUnmount() { //重置orderDetail
+    this.props.dispatch({
+      type: 'offline/resetOrderDetail',
+    });
+  }
 
   render() {
     return (

@@ -41,7 +41,7 @@ export default {
         payload: false,
       });
     },
-    *fetchDetail({ payload }, { call, put }) {
+    *fetchDetail({ payload, succCb = () => {} }, { call, put }) {
       yield put({
         type: 'changeLoading',
         payload: true,
@@ -52,6 +52,7 @@ export default {
           type: 'getDetail',
           payload: { ...response, curId: payload.id },
         });
+        succCb();
       }
       yield put({
         type: 'changeLoading',
@@ -339,5 +340,11 @@ export default {
         schemeInfo: newschemeInfo,
       };
     },
-  }
+    resetOrderDetail(state) {
+      return {
+        ...state,
+        orderDetail: {},
+      };
+    },
+  },
 };
