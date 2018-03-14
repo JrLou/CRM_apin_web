@@ -13,6 +13,7 @@ import fetch from 'dva/fetch';
 // 推荐在入口文件全局设置 locale
 import 'moment/locale/zh-cn';
 import AllocationCalendar from './AllocationCalendar/MultipleSelectCalendar.js';
+
 moment.locale('zh-cn');
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
@@ -448,7 +449,8 @@ class page extends Component {
       +moment(this.props.listdata.departure_start, "YYYY-MM-DD").format('DD')
     ]
     let canPick = airline.map((v, k) => {
-      return v.flight_date;
+      console.log(moment(moment(v.flight_date).format("YYYY-MM-DD"), 'YYYY-MM-DD').format('x'))
+      return moment(moment(v.flight_date).format("YYYY-MM-DD"), 'YYYY-MM-DD').format('x')
     })
     return (
       <div className={css.container}>
