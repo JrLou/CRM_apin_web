@@ -12,3 +12,11 @@ body {
   width: 100%;
   margin: 40px 0 !important;
 }
+
+//修复chrom的自动填充背景色为淡黄色的bug，修改为透明
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+}
