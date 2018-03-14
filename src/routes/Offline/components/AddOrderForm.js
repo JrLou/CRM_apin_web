@@ -906,8 +906,8 @@ export default class AddOrderForm extends Component {
                       </FormItem>
                     </Col>
                     <Col span={8}>
-                      <FormItem label="人数"  {...formItemLayout}>
-                        <span style={{ marginRight: '5px' }}>成人:</span>
+                      <FormItem label="人数:&nbsp;&nbsp;成人"  {...formItemLayout}>
+                        {/* <span style={{ marginRight: '5px' }}>:</span> */}
                         {getFieldDecorator('adultCount', {
                           rules: [{ pattern: /^[1-9][0-9]{0,2}$/, message: "请输入1-999的整数" }],
                           initialValue: detail.adultCount

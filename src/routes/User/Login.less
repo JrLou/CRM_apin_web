@@ -116,4 +116,11 @@
       float: right;
     }
   }
+
+  //修复登入页chrom的自动填充color被overwrite为黑色的bug
+  :global{
+    input:-webkit-autofill {
+      -webkit-text-fill-color: #fff !important;
+    }
+  }
 }
