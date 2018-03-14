@@ -51,17 +51,10 @@ class page extends Component {
     if (this.props.airline_status == 3) {
       date = moment(this.props.listdata.departure_end).format('YYYY-MM')
     } else {
-      if (this.props.listdata.departure_start >= s2) {
-        date = moment(this.props.listdata.departure_start).format('YYYY-MM')
+      if(this.props.valid_date){
+        date = moment(this.props.valid_date).format('YYYY-MM')
       } else {
-        for (let i = 0; i < airline.lenght; i++) {
-          if (airline[i].flight_date > s2) {
-            j++
-            if (j == 1) {
-              date = moment(airline[i].flight_date).format('YYYY-MM')
-            }
-          }
-        }
+        date = moment(this.props.listdata.departure_end).format('YYYY-MM')
       }
     }
     this.loadData('flightstockView/getpriceAirline', {

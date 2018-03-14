@@ -13,7 +13,6 @@ import fetch from 'dva/fetch';
 // 推荐在入口文件全局设置 locale
 import 'moment/locale/zh-cn';
 import AllocationCalendar from './AllocationCalendar/MultipleSelectCalendar.js';
-
 moment.locale('zh-cn');
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
@@ -54,14 +53,6 @@ class page extends Component {
 
   componentDidMount() {
     this.dateGet();
-    let s1 = moment('2018-03-22').format("x")
-    let s2 = new Date();
-    // 库存
-    // const dateStart = moment(this.props.listdata.departure_start, "YYYY-MM-DD").format('YYYY/MM/DD');
-    // let [year, month, day] = [new Date(dateStart).getFullYear(), new Date(dateStart).getMonth(), new Date(dateStart).getDate()]
-    console.log(parseInt((( s1 - s2.getTime()) / (1000 * 60 * 60 * 24)) + 1))
-    console.log(this.props.airline_status)
-
   }
 
   loadData(url, data) {
@@ -73,20 +64,10 @@ class page extends Component {
 
   dateGet() {  //初始化获取要展示的日期
     let date = null
-    let j = 0
-    const {flightstockEdit: {airline}} = this.props;
-    let s2 = new Date().getTime();
-    if (this.props.listdata.departure_start >= s2) {
-      date = moment(this.props.listdata.departure_start).format('YYYY-MM')
+    if (this.props.valid_date) {
+      date = moment(this.props.valid_date).format('YYYY-MM')
     } else {
-      for (let i = 0; i < airline.lenght; i++) {
-        if (airline[i].flight_date > s2) {
-          j++
-          if (j == 1) {
-            date = moment(airline[i].flight_date).format('YYYY-MM')
-          }
-        }
-      }
+      date = moment(this.props.listdata.departure_end).format('YYYY-MM')
     }
     this.loadData('flightstockEdit/getpriceAirline', {
       date: date,
@@ -833,9 +814,6 @@ class BulkImportForm extends Component {
         <FormItem
           wrapperCol={{span: 8, offset: 1}}
         >
-          {/*<Button type="primary" htmlType="submit">*/}
-          {/*确认*/}
-          {/*</Button>*/}
         </FormItem>
       </Form>
     );
