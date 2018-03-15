@@ -30,6 +30,7 @@ class LogTableList extends PureComponent {
       {
         title: '操作内容',
         dataIndex: 'record',
+        render: text => <pre>{text}</pre>, //按照后台返回的格式显示
       },
     ];
 
