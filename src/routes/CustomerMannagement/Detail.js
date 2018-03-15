@@ -45,8 +45,8 @@ class Detail extends PureComponent {
     });
   }
 
-  handleStandardTableChange = (pagination, filtersArg) => {
-    const { customerName } = this.data;
+  handleStandardTableChange = pagination => {
+    const { customerName } = this.props.data;
     //分页、排序、筛选变化时触发
     const { dispatch } = this.props;
 

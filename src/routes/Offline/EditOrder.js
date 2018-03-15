@@ -26,7 +26,11 @@ export default class EditOrder extends PureComponent {
         payload: { id: this.par },
       });
     }
-
+  }
+  componentWillUnmount() { //重置orderDetail
+    this.props.dispatch({
+      type: 'offline/resetOrderDetail',
+    });
   }
   _toMoment = (values, strArr) => {
     strArr.map((v, k) => {

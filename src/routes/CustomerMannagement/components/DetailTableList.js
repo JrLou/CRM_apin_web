@@ -8,8 +8,8 @@ import styles from '../TableList.less';
   customerMannagement: state.customerMannagement,
 }))
 class DetailStandardTable extends PureComponent {
-  handleTableChange = (pagination, filters, sorter) => {
-    this.props.onChange(pagination, filters, sorter);
+  handleTableChange = pagination => {
+    this.props.onChange(pagination);
   };
 
   transferState = ticketStatus => {

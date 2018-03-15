@@ -27,27 +27,31 @@ export default class AddOrderForm extends Component {
       typeNum: 0, //1-沉积客户、2-激活客户、3-活跃客户', 0就是暂时没有
       contactsArr: [], //联系人数组， 第一个为【主联系人】
     }
+    this.first = true;
   }
-  // componentWillReceiveProps(nextProps) {
-  //   if (nextProps.detail) {
-  //     this.setState({
-  //       detail:nextProps.detail
-  //     })
-  //   }
-  // }
+  componentWillReceiveProps(nextProps) {
+    //当    isEdit       &&   first    &&     获取到了detail.customerName
+    if (nextProps.isEdit && this.first && typeof nextProps.detail === "object" && nextProps.detail.customerName ) {
+      this.first = false;
+      const { dispatch } = this.props;
+      dispatch({
+        type: 'offline/searchCustomer',
+        payload: { name: nextProps.detail.customerName },
+        succCb: () => {
+          this.handleSelect(nextProps.detail.customerName);
+        },
+      });
+    }
+  }
   componentDidMount() {
-    const { dispatch, offline: { nameWithMoreInfo } } = this.props;    
+    const { dispatch, offline: { nameWithMoreInfo }, detail = {}, isEdit } = this.props;
     // 获取默认的三个自动补全数组
-    dispatch({
-      type: 'offline/searchCustomer',
-      payload: { name: '' },
-      succCb: () => {
-        const { detail = {} } = this.props;
-        if (detail.customerName) { //仅当有customerName的时候才执行，也就是editOrder页面的时候
-          this.handleSelect(detail.customerName);
-        }
-      },
-    });
+    if (!isEdit) {
+      dispatch({
+        type: 'offline/searchCustomer',
+        payload: { name: '' },
+      });
+    }
     dispatch({
       type: 'offline/searchSupplier',
       payload: { name: '' },
@@ -60,6 +64,10 @@ export default class AddOrderForm extends Component {
       type: 'offline/searchCity',
       payload: { condition: '', arrFlag: true },
     });
+  }
+
+  componentWillUnmount() {
+    this.first = true;
   }
 
   onBlurCheck = (inputId, dataSource, index, value) => {
