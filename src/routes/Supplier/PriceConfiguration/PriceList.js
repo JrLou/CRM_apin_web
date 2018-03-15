@@ -129,7 +129,10 @@ export default class TableList extends PureComponent {
         <Row gutter={{md: 8, lg: 24, xl: 48}}>
           <Col md={8} sm={24}>
             <FormItem label="机票资源号">
-              {getFieldDecorator('id', {rules: [{max: 32, message: '最长32位'}]})
+              {getFieldDecorator('id', {rules: [{max: 50, message: '最长50位'},{
+                pattern: /^[0-9a-zA-Z]+$/,
+                message: "只能输入字母和数字"
+              }]})
               (<Input placeholder="请输入"/>)}
             </FormItem>
           </Col>
@@ -163,12 +166,6 @@ export default class TableList extends PureComponent {
     switch (ole) {
       case 0: // 编辑
         this.setState({visible: true, condition: 0, currentData: data})
-        // this.props.history.push({
-        //   pathname: 'priceList/Edit',
-        //   state: {
-        //     data: data,
-        //   }
-        // });
         break;
       case 1: //日志
         this.setState({visible: true, condition: 1})
@@ -370,25 +367,19 @@ export default class TableList extends PureComponent {
       },
     }, {
       title: '航线类型',
-      dataIndex: 'age',
+      dataIndex: 'airline_type',
       render: (text, row, index) => {
         switch (index) {
           case 0:
-            text = '国际长线'
+            text = '未定义'
             break;
           case 1:
-            text = '国际短线'
-            break;
-          case 2:
-            text = '国内航线'
-            break;
-          case 3:
             text = '国际长线'
             break;
-          case 4:
+          case 2:
             text = '国际短线'
             break;
-          case 5:
+          case 3:
             text = '国内航线'
             break;
         }
