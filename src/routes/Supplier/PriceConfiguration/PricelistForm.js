@@ -38,11 +38,14 @@ class BulkImportForm extends PureComponent {
         this.judgment(this.props.currentData)
         break;
       case 2:
+        let date = this.props.currentData.detail.map((v, k) => {
+          return moment(v).format("YYYY-MM-DD")
+        })
         this._searchPort(getpriceAirline, {
           id: this.props.currentData.airline_id,
           date: moment(this.props.currentData.detail ? this.props.currentData.detail[0] : new Date()).format("YYYY-MM")
         }, 1)
-        this.setState({id: this.props.currentData.airline_id});
+        this.setState({id: this.props.currentData.airline_id,selectedTips:date});
         break;
       case 4:
         this.props.form.resetFields();
@@ -61,10 +64,14 @@ class BulkImportForm extends PureComponent {
         this.judgment(nextProps.currentData)
         break;
       case 2:
+        let date = nextProps.currentData.detail.map((v, k) => {
+          return moment(v).format("YYYY-MM-DD")
+        })
         this._searchPort(getpriceAirline, {
           id: nextProps.currentData.airline_id,
           date: moment(nextProps.currentData.detail ? nextProps.currentData.detail[0] : new Date()).format("YYYY-MM")
         }, 1)
+        this.setState({id: nextProps.currentData.airline_id,selectedTips:date});
         break;
       case 4:
         this.props.form.resetFields();
@@ -259,6 +266,9 @@ class BulkImportForm extends PureComponent {
     if (value > 1000 || value < -100) {
       callback('范围为-100-1000')
     }
+    if ((value + '').split('.')[1] && value.split('.')[1].length > 1) {
+      callback('最多一位小数')
+    }
     callback()
   }
 
@@ -401,9 +411,9 @@ class BulkImportForm extends PureComponent {
                       {getFieldDecorator('percent', {
                         rules: [{required: value == 0 ? true : false, message: '请填写次字段'}, {
                           validator: this.validatores.bind(this),
-                        }, {
-                          pattern: /^[0-9]+([.][0-9]{1}){0,1}$/,
-                          message: "最多一位小数"
+                        },{
+                          pattern: /^[\+\-]?\d*?\.?\d*?$/,
+                          message: "只能输入数字"
                         }],
                         initialValue: this.state.currentData.percent ? this.state.currentData.percent : 0
                       })
@@ -424,6 +434,9 @@ class BulkImportForm extends PureComponent {
                       {getFieldDecorator('price', {
                         rules: [{required: value == 0 ? true : false, message: '请填写次字段'}, {
                           validator: this.validatoresb.bind(this),
+                        },{
+                          pattern: /^[\+\-]?\d*?\.?\d*?$/,
+                          message: "只能输入数字"
                         }],
                         initialValue: this.state.currentData.price ? parseInt(this.state.currentData.price) / 100 : 0
                       })
@@ -457,6 +470,9 @@ class BulkImportForm extends PureComponent {
                       {getFieldDecorator('percent_group', {
                         rules: [{required: values == 0 ? true : false, message: '请填写次字段'}, {
                           validator: this.validatores.bind(this),
+                        },{
+                          pattern: /^[\+\-]?\d*?\.?\d*?$/,
+                          message: "只能输入数字"
                         }],
                         initialValue: this.state.currentData.percent_group ? this.state.currentData.percent_group : 0
                       })
@@ -477,6 +493,9 @@ class BulkImportForm extends PureComponent {
                       {getFieldDecorator('price_group', {
                         rules: [{required: values == 0 ? true : false, message: '请填写次字段'}, {
                           validator: this.validatoresb.bind(this),
+                        },{
+                          pattern: /^[\+\-]?\d*?\.?\d*?$/,
+                          message: "只能输入数字"
                         }],
                         initialValue: this.state.currentData.price_group ? parseInt(this.state.currentData.price_group) / 100 : 0
                       })
