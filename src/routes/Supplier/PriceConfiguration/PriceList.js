@@ -60,7 +60,7 @@ export default class TableList extends PureComponent {
         this.setState({visible: true, condition: 3, currentData: {detail: [new Date().getTime()]}})
         break;
       case 1: //弹窗确认按钮所调函数
-        this.setState({visible: false,condition:4})
+        this.setState({visible: false, condition: 4})
     }
   }
 
@@ -106,7 +106,7 @@ export default class TableList extends PureComponent {
         this.setState({
           filter: dates,
         });
-        if(this.state.keys==1){
+        if (this.state.keys == 1) {
           this.props.dispatch({
             type: 'priceList/fetch',
             payload: dates,
@@ -129,10 +129,12 @@ export default class TableList extends PureComponent {
         <Row gutter={{md: 8, lg: 24, xl: 48}}>
           <Col md={8} sm={24}>
             <FormItem label="机票资源号">
-              {getFieldDecorator('id', {rules: [{max: 50, message: '最长50位'},{
-                pattern: /^[0-9a-zA-Z]+$/,
-                message: "只能输入字母和数字"
-              }]})
+              {getFieldDecorator('id', {
+                rules: [{max: 50, message: '最长50位'}, {
+                  pattern: /^[0-9a-zA-Z]+$/,
+                  message: "只能输入字母和数字"
+                }]
+              })
               (<Input placeholder="请输入"/>)}
             </FormItem>
           </Col>
@@ -258,7 +260,7 @@ export default class TableList extends PureComponent {
   }
 
   render() {
-    const {priceList: {loading, data, datas, list: {option: {current, size, total}}, logs: {data: datalis, option}}} = this.props;
+    const {priceList: {loading, data, datas, option: {current, size, totalResult}, logs: {data: datalis, option}}} = this.props;
     const {keys, condition} = this.state
     const columns = [
       {
@@ -483,7 +485,7 @@ export default class TableList extends PureComponent {
               rowKey={'id'}
               pagination={this.state.keys == 2 ? {
                 pageSize: size ? size : 10,
-                total: total ? total : 0,
+                total: totalResult ? totalResult : 0,
                 current: current ? current : 1,
                 showSizeChanger: true,
                 showQuickJumper: true

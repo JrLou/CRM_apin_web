@@ -1,18 +1,16 @@
-import {priceCommon,priceSpecial, statePrice, priceLogs, fakequest} from '../services/api';
+import {priceCommon, priceSpecial, statePrice, priceLogs, fakequest} from '../services/api';
 import {message} from 'antd';
 
 export default {
   namespace: 'priceList',
   state: {
-    list: {
-      option: {},
-    },
+    option: {},
     data: [],
     datas: [],
     loading: false,
     logs: {},
     filter: {p: 1, pc: 10},
-    double:false
+    double: false
   },
   effects: {
     * fetch({payload}, {call, put}) {
@@ -24,8 +22,8 @@ export default {
         type: 'filteradd',
         payload: payload,
       });
-      yield put({type: 'changeDouble', payload:true})
-      const time1 =  Date.now();
+      yield put({type: 'changeDouble', payload: true})
+      const time1 = Date.now();
       const response = yield call(priceCommon, payload);
       if (response && response.code >= 1) {
         console.log(response)
@@ -38,12 +36,12 @@ export default {
         type: 'changeLoading',
         payload: false,
       });
-      const time2 =  Date.now();
-      const time = time2 -time1
-      if (!(time >=1000)) {
+      const time2 = Date.now();
+      const time = time2 - time1
+      if (!(time >= 1000)) {
         yield call(fakequest, 1000);
       }
-      yield put({type: 'changeDouble', payload:false})
+      yield put({type: 'changeDouble', payload: false})
     },
     * fetchs({payload}, {call, put}) {
       yield put({
@@ -54,8 +52,8 @@ export default {
         type: 'filteradd',
         payload: payload,
       });
-      yield put({type: 'changeDouble', payload:true})
-      const time1 =  Date.now();
+      yield put({type: 'changeDouble', payload: true})
+      const time1 = Date.now();
       const response = yield call(priceSpecial, payload);
       if (response && response.code >= 1) {
         yield put({
@@ -67,12 +65,12 @@ export default {
         type: 'changeLoading',
         payload: false,
       });
-      const time2 =  Date.now();
-      const time = time2 -time1
-      if (!(time >=1000)) {
+      const time2 = Date.now();
+      const time = time2 - time1
+      if (!(time >= 1000)) {
         yield call(fakequest, 1000);
       }
-      yield put({type: 'changeDouble', payload:false})
+      yield put({type: 'changeDouble', payload: false})
     },
     * changeStatus({payload}, {call, put}) {
       //列表页，改变上架下架状态
@@ -113,16 +111,17 @@ export default {
   },
   reducers: {
     save(state, action) {
-        return {
-          ...state,
-          data: action.payload.data,
-        };
+      return {
+        ...state,
+        data: action.payload.data,
+      };
     },
     saves(state, action) {
-        return {
-          ...state,
-          datas: action.payload.data,
-        };
+      return {
+        ...state,
+        datas: action.payload.data,
+        option: action.payload.option,
+      };
     },
     log(state, action) {
       return {
