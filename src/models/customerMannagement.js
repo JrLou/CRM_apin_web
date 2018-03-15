@@ -78,6 +78,16 @@ const initDetailTableDataState = () => ({
     option: {},
   },
 });
+const initCacheSearchFormData = () => ({
+  cacheSearchFormData: {
+    charge: '',
+    contacts: '',
+    mobile: '',
+    name: '',
+    type: '',
+    wxqq: '',
+  },
+});
 
 const initState = () => {
   return {
@@ -88,15 +98,6 @@ const initState = () => {
       option: 0,
     },
     loading: true,
-
-    cacheSearchFormData: {
-      charge: '',
-      contacts: '',
-      mobile: '',
-      name: '',
-      type: '',
-      wxqq: '',
-    },
 
     //详情TableData 详情表格用
     detailTableData: {
@@ -121,6 +122,7 @@ const initState = () => {
 
     ...initFormState(), //form用
     ...initDetailTableDataState(),
+    ...initCacheSearchFormData(),
   };
 };
 
@@ -297,6 +299,13 @@ export default {
         payload: { modalConfirmLoading: false },
       });
     },
+    *fetchClearCacheSearchFormData({ succCB = () => {} }, { put }) {
+      yield put({
+        type: 'extendAll',
+        payload: initCacheSearchFormData(),
+      });
+      yield succCB();
+    },
   },
   reducers: {
     saveTableData(state, action) {
@@ -368,5 +377,11 @@ export default {
         ...initDetailTableDataState(),
       };
     },
+    // clearCacheSearchFormData(state) {
+    //   return {
+    //     ...state,
+    //     ...initCacheSearchFormData(),
+    //   };
+    // },
   },
 };

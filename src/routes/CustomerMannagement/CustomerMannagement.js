@@ -127,9 +127,19 @@ export default class TableList extends PureComponent {
   };
 
   handleFormReset = () => {
-    const { form } = this.props;
+    const { form, dispatch } = this.props;
     form.resetFields();
-    this.handleSearch();
+    dispatch({
+      //每次保存的时候都缓存formData
+      type: 'customerMannagement/fetchClearCacheSearchFormData',
+      succCB: () => {
+        setTimeout(() => {
+          //因为上面操作是异步的，TODO:待优化
+          this.isReset = true;
+          this.handleSearch();
+        }, 300);
+      },
+    });
   };
 
   handleSearch = e => {
@@ -149,11 +159,14 @@ export default class TableList extends PureComponent {
             ...this.state.formValues,
           },
         });
-        dispatch({
-          //每次保存的时候都缓存formData
-          type: 'customerMannagement/saveCacheSearchFormData',
-          payload: formValues,
-        });
+        if (!this.isReset) {
+          this.isReset = false;
+          dispatch({
+            //每次保存的时候都缓存formData
+            type: 'customerMannagement/saveCacheSearchFormData',
+            payload: formValues,
+          });
+        }
       });
     });
   };
