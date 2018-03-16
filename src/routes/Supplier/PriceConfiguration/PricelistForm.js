@@ -119,9 +119,7 @@ class BulkImportForm extends PureComponent {
             this._searchPort(addPriceConfig, data, 0)
             break;
         }
-        console.log(this.state.datesArr)
-        console.log(this.state.selectedTips)
-        console.log('整理后的', data)
+
         this.props.form.resetFields()
         this.setState({
           value: null,
@@ -159,12 +157,22 @@ class BulkImportForm extends PureComponent {
     this.setState({
       value: e.target.value,
     });
+    if(e.target.value==0){
+      this.props.form.resetFields('price');
+    } else {
+      this.props.form.resetFields('percent');
+    }
   }
 
   onChanges(e) {
     this.setState({
       values: e.target.value,
     });
+    if(e.target.value==0){
+      this.props.form.resetFields('price_group');
+    } else {
+      this.props.form.resetFields('percent_group');
+    }
   }
 
   showPickInfo(pickInfo) {
@@ -433,7 +441,7 @@ class BulkImportForm extends PureComponent {
                       {...formItemLayout}
                     >
                       {getFieldDecorator('price', {
-                        rules: [{required: value == 0 ? true : false, message: '请填写次字段'}, {
+                        rules: [{required: value == 1 ? true : false, message: '请填写次字段'}, {
                           validator: this.validatoresb.bind(this),
                         }, {
                           pattern: /^[\+\-]?\d*?\.?\d*?$/,
@@ -492,7 +500,7 @@ class BulkImportForm extends PureComponent {
                       {...formItemLayout}
                     >
                       {getFieldDecorator('price_group', {
-                        rules: [{required: values == 0 ? true : false, message: '请填写次字段'}, {
+                        rules: [{required: values == 1 ? true : false, message: '请填写次字段'}, {
                           validator: this.validatoresb.bind(this),
                         }, {
                           pattern: /^[\+\-]?\d*?\.?\d*?$/,

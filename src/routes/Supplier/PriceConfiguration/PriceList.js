@@ -369,9 +369,9 @@ export default class TableList extends PureComponent {
       },
     }, {
       title: '航线类型',
-      dataIndex: this.state.keys == 1 ? 'airline_id' : "airline_type",
+      dataIndex: this.state.keys == "1" ? 'airline_id' : "airline_type",
       render: (text, row, index) => {
-        switch (index) {
+        switch (+text) {
           case 0:
             text = '国际长线'
             break;
