@@ -29,6 +29,7 @@ export default class TableList extends PureComponent {
       pageNum: 1,
       pageSize: 10,
     };
+    this.handleFormReset = this.handleFormReset.bind(this);
   }
 
   componentDidMount() {
@@ -126,21 +127,20 @@ export default class TableList extends PureComponent {
     Object.assign(this.page, { pageNum: 1 });
   };
 
-  handleFormReset = () => {
+  async handleFormReset() {
     const { form, dispatch } = this.props;
-    form.resetFields();
+
+    await form.resetFields();
+
     dispatch({
-      //每次保存的时候都缓存formData
+      //每次保存的时候都缓存formData,这次清空
       type: 'customerMannagement/fetchClearCacheSearchFormData',
       succCB: () => {
-        setTimeout(() => {
-          //因为上面操作是异步的，TODO:待优化
-          this.isReset = true;
-          this.handleSearch();
-        }, 300);
+        this.isReset = true;
+        this.handleSearch();
       },
     });
-  };
+  }
 
   handleSearch = e => {
     if (e && typeof e.preventDefault === 'function') {
