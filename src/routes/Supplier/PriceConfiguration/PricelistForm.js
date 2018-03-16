@@ -45,7 +45,7 @@ class BulkImportForm extends PureComponent {
           id: this.props.currentData.airline_id,
           date: moment(this.props.currentData.detail ? this.props.currentData.detail[0] : new Date()).format("YYYY-MM")
         }, 1)
-        this.setState({id: this.props.currentData.airline_id,selectedTips:date});
+        this.setState({id: this.props.currentData.airline_id, selectedTips: date});
         break;
       case 4:
         this.props.form.resetFields();
@@ -71,7 +71,7 @@ class BulkImportForm extends PureComponent {
           id: nextProps.currentData.airline_id,
           date: moment(nextProps.currentData.detail ? nextProps.currentData.detail[0] : new Date()).format("YYYY-MM")
         }, 1)
-        this.setState({id: nextProps.currentData.airline_id,selectedTips:date});
+        this.setState({id: nextProps.currentData.airline_id, selectedTips: date});
         break;
       case 4:
         this.props.form.resetFields();
@@ -331,7 +331,8 @@ class BulkImportForm extends PureComponent {
                 {getFieldDecorator('airline_id', {
                   initialValue: this.props.currentData.airline_id
                 })
-                (< Input onBlur={this.calendar.bind(this)} style={{width: '280px', marginRight: '10px'}}/>)}
+                (< Input disabled={(condition == 2 ? true : false)} onBlur={this.calendar.bind(this)}
+                         style={{width: '280px', marginRight: '10px'}}/>)}
 
               </FormItem>
             </Col> : null
@@ -411,7 +412,7 @@ class BulkImportForm extends PureComponent {
                       {getFieldDecorator('percent', {
                         rules: [{required: value == 0 ? true : false, message: '请填写次字段'}, {
                           validator: this.validatores.bind(this),
-                        },{
+                        }, {
                           pattern: /^[\+\-]?\d*?\.?\d*?$/,
                           message: "只能输入数字"
                         }],
@@ -434,7 +435,7 @@ class BulkImportForm extends PureComponent {
                       {getFieldDecorator('price', {
                         rules: [{required: value == 0 ? true : false, message: '请填写次字段'}, {
                           validator: this.validatoresb.bind(this),
-                        },{
+                        }, {
                           pattern: /^[\+\-]?\d*?\.?\d*?$/,
                           message: "只能输入数字"
                         }],
@@ -470,7 +471,7 @@ class BulkImportForm extends PureComponent {
                       {getFieldDecorator('percent_group', {
                         rules: [{required: values == 0 ? true : false, message: '请填写次字段'}, {
                           validator: this.validatores.bind(this),
-                        },{
+                        }, {
                           pattern: /^[\+\-]?\d*?\.?\d*?$/,
                           message: "只能输入数字"
                         }],
@@ -493,7 +494,7 @@ class BulkImportForm extends PureComponent {
                       {getFieldDecorator('price_group', {
                         rules: [{required: values == 0 ? true : false, message: '请填写次字段'}, {
                           validator: this.validatoresb.bind(this),
-                        },{
+                        }, {
                           pattern: /^[\+\-]?\d*?\.?\d*?$/,
                           message: "只能输入数字"
                         }],
