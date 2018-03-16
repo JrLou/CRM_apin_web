@@ -145,7 +145,7 @@ class ResetPassword extends PureComponent {
                 validator: this.compareToFirstPassword,
               },
             ],
-          })(<Input />)}
+          })(<Input autoComplete="off"/>)}
         </FormItem>
 
         <FormItem {...tailFormItemLayout}>
