@@ -225,7 +225,7 @@ export default class TableList extends PureComponent {
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="联系人:">
+            <FormItem label="主要联系人:">
               {getFieldDecorator('contacts', {
                 //【联系人】支持中文、英文，允许输入特殊字符，小写英文自动转换为大写，最多20个字符；
                 initialValue: cacheSearchFormData.contacts,
