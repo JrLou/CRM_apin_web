@@ -21,12 +21,12 @@
   },
   "proxy": {
      "/java": {
-    "target": "http://192.168.7.141:9712",
+    "target": "http://appadmin.test.io.apin.com/",
     "changeOrigin": true,
     "pathRewrite": { "^/java" : "" }
     },
      "/": {
-    "target": "http://192.168.7.141:9712",
+    "target": "http://appadmin.test.io.apin.com/",
     "changeOrigin": true
     }
 
