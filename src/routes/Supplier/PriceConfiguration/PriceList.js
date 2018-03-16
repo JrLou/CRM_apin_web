@@ -369,19 +369,25 @@ export default class TableList extends PureComponent {
       },
     }, {
       title: '航线类型',
-      dataIndex: 'airline_type',
+      dataIndex: this.state.keys == 1 ? 'airline_id' : "airline_type",
       render: (text, row, index) => {
         switch (index) {
           case 0:
-            text = '未定义'
-            break;
-          case 1:
             text = '国际长线'
             break;
-          case 2:
+          case 1:
             text = '国际短线'
             break;
+          case 2:
+            text = '国内航线'
+            break;
           case 3:
+            text = '国际长线'
+            break;
+          case 4:
+            text = '国际短线'
+            break;
+          case 5:
             text = '国内航线'
             break;
         }
