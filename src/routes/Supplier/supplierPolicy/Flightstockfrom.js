@@ -587,6 +587,24 @@ class AddForm extends Component {
     });
   }
 
+  status() {
+    let data = this.props.information.airline_status
+    switch (data) {
+      case 0:
+        return '待上架'
+        break;
+      case 1:
+        return '上架'
+        break;
+      case 3:
+        return '过期'
+        break;
+      case 4:
+        return '下架'
+        break;
+    }
+  }
+
   validatores(rule, value, callback) {
     let data = this.state.flightdata;
     if (value <= data.chupiaodays) {
@@ -732,10 +750,10 @@ class AddForm extends Component {
                 供应商名称：<span>{this.props.information.supplier_name ? this.props.information.supplier_name : ''}</span>
               </p>
               <p>航班号：<span>{this.props.information.flight_no}</span></p>
-              <p>当前状态：<span>{this.props.information.airline_status == 0 ? "待上架" : "已上架"}</span></p>
+              <p>当前状态：<span>{this.status()}</span></p>
               <Button style={{float: 'right', position: "relative", top: '30px', marginRight: "20px", zIndex: "10"}}
                       onClick={this.shelves.bind(this)}
-                      type="primary">{this.props.information.airline_status == 0 ? "上架" : "下架"}</Button>
+                      type="primary">{(this.props.information.airline_status == 0 || this.props.information.airline_status == 4 ) ? "上架" : "下架"}</Button>
             </div>
             }
             <Form layout={'horizontal'} onSubmit={this.handleSubmit.bind(this)}>
