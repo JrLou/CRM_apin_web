@@ -420,7 +420,6 @@ export default class TableList extends PureComponent {
                       break;
                     case 3:
                       return <div>
-                        <Divider type="vertical"/>
                         <a style={{cursor: "pointer", margin: "6px"}}
                            onClick={this.operating.bind(this, record, 4)}>查看
                         </a>

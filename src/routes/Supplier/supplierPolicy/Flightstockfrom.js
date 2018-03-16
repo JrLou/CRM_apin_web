@@ -578,10 +578,6 @@ class AddForm extends Component {
           id: _this.props.id,
           airlineStatus: data == "上架" ? 1 : 4,
         }, 3)
-        // _this.props.addPost('flightstockEdit/getstateAirLines', {
-        //   id: _this.props.id,
-        //   airlineStatus: data == "上架" ? 1 : 0,
-        // },);
         _this.setState({
           baioshi: true,
         });
