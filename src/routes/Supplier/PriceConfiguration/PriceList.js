@@ -529,7 +529,7 @@ export default class TableList extends PureComponent {
             >
             </Table>
             <Modal
-              title="编辑"
+              title={ condition === 1 ? "日志" : "编辑" }
               visible={this.state.visible}
               onOk={this.companyname.bind(this, 1)}
               onCancel={this.companyname.bind(this, 1)}
