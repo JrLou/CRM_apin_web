@@ -71,7 +71,7 @@ class BulkImportForm extends PureComponent {
           id: nextProps.currentData.airline_id,
           date: moment(nextProps.currentData.detail ? nextProps.currentData.detail[0] : new Date()).format("YYYY-MM")
         }, 1)
-        this.setState({id: nextProps.currentData.airline_id, selectedTips: date});
+        this.setState({id: nextProps.currentData.airline_id, selectedTips: date.join("，")}); //显示的日期加上逗号分隔
         break;
       case 4:
         this.props.form.resetFields();
