@@ -20,3 +20,11 @@ input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
     transition: background-color 5000s ease-in-out 0s;
 }
+
+:global { //修复antd的autoComplete下拉框文字溢出时候不显示的bug
+  .ant-select-dropdown-menu,.ant-select-dropdown-menu-root,.ant-select-dropdown-menu-vertical {
+    li {
+      overflow: visible;
+    }
+  }
+}

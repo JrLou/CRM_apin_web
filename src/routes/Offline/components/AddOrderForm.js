@@ -772,7 +772,7 @@ export default class AddOrderForm extends Component {
     return (
       <div>
         <Form onSubmit={this.handleSearch} className={styles.addOrderForm}>
-          <div className={styles.module}>
+          <div className={styles.module + " " + styles.formContainer}>
             <Card bordered={false}>
               <Tabs type="card">
                 <TabPane tab="询价" key="1">
@@ -810,13 +810,13 @@ export default class AddOrderForm extends Component {
                       </FormItem>
                     </Col>
                     <Col span={8}>
-                      <FormItem label="客户名"  {...formItemLayout}>
+                      <FormItem label="客户名"  {...formItemLayout} style={{ whiteSpace: "nowrap" }}>
                         {getFieldDecorator('customerName', {
                           rules: [{ required: true, message: "必填" }],
                           initialValue: detail.customerName
                         })(
                           <AutoComplete
-                            style={{ width: '60%', marginRight: '5px' }}
+                            style={{ width: '75%', marginRight: '5px' }}
                             onSearch={this.autoCompSearch.bind(null, 'customerName')}
                             disabled={readOnly}
                             dataSource={usernameData}
