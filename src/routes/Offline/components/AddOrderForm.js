@@ -438,11 +438,15 @@ export default class AddOrderForm extends Component {
   handleSelect = (value) => {
     const { offline: { nameWithMoreInfo }, form: { setFieldsValue } } = this.props;    
     const targetObj = nameWithMoreInfo.find(obj => obj.name === value);
+    if (targetObj && targetObj.type && targetObj.contacts) {
     const { type } = targetObj;
     const { contacts } = targetObj;
     this.setState({typeNum: type, contactsArr: contacts});
     //应该直接设置后面那个Select的值
     setFieldsValue({contacts: contacts[0]});
+    } else {
+      message.error("客户：" + value + '查询失败');
+    }
   };
 
   handleModalVisible = (bool) => {
