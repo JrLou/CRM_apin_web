@@ -454,7 +454,7 @@ export default class TableList extends PureComponent {
           props: {},
         };
         if (this.state.keys == 1) {
-          obj.children = <div>
+          obj.children = <div style={{whiteSpace: 'nowrap'}}>
             <a style={{cursor: "pointer", margin: "6px"}}
                onClick={this.operating.bind(this, row, 0)}>编辑
             </a>
@@ -464,7 +464,7 @@ export default class TableList extends PureComponent {
             </a>
           </div>
         } else {
-          obj.children = <div>
+          obj.children = <div style={{whiteSpace: 'nowrap'}}>
             <a style={{cursor: "pointer", margin: "6px"}}
                onClick={this.operating.bind(this, row, 2)}>编辑
             </a>
