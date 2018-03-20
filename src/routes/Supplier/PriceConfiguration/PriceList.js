@@ -320,7 +320,7 @@ export default class TableList extends PureComponent {
           for (let i = 0; i < row.detail.length; i++) {
             row.detail[i] = moment(row.detail[i]).format("YYYY-MM-DD")
           }
-          obj.children = row.detail.join(',')
+          obj.children = row.detail.join('，')
         }
         obj.props.rowSpan = keys == 2 ? 1 : 0;
         return obj;
