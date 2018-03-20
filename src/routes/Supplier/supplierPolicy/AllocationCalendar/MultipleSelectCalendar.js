@@ -38,7 +38,7 @@ class MultipleSelectCalendar extends Component {
                 <span className={css.wrapper} onClick={this.showCalendar.bind(this)}>
                     <div>
                         <input
-                          style={{width: '280px'}}
+                          style={{width: '304px'}}
                           readOnly={true} value="" placeholder={this.props.placeholder}
                           className="ant-calendar-picker-input ant-input ant-input-lg"/>
 
