@@ -306,6 +306,7 @@ export default class TableList extends PureComponent {
       },
     }, {
       title: '班期',
+      width: '297px', //目前写死了，后期可以通过媒体查询，或者其他方法优化
       dataIndex: 'detail',
       colSpan: keys == 2 ? 1 : 0,
       render: (text, row, index) => {
