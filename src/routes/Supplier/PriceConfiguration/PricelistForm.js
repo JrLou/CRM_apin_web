@@ -305,6 +305,14 @@ class BulkImportForm extends PureComponent {
     }
   }
 
+  getSelectedTipsTxt = (selectedTips) => {
+    if ( typeof selectedTips[0] === "string" ) {
+      return selectedTips.join("，");
+    } else {
+      return selectedTips;
+    }
+  }
+
   render() {
     // let airline = [{flight_date:'1521072000000',sale_count:100,seat_count:1111,sell_price:1111,settlement_price:1222}]
     const {getFieldDecorator} = this.props.form;
@@ -340,7 +348,7 @@ class BulkImportForm extends PureComponent {
                   initialValue: this.props.currentData.airline_id
                 })
                 (< Input disabled={(condition == 2 ? true : false)} onBlur={this.calendar.bind(this)}
-                         style={{width: '280px', marginRight: '10px'}}/>)}
+                         style={{width: '304px', marginRight: '10px'}}/>)}
 
               </FormItem>
             </Col> : null
@@ -364,7 +372,7 @@ class BulkImportForm extends PureComponent {
                 />
                 <div className={css.tipBox}>
                   {this.state.selectedTips.length > 0 ? <div>已选择：</div> : null}
-                  {this.state.selectedTips.length > 0 ? this.state.selectedTips.join("，") : "请选择需要批量修改的日期"} {/*显示的日期加上逗号分隔*/}
+                  {this.state.selectedTips.length > 0 ? this.getSelectedTipsTxt(this.state.selectedTips) : "请选择需要批量修改的日期"} {/*显示的日期加上逗号分隔*/}
                 </div>
               </Col>
             </Col> : null
