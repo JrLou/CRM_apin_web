@@ -570,7 +570,11 @@ class AddForm extends Component {
   shelves() {
     let _this = this
     let data = _this.props.information.airline_status
-    data == 0 ? data = "上架" : data = "下架"
+    if (data == 0 || data == 4) {
+      data = "上架"
+    } else {
+      data = "下架"
+    }
     confirm({
       title: '您确定要' + data + '吗？',
       onOk() {
