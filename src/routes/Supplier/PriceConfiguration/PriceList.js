@@ -141,7 +141,7 @@ export default class TableList extends PureComponent {
         </Row>
         <div style={{overflow: 'hidden'}}>
           <span style={{float: 'right', marginBottom: 24}}>
-             <Button style={{marginRight: 8}} type="primary" onClick={this.companyname.bind(this, 0)}>新增政策</Button>
+             <Button style={{marginRight: 8}} type="primary" onClick={this.companyname.bind(this, 0)}>新增规则</Button>
              <Button type="primary" htmlType="submit">查询</Button>
             <Button style={{marginLeft: 8}} onClick={::this.handleFormReset}>重置</Button>
           </span>
