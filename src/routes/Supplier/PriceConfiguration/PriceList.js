@@ -314,6 +314,9 @@ export default class TableList extends PureComponent {
           props: {},
         };
         if (row.detail) {
+          if (Array.isArray(row.detail) && typeof row.detail[0] === 'number' ) { // 在这里当还是数字格式的时候，先排序，再格式化
+            row.detail.sort((a,b)=>a-b);
+          }
           for (let i = 0; i < row.detail.length; i++) {
             row.detail[i] = moment(row.detail[i]).format("YYYY-MM-DD")
           }
