@@ -54,11 +54,11 @@ class AddForm extends Component {
       flight_type: null,
       returnData: [], //回显数据
       supplier: [], //供应商数据
+      valid_date: null
     };
   }
 
   componentWillReceiveProps(nextProps) {
-    let {flightdata} = this.state
     this.setState({
       flightstockAdd: nextProps.flightstockAdd ? nextProps.flightstockAdd : {},
       FlightstockView: nextProps.FlightstockView ? nextProps.FlightstockView : {details: []},
@@ -146,6 +146,7 @@ class AddForm extends Component {
           case 2:
             this.setState({
               supplier: response.data,
+              valid_date: response.data[0].valid_date
             });
             break;
         }
@@ -654,7 +655,7 @@ class AddForm extends Component {
               disabledadd={this.state.competencese}
               listdata={this.props.information}
               airline_status={this.props.location.state.data.airline_status}
-              valid_date={this.props.location.state.data.valid_date}
+              valid_date={this.state.valid_date}
               // date={[moment(returnData[0].departure_start).format("YYYY-MM-DD"), moment(returnData[0].departure_end).format("YYYY-MM-DD")]}
               {...this.props}
             />
