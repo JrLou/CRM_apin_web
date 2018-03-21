@@ -55,6 +55,7 @@ class AddForm extends Component {
       flight_type: null,
       returnData: [], //回显数据
       supplier: [], //供应商数据
+      valid_date: null
     };
   }
 
@@ -107,6 +108,8 @@ class AddForm extends Component {
       flightdata: data,
     });
     console.log(this.props)
+    // console.log(this.props.location.state.data)
+
   }
 
   _searchPort(url, value, ole) {
@@ -169,6 +172,7 @@ class AddForm extends Component {
             }
             this.setState({
               returnData: list,
+              valid_date: response.data[0].valid_date
             });
             break;
           case 1:
@@ -1100,7 +1104,7 @@ class AddForm extends Component {
               disabledadd={this.state.competencese}
               listdata={this.props.information}
               airline_status={this.props.location.state.data.airline_status}
-              valid_date={this.props.location.state.data.valid_date}
+              valid_date={this.state.valid_date}
               // date={[moment(returnData[0].departure_start).format("YYYY-MM-DD"), moment(returnData[0].departure_end).format("YYYY-MM-DD")]}
               {...this.props}
             />

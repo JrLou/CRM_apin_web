@@ -449,7 +449,6 @@ class page extends Component {
       +moment(this.props.listdata.departure_start, "YYYY-MM-DD").format('DD')
     ]
     let canPick = airline.map((v, k) => {
-      console.log(moment(moment(v.flight_date).format("YYYY-MM-DD"), 'YYYY-MM-DD').format('x'))
       return moment(moment(v.flight_date).format("YYYY-MM-DD"), 'YYYY-MM-DD').format('x')
     })
     return (

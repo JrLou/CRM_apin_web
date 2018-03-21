@@ -45,7 +45,8 @@ class BulkImportForm extends PureComponent {
           id: this.props.currentData.airline_id,
           date: moment(this.props.currentData.detail ? this.props.currentData.detail[0] : new Date()).format("YYYY-MM")
         }, 1)
-        this.setState({id: this.props.currentData.airline_id, selectedTips: date});
+        this.setState({id: this.props.currentData.airline_id, selectedTips: date, datesArr: date});
+
         break;
       case 4:
         this.props.form.resetFields();
@@ -62,16 +63,6 @@ class BulkImportForm extends PureComponent {
     switch (nextProps.condition) {
       case 0:
         this.judgment(nextProps.currentData)
-        break;
-      case 2:
-        let date = nextProps.currentData.detail.map((v, k) => {
-          return moment(v).format("YYYY-MM-DD")
-        })
-        this._searchPort(getpriceAirline, {
-          id: nextProps.currentData.airline_id,
-          date: moment(nextProps.currentData.detail ? nextProps.currentData.detail[0] : new Date()).format("YYYY-MM")
-        }, 1)
-        this.setState({id: nextProps.currentData.airline_id, selectedTips: date});
         break;
       case 4:
         this.props.form.resetFields();
@@ -157,7 +148,7 @@ class BulkImportForm extends PureComponent {
     this.setState({
       value: e.target.value,
     });
-    if(e.target.value==0){
+    if (e.target.value == 0) {
       this.props.form.resetFields('price');
     } else {
       this.props.form.resetFields('percent');
@@ -168,7 +159,7 @@ class BulkImportForm extends PureComponent {
     this.setState({
       values: e.target.value,
     });
-    if(e.target.value==0){
+    if (e.target.value == 0) {
       this.props.form.resetFields('price_group');
     } else {
       this.props.form.resetFields('percent_group');
@@ -287,13 +278,7 @@ class BulkImportForm extends PureComponent {
     callback()
   }
 
-  //
-  // guanb() {
-  //   this.props.guab()
-  // }
   updateMonthStock(obj, ole) {
-    console.log(obj)
-    console.log(ole)
     if (this.state.id) {
       this._searchPort(getpriceAirline, {
         id: this.state.id,
@@ -306,7 +291,7 @@ class BulkImportForm extends PureComponent {
   }
 
   getSelectedTipsTxt = (selectedTips) => {
-    if ( typeof selectedTips[0] === "string" ) {
+    if (typeof selectedTips[0] === "string") {
       return selectedTips.join("，");
     } else {
       return selectedTips;
@@ -326,7 +311,7 @@ class BulkImportForm extends PureComponent {
       +moment('2018-03-15', "YYYY-MM-DD").format('MM') - 1,
       +moment('2018-03-15', "YYYY-MM-DD").format('DD')
     ]
-    let canPick = this.state.data.map((v, k) => {
+    let canPick = data.map((v, k) => {
       return moment(moment(v.flight_date).format("YYYY-MM-DD"), 'YYYY-MM-DD').format('x')
     })
     // let canPick = [1521043200000]

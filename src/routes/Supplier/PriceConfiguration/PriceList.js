@@ -36,7 +36,7 @@ export default class TableList extends PureComponent {
     this.state = {
       filter: {},
       visible: false,
-      keys: 1,
+      keys: '1',
       condition: null,
       currentData: null,
     }
@@ -283,40 +283,40 @@ export default class TableList extends PureComponent {
     const columnsss = [{
       title: '序号',
       dataIndex: 'id',
-      colSpan: keys == 2 ? 1 : 0,
+      colSpan: keys == "2" ? 1 : 0,
       render: (text, row, index) => {
         const obj = {
           children: text,
           props: {},
         };
-        obj.props.rowSpan = keys == 2 ? 1 : 0;
+        obj.props.rowSpan = keys == "2" ? 1 : 0;
         return obj;
       },
     }, {
       title: '机票资源号',
       dataIndex: 'airline_id',
-      colSpan: keys == 2 ? 1 : 0,
+      colSpan: keys == "2" ? 1 : 0,
       render: (text, row, index) => {
         const obj = {
           children: text,
           props: {},
         };
-        obj.props.rowSpan = keys == 2 ? 1 : 0;
+        obj.props.rowSpan = keys == "2" ? 1 : 0;
         return obj;
       },
     }, {
       title: '班期',
       width: '297px', //目前写死了，后期可以通过媒体查询，或者其他方法优化
       dataIndex: 'detail',
-      colSpan: keys == 2 ? 1 : 0,
+      colSpan: keys == "2" ? 1 : 0,
       render: (text, row, index) => {
         const obj = {
           children: text,
           props: {},
         };
         if (row.detail) {
-          if (Array.isArray(row.detail) && typeof row.detail[0] === 'number' ) { // 在这里当还是数字格式的时候，先排序，再格式化
-            row.detail.sort((a,b)=>a-b);
+          if (Array.isArray(row.detail) && typeof row.detail[0] === 'number') { // 在这里当还是数字格式的时候，先排序，再格式化
+            row.detail.sort((a, b) => a - b);
           }
           for (let i = 0; i < row.detail.length; i++) {
             row.detail[i] = moment(row.detail[i]).format("YYYY-MM-DD")
@@ -329,7 +329,7 @@ export default class TableList extends PureComponent {
     }, {
       title: '状态',
       dataIndex: 'state',
-      colSpan: keys == 2 ? 1 : 0,
+      colSpan: keys == "2" ? 1 : 0,
       render: (text, row, index) => {
         const obj = {
           children: text,
@@ -340,13 +340,13 @@ export default class TableList extends PureComponent {
         } else {
           obj.children = "启用"
         }
-        obj.props.rowSpan = keys == 2 ? 1 : 0;
+        obj.props.rowSpan = keys == "2" ? 1 : 0;
         return obj;
       },
     }, {
       title: '采购类型',
       dataIndex: 'name',
-      colSpan: keys == 2 ? 0 : 1,
+      colSpan: keys == "2" ? 0 : 1,
       render: (text, row, index) => {
         const obj = {
           children: text,
@@ -373,10 +373,10 @@ export default class TableList extends PureComponent {
       },
     }, {
       title: '航线类型',
-      dataIndex: this.state.keys == "1" ? 'airline_id' : "airline_type",
+      dataIndex: 'airline_type',
       render: (text, row, index) => {
         if (this.state.keys == '1') {
-          switch (+text) {
+          switch (+row.airline_id) {
             case 0:
               text = '国际长线'
               break;
@@ -397,7 +397,7 @@ export default class TableList extends PureComponent {
               break;
           }
         } else {
-          switch (+text) {
+          switch (+row.airline_type) {
             case 0:
               text = '未定义'
               break;
@@ -454,7 +454,7 @@ export default class TableList extends PureComponent {
           children: text,
           props: {},
         };
-        if (this.state.keys == 1) {
+        if (this.state.keys == "1") {
           obj.children = <div style={{whiteSpace: 'nowrap'}}>
             <a style={{cursor: "pointer", margin: "6px"}}
                onClick={this.operating.bind(this, row, 0)}>编辑
@@ -497,12 +497,12 @@ export default class TableList extends PureComponent {
           </Tabs>
           <div className={css.tableList}>
             <div className={css.tableListForm}>
-              {keys == 2 ? this.renderForm() : null}
+              {keys == "2" ? this.renderForm() : null}
             </div>
             <Table
               columns={columnsss}
               loading={loading}
-              dataSource={keys == 1 ? data.sort(function (a, b) {
+              dataSource={keys == "1" ? data.sort(function (a, b) {
                 if (a.airline_id < b.airline_id) {
                   return -1;
                 } else if (a.airline_id > b.airline_id) {
@@ -511,7 +511,7 @@ export default class TableList extends PureComponent {
                 return 0;
               }) : datas}
               rowKey={'id'}
-              pagination={this.state.keys == 2 ? {
+              pagination={this.state.keys == "2" ? {
                 pageSize: size ? size : 10,
                 total: totalResult ? totalResult : 0,
                 current: current ? current : 1,
@@ -530,7 +530,7 @@ export default class TableList extends PureComponent {
             >
             </Table>
             <Modal
-              title={ condition === 1 ? "日志" : "编辑" }
+              title={condition === 1 ? "日志" : "编辑"}
               visible={this.state.visible}
               onOk={this.companyname.bind(this, 1)}
               onCancel={this.companyname.bind(this, 1)}
