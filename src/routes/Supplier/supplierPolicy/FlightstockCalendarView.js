@@ -45,9 +45,6 @@ class page extends Component {
 
   dateGet() {  //初始化获取要展示的日期
     let date = null
-    let j = 0
-    const {flightstockView: {airline}} = this.props;
-    let s2 = new Date().getTime();
     if (this.props.airline_status == 3) {
       date = moment(this.props.listdata.departure_end).format('YYYY-MM')
     } else {

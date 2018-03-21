@@ -134,6 +134,7 @@ class AddForm extends Component {
             }
             this.setState({
               returnData: list,
+              valid_date: response.data[0].valid_date
             });
             break;
           case 1:
@@ -146,7 +147,6 @@ class AddForm extends Component {
           case 2:
             this.setState({
               supplier: response.data,
-              valid_date: response.data[0].valid_date
             });
             break;
         }
@@ -450,7 +450,6 @@ class AddForm extends Component {
                       </FormItem>
                     </Col> : null
                   }
-
                   <Col span={24}>
                     {formItems}
                   </Col>
