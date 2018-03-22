@@ -33,5 +33,19 @@
   },
   "ignoreMomentLocale": true,
   "theme": "./src/theme.js",
-  "hash": true
+  "hash": true,
+  "dllPlugin": {
+    "exclude": [
+      "babel-runtime",
+      "request",
+      "request-promise",
+      "babel-polyfill"
+    ],
+    "include": [
+      "dva/router",
+      "dva/saga",
+      "dva/fetch",
+      "dva/dynamic"
+    ]
+  }
 }

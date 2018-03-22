@@ -1,5 +1,4 @@
 import {getFlyDetail, flyDetailAddTicket,updateSettleAmount,addTicketFail} from '../services/api';
-import {message} from "antd/lib/index";
 export default {
   namespace: 'flyingpigDetail',
 

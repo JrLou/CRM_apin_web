@@ -10,7 +10,7 @@ const { Column } = Table;
 // import HttpTool from '../../../http/HttpTool.js';
 // import APILXF from '../../../http/APILXF.js';
 import _ from 'underscore';
-import Spin from 'antd/lib/spin';
+import Spin from 'antd';
 
 @connect(state => ({
   gData: state.role.gData,
