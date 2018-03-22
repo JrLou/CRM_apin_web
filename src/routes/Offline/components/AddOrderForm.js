@@ -294,6 +294,58 @@ export default class AddOrderForm extends Component {
     options.unshift(<Option value={''} key={'-1'}>请选择</Option>)
     return options;
   }
+  getNoDealReasonView = (ticketStatus, detail, readOnly, formItemLayout) => {
+    const { getFieldDecorator } = this.props.form;
+
+    let result = null;
+    let valueArr = [];
+
+    const getInitValue = (detail, valueArr, defaultValue) => {
+      return ( detail.nodealReason && valueArr.indexOf(detail.nodealReason) >= 0 ) ? detail.nodealReason : defaultValue
+    }
+
+    if (ticketStatus == 2) { // 2 -> 失败
+      valueArr = [0,1,2,3,4,5,6,7,8];
+      result = (<Col span={8}>
+        <FormItem label="原因" {...formItemLayout}>
+          {getFieldDecorator('nodealReason1', {
+            rules: [],
+            initialValue: getInitValue(detail, valueArr, 0)
+          })(
+              <Select placeholder="请选择" disabled={readOnly}>
+                <Option value={0}>比价询单采购意愿低</Option>
+                <Option value={1}>账期结算</Option>
+                <Option value={2}>跟踪周期较长待客人确认</Option>
+                <Option value={3}>团期较远无资源匹配</Option>
+                <Option value={4}>客人预算不足</Option>
+                <Option value={5}>供应商价格高</Option>
+                <Option value={6}>线路资源缺乏无匹配</Option>
+                <Option value={7}>有供应但无位置</Option>
+              </Select>
+            )}
+        </FormItem>
+      </Col>);
+    } else if (ticketStatus == 0) { // 0 -> 等待
+      valueArr = [100,101,102,103,104];
+      result = (<Col span={8}>
+        <FormItem label="原因" {...formItemLayout}>
+          {getFieldDecorator('nodealReason2', {
+            rules: [],
+            initialValue: getInitValue(detail, valueArr, 104)
+          })(
+              <Select placeholder="请选择" disabled={readOnly}>
+                <Option value={100}>OTA底价</Option>
+                <Option value={101}>行程日期模糊</Option>
+                <Option value={102}>团队人数待确定</Option>
+                <Option value={103}>行程变动</Option>
+                <Option value={104}>预算不足</Option>
+              </Select>
+            )}
+        </FormItem>
+      </Col>);
+    }
+    return result;
+  }
   createChangeInfo = () => {
     // 判断退改添加是否可修改
     // 查看情况下退改不可修改
@@ -522,6 +574,14 @@ export default class AddOrderForm extends Component {
         values.isPayoff = values.isPayoff ? '1' : '0';
         values.isReceipt = values.isReceipt ? '1' : '0';
         values.isSendoff = values.isSendoff ? '1' : '0';
+
+        // nodealReason1 和 nodealReason2 需要转化成 nodealReason，之所以要写两个是因为他们同名的话初始化会出bug
+        if (typeof values.nodealReason1 === "number" || typeof values.nodealReason2 === "number") { //怕0
+          values.nodealReason = values.nodealReason2 || values.nodealReason1;
+          delete values.nodealReason1;
+          delete values.nodealReason2;
+        }
+
         // console.log('将要提交的参数'); console.log(values);
         // 凭证
         // values.receiptVoucher = values.receiptVoucher.fileList.join(',');
@@ -976,28 +1036,8 @@ export default class AddOrderForm extends Component {
                           )}
                       </FormItem>
                     </Col>
-                    {this.props.form.getFieldValue('ticketStatus') == 2 ?
-                      <Col span={8}>
-                        <FormItem label="原因" {...formItemLayout}>
-                          {getFieldDecorator('nodealReason', {
-                            rules: [],
-                            initialValue: detail.nodealReason || 0
-                          })(
-                            <Select placeholder="请选择" disabled={readOnly}>
-                              <Option value={0}>比价询单采购意愿低</Option>
-                              <Option value={1}>账期结算</Option>
-                              <Option value={2}>跟踪周期较长待客人确认</Option>
-                              <Option value={3}>团期较远无资源匹配</Option>
-                              <Option value={4}>客人预算不足</Option>
-                              <Option value={5}>供应商价格高</Option>
-                              <Option value={6}>线路资源缺乏无匹配</Option>
-                              <Option value={7}>有供应但无位置</Option>
-                            </Select>
-                            )}
-                        </FormItem>
-                      </Col>
-                      : null}
-
+                    {/* 获取选择【等待】or【失败】的formView */}
+                    {this.getNoDealReasonView(this.props.form.getFieldValue('ticketStatus'), detail, readOnly, formItemLayout)}
                   </Row>
                 </TabPane>
               </Tabs>
