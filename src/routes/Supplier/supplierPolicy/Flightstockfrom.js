@@ -792,7 +792,7 @@ class AddForm extends Component {
                         initialValue: returnData.length > 0 ? returnData[0].airline_type : '',
                       })
                       (<RadioGroup options={plainOptionsd}
-                                   disabled={(this.state.flightdata.competence)}/>)}
+                                   disabled={(this.state.flightdata.competence && this.state.flightdata.competenceEdit)}/>)}
                     </FormItem>
                   </Col>
                   <Col span={24}>
