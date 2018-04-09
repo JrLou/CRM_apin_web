@@ -1076,7 +1076,7 @@ export default class AddOrderForm extends Component {
                       <Col span={24}>
                         <FormItem label="收款金额" {...formItemLayout4}>
                           {getFieldDecorator('receiptAmount', {
-                            rules: [{ required: this.props.form.getFieldValue('isReceipt'), message: "必填" }, { pattern: /^[1-9][0-9]{0,4}$/, message: "请输入1-99999的整数" }],
+                            rules: [{ required: this.props.form.getFieldValue('isReceipt'), message: "必填" }, { pattern: /^[1-9][0-9]{0,5}$/, message: "请输入1-999999的整数" }],
                             initialValue: detail.receiptAmount
                           })(
                             <Input disabled={this.props.isView ? true : specialFlag && detail.receiptAmount} style={{ width: '70%', marginRight: "6px" }} />
